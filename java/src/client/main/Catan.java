@@ -10,7 +10,6 @@ import client.base.*;
 
 /**
  * Main entry point for the Catan program
- * fgsdnfgbsd,bjgsbdfgbskjldfhglkjsdlfhlgkjhsdkljfghskjdfhklgj
  */
 @SuppressWarnings("serial")
 public class Catan extends JFrame
