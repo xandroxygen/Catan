@@ -16,6 +16,8 @@ public interface IServerProxy {
 	/* START Non-move API */
 	
 	/**
+	 * Assigns a player ID to a player.
+	 * 
 	 * @param playerID ID to give to the player
 	 */
 	public void setPlayer(int playerID) {
@@ -23,7 +25,21 @@ public interface IServerProxy {
 	}
 	
 	/**
-	 * Logs the caller in the server, and sets their catan.user HTTP cookie.
+	 * Logs the caller into the server and sets their catan.user HTTP cookie.
+	 * 
+	 * @pre
+	 * PRE-CONDITIONS:
+	 * 	username is not null
+	 * 	password is not null
+	 * 
+	 * @post
+	 * POST-CONDITIONS:
+	 * If username/ password is valid:
+	 * 		1. Server returns an HTTP 200 response message
+	 * 		2. HTTP response headers set catan.cookie to contain identity of the logged in player.
+	 * 
+	 * If username/ password is not valid:
+	 * 		1. Server returns 400 error response and body contains an error message.
 	 *  
 	 * @param username Username of the player logging in.
 	 * @param password Password that corresponds to the username of player logging in.
@@ -34,6 +50,18 @@ public interface IServerProxy {
 	
 	/**
 	 * Returns information about all of the current games on the server.
+	 * 
+	 * @pre
+	 * PRE-CONDITIONS: None
+	 * 
+	 * @post
+	 * POST-CONDITIONS:	
+	 * 	If the operation succeeds:
+	 * 		1. Server returns an HTTP 200 reponse message
+	 * 		2. The body contains a JSON array with a list of objects that contain info about the server's games.
+	 * 
+	 * 	If the operation fails:
+	 * 		1. Server returns 400 error response and body contains an error message.
 	 */
 	public void gamesList() {
 		
@@ -41,6 +69,19 @@ public interface IServerProxy {
 	
 	/**
 	 * Creates a new game on the server. 
+	 * 
+	 * @pre
+	 * name is not null
+	 * randomTiles, randomNumbers, randomPorts contain valid boolean values
+	 * 
+	 * @post
+	 * POST-CONDITIONS:
+	 * If the operation succeeds:
+	 * 		1. The server returns an HTTP 200 response message
+	 * 		2. The body contains a JSON object describing the newly created game
+	 * 
+	 * If the operation fails:
+	 * 		1. Server returns 400 error response and body contains an error message. 
 	 * 
 	 * @param name Name of the game
 	 * @param randomTiles ??
@@ -54,6 +95,25 @@ public interface IServerProxy {
 	/**
 	 * Adds the player to the specified game and sets their catan.game cookie.
 	 * 
+	 * @pre
+	 * PRE-CONDITIONS:
+	 * 	1. The user has previously logged into the server (they have a valid catan.user HTTP cookie)
+	 * 	2. The player may join the game because
+	 * 		a. They are already in the game -OR-
+	 * 		b. There is space in the game to add a new player
+	 * 	3. The specified game is valid
+	 * 	4. The specified color is valid
+	 * 
+	 * @post
+	 * POST-CONDITIONS:
+	 * 	If the operation succeeds:
+	 * 		1. The server returns an HTTP 200 success response
+	 * 		2. The player is in the game with the specified color
+	 * 		3. The server response includes the "set-cookie" response header setting the catan.game HTTP cookie
+	 * 
+	 * 	If the operation fails:
+	 * 		1. Server returns 400 error response and body contains an error message.
+	 * 
 	 * @param gameID ID of the game to join
 	 * @param color Player color
 	 */
@@ -64,6 +124,44 @@ public interface IServerProxy {
 	/**
 	 * Returns the current state of the game in JSON format.
 	 * 
+	 * @pre
+	 * PRE-CONDITIONS:
+	 * 	1. The caller has previously logged into the server and joined a game (they have valid catan.game and catan.user HTTP cookies)
+	 * 
+	 * @post
+	 * POST-CONDITIONS:
+	 * 	If the operation succeeds:
+	 * 		1. Server returns HTTP 200 response message
+	 * 		2. The response body contains the full client model JSON 
+	 * 
+	 *  If the operation fails:
+	 *  	1. The server returns an HTTP 400 error message and the response body contains an error message
+	 */
+	public void gameGetModel() {
+		
+	}
+	
+	/**
+	 * Returns the current state of the game in JSON format.
+	 * 
+	 * @pre
+	 * PRE-CONDITIONS:
+	 * 	1. The caller has previously logged into the server and joined a game (they have valid catan.game and catan.user HTTP cookies)
+	 * 	2. If specified, the version number is included as the "version" query parameter in the request URL, 
+	 * 		and its value is a valid integer.
+	 * 
+	 * @post
+	 * POST-CONDITIONS:
+	 * 	If the operation succeeds:
+	 * 		1. Server returns HTTP 200 response message
+	 * 		2. The response body contains JSON data
+	 * 			a. The full client model JSON is returned if the client does not provide a client number, 
+	 * 				or the provided version number does not match the version on the server
+	 * 			b. "true" is returned if the caller provided a version number and it matched the version number on the server
+	 * 
+	 *  If the operation fails:
+	 *  	1. The server returns an HTTP 400 error message and the response body contains an error message
+	 * 
 	 * @param version The version number of the model. Used to compare and check if model has been updated.
 	 */
 	public void gameGetModel(int version) {
@@ -72,6 +170,19 @@ public interface IServerProxy {
 	
 	/**
 	 * Returns a list of supported AI player types.
+	 * 
+	 * @pre
+	 * PRE-CONDITIONS: None
+	 * 
+	 * @post
+	 * POST-CONDITIONS: 
+	 * 	If the operation succeeds
+	 * 		1. The server returns an HTTP 200 response message
+	 * 		2. The body contains a JSON string array enumerating the different types of AI players.
+	 * 		   These are values that may be passed to the gameAddAI method	
+	 * 
+	 *  If the operation fails:
+	 *  	1. The server returns an HTTP 400 error message and the response body contains an error message
 	 */
 	public void gameListAI() {
 		
@@ -81,12 +192,33 @@ public interface IServerProxy {
 	/**
 	 * Adds an AI player to the current game.
 	 * 
+	 * @pre
+	 * PRE-CONDITIONS:
+	 * 	1. The caller has previously logged in to the server and joined a game (they have valid catan.user and catan.game HTTP cookies).
+	 * 	2. There is space in the game for another player (the game is not “full”).
+	 * 	3. The specified “AIType” is valid (one of the values returned by the /game/listAI method).
+	 * 
+	 * @post
+	 * POST-CONDITIONS:
+	 * If the operation succeeds:
+	 * 	1. The server returns an HTTP 200 success response with “Success” in the body.
+	 * 	2. A new AI player of the specified type has been added to the current game. 
+	 * 	   The server selected a name and color for the player.
+	 * 
+	 * If the operation fails:
+	 * 	1. The server returns an HTTP 400 error response, and the body contains an error message.
+	 * 
 	 * @param AI Type ???
 	 */
 	public void gameAddAI() {
 		
 	}
 	
+	/* END Non-move API */
+	
+	
+	/* START Move API */
+
 	/* END Non-move API */
 	
 	
