@@ -43,9 +43,9 @@ public interface IServerProxy {
 	 * Creates a new game on the server. 
 	 * 
 	 * @param name Name of the game
-	 * @param randomTiles ???
-	 * @param randomNumbers ???
-	 * @param randomPorts ???
+	 * @param randomTiles ??
+	 * @param randomNumbers ??
+	 * @param randomPorts ??
 	 */
 	public void gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) {
 		
