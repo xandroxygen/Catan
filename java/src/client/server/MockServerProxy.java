@@ -6,34 +6,14 @@ import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
- * Communicates with the server API.
- * Keeps track of player and game cookies.
- * Created by Xander on 9/12/2016.
+ * Mock server used only for testing.
+ * Instead of calling API, returns hard-coded results for local testing.
+ * No special parameters needed, just call the methods.
+ * TODO: will this mock server need to respond to calls with an updated model?
+ * Created by Xander on 9/13/2016.
  */
-public class ServerProxy implements IServerProxy {
-
-    private HTTPOperations http;
-    private Map<String, String> headers;
-    private List<String> gameCookies;
-    private List<String> playerCookies;
-
-    /**
-     * Default constructor, sets all values to new objects.
-     * Also sets host, port, and base URL for the communicator class.
-     */
-    public ServerProxy() {
-        http = new HTTPOperations("h", "p", "b"); // TODO: change to actual server location
-        headers = new HashMap<>();
-        gameCookies = new ArrayList<>();
-        playerCookies = new ArrayList<>();
-    }
-
+public class MockServerProxy implements IServerProxy {
     /**
      * Assigns a player ID to a player.
      *
