@@ -19,7 +19,7 @@ public class Bank {
      * @param numberOfBrick the desired number of bricks to withdraw
      * @return
      */
-    boolean canWithdrawBrick(int numberOfBrick){
+    public boolean canWithdrawBrick(int numberOfBrick){
         return false;
     }
 
@@ -28,7 +28,7 @@ public class Bank {
      * @param numberOfWood the desired number of wood to withdraw
      * @return
      */
-    boolean canWithdrawWood(int numberOfWood){
+    public boolean canWithdrawWood(int numberOfWood){
         return false;
     }
 
@@ -37,7 +37,7 @@ public class Bank {
      * @param numberOfOre the desired number of ore to withdraw
      * @return
      */
-    boolean canWithdrawOre(int numberOfOre){
+    public boolean canWithdrawOre(int numberOfOre){
         return false;
     }
 
@@ -46,7 +46,7 @@ public class Bank {
      * @param numberOfSheep the desired number of sheep to withdraw
      * @return
      */
-    boolean canWithdrawSheep(int numberOfSheep){
+    public boolean canWithdrawSheep(int numberOfSheep){
         return false;
     }
 
@@ -55,7 +55,7 @@ public class Bank {
      * @param numberOfWheat the desired number of wheat to withdraw
      * @return
      */
-    boolean canWithdrawWheat(int numberOfWheat){
+    public boolean canWithdrawWheat(int numberOfWheat){
         return false;
     }
 
@@ -64,7 +64,7 @@ public class Bank {
      * @param numberOfBrick the desired number Of bricks to withdraw
      * @return
      */
-    boolean canDepositBrick(int playerId, int numberOfBrick){
+    public boolean canDepositBrick(int playerId, int numberOfBrick){
         return false;
     }
 
@@ -73,7 +73,7 @@ public class Bank {
      * @param numberOfWood the desired number Of wood to withdraw
      * @return
      */
-    boolean canDepositWood(int numberOfWood){
+    public boolean canDepositWood(int numberOfWood){
         return false;
     }
 
@@ -82,7 +82,7 @@ public class Bank {
      * @param numberOfOre the desired number Of ore to withdraw
      * @return
      */
-    boolean canDepositOre(int numberOfOre){
+    public boolean canDepositOre(int numberOfOre){
         return false;
     }
 
@@ -91,7 +91,7 @@ public class Bank {
      * @param numberOfSheep the desired number Of sheep to withdraw
      * @return
      */
-    boolean canDepositSheep(int numberOfSheep){
+    public boolean canDepositSheep(int numberOfSheep){
         return false;
     }
 
@@ -100,7 +100,7 @@ public class Bank {
      * @param numberOfWheat the desired number Of wheat to withdraw
      * @return
      */
-    boolean canDepositWheat(int numberOfWheat){
+    public boolean canDepositWheat(int numberOfWheat){
         return false;
     }
 
@@ -108,7 +108,7 @@ public class Bank {
      * checks whether the player can buy a development card
      * @return
      */
-    boolean canBuyDevelopmentCard(){
+    public boolean canBuyDevelopmentCard(){
         return false;
     }
 
