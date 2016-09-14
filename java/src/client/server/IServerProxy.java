@@ -84,9 +84,9 @@ public interface IServerProxy {
 	 * 		1. Server returns 400 error response and body contains an error message. 
 	 * 
 	 * @param name Name of the game
-	 * @param randomTiles ??
-	 * @param randomNumbers ??
-	 * @param randomPorts ??
+	 * @param randomTiles true if the tiles should be randomized, false if they should be preset
+	 * @param randomNumbers true if the numbers should be randomized, false if they should be preset
+	 * @param randomPorts true if the ports should be randomized, false if they should be preset
 	 */
 	public void gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) {
 		
@@ -188,7 +188,6 @@ public interface IServerProxy {
 		
 	}
 	
-	
 	/**
 	 * Adds an AI player to the current game.
 	 * 
@@ -208,9 +207,9 @@ public interface IServerProxy {
 	 * If the operation fails:
 	 * 	1. The server returns an HTTP 400 error response, and the body contains an error message.
 	 * 
-	 * @param AI Type ???
+	 * @param aiTypes The AI player to add to the game
 	 */
-	public void gameAddAI() {
+	public void gameAddAI(String aiType) {
 		
 	}
 	
