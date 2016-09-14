@@ -69,8 +69,8 @@ public class Bank {
     }
 
     /**
-     *
-     * @param numberOfWood
+     * checks whether the player has enough wood to deposit
+     * @param numberOfWood the desired number Of wood to withdraw
      * @return
      */
     boolean canDepositWood(int numberOfWood){
@@ -78,8 +78,8 @@ public class Bank {
     }
 
     /**
-     *
-     * @param numberOfOre
+     * checks whether the player has enough ore to deposit
+     * @param numberOfOre the desired number Of ore to withdraw
      * @return
      */
     boolean canDepositOre(int numberOfOre){
@@ -87,8 +87,8 @@ public class Bank {
     }
 
     /**
-     *
-     * @param numberOfSheep
+     * checks whether the player has enough sheep to deposit
+     * @param numberOfSheep the desired number Of sheep to withdraw
      * @return
      */
     boolean canDepositSheep(int numberOfSheep){
@@ -96,8 +96,8 @@ public class Bank {
     }
 
     /**
-     *
-     * @param numberOfWheat
+     * checks whether the player has enough wheat to deposit
+     * @param numberOfWheat the desired number Of wheat to withdraw
      * @return
      */
     boolean canDepositWheat(int numberOfWheat){
@@ -105,7 +105,7 @@ public class Bank {
     }
 
     /**
-     *
+     * checks whether the player can buy a development card
      * @return
      */
     boolean canBuyDevelopmentCard(){
