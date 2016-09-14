@@ -4,7 +4,7 @@ import java.util.List;
 import shared.definitions.*;
 
 /**
- * Created by Jonathan Skaggs on 9/14/2016.
+ * Player class
  */
 public class Player {
 	
