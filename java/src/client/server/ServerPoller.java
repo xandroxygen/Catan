@@ -1,10 +1,9 @@
 package client.server;
 
 import org.json.simple.JSONObject;
+import client.model.ModelUpdater;
 
 /**
- * @author	Spencer Olsen
- * 
  * Polls the server to check whether a new model exists. If a new model exists, the ServerPoller sends
  * the new data to the Model to update itself.
  */
@@ -29,7 +28,11 @@ public class ServerPoller {
 	 * The proxy to use when polling the server. This will be set externally.
 	 */
 	private IServerProxy proxy;
-	
+
+	/**
+	 * The class that does all model updates.
+	 */
+	private ModelUpdater modelUpdater;
 
 	public ServerPoller() {	}
 	
@@ -39,7 +42,9 @@ public class ServerPoller {
 	 * @param version The version of the server since the last poll
 	 * @param proxy The proxy to use when polling the server.
 	 */
-	public ServerPoller(int interval, int version, IServerProxy proxy);
+	public ServerPoller(int interval, int version, IServerProxy proxy) {
+
+	}
 	
 	/**
 	 * Calls the server proxy to retrieve the current model state.
@@ -59,9 +64,9 @@ public class ServerPoller {
 	 * </pre>
 	 */
 	public void pollServer() {
-		JSONObject result = proxy.getGameModel(version);
+		JSONObject result = proxy.gameGetModel(version);
 		if (checkForUpdates(result)) {
-			// get new version number
+			// get new version number from server model
 
 
 			updateModel(result);
@@ -70,23 +75,19 @@ public class ServerPoller {
 
 	/**
 	 * Checks if the JSONObject contains updated data.
+     *
+     * @pre
+     * data is not null
 	 *
 	 * @post<pre>
-	 * If the JSONObject is null, the method returns false, signifying that there is no new data.
-	 * If the JSONObject is not null, the method returns true, signifying that there was new data
-	 * retrieved from the server.
+	 * If the JSONObject contains string "true", the model is already up-to-date.
+     * Otherwise, the model will be sent the new data to update itself.
 	 * </pre>
 	 *
 	 * @param data The JSONObject to check for new data
 	 * @return true if the JSONObject contains new data, otherwise false
 	 */
-	private boolean checkForUpdates(JSONObject data) {
-		if (data == null)
-			return false;
-		else
-			return true;
-
-	}
+	private boolean checkForUpdates(JSONObject data) {	}
 	
 	/**
 	 * Sends the new JSON data to the Model so the Model can update itself.
@@ -101,7 +102,9 @@ public class ServerPoller {
 	 *
 	 * @param data	The data to send to the model so it can update itself
 	 */
-	private void updateModel(JSONObject data) {}
+	private void updateModel(JSONObject data) {
+        modelUpdater.updateModel(data);
+	}
 
 	public int getInterval() {
 		return interval;
@@ -126,6 +129,8 @@ public class ServerPoller {
 	public void setProxy(IServerProxy proxy) {
 		this.proxy = proxy;
 	}
+
+	public void setModelUpdater(ModelUpdater m) { this.modelUpdater = m; }
 
 }
 

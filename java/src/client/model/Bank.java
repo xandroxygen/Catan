@@ -1,19 +1,17 @@
 package client.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import shared.definitions.DevCardType;
+import shared.definitions.ResourceType;
 
 /**
- * Created by Jonathan Skaggs on 9/14/2016.
+ * Bank Class
  */
 public class Bank {
 
-    public int numberOfBrickResourceCards;
-    public int numberOfWoodResourceCards;
-    public int numberOfOreResourceCards;
-    public int numberOfSheepResourceCards;
-    public int numberOfWheatResourceCards;
+    public HashMap<ResourceType, Integer> resourseDeck;
     public ArrayList<DevCardType> developmentCards;
 
     /**

@@ -6,6 +6,9 @@ import shared.definitions.ResourceType;
 import shared.locations.HexLocation;
 import shared.locations.VertexDirection;
 
+/**
+ * Port Class
+ */
 public class Port {
 	private int ratio;
     private ResourceType resource;

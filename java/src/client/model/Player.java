@@ -49,7 +49,7 @@ public class Player {
 	/**
 	 * Checks whether the player can place a road.
 	 * @pre It's your turn, The road location is open, The road location is connected to another road owned by the player, The road location is not on water, You have the required resources (1 wood, 1 brick; 1 road), Setup round: Must be placed by settlement owned by the player with no adjacent road.
-	 * @post You lost the resources required to build a road (1 wood, 1 brick; 1 road), The road is on the map at the specified location, If applicable, “longest road” has been awarded to the player with the longest road
+	 * @post You lost the resources required to build a road (1 wood, 1 brick - 1 road), The road is on the map at the specified location, If applicable, longest road has been awarded to the player with the longest road
 	 * @param free Whether or not piece can be built for free.
 	 * @param location The location of the road.
 	 * @return result 
@@ -176,7 +176,6 @@ public class Player {
 	
 	/**
 	 * Checks whether the player can trade with another player
-	 * @param playerIndex the index of the player to be traded with.
 	 * @pre It's your turn, You have the resources you are offering.
 	 * @post The trade is offered to the other player (stored in the server model)
 	 * @param offer list of Resources, Negative numbers mean you get those cards
@@ -201,8 +200,7 @@ public class Player {
 	}
 	
 	/**
-	 * Checks whether the player can play a development card
-	 * @param type the type of development card to be played.
+	 * Checks whether the robber can be moved and a player robbed.
 	 * @pre The robber is not being kept in the same location, If a player is being robbed (i.e., victimIndex != ­1), the player being robbed has resource cards
 	 * @post The robber is in the new location, The player being robbed (if any) gave you one of his resource cards (randomly selected)
 	 * @param location New location for robber.
