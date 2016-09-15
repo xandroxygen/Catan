@@ -1,7 +1,14 @@
 package client.model;
 
+import java.awt.Point;
+
+import shared.definitions.ResourceType;
+
 /**
- * Created by Jonathan Skaggs on 9/14/2016.
+ * Hex class.
  */
 public class Hex {
+	private ResourceType resource;
+	private Point location;
+	private int number;
 }

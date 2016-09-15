@@ -8,33 +8,9 @@ import java.util.List;
 public class Map {
 	
 	private List<Hex> hexList;
+	private int radius;
+	private List<Port> portList;
 	
-	/**
-	 * Checks whether the map is able to add a city.
-	 * @param location the location of the city to place.
-	 * @return
-	 */
-	public boolean canAddCity(MapLocation location) {
-		return false;
-	}
-	
-	/**
-	 * Checks whether the map is able to add a settlement.
-	 * @param location the location of the settlement to place.
-	 * @return
-	 */
-	public boolean canAddSettlement(MapLocation location) {
-		return false;
-	}
-	
-	/**
-	 * Checks whether the map is able to add a road.
-	 * @param location the location of the road to place.
-	 * @return
-	 */
-	public boolean canAddRoad(MapLocation location) {
-		return false;
-	}
 	
 	/**
 	 * Checks whether there are resources to be offered to a player.

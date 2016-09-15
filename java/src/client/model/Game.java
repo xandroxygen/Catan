@@ -3,7 +3,7 @@ package client.model;
 import java.util.ArrayList;
 
 /**
- * Created by Jonathan Skaggs on 9/14/2016.
+ * Game class.
  */
 public class Game {
 
@@ -12,6 +12,8 @@ public class Game {
     public Map theMap;
     public Bank bank;
     public int currentTurnIndex;
+    public String status;
+    public String winner;
 
     /**
      * checks to see if the game can create a new user
