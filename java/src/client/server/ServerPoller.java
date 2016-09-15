@@ -1,6 +1,7 @@
 package client.server;
 
 import org.json.simple.JSONObject;
+import client.model.ModelUpdater;
 
 /**
  * @author	Spencer Olsen
@@ -29,7 +30,11 @@ public class ServerPoller {
 	 * The proxy to use when polling the server. This will be set externally.
 	 */
 	private IServerProxy proxy;
-	
+
+	/**
+	 * The class that does all model updates.
+	 */
+	private ModelUpdater modelUpdater;
 
 	public ServerPoller() {	}
 	
@@ -61,7 +66,7 @@ public class ServerPoller {
 	public void pollServer() {
 		JSONObject result = proxy.getGameModel(version);
 		if (checkForUpdates(result)) {
-			// get new version number
+			// get new version number from server model
 
 
 			updateModel(result);
@@ -101,7 +106,10 @@ public class ServerPoller {
 	 *
 	 * @param data	The data to send to the model so it can update itself
 	 */
-	private void updateModel(JSONObject data) {}
+	private void updateModel(JSONObject data) {
+        modelUpdater.updateModel(data);
+
+	}
 
 	public int getInterval() {
 		return interval;
@@ -126,6 +134,8 @@ public class ServerPoller {
 	public void setProxy(IServerProxy proxy) {
 		this.proxy = proxy;
 	}
+
+	public void setModelUpdater(ModelUpdater m) { this.modelUpdater = m; }
 
 }
 
