@@ -15,6 +15,16 @@ public class Game {
 
     /**
      * checks to see if the game can create a new user
+     *
+     * @pre <pre>
+     *      There are less than 4 players
+     *      The game has not started
+     * 	</pre>
+     *
+     * @post <pre>
+     *      returns true to add a new player
+     * </pre>
+     *
      * @return
      */
     public boolean canCreateUser(){
@@ -22,76 +32,19 @@ public class Game {
     }
 
     /**
-     * checks to see if the user is who he says he is
+     * Authenticates the user
+     *
+     * @pre <pre>
+     *      The player must be an atherized user
+     * 	</pre>
+     *
+     * @post <pre>
+     *      returns true to authenticate the user.
+     * </pre>
+     *
      * @return
      */
     public boolean canAuthenticateUser(){
-        return false;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public boolean canGetServerInfo(){
-        return false;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public boolean canStartGame(){
-        return false;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public boolean canEndGame(){
-        return false;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public boolean canRotateTurn(){
-        return false;
-    }
-
-    /**
-     *
-     * @param playerId
-     * @return
-     */
-    public boolean canRollDice(int playerId){
-        return false;
-    }
-
-    /**
-     *
-     * @param playerId
-     * @return
-     */
-    public boolean canPayPlayer(int playerId){
-        return false;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public boolean canAwardPlayers(){
-        return false;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public boolean canCheckForWinners(){
         return false;
     }
 }
