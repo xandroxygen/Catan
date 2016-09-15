@@ -44,7 +44,9 @@ public class ServerPoller {
 	 * @param version The version of the server since the last poll
 	 * @param proxy The proxy to use when polling the server.
 	 */
-	public ServerPoller(int interval, int version, IServerProxy proxy);
+	public ServerPoller(int interval, int version, IServerProxy proxy) {
+
+	}
 	
 	/**
 	 * Calls the server proxy to retrieve the current model state.
@@ -64,7 +66,7 @@ public class ServerPoller {
 	 * </pre>
 	 */
 	public void pollServer() {
-		JSONObject result = proxy.getGameModel(version);
+		JSONObject result = proxy.gameGetModel(version);
 		if (checkForUpdates(result)) {
 			// get new version number from server model
 
