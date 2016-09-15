@@ -2,6 +2,8 @@ package client.model;
 
 import java.util.ArrayList;
 
+import shared.definitions.DevCardType;
+
 /**
  * Created by Jonathan Skaggs on 9/14/2016.
  */
@@ -12,7 +14,7 @@ public class Bank {
     public int numberOfOreResourceCards;
     public int numberOfSheepResourceCards;
     public int numberOfWheatResourceCards;
-    public ArrayList<DevelopmentCards> developmentCards;
+    public ArrayList<DevCardType> developmentCards;
 
     /**
      * checks whether the player can buy a development card

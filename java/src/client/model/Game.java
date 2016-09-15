@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class Game {
 
     public ArrayList<Player> playerList;
-    public Dice dice;
     public Map theMap;
     public Bank bank;
     public int currentTurnIndex;
