@@ -1,5 +1,7 @@
 package client.model;
 
+import org.json.simple.JSONObject;
+
 /**
  * ModelUpdater class.
  */
@@ -123,7 +125,7 @@ public class ModelUpdater {
 	 *
 	 * @param json 
 	 */
-	public void updateModel(String json) {
+	public void updateModel(JSONObject json) {
 		
 	}
 	
@@ -149,7 +151,7 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updateBank(String json) {
+	public void updateBank(JSONObject json) {
 		
 	}
 	
@@ -186,7 +188,7 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updatePlayer(String json) {
+	public void updatePlayer(JSONObject json) {
 		
 	}
 	
@@ -237,7 +239,7 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updateGame(String json) {
+	public void updateGame(JSONObject json) {
 		
 	}
 	
@@ -296,7 +298,7 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updateMap(String json) {
+	public void updateMap(JSONObject json) {
 		
 	}
 }
