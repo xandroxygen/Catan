@@ -5,6 +5,9 @@ import java.awt.Point;
 import shared.definitions.ResourceType;
 import shared.locations.VertexDirection;
 
+/**
+ * Port Class
+ */
 public class Port {
 	private int ratio;
     private ResourceType resource;
