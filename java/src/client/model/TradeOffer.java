@@ -3,6 +3,9 @@ import java.util.HashMap;
 
 import shared.definitions.*;
 
+/**
+ * Trade Offer Class
+ */
 public class TradeOffer {
 	private int sender;
 	private int receiver;
