@@ -5,6 +5,7 @@ import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import org.json.simple.JSONObject;
 
 /**
  * Interface for the Server proxy and Mock proxy.
@@ -127,7 +128,7 @@ public interface IServerProxy {
 	 * 		1. The server returns an HTTP 400 error message and the response body contains an error message
 	 * </pre>
 	 */
-	void gameGetModel();
+	JSONObject gameGetModel();
 
 	/**
 	 * Returns the current state of the game in JSON format.
@@ -152,7 +153,7 @@ public interface IServerProxy {
 	 *
 	 * @param version The version number of the model. Used to compare and check if model has been updated.
 	 */
-	void gameGetModel(int version);
+	JSONObject gameGetModel(int version);
 	
 	/**
 	 * Returns a list of supported AI player types.
