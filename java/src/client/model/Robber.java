@@ -2,6 +2,8 @@ package client.model;
 
 import java.awt.Point;
 
+import shared.locations.HexLocation;
+
 public class Robber {
-	private Point location;
+	private HexLocation location;
 }
