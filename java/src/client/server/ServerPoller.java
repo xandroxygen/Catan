@@ -4,8 +4,6 @@ import org.json.simple.JSONObject;
 import client.model.ModelUpdater;
 
 /**
- * @author	Spencer Olsen
- * 
  * Polls the server to check whether a new model exists. If a new model exists, the ServerPoller sends
  * the new data to the Model to update itself.
  */
@@ -75,23 +73,19 @@ public class ServerPoller {
 
 	/**
 	 * Checks if the JSONObject contains updated data.
+     *
+     * @pre
+     * data is not null
 	 *
 	 * @post<pre>
-	 * If the JSONObject is null, the method returns false, signifying that there is no new data.
-	 * If the JSONObject is not null, the method returns true, signifying that there was new data
-	 * retrieved from the server.
+	 * If the JSONObject contains string "true", the model is already up-to-date.
+     * Otherwise, the model will be sent the new data to update itself.
 	 * </pre>
 	 *
 	 * @param data The JSONObject to check for new data
 	 * @return true if the JSONObject contains new data, otherwise false
 	 */
-	private boolean checkForUpdates(JSONObject data) {
-		if (data == null)
-			return false;
-		else
-			return true;
-
-	}
+	private boolean checkForUpdates(JSONObject data) {	}
 	
 	/**
 	 * Sends the new JSON data to the Model so the Model can update itself.
@@ -108,7 +102,6 @@ public class ServerPoller {
 	 */
 	private void updateModel(JSONObject data) {
         modelUpdater.updateModel(data);
-
 	}
 
 	public int getInterval() {
