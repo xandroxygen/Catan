@@ -11,7 +11,7 @@ public class Game {
     public Map theMap;
     public Bank bank;
     public int currentTurnIndex;
-    public String status;
+    public TurnTracker turnTracker;
     public String winner;
 
     /**
