@@ -12,6 +12,8 @@ public class Game {
     public Bank bank;
     public int currentTurnIndex;
     public TurnTracker turnTracker;
+    public MessageList log;
+    public MessageList chat;
     public String winner;
 
     /**
