@@ -2,6 +2,8 @@ package client.server;
 
 import org.json.simple.JSONObject;
 import client.model.ModelUpdater;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Polls the server to check whether a new model exists. If a new model exists, the ServerPoller sends
@@ -11,7 +13,7 @@ import client.model.ModelUpdater;
 public class ServerPoller {
 	
 	/**
-	 * Specifies the interval at which to poll the server for updates.
+	 * The number of seconds at which to poll the server for updates.
 	 */
 	private int interval;
 	
@@ -34,6 +36,14 @@ public class ServerPoller {
 	 */
 	private ModelUpdater modelUpdater;
 
+    /**
+     * <pre>
+     * The timer to poll the server at regular intervals.
+     * Will run on it's own thread, independent of the other code.
+     * </pre>
+     */
+	private Timer timer;
+
 	public ServerPoller() {	}
 	
 	/**
@@ -42,8 +52,29 @@ public class ServerPoller {
 	 * @param version The version of the server since the last poll
 	 * @param proxy The proxy to use when polling the server.
 	 */
-	public ServerPoller(int interval, int version, IServerProxy proxy) {
+	public ServerPoller(int seconds, IServerProxy proxy) {
+        this.interval = seconds;
+        this.proxy = proxy;
 
+        timer = new Timer();
+        timer.schedule(new PollTask(), interval*1000);
+
+    }
+
+    /**
+     * Class to independently manage the polling of the server at regular intervals.
+     */
+	private class PollTask extends TimerTask {
+
+        /**
+         * Called at the specified interval until the thread is cancelled.
+         *
+         * @post
+         * Commands will be executed at the specified interval until cancel() is called.
+         */
+		public void run() {
+            pollServer();
+        }
 	}
 	
 	/**
@@ -63,21 +94,13 @@ public class ServerPoller {
 	 * 		1. The server returns an HTTP 400 error message and the response body contains an error message
 	 * </pre>
 	 */
-	public void pollServer() {
-		JSONObject result = proxy.gameGetModel(version);
-		if (checkForUpdates(result)) {
-			// get new version number from server model
-
-
-			updateModel(result);
-		}
-	}
+	private void pollServer() {	}
 
 	/**
 	 * Checks if the JSONObject contains updated data.
      *
      * @pre
-     * data is not null
+     * data is not nul
 	 *
 	 * @post<pre>
 	 * If the JSONObject contains string "true", the model is already up-to-date.
@@ -87,7 +110,7 @@ public class ServerPoller {
 	 * @param data The JSONObject to check for new data
 	 * @return true if the JSONObject contains new data, otherwise false
 	 */
-	private boolean checkForUpdates(JSONObject data) {	}
+	private boolean checkForUpdates(JSONObject data) { return false; }
 	
 	/**
 	 * Sends the new JSON data to the Model so the Model can update itself.
@@ -106,24 +129,12 @@ public class ServerPoller {
         modelUpdater.updateModel(data);
 	}
 
-	public int getInterval() {
-		return interval;
-	}
-
 	public void setInterval(int interval) {
 		this.interval = interval;
 	}
 
-	public int getVersion() {
-		return version;
-	}
-
 	public void setVersion(int version) {
 		this.version = version;
-	}
-
-	public IServerProxy getProxy() {
-		return proxy;
 	}
 
 	public void setProxy(IServerProxy proxy) {

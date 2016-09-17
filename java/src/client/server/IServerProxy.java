@@ -6,7 +6,6 @@ import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
-import org.json.simple.JSONObject;
 
 /**
  * Interface for the Server proxy and Mock proxy.
