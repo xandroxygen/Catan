@@ -72,7 +72,7 @@ public class ServerPoller {
          * @post
          * Commands will be executed at the specified interval until cancel() is called.
          */
-		private void run() {
+		public void run() {
             pollServer();
         }
 	}
