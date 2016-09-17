@@ -52,9 +52,8 @@ public class ServerPoller {
 	 * @param version The version of the server since the last poll
 	 * @param proxy The proxy to use when polling the server.
 	 */
-	public ServerPoller(int seconds, int version, IServerProxy proxy) {
+	public ServerPoller(int seconds, IServerProxy proxy) {
         this.interval = seconds;
-        this.version = version;
         this.proxy = proxy;
 
         timer = new Timer();
@@ -62,7 +61,17 @@ public class ServerPoller {
 
     }
 
+    /**
+     * Class to independently manage the polling of the server at regular intervals.
+     */
 	private class PollTask extends TimerTask {
+
+        /**
+         * Called at the specified interval until the thread is cancelled.
+         *
+         * @post
+         * Commands will be executed at the specified interval until cancel() is called.
+         */
 		private void run() {
             pollServer();
         }
@@ -85,15 +94,7 @@ public class ServerPoller {
 	 * 		1. The server returns an HTTP 400 error message and the response body contains an error message
 	 * </pre>
 	 */
-	private void pollServer() {
-		JSONObject result = proxy.gameGetModel(version);
-		if (checkForUpdates(result)) {
-			// get new version number from server model
-
-
-
-		}
-	}
+	private void pollServer() {	}
 
 	/**
 	 * Checks if the JSONObject contains updated data.
@@ -128,24 +129,12 @@ public class ServerPoller {
         modelUpdater.updateModel(data);
 	}
 
-	public int getInterval() {
-		return interval;
-	}
-
 	public void setInterval(int interval) {
 		this.interval = interval;
 	}
 
-	public int getVersion() {
-		return version;
-	}
-
 	public void setVersion(int version) {
 		this.version = version;
-	}
-
-	public IServerProxy getProxy() {
-		return proxy;
 	}
 
 	public void setProxy(IServerProxy proxy) {
