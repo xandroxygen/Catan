@@ -48,8 +48,7 @@ public class ServerPoller {
 	
 	/**
 	 * 
-	 * @param interval The interval at which to poll the server for updates
-	 * @param version The version of the server since the last poll
+	 * @param seconds The interval at which to poll the server for updates
 	 * @param proxy The proxy to use when polling the server.
 	 */
 	public ServerPoller(int seconds, IServerProxy proxy) {
