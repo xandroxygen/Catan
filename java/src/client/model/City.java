@@ -1,14 +1,8 @@
 package client.model;
 
-import shared.locations.VertexLocation;
-
 /**
  * City class
  */
-public class City {
-	private VertexLocation location;
+public class City extends Municipality {
 
-	public VertexLocation getLocation() {
-		return location;
-	}
 }
