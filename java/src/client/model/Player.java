@@ -72,7 +72,7 @@ public class Player {
 	 * @post <pre>
 	 * 		The robber is in the new location
 	 * 		The player being robbed (if any) gave you one of his resource cards (randomly selected)
-	 * 		If applicable, “largest army” has been awarded to the player who has played the most soldier cards
+	 * 		If applicable, largest army has been awarded to the player who has played the most soldier cards
 	 * 		You are not allowed to play other development cards during this turn (except for monument cards, which may still be played)
 	 * 		</pre>
 	 * @param location New robber location.
@@ -96,7 +96,7 @@ public class Player {
 	 * 		You gained the two specified resources
 	 * 		</pre>
 	 * @param resource1 The type of the first resource you'd like to receive
-	 * @param resourec2 The type of the second resource you'd like to receive
+	 * @param resource2 The type of the second resource you'd like to receive
 	 * @return result
 	 */
 	public boolean canPlayYearOfPlenty(ResourceType resource1, ResourceType resource2) {
@@ -118,7 +118,7 @@ public class Player {
 	 * @post <pre>
 	 * 		You have two fewer unused roads
 	 * 		Two new roads appear on the map at the specified locations
-	 * 		If applicable, “longest road” has been awarded to the player with the longest road
+	 * 		If applicable, longest road has been awarded to the player with the longest road
 	 * 		</pre>
 	 * @param spot1 first edge location of road.
 	 * @param spot2 second edge location of road.
