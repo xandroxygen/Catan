@@ -124,8 +124,8 @@ public class Model {
      *
      * @param json
      */
-    void updateModel(json: json){
-        return null;
+    void updateModel(json json){
+        return;
     }
     /**
      * Checks whether the player can place a city.
@@ -135,7 +135,7 @@ public class Model {
      * @return result
      */
     boolean canPlaceCity(int playerId){
-        return null;
+        return false;
     }
 
     /**
@@ -147,7 +147,7 @@ public class Model {
      * @return result
      */
     boolean canPlaceSettlement(int playerId){
-        return null;
+        return false;
     }
 
     /**
@@ -159,7 +159,7 @@ public class Model {
      * @return result
      */
     boolean canPlaceRoad(int playerId){
-        return null;
+        return false;
     }
 
     /**
@@ -305,11 +305,10 @@ public class Model {
     /**
      * Checks whether the player can send a message.
      * @post  The chat contains your message at the end.
-     * @param message the message the player wishes to send.
      * @return
      */
     boolean canRollDice(int playerId){
-        return null;
+        return false;
     }
 
     /**
@@ -318,8 +317,8 @@ public class Model {
      * @param message the message the player wishes to send.
      * @return
      */
-    boolean canSendMessage(int playerId, message : String){
-        return null;
+    boolean canSendMessage(int playerId, String message){
+        return false;
     }
 
     /**
@@ -328,7 +327,7 @@ public class Model {
      * @return result
      */
     boolean canEndTurn(int playerId){
-        return null;
+        return false;
     }
 
     /**
@@ -367,12 +366,12 @@ public class Model {
     }
 
     boolean canGetRolledResourses(int playerId, int diceRoll){
-        return null;
+        return false;
     }
-    void makeTradeOffer(int senderPlayerId, int recieverPlayerId, HashMap<ResourceType, Integer> offer){
-        return null;
+    void makeTradeOffer(int senderPlayerId, int recieverPlayerId, HashMap<shared.definitions.ResourceType, Integer> offer){
+        return;
     }
     boolean acceptTradeOffer(){
-        return null;
+        return false;
     }
 }
