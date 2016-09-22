@@ -47,6 +47,31 @@ public interface IServerProxy {
 	void userLogin(String username, String password);
 	
 	/**
+	 * Creates a new user account & logs the caller into the server as the new user and sets
+	 * their catan.user HTTP cookie.
+	 *
+	 * @pre <pre>
+	 * 	username is not null
+	 * 	password is not null
+	 *  username has not already been taken
+	 * 	</pre>
+	 * 
+	 * @post <pre>
+	 * If username/ password is valid:
+	 * 		1. Server returns an HTTP 200 response message.
+	 * 		2. A new user account is created with the specified username and password.
+	 * 		3. HTTP response headers set catan.cookie to contain identity of the logged in player.
+	 *
+	 * If username/ password is not valid:
+	 *  	1. Server returns 400 error response and body contains an error message.
+	 *  </pre>
+	 * 
+	 * @param username Username of the new player being registered.
+	 * @param password Password that corresponds to the username of new player being registered.
+	 */
+	void userRegister(String username, String password);
+	
+	/**
 	 * Returns information about all of the current games on the server.
 	 *
 	 * @post <pre>
