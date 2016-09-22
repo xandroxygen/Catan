@@ -66,11 +66,11 @@ public class ServerProxy implements IServerProxy {
      */
     @Override
     public void userLogin(String username, String password) {
-    	String url = "/user/login";
+    	String urlExt = "/user/login";
     	
     	String body = "{\"username\"" + username + ",\"password\":" + password + "}";
     	
-    	http.post(url, headers, body);
+    	http.post(urlExt, headers, body);
     }
     
     /**
@@ -98,11 +98,11 @@ public class ServerProxy implements IServerProxy {
 	 */
     @Override
     public void userRegister(String username, String password) {
-    	String url = "/user/register";
+    	String urlExt = "/user/register";
     	
     	String body = "{\"username\"" + username + ",\"password\":" + password + "}";
     	
-    	http.post(url, headers, body);
+    	http.post(urlExt, headers, body);
     }
 
     /**
@@ -144,12 +144,12 @@ public class ServerProxy implements IServerProxy {
      */
     @Override
     public void gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) {
-    	String url = "/games/create";
+    	String urlExt = "/games/create";
     	
     	String body = "{\"randomTiles\"" + randomTiles + ",\"randomNumbers\":" + randomNumbers + ",\"randomPorts\":" + randomPorts
     			+ ",\"name\":" + name + "}";
     	
-    	http.post(url, headers, body);
+    	http.post(urlExt, headers, body);
     }
 
     /**
@@ -177,12 +177,12 @@ public class ServerProxy implements IServerProxy {
      */
     @Override
     public void gamesJoin(int gameID, CatanColor c) {
-    	String url = "/games/join";
+    	String urlExt = "/games/join";
     	String color = c.toString(); //TODO: Make sure color is being correctly converted to a string from "c"
     	
     	String body = "{\"id\"" + gameID + ",\"color\":" + color + "}";
     	
-    	http.post(url, headers, body);
+    	http.post(urlExt, headers, body);
     }
 
     /**
@@ -273,11 +273,13 @@ public class ServerProxy implements IServerProxy {
      */
     @Override
     public void gameAddAI(String aiType) {
-    	String url = "/game/addAI";
+    	String urlExt = "/game/addAI";
+    	
+    	//setHeaders();
     	
     	String body = "{\"AIType\"" + aiType + "}";
     	
-    	http.post(url, headers, body);
+    	http.post(urlExt, headers, body);
     }
 
     /**
