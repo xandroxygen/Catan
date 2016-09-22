@@ -1,11 +1,14 @@
 package client.server;
 
+import client.model.InvalidActionException;
 import org.json.simple.JSONObject;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+
+import java.util.Map;
 
 /**
  * Interface for the Server proxy and Mock proxy.
@@ -214,7 +217,7 @@ public interface IServerProxy {
 	 * @param content The message to send
      * @post the chat box contains the sent message
 	 */
-	void sendChat(String content);
+	void sendChat(String content) throws InvalidActionException;
 	
 	/**
 	 *  A domestic trade is being offered.
@@ -236,7 +239,7 @@ public interface IServerProxy {
      * 		The trade offer is removed
 	 * </pre>
 	 */
-	void acceptTrade(boolean willAccept);
+	void acceptTrade(boolean willAccept) throws InvalidActionException;
 
 	/**
      * @param hand The cards being discarded
@@ -248,9 +251,8 @@ public interface IServerProxy {
      * 		You have more than 7 cards
      * 		You have the resources you are discarding
 	 * </pre>
-     * TODO: Replace Object with correct class
 	 */
-	void discardCards(Object hand);
+	void discardCards(Map<ResourceType, String> hand) throws InvalidActionException;
 
     /**
      * Tell the server that the dice were rolled.
@@ -263,7 +265,7 @@ public interface IServerProxy {
      * 		The status of the client model is 'Rolling'
      * </pre>
      */
-	void rollNumber(int number);
+	void rollNumber(int number) throws InvalidActionException;
 
     /**
      * @param isFree during the setup phase, roads are free
@@ -287,7 +289,7 @@ public interface IServerProxy {
      * 		Longest road has been awarded, if applicable
 	 * </pre>
      */
-	void buildRoad(boolean isFree, EdgeLocation roadLocation );
+	void buildRoad(boolean isFree, EdgeLocation roadLocation ) throws InvalidActionException;
 
     /**
      * @param isFree during the setup phase, settlements are free
@@ -309,7 +311,7 @@ public interface IServerProxy {
      * 		The settlement is at the location on the map
 	 * </pre>
      */
-	void buildSettlement(boolean isFree, VertexLocation vertexLocation);
+	void buildSettlement(boolean isFree, VertexLocation vertexLocation) throws InvalidActionException;
 
     /**
      * @param vertexLocation the new city's location
@@ -329,7 +331,7 @@ public interface IServerProxy {
      * 		You regain 1 settlement
 	 * </pre>
      */
-	void buildCity(VertexLocation vertexLocation);
+	void buildCity(VertexLocation vertexLocation) throws InvalidActionException;
 
 	/**
 	 * Contact another player and offer to trade cards back and forth.
@@ -339,7 +341,7 @@ public interface IServerProxy {
      * @pre You have the resources you are offering
      * @post The trade is offered to the other player
 	 */
-	void offerTrade(Object offer, int receiverIndex);
+	void offerTrade(Object offer, int receiverIndex) throws InvalidActionException;
 	
 	/**
 	 * Used when built on a port, or when trading to the bank.
@@ -359,7 +361,7 @@ public interface IServerProxy {
 	 * 		You have the requested resource.
 	 * </pre>
 	 */
-	void maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource);
+	void maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource) throws InvalidActionException;
 	
 	/**
 	 * Called when a 7 is rolled and the robber is being moved.
@@ -378,7 +380,7 @@ public interface IServerProxy {
      * 		The player being robbed gave you a random resource card.
 	 * </pre>
 	 */
-	void robPlayer(HexLocation location, int victimIndex);
+	void robPlayer(HexLocation location, int victimIndex) throws InvalidActionException;
 
     /**
      * Called at the end of a player's turn.
@@ -387,7 +389,7 @@ public interface IServerProxy {
      * 		It is the next player's turn.
 	 * </pre>
      */
-    void finishTurn();
+    void finishTurn() throws InvalidActionException;
 
     /**
      * Purchase a development card for 1 wheat, 1 sheep, and 1 ore.
@@ -405,7 +407,7 @@ public interface IServerProxy {
      * 		You have spent the required resources
 	 * </pre>
      */
-	void buyDevCard();
+	void buyDevCard() throws InvalidActionException;
 
     /**
      * Play a soldier/knight dev card. Analogous to moving the robber.
@@ -430,7 +432,7 @@ public interface IServerProxy {
      * 		You are not allowed to play non-monument dev cards
 	 * </pre>
      */
-	void playSoldier(HexLocation location, int victimIndex);
+	void playSoldier(HexLocation location, int victimIndex) throws InvalidActionException;
 
 	/**
 	 * Play a Year of Plenty card, and receive 2 free resources.
@@ -449,7 +451,7 @@ public interface IServerProxy {
 	 *
      * @post You have the requested resources and the bank does not.
 	 */
-	void playYearOfPlenty(ResourceType resource1, ResourceType resource2);
+	void playYearOfPlenty(ResourceType resource1, ResourceType resource2) throws InvalidActionException;
 	
 	/**
 	 * Play a Road Building card, and build 2 roads.
@@ -475,7 +477,7 @@ public interface IServerProxy {
      * 		Longest road is awarded, if applicable.
 	 * </pre>
 	 */
-	void playRoadBuilding(EdgeLocation location1, EdgeLocation location2);
+	void playRoadBuilding(EdgeLocation location1, EdgeLocation location2) throws InvalidActionException;
 	
 	/**
 	 * Play a Monopoly card, and collect a specific resource from all other players.
@@ -492,14 +494,14 @@ public interface IServerProxy {
 	 *
      * @post All the players have given you all of their resources of the specified type
 	 */
-	void playMonopoly(ResourceType resource);
+	void playMonopoly(ResourceType resource) throws InvalidActionException;
 	
 	/**
 	 * Play a Monument card, and be awarded a victory point.
      * @pre You have enough monument cards to reach 10 pts and win the game.
      * @post You gained a victory point.
 	 */
-	void playVictoryPoint();
+	void playVictoryPoint() throws InvalidActionException;
 
 	/* END Move API */
 }

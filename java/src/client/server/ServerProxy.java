@@ -1,5 +1,7 @@
 package client.server;
 
+import client.model.InvalidActionException;
+import client.model.Message;
 import org.json.simple.JSONObject;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
@@ -7,22 +9,30 @@ import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Communicates with the server API.
+ * Communicates with the server API, and
  * Keeps track of player and game cookies.
- * Created by Xander on 9/12/2016.
+ * Uses the HTTPOperations class to make post and get calls.
  */
 public class ServerProxy implements IServerProxy {
 
     private HTTPOperations http;
     private Map<String, String> headers;
-    private List<String> gameCookies;
-    private List<String> playerCookies;
+    private Map<String, String> gameCookies;
+    private Map<String, String> playerCookies;
+    private String currentGameCookie;
+    private String currentPlayerCookie;
+    private int currentPlayerId;
+    private String urlExt;
+
+    private static final String EXCEPTION_MESSAGE = "API call failed.";
+
 
     /**
      * Default constructor, sets all values to new objects.
@@ -31,8 +41,9 @@ public class ServerProxy implements IServerProxy {
     public ServerProxy() {
         http = new HTTPOperations("localhost", "8081"); // hard-coded for ease of use
         headers = new HashMap<>();
-        gameCookies = new ArrayList<>();
-        playerCookies = new ArrayList<>();
+        gameCookies = new HashMap<>();
+        playerCookies = new HashMap<>();
+        urlExt = "";
     }
 
     /**
@@ -43,8 +54,36 @@ public class ServerProxy implements IServerProxy {
      */
     @Override
     public void setPlayer(int playerID) {
-
+        currentPlayerId = playerID;
     }
+
+    // --- HELPER FUNCTIONS ---
+    private void setHeaders() {
+        headers.clear();
+
+        String cookies = currentPlayerCookie + "; " + currentGameCookie;
+        headers.put("Cookie", cookies);
+    }
+
+    private void post(String urlExt, Map<String, String> headers, String body) throws InvalidActionException {
+        try {
+            http.post(urlExt, headers, body);
+        }
+        catch (MalformedURLException e) {
+            throw new InvalidActionException(EXCEPTION_MESSAGE);
+        }
+    }
+
+    private void get(String urlExt, Map<String, String> headers) throws InvalidActionException {
+        try {
+            http.get(urlExt, headers);
+        }
+        catch (MalformedURLException e) {
+            throw new InvalidActionException(EXCEPTION_MESSAGE);
+        }
+    }
+
+    // --- NON-MOVE API ---
 
     /**
      * Logs the caller into the server and sets their catan.user HTTP cookie.
@@ -240,8 +279,14 @@ public class ServerProxy implements IServerProxy {
      * @post the chat box contains the sent message
      */
     @Override
-    public void sendChat(String content) {
+    public void sendChat(String content) throws InvalidActionException {
+        urlExt = "/moves/sendChat";
 
+        setHeaders();
+
+        String body = Message.serialize(currentPlayerId, content);
+
+        post(urlExt, headers, body);
     }
 
     /**
@@ -264,8 +309,14 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void acceptTrade(boolean willAccept) {
+    public void acceptTrade(boolean willAccept) throws InvalidActionException {
+        urlExt = "/moves/acceptTrade";
 
+        setHeaders();
+
+        String body = "This will be JSON of type: acceptTrade, playerIndex: currentPlayerId, willAccept: boolean";
+
+        post(urlExt, headers, body);
     }
 
     /**
@@ -277,11 +328,16 @@ public class ServerProxy implements IServerProxy {
      * 		You have more than 7 cards
      * 		You have the resources you are discarding
      * </pre>
-     * TODO: Replace Object with correct class
      */
     @Override
-    public void discardCards(Object hand) {
+    public void discardCards(Map<ResourceType, String> hand) throws InvalidActionException {
+        urlExt = "/moves/discardCards";
 
+        setHeaders();
+
+        String body = "JSON: type: discardCards, playerIndex: currentPlayerId, discardedCards: serialized Hand";
+
+        post(urlExt, headers, body);
     }
 
     /**
@@ -296,8 +352,14 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void rollNumber(int number) {
+    public void rollNumber(int number) throws InvalidActionException {
+        urlExt = "/moves/rollNumber";
 
+        setHeaders();
+
+        String body = "JSON: type: rollNumber, playerIndex: currentPlayerId, number: number";
+
+        post(urlExt, headers, body);
     }
 
     /**
@@ -321,8 +383,14 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void buildRoad(boolean isFree, EdgeLocation roadLocation) {
+    public void buildRoad(boolean isFree, EdgeLocation roadLocation) throws InvalidActionException {
+        urlExt = "/moves/buildRoad";
 
+        setHeaders();
+
+        String body = "JSON: type: buildRoad, playerIndex: currentPlayerId, roadLocation: serialized EdgeLocation, free: boolean";
+
+        post(urlExt, headers, body);
     }
 
     /**
@@ -344,8 +412,14 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void buildSettlement(boolean isFree, VertexLocation vertexLocation) {
+    public void buildSettlement(boolean isFree, VertexLocation vertexLocation) throws InvalidActionException {
+        urlExt = "/moves/buildSettlement";
 
+        setHeaders();
+
+        String body = "JSON: type: buildSettlement, playerIndex: currentPlayerId, vertexLocation: serialized VertexLocation, free: boolean";
+
+        post(urlExt, headers, body);
     }
 
     /**
@@ -365,8 +439,14 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void buildCity(VertexLocation vertexLocation) {
+    public void buildCity(VertexLocation vertexLocation) throws InvalidActionException {
+        urlExt = "/moves/buildCity";
 
+        setHeaders();
+
+        String body = "JSON: type: buildCity, playerIndex: currentPlayerId, vertexLocation: serialized VertexLocation";
+
+        post(urlExt, headers, body);
     }
 
     /**
@@ -378,8 +458,14 @@ public class ServerProxy implements IServerProxy {
      * @post The trade is offered to the other player
      */
     @Override
-    public void offerTrade(Object offer, int receiverIndex) {
+    public void offerTrade(Object offer, int receiverIndex) throws InvalidActionException {
+        urlExt = "/moves/offerTrade";
 
+        setHeaders();
+
+        String body = "JSON: type: offerTrade, playerIndex: currentPlayerId, offer: serialized Hand, receiver: receiverIndex";
+
+        post(urlExt, headers, body);
     }
 
     /**
@@ -400,8 +486,14 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource) {
+    public void maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource) throws InvalidActionException {
+        urlExt = "/moves/maritimeTrade";
 
+        setHeaders();
+
+        String body = "JSON: type: maritimeTrade, playerIndex: currentPlayerId, ratio: ratio, inputResource: inputResource, outputResource: outputResource";
+
+        post(urlExt, headers, body);
     }
 
     /**
@@ -421,8 +513,14 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void robPlayer(HexLocation location, int victimIndex) {
+    public void robPlayer(HexLocation location, int victimIndex) throws InvalidActionException {
+        urlExt = "/moves/robPlayer";
 
+        setHeaders();
+
+        String body = "JSON: type: robPlayer, playerIndex: currentPlayerId, victimIndex: victimIndex, location: serialized HexLocation";
+
+        post(urlExt, headers, body);
     }
 
     /**
@@ -434,8 +532,14 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void finishTurn() {
+    public void finishTurn() throws InvalidActionException {
+        urlExt = "/moves/finishTurn";
 
+        setHeaders();
+
+        String body = "JSON: type: finishTurn, playerIndex: currentPlayerId";
+
+        post(urlExt, headers, body);
     }
 
     /**
@@ -455,8 +559,14 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void buyDevCard() {
+    public void buyDevCard() throws InvalidActionException {
+        urlExt = "/moves/buyDevCard";
 
+        setHeaders();
+
+        String body = "JSON: type: buyDevCard, playerIndex: currentPlayerId";
+
+        post(urlExt, headers, body);
     }
 
     /**
@@ -482,8 +592,14 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void playSoldier(HexLocation location, int victimIndex) {
+    public void playSoldier(HexLocation location, int victimIndex) throws InvalidActionException {
+        urlExt = "/moves/Soldier";
 
+        setHeaders();
+
+        String body = "JSON: type: Soldier, playerIndex: currentPlayerId, victimIndex: victimIndex, location: serialized HexLocation";
+
+        post(urlExt, headers, body);
     }
 
     /**
@@ -503,8 +619,14 @@ public class ServerProxy implements IServerProxy {
      * @post You have the requested resources and the bank does not.
      */
     @Override
-    public void playYearOfPlenty(ResourceType resource1, ResourceType resource2) {
+    public void playYearOfPlenty(ResourceType resource1, ResourceType resource2) throws InvalidActionException {
+        urlExt = "/moves/Year_Of_Plenty";
 
+        setHeaders();
+
+        String body = "JSON: type: Year_Of_Plenty, playerIndex: currentPlayerId, resource1: String(Resource), resource2: String";
+
+        post(urlExt, headers, body);
     }
 
     /**
@@ -531,8 +653,14 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void playRoadBuilding(EdgeLocation location1, EdgeLocation location2) {
+    public void playRoadBuilding(EdgeLocation location1, EdgeLocation location2) throws InvalidActionException {
+        urlExt = "/moves/Road_Building";
 
+        setHeaders();
+
+        String body = "JSON: type: Road_Building, playerIndex: currentPlayerId, spot1: serialized EdgeLocation, spot2: serialized EdgeLocation";
+
+        post(urlExt, headers, body);
     }
 
     /**
@@ -550,7 +678,15 @@ public class ServerProxy implements IServerProxy {
      * @post All the players have given you all of their resources of the specified type
      */
     @Override
-    public void playMonopoly(ResourceType resource) {
+    public void playMonopoly(ResourceType resource) throws InvalidActionException {
+        urlExt = "/moves/Monopoly";
+
+        setHeaders();
+
+        String body = "JSON: type: Monopoly, resource: String, playerIndex: currentPlayerId";
+
+        post(urlExt, headers, body);
+
 
     }
 
@@ -561,7 +697,14 @@ public class ServerProxy implements IServerProxy {
      * @post You gained a victory point.
      */
     @Override
-    public void playVictoryPoint() {
+    public void playVictoryPoint() throws InvalidActionException {
+        urlExt = "/moves/Monument";
+
+        setHeaders();
+
+        String body = "JSON: type: Monument, playerIndex: currentPlayerId";
+
+        post(urlExt, headers, body);
 
     }
 }
