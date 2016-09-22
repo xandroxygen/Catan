@@ -66,7 +66,43 @@ public class ServerProxy implements IServerProxy {
      */
     @Override
     public void userLogin(String username, String password) {
-
+    	String url = "/user/login";
+    	
+    	String body = "{\"username\"" + username + ",\"password\":" + password + "}";
+    	
+    	http.post(url, headers, body);
+    }
+    
+    /**
+	 * Creates a new user account & logs the caller into the server as the new user and sets
+	 * their catan.user HTTP cookie.
+	 *
+	 * @pre <pre>
+	 * 	username is not null
+	 * 	password is not null
+	 *  username has not already been taken
+	 * 	</pre>
+	 * 
+	 * @post <pre>
+	 * If username/ password is valid:
+	 * 		1. Server returns an HTTP 200 response message.
+	 * 		2. A new user account is created with the specified username and password.
+	 * 		3. HTTP response headers set catan.cookie to contain identity of the logged in player.
+	 *
+	 * If username/ password is not valid:
+	 *  	1. Server returns 400 error response and body contains an error message.
+	 *  </pre>
+	 * 
+	 * @param username Username of the new player being registered.
+	 * @param password Password that corresponds to the username of new player being registered.
+	 */
+    @Override
+    public void userRegister(String username, String password) {
+    	String url = "/user/register";
+    	
+    	String body = "{\"username\"" + username + ",\"password\":" + password + "}";
+    	
+    	http.post(url, headers, body);
     }
 
     /**
@@ -108,7 +144,12 @@ public class ServerProxy implements IServerProxy {
      */
     @Override
     public void gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) {
-
+    	String url = "/games/create";
+    	
+    	String body = "{\"randomTiles\"" + randomTiles + ",\"randomNumbers\":" + randomNumbers + ",\"randomPorts\":" + randomPorts
+    			+ ",\"name\":" + name + "}";
+    	
+    	http.post(url, headers, body);
     }
 
     /**
@@ -135,8 +176,13 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void gamesJoin(int gameID, CatanColor color) {
-
+    public void gamesJoin(int gameID, CatanColor c) {
+    	String url = "/games/join";
+    	String color = c.toString(); //TODO: Make sure color is being correctly converted to a string from "c"
+    	
+    	String body = "{\"id\"" + gameID + ",\"color\":" + color + "}";
+    	
+    	http.post(url, headers, body);
     }
 
     /**
@@ -209,6 +255,7 @@ public class ServerProxy implements IServerProxy {
      * Adds an AI player to the current game.
      *
      * @param aiType The AI player to add to the game
+     * 
      * @pre <pre>
      * The caller has previously logged in to the server and joined a game (they have valid catan.user and catan.game HTTP cookies).
      * There is space in the game for another player (the game is not �full�).
@@ -226,7 +273,11 @@ public class ServerProxy implements IServerProxy {
      */
     @Override
     public void gameAddAI(String aiType) {
-
+    	String url = "/game/addAI";
+    	
+    	String body = "{\"AIType\"" + aiType + "}";
+    	
+    	http.post(url, headers, body);
     }
 
     /**
