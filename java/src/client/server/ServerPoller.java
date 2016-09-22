@@ -94,13 +94,19 @@ public class ServerPoller {
 	 * 		1. The server returns an HTTP 400 error message and the response body contains an error message
 	 * </pre>
 	 */
-	private void pollServer() {	}
+	private void pollServer() {	
+		JSONObject result = proxy.gameGetModel(version);
+		boolean existUpdates = checkForUpdates(result);
+		if (existUpdates) {
+			updateModel(result);
+		}
+	}
 
 	/**
 	 * Checks if the JSONObject contains updated data.
      *
      * @pre
-     * data is not nul
+     * data is not null
 	 *
 	 * @post<pre>
 	 * If the JSONObject contains string "true", the model is already up-to-date.
