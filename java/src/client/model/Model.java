@@ -1,6 +1,13 @@
 package client.model;
 
 
+import shared.definitions.ResourceType;
+import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
+import shared.locations.VertexLocation;
+
+import java.util.Map;
+
 
 /**
  * Model Facade Class
@@ -122,56 +129,55 @@ public class Model {
      * 		the model will be updated according to the json passed into the function
      * </pre>
      *
-     * @param json
+     * @param json the Json String being passed in
      */
-    void updateModel(json: json){
-        return null;
-    }
+    void updateModel(String json){ }
     /**
      * Checks whether the player can place a city.
      * @pre It's your turn, The city location is where you currently have a settlement, You have the required resources (2 wheat, 3 ore; 1 city)
      * @post You lost the resources required to build a city (2 wheat, 3 ore; 1 city), The city is on the map at the specified location, You got a settlement back
+     * @param playerId the ID of the player who is requesting the move
      * @param location The location of the city.
      * @return result
      */
-    boolean canPlaceCity(int playerId){
-        return null;
+    boolean canPlaceCity(int playerId, VertexLocation location){
+        return false;
     }
 
     /**
      * Checks whether the player can place a settlement.
      * @pre It's your turn, The settlement location is open, The settlement location is not on water, The settlement location is connected to one of your roads except during setup, You have the required resources (1 wood, 1 brick, 1 wheat, 1 sheep; 1 settlement), The settlement cannot be placed adjacent to another settlement
      * @post You lost the resources required to build a settlement (1 wood, 1 brick, 1 wheat, 1 sheep; 1 settlement), The settlement is on the map at the specified location
+     * @param playerId the ID of the player who is requesting the move
      * @param free Whether or not piece can be built for free.
      * @param location The location of the settlement.
      * @return result
      */
-    boolean canPlaceSettlement(int playerId){
-        return null;
+    boolean canPlaceSettlement(int playerId, boolean free, VertexLocation location){
+        return false;
     }
 
     /**
      * Checks whether the player can place a road.
      * @pre It's your turn, The road location is open, The road location is connected to another road owned by the player, The road location is not on water, You have the required resources (1 wood, 1 brick; 1 road), Setup round: Must be placed by settlement owned by the player with no adjacent road.
      * @post You lost the resources required to build a road (1 wood, 1 brick - 1 road), The road is on the map at the specified location, If applicable, longest road has been awarded to the player with the longest road
+     * @param playerId the ID of the player who is requesting the move
      * @param free Whether or not piece can be built for free.
      * @param location The location of the road.
      * @return result
      */
-    boolean canPlaceRoad(int playerId){
-        return null;
+    boolean canPlaceRoad(int playerId, boolean free, VertexLocation location) {
+        return false;
     }
 
     /**
-     * Checks whether the player can trade with another player
-     * @pre It's your turn, You have the resources you are offering.
-     * @post The trade is offered to the other player (stored in the server model)
-     * @param offer list of Resources, Negative numbers mean you get those cards
-     * @param recipient the playerIndex of the offer recipient.
+     * Checks whether the player can buy a development card.
+     * @pre It's your turn, You have the required resources (1 ore, 1 wheat, 1 sheep), There are dev cards left in the deck.
+     * @post You have a new card; If it is a monument card, it has been added to your old devcard hand, If it is a non­monument card, it has been added to your new devcard hand (unplayable this turn)
      * @return result
      */
     boolean canBuyDevelopmentCard(int playerId){
-        return null;
+        return false;
     }
 
     /**
@@ -179,21 +185,24 @@ public class Model {
      * @pre It's your turn, You have the resources you are offering.
      * @post The trade is offered to the other player (stored in the server model)
      * @param offer list of Resources, Negative numbers mean you get those cards
-     * @param recipient the playerIndex of the offer recipient.
+     * @param recieverPlayerId the playerIndex of the offer recipient.
      * @return result
      */
-    boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId){
-        return null;
+    boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){
+        return false;
     }
 
     /**
-     * Checks whether the player can send a message.
-     * @post  The chat contains your message at the end.
-     * @param message the message the player wishes to send.
-     * @return
+     * Checks whether the player can trade using a port or directly to the bank.
+     * @pre It's your turn, You have the resources you are giving, For ratios less than 4, you have the correct port for the trade
+     * @post The trade has been executed (the offered resources are in the bank, and the requested resource has been received)
+     * @param ratio It must be a 2, 3, or 4.
+     * @param inputResource Type of resource you are giving.
+     * @param outputResource Type of resource you are receiving.
+     * @return result
      */
-    boolean canTradeWithBank(int playerId){
-        return null;
+    boolean canTradeWithBank(int playerId, int ratio, ResourceType inputResource, ResourceType outputResource){
+        return false;
     }
 
     /**
@@ -303,13 +312,12 @@ public class Model {
     }
 
     /**
-     * Checks whether the player can send a message.
-     * @post  The chat contains your message at the end.
-     * @param message the message the player wishes to send.
+     * Checks whether the player can roll the dice
+     * @pre It's their turn, and the model status is ROLLING
      * @return
      */
     boolean canRollDice(int playerId){
-        return null;
+        return false;
     }
 
     /**
@@ -318,8 +326,8 @@ public class Model {
      * @param message the message the player wishes to send.
      * @return
      */
-    boolean canSendMessage(int playerId, message : String){
-        return null;
+    boolean canSendMessage(int playerId, String message){
+        return false;
     }
 
     /**
@@ -328,7 +336,7 @@ public class Model {
      * @return result
      */
     boolean canEndTurn(int playerId){
-        return null;
+        return false;
     }
 
     /**
@@ -353,7 +361,7 @@ public class Model {
      * Authenticates the user
      *
      * @pre <pre>
-     *      The player must be an atherized user
+     *      The player must be an authorized user
      * 	</pre>
      *
      * @post <pre>
@@ -366,13 +374,27 @@ public class Model {
         return false;
     }
 
+    /**
+     * Checks whether the player can get rolled resources.
+     * @param playerId ID of player who needs resources
+     * @param diceRoll the number that was rolled
+     * @return true if there are resources to recieve
+     */
     boolean canGetRolledResourses(int playerId, int diceRoll){
-        return null;
+        return false;
     }
-    void makeTradeOffer(int senderPlayerId, int recieverPlayerId, HashMap<ResourceType, Integer> offer){
-        return null;
-    }
-    boolean acceptTradeOffer(){
-        return null;
-    }
+
+    /**
+     * Make a trade offer to another player. Corresponds to canMakeTradeWithPlayer
+     * @param senderPlayerId Player offering the trade
+     * @param recieverPlayerId Player being offered the trade
+     * @param offer hand of cards to trade
+     */
+    void makeTradeOffer(int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){ }
+
+    /**
+     * Sent by player who has been offered a trade.
+     * @param accept true if the player wants the trade.
+     */
+    void acceptTradeOffer(boolean accept){ }
 }
