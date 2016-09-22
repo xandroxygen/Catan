@@ -29,7 +29,7 @@ public class ServerProxy implements IServerProxy {
      * Also sets host, port, and base URL for the communicator class.
      */
     public ServerProxy() {
-        http = new HTTPOperations("h", "p", "b"); // TODO: change to actual server location
+        http = new HTTPOperations("localhost", "8081"); // hard-coded for ease of use
         headers = new HashMap<>();
         gameCookies = new ArrayList<>();
         playerCookies = new ArrayList<>();
