@@ -8,6 +8,7 @@ import java.util.TimerTask;
 /**
  * Polls the server to check whether a new model exists. If a new model exists, the ServerPoller sends
  * the new data to the Model to update itself.
+ * This class runs on its own thread, extends Timer and uses a TimerTask to stay up to date.
  */
 
 public class ServerPoller {

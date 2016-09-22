@@ -52,5 +52,26 @@ public class HTTPOperations {
     public RequestResponse get(String url, Map<String, String> headers) {
         return null;
     }
+
+
+    /**
+     * Serializes a Java object into a JSON string.
+     * Implementation subject to change.
+     * @param object The object to be serialized
+     * @return a JSON String
+     */
+    public static String serialize(Object object) {
+        return null;
+    }
+
+    /**
+     * Deserializes a JSON String into a Java object.
+     * Implementation subject to change.
+     * @param data the JSON string
+     * @return the JAVA object
+     */
+    public static Object deserialize(String data) {
+        return null;
+    }
 }
 
