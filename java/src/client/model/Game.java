@@ -31,14 +31,14 @@ public class Game {
      * @return
      */
     public boolean canCreateUser(){
-        return false;
+        return playerList.size() < 4;
     }
 
     /**
      * Authenticates the user
      *
      * @pre <pre>
-     *      The player must be an atherized user
+     *      The player must be an authenticated user
      * 	</pre>
      *
      * @post <pre>

@@ -1,6 +1,7 @@
 package client.model;
 
 
+import com.sun.org.apache.xpath.internal.operations.String;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
@@ -13,6 +14,8 @@ import java.util.Map;
  * Model Facade Class
  */
 public class Model {
+    Game game;
+
     /**
      * Updates model class.
      *
@@ -131,7 +134,11 @@ public class Model {
      *
      * @param json the Json String being passed in
      */
-    void updateModel(String json){ }
+    void updateModel(String json){
+        ModelUpdater modelUpdater = new ModelUpdater();
+        modelUpdater.updateModel(json);
+    }
+
     /**
      * Checks whether the player can place a city.
      * @pre It's your turn, The city location is where you currently have a settlement, You have the required resources (2 wheat, 3 ore; 1 city)
@@ -141,6 +148,10 @@ public class Model {
      * @return result
      */
     boolean canPlaceCity(int playerId, VertexLocation location){
+        for (Player tempPlayer  : game.playerList) {
+            if(tempPlayer.getPlayerId() == playerId);
+        }
+        ;
         return false;
     }
 

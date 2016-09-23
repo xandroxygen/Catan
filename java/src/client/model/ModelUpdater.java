@@ -1,6 +1,6 @@
 package client.model;
 
-import org.json.simple.JSONObject;
+import com.sun.org.apache.xpath.internal.operations.String;
 
 /**
  * ModelUpdater class.
@@ -125,7 +125,7 @@ public class ModelUpdater {
 	 *
 	 * @param json 
 	 */
-	public void updateModel(JSONObject json) {
+	public void updateModel(String json) {
 		
 	}
 	
@@ -151,7 +151,7 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updateBank(JSONObject json) {
+	public void updateBank(String json) {
 		
 	}
 	
@@ -188,7 +188,7 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updatePlayer(JSONObject json) {
+	public void updatePlayer(String json) {
 		
 	}
 	
@@ -239,7 +239,7 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updateGame(JSONObject json) {
+	public void updateGame(String json) {
 		
 	}
 	
@@ -298,7 +298,8 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updateMap(JSONObject json) {
+	public void updateMap(String json) {
 		
 	}
+
 }

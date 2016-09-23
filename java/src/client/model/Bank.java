@@ -19,7 +19,7 @@ public class Bank {
      *
      * @pre <pre>
      *      It is the players turn
-     *      The player has not played a development card alreday this turn
+     *      The player has not played a development card already this turn
      *      There are development cards in the bank
      * 	</pre>
      *
@@ -30,7 +30,7 @@ public class Bank {
      * @return
      */
     public boolean canBuyDevelopmentCard(){
-        return false;
+        return developmentCards.size() < 0;
     }
 
 }

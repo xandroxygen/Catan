@@ -22,8 +22,13 @@ public class Player {
 	private HashMap<DevCardType, Integer> playableDevCardHand;
 	private HashMap<DevCardType, Integer> unplayableDevCardHand;
 	private HashMap<PieceType, Integer> piecesAvailable;
-	
+
+	public int getPlayerId() {
+		return playerId;
+	}
+
 	/**
+
 	 * Checks whether the player can place a city.
 	 * @pre It's your turn, The city location is where you currently have a settlement, You have the required resources (2 wheat, 3 ore; 1 city)
 	 * @post You lost the resources required to build a city (2 wheat, 3 ore; 1 city), The city is on the map at the specified location, You got a settlement back
