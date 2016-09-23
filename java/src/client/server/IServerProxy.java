@@ -46,8 +46,9 @@ public interface IServerProxy {
 	 *  
 	 * @param username Username of the player logging in.
 	 * @param password Password that corresponds to the username of player logging in.
+	 * @throws InvalidActionException 
 	 */
-	void userLogin(String username, String password);
+	void userLogin(String username, String password) throws InvalidActionException;
 	
 	/**
 	 * Creates a new user account & logs the caller into the server as the new user and sets
@@ -71,11 +72,13 @@ public interface IServerProxy {
 	 * 
 	 * @param username Username of the new player being registered.
 	 * @param password Password that corresponds to the username of new player being registered.
+	 * @throws InvalidActionException 
 	 */
-	void userRegister(String username, String password);
+	void userRegister(String username, String password) throws InvalidActionException;
 	
 	/**
 	 * Returns information about all of the current games on the server.
+	 * @throws InvalidActionException 
 	 *
 	 * @post <pre>
 	 * 	If the operation succeeds:
@@ -86,7 +89,7 @@ public interface IServerProxy {
 	 * 		1. Server returns 400 error response and body contains an error message.
 	 * 	</pre>
 	 */
-	void gamesList();
+	void gamesList() throws InvalidActionException;
 	
 	/**
 	 * Creates a new game on the server. 
@@ -109,8 +112,9 @@ public interface IServerProxy {
      * @param randomTiles true if the tiles should be randomized, false if they should be preset
      * @param randomNumbers true if the numbers should be randomized, false if they should be preset
      * @param randomPorts true if the ports should be randomized, false if they should be preset
+	 * @throws InvalidActionException 
 	 */
-	void gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts);
+	void gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws InvalidActionException;
 	
 	/**
 	 * Adds the player to the specified game and sets their catan.game cookie.
@@ -136,11 +140,13 @@ public interface IServerProxy {
 	 *
 	 * @param gameID ID of the game to join
 	 * @param color Player color
+	 * @throws InvalidActionException 
 	 */
-	void gamesJoin(int gameID, CatanColor color);
+	void gamesJoin(int gameID, CatanColor color) throws InvalidActionException;
 	
 	/**
 	 * Returns the current state of the game in JSON format.
+	 * @throws InvalidActionException 
 	 * 
 	 * @pre <pre>
 	 * 	1. The caller has previously logged into the server and joined a game (they have valid catan.game and catan.user HTTP cookies)
@@ -156,7 +162,7 @@ public interface IServerProxy {
 	 * 		1. The server returns an HTTP 400 error message and the response body contains an error message
 	 * </pre>
 	 */
-	JSONObject gameGetModel();
+	String gameGetModel() throws InvalidActionException;
 
 	/**
 	 * Returns the current state of the game in JSON format.
@@ -180,8 +186,9 @@ public interface IServerProxy {
 	 *  </pre>
 	 *
 	 * @param version The version number of the model. Used to compare and check if model has been updated.
+	 * @throws InvalidActionException 
 	 */
-	JSONObject gameGetModel(int version);
+	JSONObject gameGetModel(int version) throws InvalidActionException;
 	
 	/**
 	 * <pre>
@@ -216,12 +223,14 @@ public interface IServerProxy {
 	 *  </pre>
 	 *
 	 * @param version The version number of the model. Used to compare and check if model has been updated.
+	 * @throws InvalidActionException 
 	 */
-	JSONObject gameReset();
+	JSONObject gameReset() throws InvalidActionException;
 	
 	
 	/**
 	 * Returns a list of supported AI player types.
+	 * @throws InvalidActionException 
 	 *
 	 * @pre <pre>
 	 * If the operation succeeds
@@ -233,7 +242,7 @@ public interface IServerProxy {
 	 * 		 1. The server returns an HTTP 400 error message and the response body contains an error message
 	 * </pre>
 	 */
-	void gameListAI();
+	void gameListAI() throws InvalidActionException;
 	
 	
 	/**
@@ -256,8 +265,9 @@ public interface IServerProxy {
 	 * </pre>
 	 *
 	 * @param aiType The AI player to add to the game
+	 * @throws InvalidActionException 
 	 */
-	void gameAddAI(String aiType);
+	void gameAddAI(String aiType) throws InvalidActionException;
 
 	/* END Non-move API */
 	

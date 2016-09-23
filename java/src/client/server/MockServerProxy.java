@@ -168,7 +168,7 @@ public class MockServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public JSONObject gameGetModel() {
+    public String gameGetModel() {
 
         return null;
     }

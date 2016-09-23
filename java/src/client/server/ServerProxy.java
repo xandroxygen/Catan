@@ -96,6 +96,15 @@ public class ServerProxy implements IServerProxy {
             //updater.updateModel();
         }
     }
+    
+    private String booleanToString(boolean toConvert) {
+    	if (toConvert) {
+    		return "true";
+    	}
+    	else {
+    		return "false";
+    	}
+    }
 
     // --- NON-MOVE API ---
 
@@ -118,14 +127,25 @@ public class ServerProxy implements IServerProxy {
      *  </pre>
      */
     @Override
-    public void userLogin(String username, String password) {
-    	String urlExt = "/user/login";
+    public void userLogin(String username, String password) throws InvalidActionException {
+    	if (username != null && password != null) {
+    		String urlExt = "/user/login";
+    		
+    		setHeaders();
+        	
+        	Map<String, String> m = new HashMap<>();
+        	m.put("username", username);
+        	m.put("password", password);
+        	String body = Serializer.serialize(m);
+        	
+        	RequestResponse result = post(urlExt, headers, body);
+        	
+        	
+    	}
+    	else {
+    		// TODO: throw exception
+    	}
     	
-    	//setHeaders(); //TODO: Is this needed here?
-    	
-    	String body = "{\"username\"" + username + ",\"password\":" + password + "}";
-    	
-    	http.post(urlExt, headers, body);
     }
     
     /**
@@ -152,14 +172,18 @@ public class ServerProxy implements IServerProxy {
 	 * @param password Password that corresponds to the username of new player being registered.
 	 */
     @Override
-    public void userRegister(String username, String password) {
-    	String urlExt = "/user/register";
+    public void userRegister(String username, String password) throws InvalidActionException {
     	
-    	//setHeaders(); //TODO: Is this needed here?
-    	
-    	String body = "{\"username\"" + username + ",\"password\":" + password + "}";
-    	
-    	http.post(urlExt, headers, body);
+    	if (username != null && password != null) { //TODO: check that username hasn't been taken
+        	String urlExt = "/user/register";
+        	
+        	Map<String, String> m = new HashMap<>();
+        	m.put("username", username);
+        	m.put("password", password);
+        	String body = Serializer.serialize(m);
+        	
+        	post(urlExt, headers, body);
+    	}
     }
 
     /**
@@ -175,12 +199,14 @@ public class ServerProxy implements IServerProxy {
      * 	</pre>
      */
     @Override
-    public void gamesList() {
+    public void gamesList() throws InvalidActionException {
     	String urlExt = "/games/list";
     	
-    	//setHeaders();
+    	setHeaders();
     	
-    	http.get(urlExt, headers);
+    	RequestResponse result = get(urlExt, headers);
+    	
+    	//return (String)result.getData();
     	
     	
     }
@@ -206,15 +232,22 @@ public class ServerProxy implements IServerProxy {
      * 	</pre>
      */
     @Override
-    public void gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) {
-    	String urlExt = "/games/create";
+    public void gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
+    		throws InvalidActionException {
+    	if (name != null) {
+    		String urlExt = "/games/create";
+        	
+        	setHeaders();
+        	
+        	Map<String, String> m = new HashMap<>();
+        	m.put("randomTiles", booleanToString(randomTiles));
+        	m.put("randomNumbers", booleanToString(randomNumbers));
+        	m.put("randomPorts", booleanToString(randomPorts));
+        	String body = Serializer.serialize(m);
+        	
+        	post(urlExt, headers, body);
+    	}
     	
-    	//setHeaders();
-    	
-    	String body = "{\"randomTiles\"" + randomTiles + ",\"randomNumbers\":" + randomNumbers + ",\"randomPorts\":" + randomPorts
-    			+ ",\"name\":" + name + "}";
-    	
-    	http.post(urlExt, headers, body);
     }
 
     /**
@@ -241,15 +274,18 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void gamesJoin(int gameID, CatanColor c) {
+    public void gamesJoin(int gameID, CatanColor c) throws InvalidActionException {
     	String urlExt = "/games/join";
     	String color = c.toString(); //TODO: Make sure color is being correctly converted to a string from "c"
     	
-    	String body = "{\"id\"" + gameID + ",\"color\":" + color + "}";
+    	Map<String, String> m = new HashMap<>();
+    	m.put("gameID", Integer.toString(gameID));
+    	m.put("color", color);
+    	String body = Serializer.serialize(m);
     	
-    	//setHeaders();
+    	setHeaders();
     	
-    	http.post(urlExt, headers, body);
+    	post(urlExt, headers, body);
     }
 
     /**
@@ -268,14 +304,14 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public JSONObject gameGetModel() {
+    public String gameGetModel() throws InvalidActionException {
     	String urlExt = "/game/model";
     	
-    	//setHeaders();
+    	setHeaders();
     	
-    	RequestResponse result = http.get(urlExt, headers);
+    	RequestResponse result = get(urlExt, headers);
         
-    	return null;
+    	return (String)result.getData();
     }
 
     /**
@@ -300,12 +336,12 @@ public class ServerProxy implements IServerProxy {
      *  </pre>
      */
     @Override
-    public JSONObject gameGetModel(int version) {
+    public JSONObject gameGetModel(int version) throws InvalidActionException {
     	String urlExt = "/game/model?version=" + version;
     	
-    	//setHeaders();
+    	setHeaders();
     	
-    	RequestResponse result = http.get(urlExt, headers);
+    	RequestResponse result = get(urlExt, headers);
         
     	return null;
     }
@@ -344,12 +380,12 @@ public class ServerProxy implements IServerProxy {
 	 *
 	 * @param version The version number of the model. Used to compare and check if model has been updated.
 	 */
-	public JSONObject gameReset() {
+	public JSONObject gameReset() throws InvalidActionException {
 		String urlExt = "/game/reset";
     	
-    	//setHeaders();
+    	setHeaders();
     	
-    	RequestResponse result = http.get(urlExt, headers);
+    	RequestResponse result = get(urlExt, headers);
         
     	return null;
 	}
@@ -368,12 +404,12 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void gameListAI() {
+    public void gameListAI() throws InvalidActionException {
     	String urlExt = "/game/reset";
     	
-    	//setHeaders();
+    	setHeaders();
     	
-    	RequestResponse result = http.get(urlExt, headers);
+    	RequestResponse result = get(urlExt, headers);
     }
 
     /**
@@ -397,14 +433,16 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void gameAddAI(String aiType) {
+    public void gameAddAI(String aiType) throws InvalidActionException {
     	String urlExt = "/game/addAI";
     	
-    	//setHeaders();
+    	setHeaders();
     	
-    	String body = "{\"AIType\"" + aiType + "}";
+    	Map<String, String> m = new HashMap<>();
+    	m.put("AIType", aiType);
+    	String body = Serializer.serialize(m);
     	
-    	http.post(urlExt, headers, body);
+    	post(urlExt, headers, body);
     }
 
     /**
