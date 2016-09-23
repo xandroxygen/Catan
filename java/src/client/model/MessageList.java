@@ -3,9 +3,9 @@ package client.model;
 import java.util.ArrayList;
 
 public class MessageList {
-	private ArrayList<String> messages;
+	private ArrayList<Message> messages;
 
-	public ArrayList<String> getMessages() {
+	public ArrayList<Message> getMessages() {
 		return messages;
 	}
 }

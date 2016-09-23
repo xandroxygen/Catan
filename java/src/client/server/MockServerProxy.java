@@ -1,11 +1,14 @@
 package client.server;
 
+import client.model.InvalidActionException;
 import org.json.simple.JSONObject;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+
+import java.util.Map;
 
 /**
  * Mock server used only for testing.
@@ -325,10 +328,9 @@ public class MockServerProxy implements IServerProxy {
      * 		You have more than 7 cards
      * 		You have the resources you are discarding
      * </pre>
-     * TODO: Replace Object with correct class
      */
     @Override
-    public void discardCards(Object hand) {
+    public void discardCards(Map<ResourceType, String> hand) throws InvalidActionException {
 
     }
 

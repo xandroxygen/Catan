@@ -10,13 +10,13 @@ public class RequestResponse {
     private Exception error;
     private Object data;
 
-    public RequestResponse(Exception error) {
-        hasError = true;
+    public RequestResponse(boolean hasError, Exception error) {
+        this.hasError = hasError;
         this.error = error;
     }
 
-    public RequestResponse(Object data) {
-        hasError = false;
+    public RequestResponse(boolean hasError, Object data) {
+        this.hasError = hasError;
         this.data = data;
     }
 
