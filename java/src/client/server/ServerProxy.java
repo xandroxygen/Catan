@@ -1,7 +1,9 @@
 package client.server;
 
+import client.join.INewGameView;
 import client.model.InvalidActionException;
 import client.model.Message;
+import client.model.ModelUpdater;
 import org.json.simple.JSONObject;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
@@ -30,6 +32,7 @@ public class ServerProxy implements IServerProxy {
     private String currentPlayerCookie;
     private int currentPlayerId;
     private String urlExt;
+    private ModelUpdater updater;
 
     private static final String EXCEPTION_MESSAGE = "API call failed.";
 
@@ -44,6 +47,7 @@ public class ServerProxy implements IServerProxy {
         gameCookies = new HashMap<>();
         playerCookies = new HashMap<>();
         urlExt = "";
+        updater = new ModelUpdater();
     }
 
     /**
@@ -65,21 +69,31 @@ public class ServerProxy implements IServerProxy {
         headers.put("Cookie", cookies);
     }
 
-    private void post(String urlExt, Map<String, String> headers, String body) throws InvalidActionException {
+    private RequestResponse post(String urlExt, Map<String, String> headers, String body) throws InvalidActionException {
         try {
-            http.post(urlExt, headers, body);
+            return http.post(urlExt, headers, body);
         }
         catch (MalformedURLException e) {
             throw new InvalidActionException(EXCEPTION_MESSAGE);
         }
     }
 
-    private void get(String urlExt, Map<String, String> headers) throws InvalidActionException {
+    private RequestResponse get(String urlExt, Map<String, String> headers) throws InvalidActionException {
         try {
-            http.get(urlExt, headers);
+            return http.get(urlExt, headers);
         }
         catch (MalformedURLException e) {
             throw new InvalidActionException(EXCEPTION_MESSAGE);
+        }
+    }
+
+    private void handleMoveResult(RequestResponse result) throws InvalidActionException {
+        if (result.hasError()) {
+            throw new InvalidActionException(EXCEPTION_MESSAGE);
+        }
+        else {
+            String modelJSON = (String) result.getData();
+            //updater.updateModel();
         }
     }
 
@@ -286,7 +300,9 @@ public class ServerProxy implements IServerProxy {
 
         String body = Message.serialize(currentPlayerId, content);
 
-        post(urlExt, headers, body);
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleMoveResult(result);
     }
 
     /**
@@ -359,7 +375,9 @@ public class ServerProxy implements IServerProxy {
 
         String body = "JSON: type: rollNumber, playerIndex: currentPlayerId, number: number";
 
-        post(urlExt, headers, body);
+        RequestResponse result = post(urlExt, headers, body);
+
+
     }
 
     /**

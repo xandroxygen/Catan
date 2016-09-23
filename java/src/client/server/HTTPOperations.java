@@ -31,6 +31,7 @@ public class HTTPOperations {
 
     /**
      * Constructor for the HTTPOperations class.
+     *
      * @param h host of server to talk to
      * @param p port to talk on (usually 8081)
      */
@@ -42,7 +43,8 @@ public class HTTPOperations {
 
     /**
      * GETs data from the server.
-     * @param url REST url to call
+     *
+     * @param url     REST url to call
      * @param headers any headers to pass, including cookies
      * @return a RequestResponse, which is either data or an error
      */
@@ -62,21 +64,20 @@ public class HTTPOperations {
                 InputStream responseBody = connection.getInputStream();
 
                 return new RequestResponse(false, responseToString(responseBody)); // response OK
-            }
-            else {
+            } else {
                 return new RequestResponse(true, "Server returned an error oh noooeee");
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return new RequestResponse(true, e);
         }
     }
 
     /**
      * POSTs data to the server.
-     * @param url REST url to call
+     *
+     * @param url     REST url to call
      * @param headers any headers to pass, including cookies
-     * @param body the body of the data
+     * @param body    the body of the data
      * @return returns a RequestResponse, which is either data or an error
      */
     public RequestResponse post(String url, Map<String, String> headers, String body) throws MalformedURLException {
@@ -99,8 +100,7 @@ public class HTTPOperations {
                 InputStream responseBody = connection.getInputStream();
 
                 return new RequestResponse(false, responseToString(responseBody)); // response OK
-            }
-            else {
+            } else {
                 return new RequestResponse(true, "Server returned an error oh noooeee");
             }
         } catch (IOException e) {
@@ -119,27 +119,6 @@ public class HTTPOperations {
             byteStream.write(buffer, 0, length);
         }
         return byteStream.toString();
-    }
-
-
-    /**
-     * Serializes a Java object into a JSON string.
-     * Implementation subject to change.
-     * @param object The object to be serialized
-     * @return a JSON String
-     */
-    public static String serialize(Object object) {
-        return null;
-    }
-
-    /**
-     * Deserializes a JSON String into a Java object.
-     * Implementation subject to change.
-     * @param data the JSON string
-     * @return the JAVA object
-     */
-    public static Object deserialize(String data) {
-        return null;
     }
 }
 
