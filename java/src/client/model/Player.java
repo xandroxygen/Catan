@@ -22,6 +22,9 @@ public class Player {
 	private HashMap<DevCardType, Integer> playableDevCardHand;
 	private HashMap<DevCardType, Integer> unplayableDevCardHand;
 	private HashMap<PieceType, Integer> piecesAvailable;
+	private List<City> placedCities;
+	private List<Settlement> placedSettlements;
+	private List<Road> placedRoads;
 	
 	/**
 	 * Checks whether the player can place a city.
@@ -31,7 +34,9 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canPlaceCity(VertexLocation location) {
-		return false;
+		return ((Game.getInstance().turnTracker.getCurrentTurn() == playerIndex) && 
+				settlementExists(location) && (resourceHand.get("WHEAT") >= 2) && 
+				(resourceHand.get("ORE") >= 3) && (piecesAvailable.get("CITY") >= 1));
 	}
 	
 	/**
@@ -43,7 +48,10 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canPlaceSettlement(boolean free, VertexLocation location) {
-		return false;
+		return ((Game.getInstance().turnTracker.getCurrentTurn() == playerIndex) && 
+				Map.getInstance().isOpen(location) && (resourceHand.get("WOOD") >= 1) && 
+				(resourceHand.get("BRICK") >= 1) && (resourceHand.get("WHEAT") >= 1) && 
+				(resourceHand.get("SHEEP") >= 1) && (piecesAvailable.get("SETTLEMENT") >= 1));
 	}
 	
 	/**
@@ -238,6 +246,24 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canEndTurn() {
+		return false;
+	}
+	
+	private boolean cityExists(VertexLocation location) {
+		for (City city : placedCities) {
+			if (city.getLocation().equals(location)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean settlementExists(VertexLocation location) {
+		for (Settlement settlement : placedSettlements) {
+			if (settlement.getLocation().equals(location)) {
+				return true;
+			}
+		}
 		return false;
 	}
 	
