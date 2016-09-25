@@ -113,9 +113,10 @@ public interface IServerProxy {
      * @param randomTiles true if the tiles should be randomized, false if they should be preset
      * @param randomNumbers true if the numbers should be randomized, false if they should be preset
      * @param randomPorts true if the ports should be randomized, false if they should be preset
+	 * @return 
 	 * @throws InvalidActionException 
 	 */
-	void gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws InvalidActionException;
+	String gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws InvalidActionException;
 	
 	/**
 	 * Adds the player to the specified game and sets their catan.game cookie.

@@ -119,8 +119,8 @@ public class MockServerProxy implements IServerProxy {
      * 	</pre>
      */
     @Override
-    public void gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) {
-
+    public String gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) {
+    	return null;
     }
 
     /**
