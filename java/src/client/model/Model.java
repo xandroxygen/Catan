@@ -14,7 +14,7 @@ import java.util.Map;
  * Model Facade Class
  */
 public class Model {
-    Game game;
+    private Game game;
 
     /**
      * Updates model class.
@@ -135,6 +135,7 @@ public class Model {
      * @param json the Json String being passed in
      */
     void updateModel(String json){
+        //TODO SKAGGS
         ModelUpdater modelUpdater = new ModelUpdater();
         modelUpdater.updateModel(json);
     }
@@ -148,10 +149,15 @@ public class Model {
      * @return result
      */
     boolean canPlaceCity(int playerId, VertexLocation location){
+        //Player checks if he has the resources to buy a city
         for (Player tempPlayer  : game.playerList) {
-            if(tempPlayer.getPlayerId() == playerId);
+            if(tempPlayer.getPlayerId() == playerId){
+                tempPlayer.canPlaceCity(location);
+            }
         }
-        ;
+        //Verifies if the desired place on the map a valid location
+        game.theMap.canPlaceCity(location);
+        //TODO add stuff here
         return false;
     }
 
@@ -188,6 +194,7 @@ public class Model {
      * @return result
      */
     boolean canBuyDevelopmentCard(int playerId){
+        //TODO SKAGGS
         return false;
     }
 
@@ -213,6 +220,7 @@ public class Model {
      * @return result
      */
     boolean canTradeWithBank(int playerId, int ratio, ResourceType inputResource, ResourceType outputResource){
+        //TODO SKAGGS
         return false;
     }
 
@@ -238,6 +246,7 @@ public class Model {
      * @return result
      */
     public boolean canPlaySoldier(int playerId, HexLocation location, int victimIndex) {
+        //TODO SKAGGS
         return false;
     }
 
@@ -258,6 +267,7 @@ public class Model {
      * @return result
      */
     public boolean canPlayYearOfPlenty(int playerId, ResourceType resource1, ResourceType resource2) {
+        //TODO SKAGGS
         return false;
     }
 
@@ -283,6 +293,7 @@ public class Model {
      * @return result
      */
     public boolean canPlayRoadCard(int playerId, EdgeLocation spot1, EdgeLocation spot2) {
+        //TODO SKAGGS
         return false;
     }
 
@@ -301,6 +312,7 @@ public class Model {
      * @return result
      */
     public boolean canPlayMonopolyCard(int playerId, ResourceType resource) {
+        //TODO SKAGGS
         return false;
     }
 
@@ -319,6 +331,7 @@ public class Model {
      * @return result
      */
     public boolean canPlayMonumentCard(int playerId) {
+        //TODO SKAGGS
         return false;
     }
 
@@ -365,6 +378,7 @@ public class Model {
      * @return
      */
     public boolean canCreateUser(){
+        //TODO Wait
         return false;
     }
 
@@ -382,6 +396,7 @@ public class Model {
      * @return
      */
     public boolean canAuthenticateUser(){
+        //TODO Wait
         return false;
     }
 
@@ -401,11 +416,16 @@ public class Model {
      * @param recieverPlayerId Player being offered the trade
      * @param offer hand of cards to trade
      */
-    void makeTradeOffer(int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){ }
+    void makeTradeOffer(int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){
+        //TODO SKAGGS
+    }
 
     /**
      * Sent by player who has been offered a trade.
      * @param accept true if the player wants the trade.
      */
-    void acceptTradeOffer(boolean accept){ }
+    void acceptTradeOffer(boolean accept){
+        //TODO SKAGGS
+    }
+    //Logic goes in the game
 }

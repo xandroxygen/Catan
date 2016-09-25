@@ -1,10 +1,10 @@
 package client.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Bank Class
@@ -32,5 +32,7 @@ public class Bank {
     public boolean canBuyDevelopmentCard(){
         return developmentCards.size() < 0;
     }
+
+    //TODO create CLASS HashMap<ResourceType, Integer> resourceDeck
 
 }
