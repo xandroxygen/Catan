@@ -282,21 +282,6 @@ public class MockServerProxy implements IServerProxy {
     }
 
     /**
-     * @param hand The cards being discarded
-     * @pre <pre>
-     *      Player is logged in
-     * 		Player has joined a game
-     * 		The status of the client model is 'Discarding'
-     * 		You have more than 7 cards
-     * 		You have the resources you are discarding
-     * </pre>
-     */
-    @Override
-    public void discardCards(Map<ResourceType, String> hand) throws InvalidActionException {
-
-    }
-
-    /**
      * Tell the server that the dice were rolled.
      *
      * @param number the number that was rolled, in the range 2-12
@@ -378,19 +363,6 @@ public class MockServerProxy implements IServerProxy {
      */
     @Override
     public void buildCity(VertexLocation vertexLocation) {
-
-    }
-
-    /**
-     * Contact another player and offer to trade cards back and forth.
-     *
-     * @param offer         Cards you are offering - negative numbers means you receive those cards, positive means you give
-     * @param receiverIndex The index of the recipient of the trade offer
-     * @pre You have the resources you are offering
-     * @post The trade is offered to the other player
-     */
-    @Override
-    public void offerTrade(Object offer, int receiverIndex) {
 
     }
 
@@ -576,4 +548,16 @@ public class MockServerProxy implements IServerProxy {
     public void playVictoryPoint() {
 
     }
+
+	@Override
+	public void discardCards(Map<ResourceType, Integer> hand) throws InvalidActionException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void offerTrade(Map<ResourceType, Integer> offer, int receiverIndex) throws InvalidActionException {
+		// TODO Auto-generated method stub
+		
+	}
 }
