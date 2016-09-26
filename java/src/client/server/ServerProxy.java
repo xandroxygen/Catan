@@ -132,7 +132,7 @@ public class ServerProxy implements IServerProxy {
     	Map<String, String> m = new HashMap<>();
     	m.put("username", username);
     	m.put("password", password);
-    	String body = Serializer.serialize(m);
+    	String body = Serializer.serializeNonMoveCall(m);
     	
     	RequestResponse result = post(urlExt, headers, body); 
     	
@@ -174,7 +174,7 @@ public class ServerProxy implements IServerProxy {
         	Map<String, String> m = new HashMap<>();
         	m.put("username", username);
         	m.put("password", password);
-        	String body = Serializer.serialize(m);
+        	String body = Serializer.serializeNonMoveCall(m);
         	
         	//TODO: Set catan.cookie
         	
@@ -240,7 +240,7 @@ public class ServerProxy implements IServerProxy {
     	m.put("randomTiles", booleanToString(randomTiles));
     	m.put("randomNumbers", booleanToString(randomNumbers));
     	m.put("randomPorts", booleanToString(randomPorts));
-    	String body = Serializer.serialize(m);
+    	String body = Serializer.serializeNonMoveCall(m);
     	
     	RequestResponse result = get(urlExt, headers);
     	if (result.hasError()) {
@@ -282,7 +282,7 @@ public class ServerProxy implements IServerProxy {
     	Map<String, String> m = new HashMap<>();
     	m.put("gameID", Integer.toString(gameID));
     	m.put("color", color);
-    	String body = Serializer.serialize(m);
+    	String body = Serializer.serializeNonMoveCall(m);
     	
     	setHeaders();
     	
@@ -412,7 +412,7 @@ public class ServerProxy implements IServerProxy {
     	
     	Map<String, String> m = new HashMap<>();
     	m.put("AIType", aiType);
-    	String body = Serializer.serialize(m);
+    	String body = Serializer.serializeNonMoveCall(m);
     	
     	RequestResponse result = post(urlExt, headers, body);
     	handleResult(result);

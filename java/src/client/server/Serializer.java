@@ -16,7 +16,7 @@ public class Serializer {
 	 * @param jsonBody the content to be serialized.
 	 * @return the serialized JSON string.
 	 */
-	public static String serialize(Map<String, String> jsonBody) {
+	public static String serializeNonMoveCall(Map<String, String> jsonBody) {
 		JSONObject jo = new JSONObject();
 		for (Map.Entry<String, String> entrySet : jsonBody.entrySet()) {
 			jo.put(entrySet.getKey(), entrySet.getValue());
