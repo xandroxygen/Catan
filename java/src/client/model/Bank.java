@@ -11,8 +11,12 @@ import java.util.HashMap;
  */
 public class Bank {
 
-    public HashMap<ResourceType, Integer> resourseDeck;
-    public ArrayList<DevCardType> developmentCards;
+    private HashMap<ResourceType, Integer> resourseDeck;
+    private ArrayList<DevCardType> developmentCards;
+
+    public HashMap<ResourceType, Integer> getResourseDeck() {
+        return resourseDeck;
+    }
 
     /**
      * checks whether the player can buy a development card

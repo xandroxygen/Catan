@@ -10,8 +10,11 @@ public class Map {
 	private List<Hex> hexList;
 	private int radius;
 	private List<Port> portList;
-	
-	
+
+	public List<Port> getPortList() {
+		return portList;
+	}
+
 	/**
 	 * Checks whether there are resources to be offered to a player.
 	 * @param diceRoll the value rolled by the dice.

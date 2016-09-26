@@ -15,6 +15,11 @@ public class Game {
     public MessageList log;
     public MessageList chat;
     public String winner;
+    public Robber robber;
+
+    public Robber getRobber() {
+        return robber;
+    }
 
     /**
      * checks to see if the game can create a new user

@@ -9,6 +9,8 @@ import shared.locations.VertexLocation;
 
 import java.util.Map;
 
+import static shared.definitions.ResourceType.*;
+
 
 /**
  * Model Facade Class
@@ -149,15 +151,6 @@ public class Model {
      * @return result
      */
     boolean canPlaceCity(int playerId, VertexLocation location){
-        //Player checks if he has the resources to buy a city
-        for (Player tempPlayer  : game.playerList) {
-            if(tempPlayer.getPlayerId() == playerId){
-                tempPlayer.canPlaceCity(location);
-            }
-        }
-        //Verifies if the desired place on the map a valid location
-        game.theMap.canPlaceCity(location);
-        //TODO add stuff here
         return false;
     }
 
@@ -195,7 +188,17 @@ public class Model {
      */
     boolean canBuyDevelopmentCard(int playerId){
         //TODO SKAGGS
-        return false;
+        // Verifies that the Bank has Dev Cards
+        boolean bool = game.bank.canBuyDevelopmentCard();
+        // Verifies that the Player has enough resources
+        if (bool){
+            for (Player tempPlayer  : game.playerList) {
+                if(tempPlayer.getPlayerId() == playerId){
+                    tempPlayer.canBuyDevelopmentCard();
+                }
+            }
+        }
+        return bool;
     }
 
     /**
@@ -221,7 +224,37 @@ public class Model {
      */
     boolean canTradeWithBank(int playerId, int ratio, ResourceType inputResource, ResourceType outputResource){
         //TODO SKAGGS
-        return false;
+        //TODO check the logic on the port calls on the map
+        boolean bool = false;
+        //Verifies that it is the turn of the PlayerId
+        int i = 0;
+        for (Player tempPlayer  : game.playerList) {
+            if(tempPlayer.getPlayerId() == playerId){
+                bool = game.turnTracker.getCurrentTurn() == i;
+                if(bool){
+                    //Verifies that the player has the resources that he wants to trade
+                    bool = tempPlayer.canTradeWithBank();
+                }
+            }
+            i++;
+        }
+        //Verifies that the ratios are correct
+        if(inputResource == WOOD){
+            //TODO ???
+        }
+        else if(inputResource == BRICK){
+            //TODO ???
+        }
+        else if(inputResource == SHEEP){
+            //TODO ???
+        }
+        else if(inputResource == WHEAT){
+            //TODO ???
+        }
+        else if(inputResource == ORE){
+            //TODO ???
+        }
+        return bool;
     }
 
     /**
@@ -247,7 +280,26 @@ public class Model {
      */
     public boolean canPlaySoldier(int playerId, HexLocation location, int victimIndex) {
         //TODO SKAGGS
-        return false;
+        int playerIndex = game.getPlayerIndex();
+        //verify it is the players turn
+        boolean bool = game.isTurn(playerId);
+        //verify the client model status is 'Playing'
+        if (bool){
+            bool = game.turnTracker.getStatus() == GameStatus.Playing;
+        }
+        //verify you have the specific card you want to play in your old dev card hand
+        //and verify you have not yet played a non­monument dev card this turn
+        if(bool){
+            bool = game.playerList.get(playerIndex).canPlaySoldier(location, victimIndex);
+        }
+        //verify The robber is not being kept in the same location
+        if(bool){
+            bool = game.getRobber().getLocation() != location;
+        }
+        //TODO ??? Do you have to rob a player ???
+        //verify If a player is being robbed (i.e., victimIndex != ­1)
+        //verify The player being robbed has resource cards
+        return bool;
     }
 
     /**
@@ -268,7 +320,23 @@ public class Model {
      */
     public boolean canPlayYearOfPlenty(int playerId, ResourceType resource1, ResourceType resource2) {
         //TODO SKAGGS
-        return false;
+        int playerIndex = game.getPlayerIndex();
+        //verify it is the players turn
+        boolean bool = game.isTurn(playerId);
+        //verify the client model status is 'Playing'
+        if (bool){
+            bool = game.turnTracker.getStatus() == GameStatus.Playing;
+        }
+        //verify you have the specific card you want to play in your old dev card hand
+        //and verify you have not yet played a non­monument dev card this turn
+        if(bool){
+            bool = game.playerList.get(playerIndex).canPlayYearOfPlenty(resource1, resource2);
+        }
+        //verify two specified resources are in the bank.
+        if(bool){
+          //TODO ???  bool = game.bank.getResourceDeck()
+        }
+        return bool;
     }
 
     /**
