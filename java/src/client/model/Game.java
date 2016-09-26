@@ -21,6 +21,23 @@ public class Game {
         return robber;
     }
 
+    public boolean isTurn(int playerId){
+        //TODO Skaggs
+        return false;
+    }
+
+    public int getPlayerIndex(int playerId){
+        int i = 0;
+        for (Player tempPlayer  : playerList) {
+            if(tempPlayer.getPlayerId() == playerId){
+                return i;
+            }
+            i++;
+        }
+        //TODO should throw and invalidExceptionError
+        return -1;
+    }
+
     /**
      * checks to see if the game can create a new user
      *

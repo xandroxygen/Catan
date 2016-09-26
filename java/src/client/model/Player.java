@@ -85,6 +85,7 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canPlaySoldier(HexLocation location, int victimIndex) {
+		//TODO SKAGGS
 		return false;
 	}
 	
@@ -105,6 +106,7 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canPlayYearOfPlenty(ResourceType resource1, ResourceType resource2) {
+		//TODO SKAGGS
 		return false;
 	}
 	
@@ -130,6 +132,7 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canPlayRoadCard(EdgeLocation spot1, EdgeLocation spot2) {
+		//TODO SKAGGS
 		return false;
 	}
  	
@@ -148,6 +151,7 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canPlayMonopolyCard(ResourceType resource) {
+		//TODO SKAGGS
 		return false;
 	}
 	
@@ -166,6 +170,7 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canPlayMonumentCard() {
+		//TODO SKAGGS
 		return false;
 	}
 	
@@ -176,6 +181,7 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canBuyDevelopmentCard() {
+		//TODO SKAGGS
 		return false;
 	}
 	
@@ -188,6 +194,20 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canTradeWithPlayer(HashMap<ResourceType, Integer> offer, int recipient) {
+		return false;
+	}
+
+
+	/**
+	 * Checks whether the player can trade using a port or directly to the bank.
+	 * @pre It's your turn, You have the resources you are giving, For ratios less than 4, you have the correct port for the trade
+	 * @post The trade has been executed (the offered resources are in the bank, and the requested resource has been received)
+	 * @param ratio It must be a 2, 3, or 4.
+	 * @param inputResource Type of resource you are giving.
+	 * @return result
+	 */
+	boolean canTradeWithBank(int ratio, ResourceType inputResource){
+		//TODO SKAGGS
 		return false;
 	}
 	

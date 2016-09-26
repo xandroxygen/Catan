@@ -137,7 +137,7 @@ public class Model {
      * @param json the Json String being passed in
      */
     void updateModel(String json){
-        //TODO SKAGGS
+        //TODO wait
         ModelUpdater modelUpdater = new ModelUpdater();
         modelUpdater.updateModel(json);
     }
@@ -188,15 +188,12 @@ public class Model {
      */
     boolean canBuyDevelopmentCard(int playerId){
         //TODO SKAGGS
+        int playerIndex = game.getPlayerIndex(playerId);
         // Verifies that the Bank has Dev Cards
         boolean bool = game.bank.canBuyDevelopmentCard();
         // Verifies that the Player has enough resources
         if (bool){
-            for (Player tempPlayer  : game.playerList) {
-                if(tempPlayer.getPlayerId() == playerId){
-                    tempPlayer.canBuyDevelopmentCard();
-                }
-            }
+            bool = game.playerList.get(playerIndex).canBuyDevelopmentCard();
         }
         return bool;
     }
@@ -224,19 +221,14 @@ public class Model {
      */
     boolean canTradeWithBank(int playerId, int ratio, ResourceType inputResource, ResourceType outputResource){
         //TODO SKAGGS
+        int playerIndex = game.getPlayerIndex(playerId);
         //TODO check the logic on the port calls on the map
-        boolean bool = false;
+        boolean bool;
         //Verifies that it is the turn of the PlayerId
-        int i = 0;
-        for (Player tempPlayer  : game.playerList) {
-            if(tempPlayer.getPlayerId() == playerId){
-                bool = game.turnTracker.getCurrentTurn() == i;
-                if(bool){
-                    //Verifies that the player has the resources that he wants to trade
-                    bool = tempPlayer.canTradeWithBank();
-                }
-            }
-            i++;
+        bool = game.turnTracker.getCurrentTurn() == playerIndex;
+        //Verifies that the player has the resources that he wants to trade
+        if(bool) {
+            bool = game.playerList.get(playerIndex).canTradeWithBank(ratio, inputResource);
         }
         //Verifies that the ratios are correct
         if(inputResource == WOOD){
@@ -280,7 +272,7 @@ public class Model {
      */
     public boolean canPlaySoldier(int playerId, HexLocation location, int victimIndex) {
         //TODO SKAGGS
-        int playerIndex = game.getPlayerIndex();
+        int playerIndex = game.getPlayerIndex(playerId);
         //verify it is the players turn
         boolean bool = game.isTurn(playerId);
         //verify the client model status is 'Playing'
@@ -320,7 +312,7 @@ public class Model {
      */
     public boolean canPlayYearOfPlenty(int playerId, ResourceType resource1, ResourceType resource2) {
         //TODO SKAGGS
-        int playerIndex = game.getPlayerIndex();
+        int playerIndex = game.getPlayerIndex(playerId);
         //verify it is the players turn
         boolean bool = game.isTurn(playerId);
         //verify the client model status is 'Playing'
@@ -362,7 +354,26 @@ public class Model {
      */
     public boolean canPlayRoadCard(int playerId, EdgeLocation spot1, EdgeLocation spot2) {
         //TODO SKAGGS
-        return false;
+        int playerIndex = game.getPlayerIndex(playerId);
+        //verify it is the players turn
+        boolean bool = game.isTurn(playerId);
+        //verify the client model status is 'Playing'
+        if (bool){
+            bool = game.turnTracker.getStatus() == GameStatus.Playing;
+        }
+        //verify you have the specific card you want to play in your old dev card hand
+        //and verify you have not yet played a non­monument dev card this turn
+        if(bool){
+            bool = game.playerList.get(playerIndex).canPlayRoadCard(spot1, spot2);
+        }
+        //verify the first road location (spot1) is connected to one of your roads.
+        //The second road location (spot2) is connected to one of your roads or to the first road location (spot1)
+        //Neither road location is on water
+        //You have at least two unused roads
+        if(bool){
+            //TODO What are the different spots ???
+        }
+        return bool;
     }
 
     /**
@@ -381,7 +392,19 @@ public class Model {
      */
     public boolean canPlayMonopolyCard(int playerId, ResourceType resource) {
         //TODO SKAGGS
-        return false;
+        int playerIndex = game.getPlayerIndex(playerId);
+        //verify it is the players turn
+        boolean bool = game.isTurn(playerId);
+        //verify the client model status is 'Playing'
+        if (bool){
+            bool = game.turnTracker.getStatus() == GameStatus.Playing;
+        }
+        //verify you have the specific card you want to play in your old dev card hand
+        //and verify you have not yet played a non­monument dev card this turn
+        if(bool){
+            bool = game.playerList.get(playerIndex).canPlayMonopolyCard(resource);
+        }
+        return bool;
     }
 
     /**
@@ -400,7 +423,19 @@ public class Model {
      */
     public boolean canPlayMonumentCard(int playerId) {
         //TODO SKAGGS
-        return false;
+        int playerIndex = game.getPlayerIndex(playerId);
+        //verify it is the players turn
+        boolean bool = game.isTurn(playerId);
+        //verify the client model status is 'Playing'
+        if (bool){
+            bool = game.turnTracker.getStatus() == GameStatus.Playing;
+        }
+        //verify you have the specific card you want to play in your old dev card hand
+        //and verify you have not yet played a non­monument dev card this turn
+        if(bool){
+            bool = game.playerList.get(playerIndex).canPlayMonumentCard();
+        }
+        return bool;
     }
 
     /**
@@ -409,6 +444,13 @@ public class Model {
      * @return
      */
     boolean canRollDice(int playerId){
+//        int playerIndex = game.getPlayerIndex(playerId);
+//        //verify it is the players turn
+//        boolean bool = game.isTurn(playerId);
+//        //verify the client model status is 'Playing'
+//        if (bool){
+//            bool = game.turnTracker.getStatus() == GameStatus.Rolling;
+//        }
         return false;
     }
 
@@ -481,10 +523,10 @@ public class Model {
     /**
      * Make a trade offer to another player. Corresponds to canMakeTradeWithPlayer
      * @param senderPlayerId Player offering the trade
-     * @param recieverPlayerId Player being offered the trade
+     * @param receiverPlayerId Player being offered the trade
      * @param offer hand of cards to trade
      */
-    void makeTradeOffer(int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){
+    void makeTradeOffer(int senderPlayerId, int receiverPlayerId, Map<ResourceType, Integer> offer){
         //TODO SKAGGS
     }
 
