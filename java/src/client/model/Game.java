@@ -22,8 +22,8 @@ public class Game {
     }
 
     public boolean isTurn(int playerId){
-        //TODO Skaggs
-        return false;
+        //TODO (I am not sure how getCurrentTurn() is implemented) Is it a playerId or is it an index number?
+        return getPlayerIndex(playerId) == turnTracker.getCurrentTurn();
     }
 
     public int getPlayerIndex(int playerId){

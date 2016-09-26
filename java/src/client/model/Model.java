@@ -2,6 +2,7 @@ package client.model;
 
 
 import com.sun.org.apache.xpath.internal.operations.String;
+import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
@@ -183,11 +184,10 @@ public class Model {
     /**
      * Checks whether the player can buy a development card.
      * @pre It's your turn, You have the required resources (1 ore, 1 wheat, 1 sheep), There are dev cards left in the deck.
-     * @post You have a new card; If it is a monument card, it has been added to your old devcard hand, If it is a non­monument card, it has been added to your new devcard hand (unplayable this turn)
+     * @post You have a new card; If it is a monument card, it has been added to your old devCard hand, If it is a non­monument card, it has been added to your new devcard hand (unplayable this turn)
      * @return result
      */
     boolean canBuyDevelopmentCard(int playerId){
-        //TODO SKAGGS
         int playerIndex = game.getPlayerIndex(playerId);
         // Verifies that the Bank has Dev Cards
         boolean bool = game.bank.canBuyDevelopmentCard();
@@ -220,7 +220,6 @@ public class Model {
      * @return result
      */
     boolean canTradeWithBank(int playerId, int ratio, ResourceType inputResource, ResourceType outputResource){
-        //TODO SKAGGS
         int playerIndex = game.getPlayerIndex(playerId);
         //TODO check the logic on the port calls on the map
         boolean bool;
@@ -271,7 +270,6 @@ public class Model {
      * @return result
      */
     public boolean canPlaySoldier(int playerId, HexLocation location, int victimIndex) {
-        //TODO SKAGGS
         int playerIndex = game.getPlayerIndex(playerId);
         //verify it is the players turn
         boolean bool = game.isTurn(playerId);
@@ -282,9 +280,10 @@ public class Model {
         //verify you have the specific card you want to play in your old dev card hand
         //and verify you have not yet played a non­monument dev card this turn
         if(bool){
-            bool = game.playerList.get(playerIndex).canPlaySoldier(location, victimIndex);
+            bool = game.playerList.get(playerIndex).canPlayDevCard(DevCardType.SOLDIER);
         }
         //verify The robber is not being kept in the same location
+        //TODO I added a Robber to the game because I was fairly certain that is where he should be
         if(bool){
             bool = game.getRobber().getLocation() != location;
         }
@@ -311,7 +310,6 @@ public class Model {
      * @return result
      */
     public boolean canPlayYearOfPlenty(int playerId, ResourceType resource1, ResourceType resource2) {
-        //TODO SKAGGS
         int playerIndex = game.getPlayerIndex(playerId);
         //verify it is the players turn
         boolean bool = game.isTurn(playerId);
@@ -322,7 +320,7 @@ public class Model {
         //verify you have the specific card you want to play in your old dev card hand
         //and verify you have not yet played a non­monument dev card this turn
         if(bool){
-            bool = game.playerList.get(playerIndex).canPlayYearOfPlenty(resource1, resource2);
+            bool = game.playerList.get(playerIndex).canPlayDevCard(DevCardType.YEAR_OF_PLENTY);
         }
         //verify two specified resources are in the bank.
         if(bool){
@@ -353,7 +351,6 @@ public class Model {
      * @return result
      */
     public boolean canPlayRoadCard(int playerId, EdgeLocation spot1, EdgeLocation spot2) {
-        //TODO SKAGGS
         int playerIndex = game.getPlayerIndex(playerId);
         //verify it is the players turn
         boolean bool = game.isTurn(playerId);
@@ -364,7 +361,7 @@ public class Model {
         //verify you have the specific card you want to play in your old dev card hand
         //and verify you have not yet played a non­monument dev card this turn
         if(bool){
-            bool = game.playerList.get(playerIndex).canPlayRoadCard(spot1, spot2);
+            bool = game.playerList.get(playerIndex).canPlayDevCard(DevCardType.ROAD_BUILD);
         }
         //verify the first road location (spot1) is connected to one of your roads.
         //The second road location (spot2) is connected to one of your roads or to the first road location (spot1)
@@ -391,7 +388,6 @@ public class Model {
      * @return result
      */
     public boolean canPlayMonopolyCard(int playerId, ResourceType resource) {
-        //TODO SKAGGS
         int playerIndex = game.getPlayerIndex(playerId);
         //verify it is the players turn
         boolean bool = game.isTurn(playerId);
@@ -402,7 +398,7 @@ public class Model {
         //verify you have the specific card you want to play in your old dev card hand
         //and verify you have not yet played a non­monument dev card this turn
         if(bool){
-            bool = game.playerList.get(playerIndex).canPlayMonopolyCard(resource);
+            bool = game.playerList.get(playerIndex).canPlayDevCard(DevCardType.MONOPOLY);
         }
         return bool;
     }
@@ -422,7 +418,6 @@ public class Model {
      * @return result
      */
     public boolean canPlayMonumentCard(int playerId) {
-        //TODO SKAGGS
         int playerIndex = game.getPlayerIndex(playerId);
         //verify it is the players turn
         boolean bool = game.isTurn(playerId);
@@ -433,7 +428,7 @@ public class Model {
         //verify you have the specific card you want to play in your old dev card hand
         //and verify you have not yet played a non­monument dev card this turn
         if(bool){
-            bool = game.playerList.get(playerIndex).canPlayMonumentCard();
+            bool = game.playerList.get(playerIndex).canPlayDevCard(DevCardType.MONUMENT);
         }
         return bool;
     }
@@ -527,7 +522,7 @@ public class Model {
      * @param offer hand of cards to trade
      */
     void makeTradeOffer(int senderPlayerId, int receiverPlayerId, Map<ResourceType, Integer> offer){
-        //TODO SKAGGS
+        //TODO should be canMakeTradeOffer ???
     }
 
     /**
@@ -535,7 +530,7 @@ public class Model {
      * @param accept true if the player wants the trade.
      */
     void acceptTradeOffer(boolean accept){
-        //TODO SKAGGS
+        //TODO should be canAcceptTradeOffer ???
     }
     //Logic goes in the game
 }

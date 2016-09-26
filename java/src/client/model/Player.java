@@ -28,7 +28,6 @@ public class Player {
 	}
 
 	/**
-
 	 * Checks whether the player can place a city.
 	 * @pre It's your turn, The city location is where you currently have a settlement, You have the required resources (2 wheat, 3 ore; 1 city)
 	 * @post You lost the resources required to build a city (2 wheat, 3 ore; 1 city), The city is on the map at the specified location, You got a settlement back
@@ -62,6 +61,15 @@ public class Player {
 	public boolean canPlaceRoad(boolean free, VertexLocation location) {
 		return false;
 	}
+
+	public boolean canPlayDevCard(DevCardType devCardType) {
+		//TODO assumption (oldDevCardHand = playableDevCardHand)
+		boolean bool = playableDevCardHand.containsKey(devCardType);
+		if(bool){
+			bool = !developmentCardPlayed;
+		}
+		return bool;
+	}
 	
 	/**
 	 * Checks whether you can play a soldier development card
@@ -85,7 +93,7 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canPlaySoldier(HexLocation location, int victimIndex) {
-		//TODO SKAGGS
+		//TODO unnecessary function
 		return false;
 	}
 	
@@ -106,7 +114,7 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canPlayYearOfPlenty(ResourceType resource1, ResourceType resource2) {
-		//TODO SKAGGS
+		//TODO unnecessary function
 		return false;
 	}
 	
@@ -132,7 +140,7 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canPlayRoadCard(EdgeLocation spot1, EdgeLocation spot2) {
-		//TODO SKAGGS
+		//TODO unnecessary function
 		return false;
 	}
  	
@@ -151,7 +159,7 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canPlayMonopolyCard(ResourceType resource) {
-		//TODO SKAGGS
+		//TODO unnecessary function
 		return false;
 	}
 	
@@ -170,19 +178,20 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canPlayMonumentCard() {
-		//TODO SKAGGS
+		//TODO unnecessary function
 		return false;
 	}
 	
 	/**
 	 * Checks whether the player can buy a development card.
 	 * @pre It's your turn, You have the required resources (1 ore, 1 wheat, 1 sheep), There are dev cards left in the deck.
-	 * @post You have a new card; If it is a monument card, it has been added to your old devcard hand, If it is a non­monument card, it has been added to your new devcard hand (unplayable this turn)
+	 * @post You have a new card; If it is a monument card, it has been added to your old devCard hand, If it is a non­monument card, it has been added to your new devcard hand (unplayable this turn)
 	 * @return result
 	 */
 	public boolean canBuyDevelopmentCard() {
-		//TODO SKAGGS
-		return false;
+		return resourceHand.containsKey(ResourceType.ORE) &&
+				resourceHand.containsKey(ResourceType.WHEAT) &&
+				resourceHand.containsKey(ResourceType.SHEEP);
 	}
 	
 	/**
@@ -207,8 +216,7 @@ public class Player {
 	 * @return result
 	 */
 	boolean canTradeWithBank(int ratio, ResourceType inputResource){
-		//TODO SKAGGS
-		return false;
+		return resourceHand.get(inputResource) >= ratio;
 	}
 	
 	/**
