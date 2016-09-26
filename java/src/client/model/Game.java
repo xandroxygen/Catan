@@ -17,7 +17,7 @@ public class Game {
     public String winner;
 
     public boolean isTurn(int playerId){
-        //TODO look for his implementation
+        //TODO look for implementation
         return getPlayerIndex(playerId) == turnTracker.getCurrentTurn();
     }
 

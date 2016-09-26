@@ -14,7 +14,7 @@ public class Bank {
     private HashMap<ResourceType, Integer> resourseDeck;
     private ArrayList<DevCardType> developmentCards;
 
-    public HashMap<ResourceType, Integer> getResourseDeck() {
+    public HashMap<ResourceType, Integer> getResourceDeck() {
         return resourseDeck;
     }
 

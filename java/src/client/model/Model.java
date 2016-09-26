@@ -233,6 +233,11 @@ public class Model {
         //TODO check if the location of the port matches the location of that players city or settlement locations
         if(inputResource == WOOD){
             //TODO ???
+            for(Port port : game.theMap.getPortList()){
+//                for(Player player : game.playerList.get(playerIndex)){
+//
+//                }
+            }
         }
         else if(inputResource == BRICK){
             //TODO ???
@@ -322,10 +327,10 @@ public class Model {
         //verify two specified resources are in the bank.
         if(bool){
             if(resource1 == resource2){
-                bool = game.bank.getResourseDeck().get(resource1) >= 2;
+                bool = game.bank.getResourceDeck().get(resource1) >= 2;
             }else{
-                bool = game.bank.getResourseDeck().get(resource1) >= 1 &&
-                        game.bank.getResourseDeck().get(resource2) >= 1;
+                bool = game.bank.getResourceDeck().get(resource1) >= 1 &&
+                        game.bank.getResourceDeck().get(resource2) >= 1;
             }
         }
         return bool;
@@ -478,8 +483,7 @@ public class Model {
      * @return
      */
     public boolean canCreatePlayer(){
-        //TODO SKAGGS
-        return false;
+        return game.playerList.size() < 4;
     }
 
 //    /**
@@ -503,7 +507,7 @@ public class Model {
      * Checks whether the player can get rolled resources.
      * @param playerId ID of player who needs resources
      * @param diceRoll the number that was rolled
-     * @return true if there are resources to recieve
+     * @return true if there are resources to receive
      */
     boolean canGetRolledResourses(int playerId, int diceRoll){
         return false;
@@ -515,7 +519,7 @@ public class Model {
      * @param receiverPlayerId Player being offered the trade
      * @param offer hand of cards to trade
      */
-    void makeTradeOffer(int senderPlayerId, int receiverPlayerId, Map<ResourceType, Integer> offer){
+    void canMakeTradeOffer(int senderPlayerId, int receiverPlayerId, Map<ResourceType, Integer> offer){
         //TODO should be canMakeTradeOffer !!!
     }
 
@@ -523,7 +527,7 @@ public class Model {
      * Sent by player who has been offered a trade.
      * @param accept true if the player wants the trade.
      */
-    void acceptTradeOffer(boolean accept){
+    void canAcceptTradeOffer(boolean accept){
         //TODO should be canAcceptTradeOffer !!!
     }
     //Logic goes in the game
