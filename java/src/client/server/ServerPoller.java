@@ -1,6 +1,8 @@
 package client.server;
 
 import org.json.simple.JSONObject;
+
+import client.model.InvalidActionException;
 import client.model.ModelUpdater;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -94,7 +96,16 @@ public class ServerPoller {
 	 * 		1. The server returns an HTTP 400 error message and the response body contains an error message
 	 * </pre>
 	 */
-	private void pollServer() {	}
+	private void pollServer() {	
+		try {
+			String result = proxy.gameGetModel(version);
+			if (checkForUpdates(result)) {
+				//modelUpdater.updateModel(result);
+			}
+		} catch (InvalidActionException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Checks if the JSONObject contains updated data.
@@ -110,7 +121,7 @@ public class ServerPoller {
 	 * @param data The JSONObject to check for new data
 	 * @return true if the JSONObject contains new data, otherwise false
 	 */
-	private boolean checkForUpdates(JSONObject data) { return false; }
+	private boolean checkForUpdates(String data) { return false; }
 	
 	/**
 	 * Sends the new JSON data to the Model so the Model can update itself.
