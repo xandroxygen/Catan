@@ -289,7 +289,7 @@ public interface IServerProxy {
      * 		You have the resources you are discarding
 	 * </pre>
 	 */
-	void discardCards(Map<ResourceType, String> hand) throws InvalidActionException;
+	void discardCards(Map<ResourceType, Integer> hand) throws InvalidActionException;
 
     /**
      * Tell the server that the dice were rolled.
@@ -378,7 +378,7 @@ public interface IServerProxy {
      * @pre You have the resources you are offering
      * @post The trade is offered to the other player
 	 */
-	void offerTrade(Object offer, int receiverIndex) throws InvalidActionException;
+	void offerTrade(Map<ResourceType, Integer> offer, int receiverIndex) throws InvalidActionException;
 	
 	/**
 	 * Used when built on a port, or when trading to the bank.
