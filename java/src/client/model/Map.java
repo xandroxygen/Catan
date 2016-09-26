@@ -10,6 +10,11 @@ public class Map {
 	private List<Hex> hexList;
 	private int radius;
 	private List<Port> portList;
+	public Robber robber;
+
+	public Robber getRobber() {
+		return robber;
+	}
 
 	public List<Port> getPortList() {
 		return portList;

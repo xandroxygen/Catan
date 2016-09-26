@@ -15,14 +15,9 @@ public class Game {
     public MessageList log;
     public MessageList chat;
     public String winner;
-    public Robber robber;
-
-    public Robber getRobber() {
-        return robber;
-    }
 
     public boolean isTurn(int playerId){
-        //TODO (I am not sure how getCurrentTurn() is implemented) Is it a playerId or is it an index number?
+        //TODO look for his implementation
         return getPlayerIndex(playerId) == turnTracker.getCurrentTurn();
     }
 
@@ -34,7 +29,7 @@ public class Game {
             }
             i++;
         }
-        //TODO should throw and invalidExceptionError
+        //TODO throw invalidExceptionError
         return -1;
     }
 
@@ -52,7 +47,7 @@ public class Game {
      *
      * @return
      */
-    public boolean canCreateUser(){
+    public boolean canCreatePlayer(){
         return playerList.size() < 4;
     }
 

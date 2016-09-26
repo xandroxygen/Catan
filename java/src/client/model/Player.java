@@ -1,11 +1,12 @@
 package client.model;
-import java.util.HashMap;
-import java.util.List;
-
-import shared.definitions.*;
-import shared.locations.EdgeLocation;
+import shared.definitions.CatanColor;
+import shared.definitions.DevCardType;
+import shared.definitions.PieceType;
+import shared.definitions.ResourceType;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+
+import java.util.HashMap;
 
 /**
  * Player class
@@ -62,8 +63,18 @@ public class Player {
 		return false;
 	}
 
+	/**
+	 * Checks whether you can play a development card
+	 * @pre <pre>
+	 * 		It's your turn
+	 * 		The client model status is 'Playing'
+	 * 		You have the specific card you want to play in your old dev card hand
+	 * 		You have not yet played a non­monument dev card this turn
+	 * 		</pre>
+	 * @param devCardType the type of dev card the player wants to play
+	 * @return result
+	 */
 	public boolean canPlayDevCard(DevCardType devCardType) {
-		//TODO assumption (oldDevCardHand = playableDevCardHand)
 		boolean bool = playableDevCardHand.containsKey(devCardType);
 		if(bool){
 			bool = !developmentCardPlayed;
@@ -71,116 +82,111 @@ public class Player {
 		return bool;
 	}
 	
-	/**
-	 * Checks whether you can play a soldier development card
-	 * @pre <pre>
-	 * 		It's your turn
-	 * 		The client model status is 'Playing'
-	 * 		You have the specific card you want to play in your old dev card hand
-	 * 		You have not yet played a non­monument dev card this turn
-	 * 		The robber is not being kept in the same location
-	 * 		If a player is being robbed (i.e., victimIndex != ­1)
-	 * 		The player being robbed has resource cards
-	 * 		</pre>
-	 * @post <pre>
-	 * 		The robber is in the new location
-	 * 		The player being robbed (if any) gave you one of his resource cards (randomly selected)
-	 * 		If applicable, largest army has been awarded to the player who has played the most soldier cards
-	 * 		You are not allowed to play other development cards during this turn (except for monument cards, which may still be played)
-	 * 		</pre>
-	 * @param location New robber location.
-	 * @param victimIndex The playerIndex of the player you wish to rob, or -1 to rob no one.
-	 * @return result
-	 */
-	public boolean canPlaySoldier(HexLocation location, int victimIndex) {
-		//TODO unnecessary function
-		return false;
-	}
-	
-	/**
-	 * Checks whether you can play a year of plenty card.
-	 * @pre <pre>
-	 * 		It's your turn
-	 * 		The client model status is 'Playing'
-	 * 		You have the specific card you want to play in your old dev card hand
-	 * 		You have not yet played a non­monument dev card this turn
-	 * 		Two specified resources are in the bank.
-	 * 		</pre>
-	 * @post <pre>
-	 * 		You gained the two specified resources
-	 * 		</pre>
-	 * @param resource1 The type of the first resource you'd like to receive
-	 * @param resource2 The type of the second resource you'd like to receive
-	 * @return result
-	 */
-	public boolean canPlayYearOfPlenty(ResourceType resource1, ResourceType resource2) {
-		//TODO unnecessary function
-		return false;
-	}
-	
-	/**
-	 * Checks whether a Road card can be played.
-	 * @pre <pre>
-	 * 		It's your turn
-	 * 		The client model status is 'Playing'
-	 * 		You have the specific card you want to play in your old dev card hand
-	 * 		You have not yet played a non­monument dev card this turn
-	 * 		The first road location (spot1) is connected to one of your roads.
-	 * 		The second road location (spot2) is connected to one of your roads or to the first road location (spot1)
-	 * 		Neither road location is on water
-	 * 		You have at least two unused roads
-	 * 		</pre>
-	 * @post <pre>
-	 * 		You have two fewer unused roads
-	 * 		Two new roads appear on the map at the specified locations
-	 * 		If applicable, longest road has been awarded to the player with the longest road
-	 * 		</pre>
-	 * @param spot1 first edge location of road.
-	 * @param spot2 second edge location of road.
-	 * @return result
-	 */
-	public boolean canPlayRoadCard(EdgeLocation spot1, EdgeLocation spot2) {
-		//TODO unnecessary function
-		return false;
-	}
- 	
-	/**
-	 * Checks whether a Monopoly card can be played.
-	 * @pre <pre>
-	 * 		It's your turn
-	 * 		The client model status is 'Playing'
-	 * 		You have the specific card you want to play in your old dev card hand
-	 * 		You have not yet played a non­monument dev card this turn
-	 * 		</pre>
-	 * @post <pre>
-	 * 		All of the other players have given you all of their resource cards of the specified type
-	 * 		</pre>
-	 * @param resource The type of resource desired from other players.
-	 * @return result
-	 */
-	public boolean canPlayMonopolyCard(ResourceType resource) {
-		//TODO unnecessary function
-		return false;
-	}
-	
-	/**
-	 * Checks whether a Monument card can be played.
-	 * @pre <pre>
-	 * 		It's your turn
-	 * 		The client model status is 'Playing'
-	 * 		You have the specific card you want to play in your old dev card hand
-	 * 		You have not yet played a non­monument dev card this turn
-	 * 		You have enough monument cards to win the game (i.e., reach 10 victory points)
-	 * 		</pre>
-	 * @post <pre>
-	 * 		You gained a victory point
-	 * 		</pre>
-	 * @return result
-	 */
-	public boolean canPlayMonumentCard() {
-		//TODO unnecessary function
-		return false;
-	}
+//	/**
+//	 * Checks whether you can play a soldier development card
+//	 * @pre <pre>
+//	 * 		It's your turn
+//	 * 		The client model status is 'Playing'
+//	 * 		You have the specific card you want to play in your old dev card hand
+//	 * 		You have not yet played a non­monument dev card this turn
+//	 * 		The robber is not being kept in the same location
+//	 * 		If a player is being robbed (i.e., victimIndex != ­1)
+//	 * 		The player being robbed has resource cards
+//	 * 		</pre>
+//	 * @post <pre>
+//	 * 		The robber is in the new location
+//	 * 		The player being robbed (if any) gave you one of his resource cards (randomly selected)
+//	 * 		If applicable, largest army has been awarded to the player who has played the most soldier cards
+//	 * 		You are not allowed to play other development cards during this turn (except for monument cards, which may still be played)
+//	 * 		</pre>
+//	 * @param location New robber location.
+//	 * @param victimIndex The playerIndex of the player you wish to rob, or -1 to rob no one.
+//	 * @return result
+//	 */
+//	public boolean canPlaySoldier(HexLocation location, int victimIndex) {
+//		return false;
+//	}
+//
+//	/**
+//	 * Checks whether you can play a year of plenty card.
+//	 * @pre <pre>
+//	 * 		It's your turn
+//	 * 		The client model status is 'Playing'
+//	 * 		You have the specific card you want to play in your old dev card hand
+//	 * 		You have not yet played a non­monument dev card this turn
+//	 * 		Two specified resources are in the bank.
+//	 * 		</pre>
+//	 * @post <pre>
+//	 * 		You gained the two specified resources
+//	 * 		</pre>
+//	 * @param resource1 The type of the first resource you'd like to receive
+//	 * @param resource2 The type of the second resource you'd like to receive
+//	 * @return result
+//	 */
+//	public boolean canPlayYearOfPlenty(ResourceType resource1, ResourceType resource2) {
+//		return false;
+//	}
+//
+//	/**
+//	 * Checks whether a Road card can be played.
+//	 * @pre <pre>
+//	 * 		It's your turn
+//	 * 		The client model status is 'Playing'
+//	 * 		You have the specific card you want to play in your old dev card hand
+//	 * 		You have not yet played a non­monument dev card this turn
+//	 * 		The first road location (spot1) is connected to one of your roads.
+//	 * 		The second road location (spot2) is connected to one of your roads or to the first road location (spot1)
+//	 * 		Neither road location is on water
+//	 * 		You have at least two unused roads
+//	 * 		</pre>
+//	 * @post <pre>
+//	 * 		You have two fewer unused roads
+//	 * 		Two new roads appear on the map at the specified locations
+//	 * 		If applicable, longest road has been awarded to the player with the longest road
+//	 * 		</pre>
+//	 * @param spot1 first edge location of road.
+//	 * @param spot2 second edge location of road.
+//	 * @return result
+//	 */
+//	public boolean canPlayRoadCard(EdgeLocation spot1, EdgeLocation spot2) {
+//		return false;
+//	}
+//
+//	/**
+//	 * Checks whether a Monopoly card can be played.
+//	 * @pre <pre>
+//	 * 		It's your turn
+//	 * 		The client model status is 'Playing'
+//	 * 		You have the specific card you want to play in your old dev card hand
+//	 * 		You have not yet played a non­monument dev card this turn
+//	 * 		</pre>
+//	 * @post <pre>
+//	 * 		All of the other players have given you all of their resource cards of the specified type
+//	 * 		</pre>
+//	 * @param resource The type of resource desired from other players.
+//	 * @return result
+//	 */
+//	public boolean canPlayMonopolyCard(ResourceType resource) {
+//		return false;
+//	}
+//
+//	/**
+//	 * Checks whether a Monument card can be played.
+//	 * @pre <pre>
+//	 * 		It's your turn
+//	 * 		The client model status is 'Playing'
+//	 * 		You have the specific card you want to play in your old dev card hand
+//	 * 		You have not yet played a non­monument dev card this turn
+//	 * 		You have enough monument cards to win the game (i.e., reach 10 victory points)
+//	 * 		</pre>
+//	 * @post <pre>
+//	 * 		You gained a victory point
+//	 * 		</pre>
+//	 * @return result
+//	 */
+//	public boolean canPlayMonumentCard() {
+//		return false;
+//	}
 	
 	/**
 	 * Checks whether the player can buy a development card.

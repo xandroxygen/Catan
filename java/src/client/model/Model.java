@@ -146,7 +146,7 @@ public class Model {
     /**
      * Checks whether the player can place a city.
      * @pre It's your turn, The city location is where you currently have a settlement, You have the required resources (2 wheat, 3 ore; 1 city)
-     * @post You lost the resources required to build a city (2 wheat, 3 ore; 1 city), The city is on the map at the specified location, You got a settlement back
+     * @post You lost the resources required to build a city (2 wheat, 3 ore, 1 city), The city is on the map at the specified location, You got a settlement back
      * @param playerId the ID of the player who is requesting the move
      * @param location The location of the city.
      * @return result
@@ -230,6 +230,7 @@ public class Model {
             bool = game.playerList.get(playerIndex).canTradeWithBank(ratio, inputResource);
         }
         //Verifies that the ratios are correct
+        //TODO check if the location of the port matches the location of that players city or settlement locations
         if(inputResource == WOOD){
             //TODO ???
         }
@@ -283,13 +284,9 @@ public class Model {
             bool = game.playerList.get(playerIndex).canPlayDevCard(DevCardType.SOLDIER);
         }
         //verify The robber is not being kept in the same location
-        //TODO I added a Robber to the game because I was fairly certain that is where he should be
         if(bool){
-            bool = game.getRobber().getLocation() != location;
+            bool = game.theMap.getRobber().getLocation() != location;
         }
-        //TODO ??? Do you have to rob a player ???
-        //verify If a player is being robbed (i.e., victimIndex != ­1)
-        //verify The player being robbed has resource cards
         return bool;
     }
 
@@ -324,7 +321,12 @@ public class Model {
         }
         //verify two specified resources are in the bank.
         if(bool){
-          //TODO ???  bool = game.bank.getResourceDeck()
+            if(resource1 == resource2){
+                bool = game.bank.getResourseDeck().get(resource1) >= 2;
+            }else{
+                bool = game.bank.getResourseDeck().get(resource1) >= 1 &&
+                        game.bank.getResourseDeck().get(resource2) >= 1;
+            }
         }
         return bool;
     }
@@ -439,13 +441,6 @@ public class Model {
      * @return
      */
     boolean canRollDice(int playerId){
-//        int playerIndex = game.getPlayerIndex(playerId);
-//        //verify it is the players turn
-//        boolean bool = game.isTurn(playerId);
-//        //verify the client model status is 'Playing'
-//        if (bool){
-//            bool = game.turnTracker.getStatus() == GameStatus.Rolling;
-//        }
         return false;
     }
 
@@ -482,28 +477,27 @@ public class Model {
      *
      * @return
      */
-    public boolean canCreateUser(){
-        //TODO Wait
+    public boolean canCreatePlayer(){
+        //TODO SKAGGS
         return false;
     }
 
-    /**
-     * Authenticates the user
-     *
-     * @pre <pre>
-     *      The player must be an authorized user
-     * 	</pre>
-     *
-     * @post <pre>
-     *      returns true to authenticate the user.
-     * </pre>
-     *
-     * @return
-     */
-    public boolean canAuthenticateUser(){
-        //TODO Wait
-        return false;
-    }
+//    /**
+//     * Authenticates the player
+//     *
+//     * @pre <pre>
+//     *      The player must be an authorized user
+//     * 	</pre>
+//     *
+//     * @post <pre>
+//     *      returns true to authenticate the user.
+//     * </pre>
+//     *
+//     * @return
+//     */
+//    public boolean canAuthenticateUser(){
+//        return false;
+//    }
 
     /**
      * Checks whether the player can get rolled resources.
@@ -522,7 +516,7 @@ public class Model {
      * @param offer hand of cards to trade
      */
     void makeTradeOffer(int senderPlayerId, int receiverPlayerId, Map<ResourceType, Integer> offer){
-        //TODO should be canMakeTradeOffer ???
+        //TODO should be canMakeTradeOffer !!!
     }
 
     /**
@@ -530,7 +524,7 @@ public class Model {
      * @param accept true if the player wants the trade.
      */
     void acceptTradeOffer(boolean accept){
-        //TODO should be canAcceptTradeOffer ???
+        //TODO should be canAcceptTradeOffer !!!
     }
     //Logic goes in the game
 }
