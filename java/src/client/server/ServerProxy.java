@@ -11,7 +11,6 @@ import shared.locations.VertexLocation;
 
 import java.net.MalformedURLException;
 import java.util.HashMap;
-import java.util.IntSummaryStatistics;
 import java.util.Map;
 
 /**
@@ -31,7 +30,8 @@ public class ServerProxy implements IServerProxy {
     private String urlExt;
     private ModelUpdater updater;
 
-    private static final String EXCEPTION_MESSAGE = "API call failed.";
+    private static final String EXCEPTION_MESSAGE_CALL = "API call failed.";
+    private static final String EXCEPTION_MESSAGE_RESPONSE = "API response failed.";
 
 
     /**
@@ -71,7 +71,7 @@ public class ServerProxy implements IServerProxy {
             return http.post(urlExt, headers, body);
         }
         catch (MalformedURLException e) {
-            throw new InvalidActionException(EXCEPTION_MESSAGE);
+            throw new InvalidActionException(EXCEPTION_MESSAGE_CALL);
         }
     }
 
@@ -80,16 +80,17 @@ public class ServerProxy implements IServerProxy {
             return http.get(urlExt, headers);
         }
         catch (MalformedURLException e) {
-            throw new InvalidActionException(EXCEPTION_MESSAGE);
+            throw new InvalidActionException(EXCEPTION_MESSAGE_CALL);
         }
     }
 
     private void handleResult(RequestResponse result) throws InvalidActionException {
         if (result.hasError()) {
-            throw new InvalidActionException(EXCEPTION_MESSAGE);
+            throw new InvalidActionException(EXCEPTION_MESSAGE_RESPONSE);
         }
         else {
             String modelJSON = (String)result.getData();
+            // TODO: Do something with this?
         }
     }
     
@@ -202,7 +203,7 @@ public class ServerProxy implements IServerProxy {
     	
     	RequestResponse result = get(urlExt, headers);
     	if (result.hasError()) {
-    		throw new InvalidActionException(EXCEPTION_MESSAGE);
+    		throw new InvalidActionException(EXCEPTION_MESSAGE_CALL);
     	} else {
     		return (String)result.getData();
     	}    	
@@ -243,7 +244,7 @@ public class ServerProxy implements IServerProxy {
     	
     	RequestResponse result = get(urlExt, headers);
     	if (result.hasError()) {
-    		throw new InvalidActionException(EXCEPTION_MESSAGE);
+    		throw new InvalidActionException(EXCEPTION_MESSAGE_CALL);
     	} else {
     		return (String)result.getData();
     	}
@@ -315,7 +316,7 @@ public class ServerProxy implements IServerProxy {
     	
     	RequestResponse result = get(urlExt, headers);
     	if (result.hasError()) {
-    		throw new InvalidActionException(EXCEPTION_MESSAGE);
+    		throw new InvalidActionException(EXCEPTION_MESSAGE_CALL);
     	} else {
     		return (String)result.getData();
     	}
@@ -350,58 +351,11 @@ public class ServerProxy implements IServerProxy {
     	
     	RequestResponse result = get(urlExt, headers);
     	if (result.hasError()) {
-    		throw new InvalidActionException(EXCEPTION_MESSAGE);
+    		throw new InvalidActionException(EXCEPTION_MESSAGE_CALL);
     	} else {
     		return (String)result.getData();
     	} 
     }
-<<<<<<< HEAD
-    
-    /**
-	 * <pre>
-	 * Clears out the command history of the current game.
-	 * 
-	 * For the default games created by the server, this method reverts the game to 
-	 * the state immediately after the initial placement round. For user-created games,
-	 * this method reverts the game to the very beginning (i.e., before the initial
-	 * placement round).
-	 * 
-	 * When a game is reset, the players in the game are maintained.
-	 * 
-	 * This method returns the client model JSON for the game after it has been reset.
-	 * 
-	 * 
-	 * </pre>
-	 *
-	 * @pre <pre>
-	 * 	1. The caller has previously logged into the server and joined a game 
-	 * (they have valid catan.game and catan.user HTTP cookies)
-	 *  </pre>
-	 *
-	 * @post <pre>
-	 * 	If the operation succeeds:
-	 * 		 1. The game's command history has been cleared out
-	 * 		 2. The game's players have NOT been cleared out
-	 * 		 3. The server returns an HTTP 200 success response.
-	 * 		 4. The body contains the game's updated client model JSON
-	 *
-	 *  If the operation fails:
-	 *  	 1. The server returns an HTTP 400 error message and the response body contains an error message
-	 *  </pre>
-	 *
-	 * param version The version number of the model. Used to compare and check if model has been updated.
-	 */
-	public JSONObject gameReset() throws InvalidActionException {
-		String urlExt = "/game/reset";
-    	
-    	setHeaders();
-    	
-    	RequestResponse result = get(urlExt, headers);
-        
-    	return null;
-	}
-=======
->>>>>>> non-move
 
     /**
      * Returns a list of supported AI player types.
@@ -424,7 +378,7 @@ public class ServerProxy implements IServerProxy {
     	
     	RequestResponse result = get(urlExt, headers);
     	if (result.hasError()) {
-    		throw new InvalidActionException(EXCEPTION_MESSAGE);
+    		throw new InvalidActionException(EXCEPTION_MESSAGE_CALL);
     	} else {
     		return (String)result.getData();
     	} 
@@ -522,7 +476,7 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleMoveResult(result);
+        handleResult(result);
     }
 
     /**
@@ -548,7 +502,7 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleMoveResult(result);
+        handleResult(result);
     }
 
     /**
@@ -575,7 +529,7 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleMoveResult(result);
+        handleResult(result);
     }
 
     /**
@@ -612,7 +566,7 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleMoveResult(result);
+        handleResult(result);
     }
 
     /**
@@ -647,7 +601,7 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleMoveResult(result);
+        handleResult(result);
     }
 
     /**
@@ -679,7 +633,7 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleMoveResult(result);
+        handleResult(result);
     }
 
     /**
@@ -704,7 +658,7 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleMoveResult(result);
+        handleResult(result);
     }
 
     /**
@@ -739,7 +693,7 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleMoveResult(result);
+        handleResult(result);
     }
 
     /**
@@ -772,7 +726,7 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleMoveResult(result);
+        handleResult(result);
     }
 
     /**
@@ -795,7 +749,7 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleMoveResult(result);
+        handleResult(result);
     }
 
     /**
@@ -826,7 +780,7 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleMoveResult(result);
+        handleResult(result);
     }
 
     /**
@@ -865,7 +819,7 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleMoveResult(result);
+        handleResult(result);
     }
 
     /**
@@ -898,7 +852,7 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleMoveResult(result);    }
+        handleResult(result);    }
 
     /**
      * Play a Road Building card, and build 2 roads.
@@ -937,7 +891,7 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleMoveResult(result);
+        handleResult(result);
     }
 
     /**
@@ -970,7 +924,7 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleMoveResult(result);
+        handleResult(result);
 
 
     }
@@ -993,7 +947,7 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleMoveResult(result);
+        handleResult(result);
 
     }
 }
