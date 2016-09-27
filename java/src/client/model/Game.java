@@ -1,8 +1,6 @@
 package client.model;
 
 import java.util.ArrayList;
-import java.util.Map;
-
 import shared.definitions.ResourceType;
 import shared.locations.VertexLocation;
 
@@ -99,8 +97,8 @@ public class Game {
     boolean canPlaceSettlement(int playerId, boolean free, VertexLocation location){
     	Player player = this.getPlayerById(playerId);
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
-				theMap.isOpen(location) && (player.getResourceHand().get("WOOD") >= 1) && 
-				(player.getResourceHand().get("BRICK") >= 1) && (player.getResourceHand().get("WHEAT") >= 1) && 
+				theMap.isOpen(location) && (player.getResourceHand().get("WOOD") >= 1) &&
+				(player.getResourceHand().get("BRICK") >= 1) && (player.getResourceHand().get("WHEAT") >= 1) &&
 				(player.getResourceHand().get("SHEEP") >= 1) && (player.getResourceHand().get("SETTLEMENT") >= 1));
     }
 
@@ -128,7 +126,7 @@ public class Game {
      * @param recieverPlayerId the playerIndex of the offer recipient.
      * @return result
      */
-    boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){
+    boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, java.util.Map<ResourceType, Integer> offer){
     	Player player = this.getPlayerById(playerId);
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
 				(player.getResourceHand().get("WOOD") >= 1) && 

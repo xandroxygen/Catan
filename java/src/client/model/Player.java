@@ -1,13 +1,15 @@
 package client.model;
-import java.util.HashMap;
-import java.util.List;
 
-import shared.definitions.*;
-import shared.locations.EdgeLocation;
+import shared.definitions.CatanColor;
+import shared.definitions.DevCardType;
+import shared.definitions.PieceType;
+import shared.definitions.ResourceType;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Player class
@@ -27,11 +29,6 @@ public class Player {
 	private List<City> placedCities;
 	private List<Settlement> placedSettlements;
 	private List<Road> placedRoads;
-
-
-	public int getPlayerId() {
-		return playerId;
-	}
 
 	/**
 	 * Checks whether the player can place a city.

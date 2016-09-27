@@ -151,7 +151,7 @@ public class Model {
      * @return result
      */
     boolean canPlaceCity(int playerId, VertexLocation location){
-        return false; // ME
+        return false;
     }
 
     /**
@@ -232,11 +232,11 @@ public class Model {
         //TODO check if the location of the port matches the location of that players city or settlement locations
         if(inputResource == WOOD){
             //TODO ???
-            for(Port port : game.theMap.getPortList()){
+//            for(Port port : game.theMap.getPortList()){
 //                for(Player player : game.playerList){
 //
 //                }
-            }
+//            }
         }
         else if(inputResource == BRICK){
             //TODO ???
