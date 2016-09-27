@@ -1,6 +1,8 @@
 package client.model;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import shared.definitions.*;
 import shared.locations.EdgeLocation;
@@ -34,9 +36,7 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canPlaceCity(VertexLocation location) {
-		return ((Game.getInstance().turnTracker.getCurrentTurn() == playerIndex) && 
-				settlementExists(location) && (resourceHand.get("WHEAT") >= 2) && 
-				(resourceHand.get("ORE") >= 3) && (piecesAvailable.get("CITY") >= 1));
+		return false;
 	}
 	
 	/**
@@ -48,10 +48,7 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canPlaceSettlement(boolean free, VertexLocation location) {
-		return ((Game.getInstance().turnTracker.getCurrentTurn() == playerIndex) && 
-				Map.getInstance().isOpen(location) && (resourceHand.get("WOOD") >= 1) && 
-				(resourceHand.get("BRICK") >= 1) && (resourceHand.get("WHEAT") >= 1) && 
-				(resourceHand.get("SHEEP") >= 1) && (piecesAvailable.get("SETTLEMENT") >= 1));
+		return false;
 	}
 	
 	/**
@@ -258,7 +255,7 @@ public class Player {
 		return false;
 	}
 	
-	private boolean settlementExists(VertexLocation location) {
+	protected boolean settlementExists(VertexLocation location) {
 		for (Settlement settlement : placedSettlements) {
 			if (settlement.getLocation().equals(location)) {
 				return true;
@@ -266,5 +263,79 @@ public class Player {
 		}
 		return false;
 	}
+	
+	protected boolean hasOfferResources(Map<ResourceType, Integer> offer) {
+		if ((offer.get("WOOD") > 0) && (resourceHand.get("WOOD") <= offer.get("WOOD"))) {
+			return false;
+		}
+		if ((offer.get("BRICK") > 0) && (resourceHand.get("BRICK") <= offer.get("BRICK"))) {
+			return false;
+		}
+		if ((offer.get("SHEEP") > 0) && (resourceHand.get("SHEEP") <= offer.get("SHEEP"))) {
+			return false;
+		}
+		if ((offer.get("WHEAT") > 0) && (resourceHand.get("WHEAT") <= offer.get("WHEAT"))) {
+			return false;
+		}
+		if ((offer.get("ORE") > 0) && (resourceHand.get("ORE") <= offer.get("ORE"))) {
+			return false;
+		}
+		return true;
+	}
+	
+	// GETTERS AND SETTERS
+
+	public String getName() {
+		return name;
+	}
+
+	public CatanColor getColor() {
+		return color;
+	}
+
+	public int getPlayerIndex() {
+		return playerIndex;
+	}
+
+	public int getPlayerId() {
+		return playerId;
+	}
+
+	public boolean isDevelopmentCardPlayed() {
+		return developmentCardPlayed;
+	}
+
+	public int getVictoryPoints() {
+		return victoryPoints;
+	}
+
+	public HashMap<ResourceType, Integer> getResourceHand() {
+		return resourceHand;
+	}
+
+	public HashMap<DevCardType, Integer> getPlayableDevCardHand() {
+		return playableDevCardHand;
+	}
+
+	public HashMap<DevCardType, Integer> getUnplayableDevCardHand() {
+		return unplayableDevCardHand;
+	}
+
+	public HashMap<PieceType, Integer> getPiecesAvailable() {
+		return piecesAvailable;
+	}
+
+	public List<City> getPlacedCities() {
+		return placedCities;
+	}
+
+	public List<Settlement> getPlacedSettlements() {
+		return placedSettlements;
+	}
+
+	public List<Road> getPlacedRoads() {
+		return placedRoads;
+	}
+	
 	
 }

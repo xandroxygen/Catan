@@ -13,6 +13,7 @@ import java.util.Map;
  * Model Facade Class
  */
 public class Model {
+	private Game game;
     /**
      * Updates model class.
      *
@@ -141,7 +142,7 @@ public class Model {
      * @return result
      */
     boolean canPlaceCity(int playerId, VertexLocation location){
-        return false;
+        return false; // ME
     }
 
     /**
@@ -154,7 +155,7 @@ public class Model {
      * @return result
      */
     boolean canPlaceSettlement(int playerId, boolean free, VertexLocation location){
-        return false;
+        return false; // ME
     }
 
     /**
@@ -167,7 +168,7 @@ public class Model {
      * @return result
      */
     boolean canPlaceRoad(int playerId, boolean free, VertexLocation location) {
-        return false;
+        return false; // ME
     }
 
     /**
@@ -189,7 +190,7 @@ public class Model {
      * @return result
      */
     boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){
-        return false;
+        return false; // ME
     }
 
     /**
@@ -317,7 +318,7 @@ public class Model {
      * @return
      */
     boolean canRollDice(int playerId){
-        return false;
+        return false; //ME
     }
 
     /**
@@ -327,7 +328,7 @@ public class Model {
      * @return
      */
     boolean canSendMessage(int playerId, String message){
-        return false;
+        return false; //ME
     }
 
     /**
@@ -336,7 +337,7 @@ public class Model {
      * @return result
      */
     boolean canEndTurn(int playerId){
-        return false;
+        return false; //ME
     }
 
     /**
@@ -381,7 +382,7 @@ public class Model {
      * @return true if there are resources to recieve
      */
     boolean canGetRolledResourses(int playerId, int diceRoll){
-        return false;
+        return false; //ME
     }
 
     /**
