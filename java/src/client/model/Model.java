@@ -234,7 +234,7 @@ public class Model {
         if(inputResource == WOOD){
             //TODO ???
             for(Port port : game.theMap.getPortList()){
-//                for(Player player : game.playerList.get(playerIndex)){
+//                for(Player player : game.playerList){
 //
 //                }
             }
