@@ -1,8 +1,9 @@
 package client.model;
-import shared.definitions.CatanColor;
-import shared.definitions.DevCardType;
-import shared.definitions.PieceType;
-import shared.definitions.ResourceType;
+import java.util.HashMap;
+import java.util.List;
+
+import shared.definitions.*;
+import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
@@ -23,6 +24,10 @@ public class Player {
 	private HashMap<DevCardType, Integer> playableDevCardHand;
 	private HashMap<DevCardType, Integer> unplayableDevCardHand;
 	private HashMap<PieceType, Integer> piecesAvailable;
+	private List<City> placedCities;
+	private List<Settlement> placedSettlements;
+	private List<Road> placedRoads;
+
 
 	public int getPlayerId() {
 		return playerId;
@@ -224,7 +229,7 @@ public class Player {
 	boolean canTradeWithBank(int ratio, ResourceType inputResource){
 		return resourceHand.get(inputResource) >= ratio;
 	}
-	
+
 	/**
 	 * Checks whether the player can trade with the maritime.
 	 * @pre It's your turn, You have the resources you are giving, For ratios less than 4, you have the correct port for the trade
@@ -280,4 +285,96 @@ public class Player {
 		return false;
 	}
 	
+	private boolean cityExists(VertexLocation location) {
+		for (City city : placedCities) {
+			if (city.getLocation().equals(location)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected boolean settlementExists(VertexLocation location) {
+		for (Settlement settlement : placedSettlements) {
+			if (settlement.getLocation().equals(location)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected boolean hasOfferResources(Map<ResourceType, Integer> offer) {
+		if ((offer.get("WOOD") > 0) && (resourceHand.get("WOOD") <= offer.get("WOOD"))) {
+			return false;
+		}
+		if ((offer.get("BRICK") > 0) && (resourceHand.get("BRICK") <= offer.get("BRICK"))) {
+			return false;
+		}
+		if ((offer.get("SHEEP") > 0) && (resourceHand.get("SHEEP") <= offer.get("SHEEP"))) {
+			return false;
+		}
+		if ((offer.get("WHEAT") > 0) && (resourceHand.get("WHEAT") <= offer.get("WHEAT"))) {
+			return false;
+		}
+		if ((offer.get("ORE") > 0) && (resourceHand.get("ORE") <= offer.get("ORE"))) {
+			return false;
+		}
+		return true;
+	}
+
+	// GETTERS AND SETTERS
+
+	public String getName() {
+		return name;
+	}
+
+	public CatanColor getColor() {
+		return color;
+	}
+
+	public int getPlayerIndex() {
+		return playerIndex;
+	}
+
+	public int getPlayerId() {
+		return playerId;
+	}
+
+	public boolean isDevelopmentCardPlayed() {
+		return developmentCardPlayed;
+	}
+
+	public int getVictoryPoints() {
+		return victoryPoints;
+	}
+
+	public HashMap<ResourceType, Integer> getResourceHand() {
+		return resourceHand;
+	}
+
+	public HashMap<DevCardType, Integer> getPlayableDevCardHand() {
+		return playableDevCardHand;
+	}
+
+	public HashMap<DevCardType, Integer> getUnplayableDevCardHand() {
+		return unplayableDevCardHand;
+	}
+
+	public HashMap<PieceType, Integer> getPiecesAvailable() {
+		return piecesAvailable;
+	}
+
+	public List<City> getPlacedCities() {
+		return placedCities;
+	}
+
+	public List<Settlement> getPlacedSettlements() {
+		return placedSettlements;
+	}
+
+	public List<Road> getPlacedRoads() {
+		return placedRoads;
+	}
+
+
 }

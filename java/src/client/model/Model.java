@@ -17,8 +17,7 @@ import static shared.definitions.ResourceType.*;
  * Model Facade Class
  */
 public class Model {
-    private Game game;
-
+	private Game game;
     /**
      * Updates model class.
      *
@@ -152,7 +151,7 @@ public class Model {
      * @return result
      */
     boolean canPlaceCity(int playerId, VertexLocation location){
-        return false;
+        return false; // ME
     }
 
     /**
