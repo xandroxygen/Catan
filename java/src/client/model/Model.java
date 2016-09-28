@@ -230,12 +230,14 @@ public class Model {
         //Verifies that the ratios are correct
         //TODO check if the location of the port matches the location of that players city or settlement locations
         if(inputResource == WOOD){
-            //add stuff here
-//            for(Port port : game.theMap.getPortList()){
-//                for(Player player : game.playerList){
-//
-//                }
-//            }
+            bool = false;
+            //iterate through the ports
+            for(Map.Entry<EdgeLocation, Port> tempPort: game.theMap.getPorts().entrySet()) {
+                if(tempPort.getValue().getResource() == WOOD && !bool) {
+                    bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
+                            game.playerList.get(playerIndex));
+                }
+            }
         }
         else if(inputResource == BRICK){
             //add stuff here

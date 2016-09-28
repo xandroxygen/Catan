@@ -1,23 +1,13 @@
 package client.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
-import shared.locations.EdgeDirection;
-import shared.locations.EdgeLocation;
-import shared.locations.HexLocation;
-import shared.locations.VertexDirection;
-import shared.locations.VertexLocation;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import shared.locations.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Map class.
@@ -29,11 +19,23 @@ public class Map {
 	private HashMap<VertexLocation, Settlement> settlements;
     private HashMap<EdgeLocation, Road> roads;
     private int radius;
-    private HashMap<HexLocation, Port> ports;
+    private HashMap<EdgeLocation, Port> ports;
 
 //    private List<Port> portList;
 
     private Robber robber;
+
+	public HashMap<VertexLocation, City> getCities() {
+		return cities;
+	}
+
+	public HashMap<VertexLocation, Settlement> getSettlements() {
+		return settlements;
+	}
+
+	public HashMap<EdgeLocation, Road> getRoads() {
+		return roads;
+	}
 
 	public Robber getRobber() {
 		return robber;
@@ -43,7 +45,12 @@ public class Map {
 //		return portList;
 //	}
 
-    /**
+
+	public HashMap<EdgeLocation, Port> getPorts() {
+		return ports;
+	}
+
+	/**
      * Constructor for creating Map with JsonObject
      * @param mapJSON
      */
