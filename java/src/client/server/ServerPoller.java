@@ -1,7 +1,13 @@
 package client.server;
 
-import org.json.simple.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import client.model.InvalidActionException;
 import client.model.ModelUpdater;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -14,9 +20,14 @@ import java.util.TimerTask;
 public class ServerPoller {
 	
 	/**
-	 * The number of seconds at which to poll the server for updates.
+	 * The number of milliseconds at which to poll the server for updates.
 	 */
-	private int interval;
+	private final long POLL_INTERVAL = 1000;
+	
+	/**
+	 * The number of milliseconds to delay before executing the timer task
+	 */
+	private final long DELAY = 0;
 	
 	/**
 	 * <p>
@@ -25,12 +36,13 @@ public class ServerPoller {
 	 * by comparing the version numbers.
 	 * </p>
 	 */
-	private int version;
+	private int version = -1;
 	
 	/**
 	 * The proxy to use when polling the server. This will be set externally.
+	 * Could be either a mock proxy or the real server proxy.
 	 */
-	private IServerProxy proxy;
+	private IServerProxy server;
 
 	/**
 	 * The class that does all model updates.
@@ -43,42 +55,36 @@ public class ServerPoller {
      * Will run on it's own thread, independent of the other code.
      * </pre>
      */
-	private Timer timer;
-
-	public ServerPoller() {	}
+	private Timer poller;
 	
 	/**
 	 * 
 	 * @param seconds The interval at which to poll the server for updates
-	 * @param proxy The proxy to use when polling the server.
+	 * @param server The proxy to use when polling the server.
 	 */
-	public ServerPoller(int seconds, IServerProxy proxy) {
-        this.interval = seconds;
-        this.proxy = proxy;
-
-        timer = new Timer();
-        timer.schedule(new PollTask(), interval*1000);
-
+	public ServerPoller(IServerProxy server) {
+        this.server = server;
     }
-
-    /**
-     * Class to independently manage the polling of the server at regular intervals.
-     */
-	private class PollTask extends TimerTask {
-
-        /**
-         * Called at the specified interval until the thread is cancelled.
-         *
-         * @post
-         * Commands will be executed at the specified interval until cancel() is called.
-         */
-		public void run() {
-            pollServer();
-        }
+	
+	/**
+	 * Initiates regularly polling the server for updated models
+	 */
+	public void start() {
+		assert server != null;
+		
+		poller = new Timer(true);
+		poller.scheduleAtFixedRate(new TimerTask() {
+			
+			@Override
+			public void run() {
+				pollServer();
+			}
+			
+		}, DELAY, POLL_INTERVAL);
 	}
 	
 	/**
-	 * Calls the server proxy to retrieve the current model state.
+	 * Calls the server to retrieve the current model state.
 	 *
 	 * @pre <pre>
 	 *     1. proxy is not null
@@ -94,51 +100,81 @@ public class ServerPoller {
 	 * 		1. The server returns an HTTP 400 error message and the response body contains an error message
 	 * </pre>
 	 */
-	private void pollServer() {	}
+	public void pollServer() {	
+		try {
+			String result = server.gameGetModel(version);
+			Gson gson = new Gson();
+			String response = gson.toJson(result);
+			boolean hasChanged = checkForUpdates(response);
+			if (hasChanged) {
+				//modelUpdater.updateModel(gson.toJson(response));
+				updateVersion(response);
+			}
+		} catch (InvalidActionException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Checks if the JSONObject contains updated data.
      *
      * @pre
-     * data is not nul
+     * data is not null
 	 *
 	 * @post<pre>
 	 * If the JSONObject contains string "true", the model is already up-to-date.
      * Otherwise, the model will be sent the new data to update itself.
 	 * </pre>
 	 *
-	 * @param data The JSONObject to check for new data
-	 * @return true if the JSONObject contains new data, otherwise false
+	 * @param data The JSON string to check for new data
+	 * @return true if the JSON contains new data, otherwise false
 	 */
-	private boolean checkForUpdates(JSONObject data) { return false; }
+	public boolean checkForUpdates(String response) { 
+		if(response.equals("true")) {
+			// no updates occurred, the version numbers matched up
+			return false;
+		}
+		else {
+			return true; 
+		}
+	}
 	
 	/**
-	 * Sends the new JSON data to the Model so the Model can update itself.
-	 *
-	 * @pre <pre>
-	 * data is not null
-	 * </pre>
-	 *
-	 * @post <pre>
-	 * The model is updated with the new data.
-	 * </pre>
-	 *
-	 * @param data	The data to send to the model so it can update itself
+	 * Extracts the version number from the server response and assigns it to the 
+	 * version number on the client side.
+	 * 
+	 * @pre response is not null
+	 * 
+	 * @post The local version number is set equal to the version number from the server
+	 * 
+	 * @param response The response from the server containing new model data
 	 */
-	private void updateModel(JSONObject data) {
-        modelUpdater.updateModel(data);
+	public void updateVersion(String response) {
+		assert response != null;
+		
+		JsonObject obj = new JsonParser().parse(response).getAsJsonObject();
+		JsonElement version= obj.get("version");
+		setVersion(version.getAsInt());
 	}
-
-	public void setInterval(int interval) {
-		this.interval = interval;
-	}
+	
+	/**
+     * Stops the poller and sets it to null
+     */
+    public void stop() {
+        poller.cancel();
+        poller = null;
+    }
+    
+    public IServerProxy getProxy() {
+    	return this.server;
+    }
 
 	public void setVersion(int version) {
 		this.version = version;
 	}
 
-	public void setProxy(IServerProxy proxy) {
-		this.proxy = proxy;
+	public void setServer(IServerProxy proxy) {
+		this.server = proxy;
 	}
 
 	public void setModelUpdater(ModelUpdater m) { this.modelUpdater = m; }
