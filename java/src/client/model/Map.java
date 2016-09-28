@@ -21,8 +21,6 @@ public class Map {
     private int radius;
     private HashMap<EdgeLocation, Port> ports;
 
-//    private List<Port> portList;
-
     private Robber robber;
 
 	public HashMap<VertexLocation, City> getCities() {
@@ -40,11 +38,6 @@ public class Map {
 	public Robber getRobber() {
 		return robber;
 	}
-
-//	public List<Port> getPortList() {
-//		return portList;
-//	}
-
 
 	public HashMap<EdgeLocation, Port> getPorts() {
 		return ports;
@@ -90,30 +83,15 @@ public class Map {
 	}
 
 	public boolean hasCityAtLocation(VertexLocation location) {
-		if (cities.get(location) != null) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return cities.get(location) != null;
 	}
 
 	public boolean hasSettlementAtLocation(VertexLocation location) {
-		if (settlements.get(location) != null) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return settlements.get(location) != null;
 	}
 
 	public boolean hasRoadAtLocation(EdgeLocation location) {
-		if (roads.get(location) != null) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return roads.get(location) != null;
 	}
 
 	public boolean hasAdjacentSettlement(VertexLocation location) {
@@ -245,10 +223,7 @@ public class Map {
 	 * @return
 	 */
 	public boolean playerHasRoadAtLocation(EdgeLocation location, Player player) {
-		if (roads.get(location) != null && roads.get(location).getOwnerIndex() == player.getPlayerIndex()) {
-			return true;
-		}
-		return false;
+		return roads.get(location) != null && roads.get(location).getOwnerIndex() == player.getPlayerIndex();
 	}
 
 	/**
