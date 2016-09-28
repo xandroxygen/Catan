@@ -12,7 +12,7 @@ import shared.locations.VertexLocation;
 public class Game {
 
     public ArrayList<Player> playerList;
-    public Map theMap;
+    public client.model.Map theMap;
     public Bank bank;
     public int currentTurnIndex;
     public TurnTracker turnTracker;
@@ -21,7 +21,7 @@ public class Game {
     public String winner;
 
     public boolean isTurn(int playerId){
-        //TODO look for implementation
+        //look for implementation
         return getPlayerIndex(playerId) == turnTracker.getCurrentTurn();
     }
 
@@ -33,7 +33,7 @@ public class Game {
             }
             i++;
         }
-        //TODO throw invalidExceptionError
+        //throw invalidExceptionError();
         return -1;
     }
 
@@ -166,6 +166,7 @@ public class Game {
      */
     boolean canGetRolledResourses(int playerId, int diceRoll){
         // TODO: If piece is on hex with that number, return true.
+        return false;
     }
     
     // MARK: HELPER METHODS

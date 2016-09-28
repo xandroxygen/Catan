@@ -135,7 +135,7 @@ public class ModelUpdater {
 	 *
 	 * @param json 
 	 */
-	public void updateModel(String json) {
+	public void updateModel(JsonObject json) {
 		
 	}
 	
@@ -198,7 +198,7 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updatePlayer(String json) {
+	public void updatePlayer(JsonObject json) {
 		
 	}
 	
@@ -249,8 +249,8 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updateGame(String json) {
-		
+	public void updateGame(JsonObject json) {
+
 	}
 	
 	/**

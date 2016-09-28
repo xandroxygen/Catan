@@ -27,7 +27,7 @@ public class Map {
 	private HashMap<EdgeLocation, Road> roads;
 	private int radius;
 	private List<Port> portList;
-	public Robber robber;
+    private Robber robber;
 
 	public Robber getRobber() {
 		return robber;
@@ -36,9 +36,7 @@ public class Map {
 	public List<Port> getPortList() {
 		return portList;
 	}
-
-	private HashMap<HexLocation, Port> ports;
-	private Robber robber;
+    private HashMap<HexLocation, Port> ports;
 
 
 	public Map(JsonObject mapJSON) {
@@ -75,6 +73,11 @@ public class Map {
 		//if (municipalities.get(location.))
 		return false;
 	}
+
+    public boolean hasRoadAtLocation(EdgeLocation location) {
+        //if (municipalities.get(location.))
+        return false;
+    }
 
 
 	/**

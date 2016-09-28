@@ -3,6 +3,7 @@ package client.model;
 
 import com.sun.org.apache.xpath.internal.operations.String;
 import shared.definitions.DevCardType;
+import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
@@ -136,8 +137,7 @@ public class Model {
      *
      * @param json the Json String being passed in
      */
-    void updateModel(String json){
-        //TODO wait
+    void updateModel(JsonObject json){
         ModelUpdater modelUpdater = new ModelUpdater();
         modelUpdater.updateModel(json);
     }
@@ -374,7 +374,12 @@ public class Model {
         //Neither road location is on water
         //You have at least two unused roads
         if(bool){
-            //TODO What are the different spots ???
+            bool = !game.theMap.hasRoadAtLocation(spot1) && !game.theMap.hasRoadAtLocation(spot2);
+            //TODO The second road location (spot2) is connected to one of your roads or to the first road location (spot1)
+            //TODO Neither road location is on water
+        }
+        if(bool){
+            bool = game.playerList.get(playerIndex).getPiecesAvailable().get(PieceType.ROAD) >= 2;
         }
         return bool;
     }
@@ -518,16 +523,52 @@ public class Model {
      * @param receiverPlayerId Player being offered the trade
      * @param offer hand of cards to trade
      */
-    void canMakeTradeOffer(int senderPlayerId, int receiverPlayerId, Map<ResourceType, Integer> offer){
-        //TODO should be canMakeTradeOffer !!!
+    boolean canMakeTradeOffer(int senderPlayerId, int receiverPlayerId, Map<ResourceType, Integer> offer){
+        int senderPlayerIndex = game.getPlayerIndex(senderPlayerId);
+        int receiverPlayerIndex = game.getPlayerIndex(receiverPlayerId);
+        //Checks to see if it is the players turn
+        boolean bool = game.isTurn(senderPlayerId);
+        //Checks to see if the sender has all resources he is offering
+        if (bool && offer.get(ResourceType.BRICK) > 0){
+            bool = offer.get(ResourceType.BRICK) <= game.playerList.get(senderPlayerIndex).getResourceHand().get(ResourceType.BRICK);
+        }
+        if (bool && offer.get(ResourceType.WOOD) > 0){
+            bool = offer.get(ResourceType.WOOD) <= game.playerList.get(senderPlayerIndex).getResourceHand().get(ResourceType.WOOD);
+        }
+        if (bool && offer.get(ResourceType.WHEAT) > 0){
+            bool = offer.get(ResourceType.WHEAT) <= game.playerList.get(senderPlayerIndex).getResourceHand().get(ResourceType.WHEAT);
+        }
+        if (bool && offer.get(ResourceType.SHEEP) > 0){
+            bool = offer.get(ResourceType.SHEEP) <= game.playerList.get(senderPlayerIndex).getResourceHand().get(ResourceType.SHEEP);
+        }
+        if (bool && offer.get(ResourceType.ORE) > 0){
+            bool = offer.get(ResourceType.ORE) <= game.playerList.get(senderPlayerIndex).getResourceHand().get(ResourceType.ORE);
+        }
+        //Checks to see if the receiver has all resources he is offering
+        if (bool && offer.get(ResourceType.BRICK) < 0){
+            bool = offer.get(ResourceType.BRICK) <= game.playerList.get(receiverPlayerIndex).getResourceHand().get(ResourceType.BRICK);
+        }
+        if (bool && offer.get(ResourceType.WOOD) < 0){
+            bool = offer.get(ResourceType.WOOD) <= game.playerList.get(receiverPlayerIndex).getResourceHand().get(ResourceType.WOOD);
+        }
+        if (bool && offer.get(ResourceType.WHEAT) < 0){
+            bool = offer.get(ResourceType.WHEAT) <= game.playerList.get(receiverPlayerIndex).getResourceHand().get(ResourceType.WHEAT);
+        }
+        if (bool && offer.get(ResourceType.SHEEP) < 0){
+            bool = offer.get(ResourceType.SHEEP) <= game.playerList.get(receiverPlayerIndex).getResourceHand().get(ResourceType.SHEEP);
+        }
+        if (bool && offer.get(ResourceType.ORE) < 0){
+            bool = offer.get(ResourceType.ORE) <= game.playerList.get(receiverPlayerIndex).getResourceHand().get(ResourceType.ORE);
+        }
+        return bool;
     }
 
     /**
      * Sent by player who has been offered a trade.
-     * @param accept true if the player wants the trade.
      */
-    void canAcceptTradeOffer(boolean accept){
-        //TODO should be canAcceptTradeOffer !!!
+    boolean canAcceptTradeOffer(){
+        //TODO there should be a trade offer in the game???
+        return false;
     }
     //Logic goes in the game
 }

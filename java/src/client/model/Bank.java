@@ -37,6 +37,4 @@ public class Bank {
         return developmentCards.size() < 0;
     }
 
-    //TODO create CLASS HashMap<ResourceType, Integer> resourceDeck
-
 }
