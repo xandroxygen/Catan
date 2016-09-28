@@ -12,4 +12,8 @@ public class Road {
 	public EdgeLocation getLocation() {
 		return location.getNormalizedLocation();
 	}
+	
+	public int getOwnerIndex() {
+		return owner;
+	}
 }

@@ -1,5 +1,7 @@
 package shared.locations;
 
+import java.util.ArrayList;
+
 /**
  * Represents the location of an edge on a hex map
  */
@@ -104,6 +106,39 @@ public class EdgeLocation
 			default:
 				assert false;
 				return null;
+		}
+	}
+	
+	public ArrayList<VertexLocation> getNormalizedVertices() {
+		ArrayList<VertexLocation> vertices = new ArrayList<>();
+		switch (dir) {
+			case North:
+				vertices.add(new VertexLocation(hexLoc,VertexDirection.NorthWest).getNormalizedLocation());
+				vertices.add(new VertexLocation(hexLoc,VertexDirection.NorthEast).getNormalizedLocation());
+				return vertices;
+			case NorthEast:
+				vertices.add(new VertexLocation(hexLoc,VertexDirection.NorthEast).getNormalizedLocation());
+				vertices.add(new VertexLocation(hexLoc,VertexDirection.East).getNormalizedLocation());
+				return vertices;
+			case SouthEast:
+				vertices.add(new VertexLocation(hexLoc,VertexDirection.East).getNormalizedLocation());
+				vertices.add(new VertexLocation(hexLoc,VertexDirection.SouthEast).getNormalizedLocation());
+				return vertices;
+			case South:
+				vertices.add(new VertexLocation(hexLoc,VertexDirection.SouthEast).getNormalizedLocation());
+				vertices.add(new VertexLocation(hexLoc,VertexDirection.SouthWest).getNormalizedLocation());
+				return vertices;
+			case SouthWest:
+				vertices.add(new VertexLocation(hexLoc,VertexDirection.SouthWest).getNormalizedLocation());
+				vertices.add(new VertexLocation(hexLoc,VertexDirection.West).getNormalizedLocation());
+				return vertices;
+			case NorthWest:
+				vertices.add(new VertexLocation(hexLoc,VertexDirection.West).getNormalizedLocation());
+				vertices.add(new VertexLocation(hexLoc,VertexDirection.NorthWest).getNormalizedLocation());
+				return vertices;
+			default:
+				return null;
+				
 		}
 	}
 }
