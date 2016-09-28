@@ -246,6 +246,7 @@ public class ServerProxy implements IServerProxy {
     	if (result.hasError()) {
     		throw new InvalidActionException(EXCEPTION_MESSAGE_CALL);
     	} else {
+    		//TODO: convert to json
     		return (String)result.getData();
     	}
     	
