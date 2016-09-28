@@ -48,38 +48,45 @@ public class Map {
      * @param mapJSON
      */
 	public Map(JsonObject mapJSON) {
-		hexes = new HashMap<>();
-		cities = new HashMap<>();
-		settlements = new HashMap<>();
-		roads = new HashMap<>();
-		ports = new HashMap<>();
-		JsonArray hexJSONArray = mapJSON.getAsJsonArray("hexes");
-		for (JsonElement hexElement: hexJSONArray) {
-			Hex hex = new Gson().fromJson(hexElement, Hex.class);
-			hexes.put(hex.getLocation(), hex);
+		try {
+			hexes = new HashMap<>();
+			cities = new HashMap<>();
+			settlements = new HashMap<>();
+			roads = new HashMap<>();
+			ports = new HashMap<>();
+			JsonArray hexJSONArray = mapJSON.getAsJsonArray("hexes");
+			for (JsonElement hexElement: hexJSONArray) {
+				Hex hex = new Gson().fromJson(hexElement, Hex.class);
+				hexes.put(hex.getLocation(), hex);
+			}
+			JsonArray roadsJSON = mapJSON.getAsJsonArray("roads");
+			for (JsonElement roadElement : roadsJSON) {
+				Road road = new Gson().fromJson(roadElement, Road.class);
+				roads.put(road.getLocation(), road);
+			}
+			JsonArray settlementsJSON = mapJSON.getAsJsonArray("settlements");
+			for (JsonElement settlementElement : settlementsJSON) {
+				Settlement settlement = new Gson().fromJson(settlementElement, Settlement.class);
+				settlements.put(settlement.getLocation(), settlement);
+			}
+			JsonArray citiesJSON = mapJSON.getAsJsonArray("cities");
+			for (JsonElement cityElement : citiesJSON) {
+				City city = new Gson().fromJson(cityElement, City.class);
+				cities.put(city.getLocation(), city);
+			}
+			JsonArray portsJSON = mapJSON.getAsJsonArray("ports");
+			for (JsonElement portElement : portsJSON) {
+				Port port = new Gson().fromJson(portElement, Port.class);
+				ports.put(port.getLocation(), port);
+			}
+			JsonObject robberJSON = mapJSON.getAsJsonObject("robber");
+			robber = new Robber(robberJSON.get("x").getAsInt(),robberJSON.get("y").getAsInt());
+			radius = mapJSON.get("radius").getAsInt();
 		}
-		JsonArray roadsJSON = mapJSON.getAsJsonArray("roads");
-		for (JsonElement roadElement : roadsJSON) {
-			Road road = new Gson().fromJson(roadElement, Road.class);
-			roads.put(road.getLocation(), road);
+		catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("No radius in model..");
 		}
-		JsonArray settlementsJSON = mapJSON.getAsJsonArray("settlements");
-		for (JsonElement settlementElement : settlementsJSON) {
-			Settlement settlement = new Gson().fromJson(settlementElement, Settlement.class);
-			settlements.put(settlement.getLocation(), settlement);
-		}
-		JsonArray citiesJSON = mapJSON.getAsJsonArray("cities");
-		for (JsonElement cityElement : citiesJSON) {
-			City city = new Gson().fromJson(cityElement, City.class);
-			cities.put(city.getLocation(), city);
-		}
-		JsonArray portsJSON = mapJSON.getAsJsonArray("ports");
-		for (JsonElement portElement : portsJSON) {
-			Port port = new Gson().fromJson(portElement, Port.class);
-			ports.put(port.getLocation(), port);
-		}
-		radius = mapJSON.getAsJsonObject("radius").getAsInt();
-		robber = new Gson().fromJson(mapJSON.getAsJsonObject("robber"), Robber.class);
 	}
 
 	public boolean hasCityAtLocation(VertexLocation location) {
@@ -378,6 +385,12 @@ public class Map {
 		String json = "{\"resource\":\"wheat\",\"location\":{\"x\":-1,\"y\":2}}";
 		Hex hex = new Gson().fromJson(json, Hex.class);
 		System.out.println(hex.getLocation().getX());
+		
+		//String json2 = "{\"x\": 0,\"y\": -1}";
+		//Robber robber = new Robber
+		//System.out.println(robber.toString());
+		
+
 	}
 
 
