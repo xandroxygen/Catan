@@ -22,10 +22,10 @@ public class Game {
     public Bank bank;
     public int currentTurnIndex;
     public TurnTracker turnTracker;
-    public MessageList log;
-    public MessageList chat;
-    public String winner;
-    public TradeOffer tradeOffer;
+    public ArrayList<Line> log;
+    public ArrayList<Line> chat;
+    public int winner;
+    public int version;
 
     public boolean isTurn(int playerId){
         //look for implementation
@@ -43,11 +43,6 @@ public class Game {
         //throw invalidExceptionError();
         return -1;
     }
-    public ArrayList<Line> log;
-    public ArrayList<Line> chat;
-    public int winner;
-    public int version;
-
 
     public Game(ArrayList<Player> players, Map theMap, Bank bank, JsonObject modelJSON) {
 
@@ -153,17 +148,14 @@ public class Game {
     boolean canPlaceSettlement(int playerId, boolean free, VertexLocation location){
     	Player player = this.getPlayerById(playerId);
     	if (free) {
-    		return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
-    				!theMap.hasSettlementAtLocation(location) && !theMap.hasAdjacentSettlement(location) &&
+    		return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
+    				!theMap.hasSettlementAtLocation(location) && !theMap.hasAdjacentSettlement(location) && 
     				theMap.vertexIsOnPlayerRoad(location, player));
     	}
-    	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
-				theMap.isOpen(location) && (player.getResourceHand().get("WOOD") >= 1) &&
-				(player.getResourceHand().get("BRICK") >= 1) && (player.getResourceHand().get("WHEAT") >= 1) &&
-				(player.getResourceHand().get("SHEEP") >= 1) && (player.getResourceHand().get("SETTLEMENT") >= 1));
-				!theMap.hasSettlementAtLocation(location) && theMap.vertexIsOnPlayerRoad(location, player) &&
-				(player.getResourceHand().get("WOOD") >= 1) && (player.getResourceHand().get("BRICK") >= 1) &&
-				(player.getResourceHand().get("WHEAT") >= 1) && (player.getResourceHand().get("SHEEP") >= 1) &&
+    	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
+				!theMap.hasSettlementAtLocation(location) && theMap.vertexIsOnPlayerRoad(location, player) && 
+				(player.getResourceHand().get("WOOD") >= 1) && (player.getResourceHand().get("BRICK") >= 1) && 
+				(player.getResourceHand().get("WHEAT") >= 1) && (player.getResourceHand().get("SHEEP") >= 1) && 
 				(player.getResourceHand().get("SETTLEMENT") >= 1));
     }
 
