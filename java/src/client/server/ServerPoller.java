@@ -103,11 +103,11 @@ public class ServerPoller {
 	public void pollServer() {	
 		try {
 			String response = server.gameGetModel(version);
-			JsonObject obj = new JsonParser().parse(response).getAsJsonObject();
 			
 			boolean hasChanged = checkForUpdates(response);
 			if (hasChanged) {
-				modelUpdater.updateModel(obj);
+				JsonObject newModel = new JsonParser().parse(response).getAsJsonObject();
+				modelUpdater.updateModel(newModel);
 				//updateVersion(result);
 			}
 		} catch (InvalidActionException e) {
