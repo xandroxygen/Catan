@@ -19,6 +19,7 @@ public class Game {
     public MessageList log;
     public MessageList chat;
     public String winner;
+    public TradeOffer tradeOffer;
 
     public boolean isTurn(int playerId){
         //look for implementation

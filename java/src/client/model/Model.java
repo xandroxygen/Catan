@@ -220,7 +220,6 @@ public class Model {
      */
     boolean canTradeWithBank(int playerId, int ratio, ResourceType inputResource, ResourceType outputResource){
         int playerIndex = game.getPlayerIndex(playerId);
-        //TODO check the logic on the port calls on the map
         boolean bool;
         //Verifies that it is the turn of the PlayerId
         bool = game.turnTracker.getCurrentTurn() == playerIndex;
@@ -231,7 +230,7 @@ public class Model {
         //Verifies that the ratios are correct
         //TODO check if the location of the port matches the location of that players city or settlement locations
         if(inputResource == WOOD){
-            //TODO ???
+            //add stuff here
 //            for(Port port : game.theMap.getPortList()){
 //                for(Player player : game.playerList){
 //
@@ -239,16 +238,16 @@ public class Model {
 //            }
         }
         else if(inputResource == BRICK){
-            //TODO ???
+            //add stuff here
         }
         else if(inputResource == SHEEP){
-            //TODO ???
+            //add stuff here
         }
         else if(inputResource == WHEAT){
-            //TODO ???
+            //add stuff here
         }
         else if(inputResource == ORE){
-            //TODO ???
+            //add stuff here
         }
         return bool;
     }
@@ -566,9 +565,8 @@ public class Model {
     /**
      * Sent by player who has been offered a trade.
      */
-    boolean canAcceptTradeOffer(){
-        //TODO there should be a trade offer in the game???
-        return false;
+    boolean canAcceptTradeOffer(int receiverPlayerId){
+        return game.tradeOffer != null && game.tradeOffer.getOffer() != null && game.tradeOffer.getReceiver() == receiverPlayerId;
     }
     //Logic goes in the game
 }
