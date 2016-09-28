@@ -199,7 +199,7 @@ public class MockServerProxy implements IServerProxy {
     	switch(version){
     		case(0): return testModel1;
     		case(1): return testModel2;
-    		case(3): return testModel3;	// the versions numbers match, the string "true" is returned
+    		case(3): return testModel3;	// the version numbers match, the string "true" is returned
     		default: return testModel1; // this should never be reached
     	}
     }

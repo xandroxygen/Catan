@@ -1,4 +1,4 @@
-package client.server;
+package client.testing;
 
 import static org.junit.Assert.*;
 
@@ -7,6 +7,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import client.server.MockServerProxy;
+import client.server.ServerPoller;
 
 public class ServerPollerTest {
 	MockServerProxy mockProxy;
