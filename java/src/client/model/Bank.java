@@ -16,8 +16,8 @@ import java.util.HashMap;
  */
 public class Bank {
 
-    public HashMap<ResourceType, Integer> resourseDeck;
-    public HashMap<DevCardType, Integer> developmentCards;
+    private HashMap<ResourceType, Integer> resourseDeck;
+    private HashMap<DevCardType, Integer> developmentCards;
 
     public Bank(JsonObject modelJSON) {
     	// Parse resources
@@ -40,8 +40,6 @@ public class Bank {
 		developmentCards.put(DevCardType.YEAR_OF_PLENTY, oldDevCardsJSON.get("yearOfPlenty").getAsInt());
 
     }
-    private HashMap<ResourceType, Integer> resourseDeck;
-    private ArrayList<DevCardType> developmentCards;
 
     public HashMap<ResourceType, Integer> getResourceDeck() {
         return resourseDeck;

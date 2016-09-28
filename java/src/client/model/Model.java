@@ -1,6 +1,7 @@
 package client.model;
 
 
+import com.google.gson.JsonObject;
 import com.sun.org.apache.xpath.internal.operations.String;
 import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
@@ -380,7 +381,7 @@ public class Model {
             //TODO Neither road location is on water
         }
         if(bool){
-            bool = game.playerList.get(playerIndex).getPiecesAvailable().get(PieceType.ROAD) >= 2;
+            bool = game.playerList.get(playerIndex).getRoads() >= 2;
         }
         return bool;
     }

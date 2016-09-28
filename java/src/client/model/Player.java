@@ -144,9 +144,9 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canPlayDevCard(DevCardType devCardType) {
-		boolean bool = playableDevCardHand.containsKey(devCardType);
+		boolean bool = oldDevCards.containsKey(devCardType);
 		if(bool){
-			bool = !developmentCardPlayed;
+			bool = !playedDevCard;
 		}
 		return bool;
 	}
@@ -264,9 +264,9 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canBuyDevelopmentCard() {
-		return resourceHand.containsKey(ResourceType.ORE) &&
-				resourceHand.containsKey(ResourceType.WHEAT) &&
-				resourceHand.containsKey(ResourceType.SHEEP);
+		return resources.containsKey(ResourceType.ORE) &&
+				resources.containsKey(ResourceType.WHEAT) &&
+				resources.containsKey(ResourceType.SHEEP);
 	}
 	
 	/**
@@ -291,7 +291,7 @@ public class Player {
 	 * @return result
 	 */
 	boolean canTradeWithBank(int ratio, ResourceType inputResource){
-		return resourceHand.get(inputResource) >= ratio;
+		return resources.get(inputResource) >= ratio;
 	}
 
 	/**
