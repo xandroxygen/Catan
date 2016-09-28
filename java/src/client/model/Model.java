@@ -39,6 +39,10 @@ public class Model {
 		return game.getVersion();
 	}
 	
+	public Game getGame() {
+		return game;
+	}
+	
     /**
      * Updates model class.
      *
