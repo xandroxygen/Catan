@@ -20,6 +20,25 @@ import static shared.definitions.ResourceType.*;
  */
 public class Model {
 	private Game game;
+	private ModelUpdater modelUpdater;
+	private Model model;
+	
+	private Model() {
+		modelUpdater = new ModelUpdater();
+	}
+	
+	public Model getInstance() {
+		if (model == null) {
+			model = new Model();
+		}
+		return model;
+	}
+	
+	
+	public int getVersion() {
+		return game.getVersion();
+	}
+	
     /**
      * Updates model class.
      *
@@ -138,9 +157,8 @@ public class Model {
      *
      * @param json the Json String being passed in
      */
-    void updateModel(JsonObject json){
-        ModelUpdater modelUpdater = new ModelUpdater();
-        modelUpdater.updateModel(json);
+    public void updateModel(JsonObject json){
+    	game = modelUpdater.updateModel(json);
     }
 
     /**

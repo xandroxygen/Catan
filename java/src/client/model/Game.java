@@ -249,4 +249,45 @@ public class Game {
     	return null;
     }
     
+    // GETTERS
+    public ArrayList<Player> getPlayerList() {
+		return playerList;
+	}
+
+	public client.model.Map getTheMap() {
+		return theMap;
+	}
+
+	public Bank getBank() {
+		return bank;
+	}
+
+	public int getCurrentTurnIndex() {
+		return currentTurnIndex;
+	}
+
+	public TurnTracker getTurnTracker() {
+		return turnTracker;
+	}
+
+	public ArrayList<Line> getLog() {
+		return log;
+	}
+
+	public ArrayList<Line> getChat() {
+		return chat;
+	}
+
+	public int getWinner() {
+		return winner;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public TradeOffer getTradeOffer() {
+		return tradeOffer;
+	}
+    
 }
