@@ -1,18 +1,27 @@
 package client.server;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 
 /**
  * Takes care of post and get http requests.
- * Runs asynchronously once called.
- * To receive request responses, implement CallbackProxy.
- * TODO: Confirm how to do async I/O and write this in.
- * Created by Xander on 9/13/2016.
+ * Currently, also handles serialization requests. That may change.
+ * Uses Java's HTTPURLConnection to connect to the server.
+ * Server details are (for now) hard coded into the constructor of the ServerProxy class.
  */
 public class HTTPOperations {
     private String host;
     private String port;
     private String baseUrl;
+
+    private static final String HTTP_GET = "GET";
+    private static final String HTTP_POST = "POST";
 
     public HTTPOperations() {
         host = new String();
@@ -22,56 +31,94 @@ public class HTTPOperations {
 
     /**
      * Constructor for the HTTPOperations class.
+     *
      * @param h host of server to talk to
      * @param p port to talk on (usually 8081)
-     * @param b the base URL to call
      */
-    public HTTPOperations(String h, String p, String b) {
+    public HTTPOperations(String h, String p) {
         host = h;
         port = p;
-        baseUrl = b;
-    }
-
-    /**
-     * POSTs data to the server.
-     * @param url REST url to call
-     * @param headers any headers to pass, including cookies
-     * @param body the body of the data
-     * @return returns a RequestResponse, which is either data or an error
-     */
-    public RequestResponse post(String url, Map<String, String> headers, String body) {
-        return null;
+        baseUrl = "http://" + host + ":" + port;
     }
 
     /**
      * GETs data from the server.
-     * @param url REST url to call
+     *
+     * @param url     REST url to call
      * @param headers any headers to pass, including cookies
      * @return a RequestResponse, which is either data or an error
      */
-    public RequestResponse get(String url, Map<String, String> headers) {
-        return null;
+    public RequestResponse get(String url, Map<String, String> headers) throws MalformedURLException {
+        try {
+            URL requestURL = new URL(baseUrl + url);
+
+            HttpURLConnection connection = (HttpURLConnection) requestURL.openConnection();
+            connection.setRequestMethod(HTTP_GET);
+
+            for (String header : headers.keySet()) {
+                connection.setRequestProperty(header, headers.get(header));
+            }
+            connection.connect();
+
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                InputStream responseBody = connection.getInputStream();
+
+                return new RequestResponse(false, responseToString(responseBody)); // response OK
+            } else {
+                return new RequestResponse(true, "Server returned an error oh noooeee");
+            }
+        } catch (IOException e) {
+            return new RequestResponse(true, e);
+        }
     }
 
-
     /**
-     * Serializes a Java object into a JSON string.
-     * Implementation subject to change.
-     * @param object The object to be serialized
-     * @return a JSON String
+     * POSTs data to the server.
+     *
+     * @param url     REST url to call
+     * @param headers any headers to pass, including cookies
+     * @param body    the body of the data
+     * @return returns a RequestResponse, which is either data or an error
      */
-    public static String serialize(Object object) {
-        return null;
+    public RequestResponse post(String url, Map<String, String> headers, String body) throws MalformedURLException {
+        try {
+            URL requestURL = new URL(baseUrl + url);
+
+            HttpURLConnection connection = (HttpURLConnection) requestURL.openConnection();
+            connection.setRequestMethod(HTTP_POST);
+
+            for (String header : headers.keySet()) {
+                connection.setRequestProperty(header, headers.get(header));
+            }
+            connection.connect();
+
+            OutputStream requestBody = connection.getOutputStream();
+            requestBody.write(body.getBytes());
+            requestBody.close();
+
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                InputStream responseBody = connection.getInputStream();
+
+                return new RequestResponse(false, responseToString(responseBody)); // response OK
+            } else {
+                return new RequestResponse(true, "Server returned an error oh noooeee");
+            }
+        } catch (IOException e) {
+            return new RequestResponse(true, e); // other error
+        }
     }
 
-    /**
-     * Deserializes a JSON String into a Java object.
-     * Implementation subject to change.
-     * @param data the JSON string
-     * @return the JAVA object
+    /*
+        Helper function: changes input stream response to a string for returning.
      */
-    public static Object deserialize(String data) {
-        return null;
+    private String responseToString(InputStream response) throws IOException {
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length = 0;
+        while ((length = response.read(buffer)) != -1) {
+            byteStream.write(buffer, 0, length);
+        }
+        return byteStream.toString();
     }
 }
 

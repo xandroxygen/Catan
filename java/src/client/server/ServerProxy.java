@@ -1,5 +1,7 @@
 package client.server;
 
+import client.model.InvalidActionException;
+import client.model.ModelUpdater;
 import org.json.simple.JSONObject;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
@@ -7,44 +9,101 @@ import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
-import java.util.ArrayList;
+import java.net.MalformedURLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Communicates with the server API.
+ * Communicates with the server API, and
  * Keeps track of player and game cookies.
- * Created by Xander on 9/12/2016.
+ * Uses the HTTPOperations class to make post and get calls.
  */
 public class ServerProxy implements IServerProxy {
 
     private HTTPOperations http;
     private Map<String, String> headers;
-    private List<String> gameCookies;
-    private List<String> playerCookies;
+    private Map<String, String> gameCookies;
+    private Map<String, String> playerCookies;
+    private String currentGameCookie;
+    private String currentPlayerCookie;
+    private int currentPlayerIndex;
+    private String urlExt;
+    private ModelUpdater updater;
+
+    private static final String EXCEPTION_MESSAGE_CALL = "API call failed.";
+    private static final String EXCEPTION_MESSAGE_RESPONSE = "API response failed.";
+
 
     /**
      * Default constructor, sets all values to new objects.
      * Also sets host, port, and base URL for the communicator class.
      */
     public ServerProxy() {
-        http = new HTTPOperations("h", "p", "b"); // TODO: change to actual server location
+        http = new HTTPOperations("localhost", "8081"); // hard-coded for ease of use
         headers = new HashMap<>();
-        gameCookies = new ArrayList<>();
-        playerCookies = new ArrayList<>();
+        gameCookies = new HashMap<>();
+        playerCookies = new HashMap<>();
+        urlExt = "";
+        updater = new ModelUpdater();
     }
 
     /**
      * Instructs the server communicator which player's turn it is.
      * The communicator uses the player's specific cookie.
      *
-     * @param playerID ID to give to the player
+     * @param playerIndex index (NOT id) of the player whose turn it is
      */
     @Override
-    public void setPlayer(int playerID) {
-
+    public void setPlayer(int playerIndex) {
+        currentPlayerIndex = playerIndex;
     }
+
+    // --- HELPER FUNCTIONS ---
+    private void setHeaders() {
+        headers.clear();
+
+        String cookies = currentPlayerCookie + "; " + currentGameCookie;
+        headers.put("Cookie", cookies);
+    }
+
+    private RequestResponse post(String urlExt, Map<String, String> headers, String body) throws InvalidActionException {
+        try {
+            return http.post(urlExt, headers, body);
+        }
+        catch (MalformedURLException e) {
+            throw new InvalidActionException(EXCEPTION_MESSAGE_CALL);
+        }
+    }
+
+    private RequestResponse get(String urlExt, Map<String, String> headers) throws InvalidActionException {
+        try {
+            return http.get(urlExt, headers);
+        }
+        catch (MalformedURLException e) {
+            throw new InvalidActionException(EXCEPTION_MESSAGE_CALL);
+        }
+    }
+
+    private void handleResult(RequestResponse result) throws InvalidActionException {
+        if (result.hasError()) {
+            throw new InvalidActionException(EXCEPTION_MESSAGE_RESPONSE);
+        }
+        else {
+            String modelJSON = (String)result.getData();
+            // TODO: Do something with this? Or leave for Server Poller?
+        }
+    }
+    
+    private String booleanToString(boolean toConvert) {
+    	if (toConvert) {
+    		return "true";
+    	}
+    	else {
+    		return "false";
+    	}
+    }
+
+    // --- NON-MOVE API ---
 
     /**
      * Logs the caller into the server and sets their catan.user HTTP cookie.
@@ -65,8 +124,63 @@ public class ServerProxy implements IServerProxy {
      *  </pre>
      */
     @Override
-    public void userLogin(String username, String password) {
-
+    public void userLogin(String username, String password) throws InvalidActionException {
+    	String urlExt = "/user/login";
+		
+		setHeaders();
+    	
+    	Map<String, String> m = new HashMap<>();
+    	m.put("username", username);
+    	m.put("password", password);
+    	String body = Serializer.serializeNonMoveCall(m);
+    	
+    	RequestResponse result = post(urlExt, headers, body); 
+    	
+    	// TODO: extract and set catan.cookie
+    	
+    	handleResult(result);
+    	
+    }
+    
+    /**
+	 * Creates a new user account & logs the caller into the server as the new user and sets
+	 * their catan.user HTTP cookie.
+	 *
+	 * @pre <pre>
+	 * 	username is not null
+	 * 	password is not null
+	 *  username has not already been taken
+	 * 	</pre>
+	 * 
+	 * @post <pre>
+	 * If username/ password is valid:
+	 * 		1. Server returns an HTTP 200 response message.
+	 * 		2. A new user account is created with the specified username and password.
+	 * 		3. HTTP response headers set catan.cookie to contain identity of the logged in player.
+	 *
+	 * If username/ password is not valid:
+	 *  	1. Server returns 400 error response and body contains an error message.
+	 *  </pre>
+	 * 
+	 * @param username Username of the new player being registered.
+	 * @param password Password that corresponds to the username of new player being registered.
+	 */
+    @Override
+    public void userRegister(String username, String password) throws InvalidActionException {
+    	
+    	if (username != null && password != null) { //TODO: check that the username hasn't already been taken
+        	String urlExt = "/user/register";
+        	
+        	Map<String, String> m = new HashMap<>();
+        	m.put("username", username);
+        	m.put("password", password);
+        	String body = Serializer.serializeNonMoveCall(m);
+        	
+        	//TODO: Set catan.cookie
+        	
+        	RequestResponse result = post(urlExt, headers, body);
+        	handleResult(result);
+    	}
     }
 
     /**
@@ -82,8 +196,17 @@ public class ServerProxy implements IServerProxy {
      * 	</pre>
      */
     @Override
-    public void gamesList() {
-
+    public String gamesList() throws InvalidActionException {
+    	String urlExt = "/games/list";
+    	
+    	setHeaders();
+    	
+    	RequestResponse result = get(urlExt, headers);
+    	if (result.hasError()) {
+    		throw new InvalidActionException(EXCEPTION_MESSAGE_CALL);
+    	} else {
+    		return (String)result.getData();
+    	}    	
     }
 
     /**
@@ -107,15 +230,33 @@ public class ServerProxy implements IServerProxy {
      * 	</pre>
      */
     @Override
-    public void gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) {
-
+    public String gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
+    		throws InvalidActionException {
+    	String urlExt = "/games/create";
+    	
+    	setHeaders();
+    	
+    	Map<String, String> m = new HashMap<>();
+    	m.put("randomTiles", booleanToString(randomTiles));
+    	m.put("randomNumbers", booleanToString(randomNumbers));
+    	m.put("randomPorts", booleanToString(randomPorts));
+    	String body = Serializer.serializeNonMoveCall(m);
+    	
+    	RequestResponse result = get(urlExt, headers);
+    	if (result.hasError()) {
+    		throw new InvalidActionException(EXCEPTION_MESSAGE_CALL);
+    	} else {
+    		//TODO: convert to json
+    		return (String)result.getData();
+    	}
+    	
     }
 
     /**
      * Adds the player to the specified game and sets their catan.game cookie.
      *
      * @param gameID ID of the game to join
-     * @param color  Player color
+     * @param c  Player color
      * @pre <pre>
      * 	1. The user has previously logged into the server (they have a valid catan.user HTTP cookie)
      * 	2. The player may join the game because
@@ -135,8 +276,22 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void gamesJoin(int gameID, CatanColor color) {
-
+    public void gamesJoin(int gameID, CatanColor c) throws InvalidActionException {
+    	String urlExt = "/games/join";
+    	String color = c.toString(); //TODO: Make sure color is being correctly converted to a string
+    	
+    	Map<String, String> m = new HashMap<>();
+    	m.put("gameID", Integer.toString(gameID));
+    	m.put("color", color);
+    	String body = Serializer.serializeNonMoveCall(m);
+    	
+    	setHeaders();
+    	
+    	RequestResponse result = post(urlExt, headers, body);
+    	
+    	// TODO: extract and set catan.game HTTP cookie
+    	
+    	handleResult(result);
     }
 
     /**
@@ -155,9 +310,17 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public JSONObject gameGetModel() {
-
-        return null;
+    public String gameGetModel() throws InvalidActionException {
+    	String urlExt = "/game/model";
+    	
+    	setHeaders();
+    	
+    	RequestResponse result = get(urlExt, headers);
+    	if (result.hasError()) {
+    		throw new InvalidActionException(EXCEPTION_MESSAGE_CALL);
+    	} else {
+    		return (String)result.getData();
+    	}
     }
 
     /**
@@ -182,9 +345,17 @@ public class ServerProxy implements IServerProxy {
      *  </pre>
      */
     @Override
-    public JSONObject gameGetModel(int version) {
-
-        return null;
+    public String gameGetModel(int version) throws InvalidActionException {
+    	String urlExt = "/game/model?version=" + version;
+    	
+    	setHeaders();
+    	
+    	RequestResponse result = get(urlExt, headers);
+    	if (result.hasError()) {
+    		throw new InvalidActionException(EXCEPTION_MESSAGE_CALL);
+    	} else {
+    		return (String)result.getData();
+    	} 
     }
 
     /**
@@ -201,14 +372,24 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void gameListAI() {
-
+    public String gameListAI() throws InvalidActionException {
+    	String urlExt = "/game/reset";
+    	
+    	setHeaders();
+    	
+    	RequestResponse result = get(urlExt, headers);
+    	if (result.hasError()) {
+    		throw new InvalidActionException(EXCEPTION_MESSAGE_CALL);
+    	} else {
+    		return (String)result.getData();
+    	} 
     }
 
     /**
      * Adds an AI player to the current game.
      *
      * @param aiType The AI player to add to the game
+     * 
      * @pre <pre>
      * The caller has previously logged in to the server and joined a game (they have valid catan.user and catan.game HTTP cookies).
      * There is space in the game for another player (the game is not �full�).
@@ -225,9 +406,20 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void gameAddAI(String aiType) {
-
+    public void gameAddAI(String aiType) throws InvalidActionException {
+    	String urlExt = "/game/addAI";
+    	
+    	setHeaders();
+    	
+    	Map<String, String> m = new HashMap<>();
+    	m.put("AIType", aiType);
+    	String body = Serializer.serializeNonMoveCall(m);
+    	
+    	RequestResponse result = post(urlExt, headers, body);
+    	handleResult(result);
     }
+
+    // --- MOVE API ---
 
     /**
      * Sends a chat message to the group.
@@ -240,8 +432,19 @@ public class ServerProxy implements IServerProxy {
      * @post the chat box contains the sent message
      */
     @Override
-    public void sendChat(String content) {
+    public void sendChat(String content) throws InvalidActionException {
+        urlExt = "/moves/sendChat";
 
+        setHeaders();
+
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("content", content);
+
+        String body = Serializer.serializeMoveCall("sendChat", currentPlayerIndex, attributes);
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);
     }
 
     /**
@@ -264,8 +467,19 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void acceptTrade(boolean willAccept) {
+    public void acceptTrade(boolean willAccept) throws InvalidActionException {
+        urlExt = "/moves/acceptTrade";
 
+        setHeaders();
+
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("willAccept", booleanToString(willAccept));
+
+        String body = Serializer.serializeMoveCall("acceptTrade", currentPlayerIndex, attributes);
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);
     }
 
     /**
@@ -277,11 +491,21 @@ public class ServerProxy implements IServerProxy {
      * 		You have more than 7 cards
      * 		You have the resources you are discarding
      * </pre>
-     * TODO: Replace Object with correct class
      */
     @Override
-    public void discardCards(Object hand) {
+    public void discardCards(Map<ResourceType, Integer> hand) throws InvalidActionException {
+        urlExt = "/moves/discardCards";
 
+        setHeaders();
+
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("discardedCards", Serializer.serializeHand(hand));
+
+        String body = Serializer.serializeMoveCall("discardCards", currentPlayerIndex, attributes);
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);
     }
 
     /**
@@ -296,8 +520,19 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void rollNumber(int number) {
+    public void rollNumber(int number) throws InvalidActionException {
+        urlExt = "/moves/rollNumber";
 
+        setHeaders();
+
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("number", Integer.toString(number));
+
+        String body = Serializer.serializeMoveCall("rollNumber", currentPlayerIndex, attributes);
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);
     }
 
     /**
@@ -321,8 +556,20 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void buildRoad(boolean isFree, EdgeLocation roadLocation) {
+    public void buildRoad(boolean isFree, EdgeLocation roadLocation) throws InvalidActionException {
+        urlExt = "/moves/buildRoad";
 
+        setHeaders();
+
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("roadLocation", Serializer.serializeEdgeLocation(roadLocation));
+        attributes.put("free", booleanToString(isFree));
+
+        String body = Serializer.serializeMoveCall("buildRoad", currentPlayerIndex, attributes);
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);
     }
 
     /**
@@ -344,8 +591,20 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void buildSettlement(boolean isFree, VertexLocation vertexLocation) {
+    public void buildSettlement(boolean isFree, VertexLocation vertexLocation) throws InvalidActionException {
+        urlExt = "/moves/buildSettlement";
 
+        setHeaders();
+
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("vertexLocation", Serializer.serializeVertexLocation(vertexLocation));
+        attributes.put("free", booleanToString(isFree));
+
+        String body = Serializer.serializeMoveCall("buildSettlement", currentPlayerIndex, attributes);
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);
     }
 
     /**
@@ -365,8 +624,19 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void buildCity(VertexLocation vertexLocation) {
+    public void buildCity(VertexLocation vertexLocation) throws InvalidActionException {
+        urlExt = "/moves/buildCity";
 
+        setHeaders();
+
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("vertexLocation", Serializer.serializeVertexLocation(vertexLocation));
+
+        String body = Serializer.serializeMoveCall("buildCity", currentPlayerIndex, attributes);
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);
     }
 
     /**
@@ -378,8 +648,20 @@ public class ServerProxy implements IServerProxy {
      * @post The trade is offered to the other player
      */
     @Override
-    public void offerTrade(Object offer, int receiverIndex) {
+    public void offerTrade(Map<ResourceType, Integer> offer, int receiverIndex) throws InvalidActionException {
+        urlExt = "/moves/offerTrade";
 
+        setHeaders();
+
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("offer", Serializer.serializeHand(offer));
+        attributes.put("receiver", Integer.toString(receiverIndex));
+
+        String body = Serializer.serializeMoveCall("offerTrade", currentPlayerIndex, attributes);
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);
     }
 
     /**
@@ -400,8 +682,21 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource) {
+    public void maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource) throws InvalidActionException {
+        urlExt = "/moves/maritimeTrade";
 
+        setHeaders();
+
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("ratio", Integer.toString(ratio));
+        attributes.put("inputResource", Serializer.serializeResourceType(inputResource));
+        attributes.put("outputResource", Serializer.serializeResourceType(outputResource));
+
+        String body = Serializer.serializeMoveCall("maritimeTrade", currentPlayerIndex, attributes);
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);
     }
 
     /**
@@ -421,8 +716,20 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void robPlayer(HexLocation location, int victimIndex) {
+    public void robPlayer(HexLocation location, int victimIndex) throws InvalidActionException {
+        urlExt = "/moves/robPlayer";
 
+        setHeaders();
+
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("victimIndex", Integer.toString(victimIndex));
+        attributes.put("location", Serializer.serializeHexLocation(location));
+
+        String body = Serializer.serializeMoveCall("robPlayer", currentPlayerIndex, attributes);
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);
     }
 
     /**
@@ -434,8 +741,18 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void finishTurn() {
+    public void finishTurn() throws InvalidActionException {
+        urlExt = "/moves/finishTurn";
 
+        setHeaders();
+
+        Map<String, String> attributes = new HashMap<>();
+
+        String body = Serializer.serializeMoveCall("finishTurn", currentPlayerIndex, attributes);
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);
     }
 
     /**
@@ -455,8 +772,18 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void buyDevCard() {
+    public void buyDevCard() throws InvalidActionException {
+        urlExt = "/moves/buyDevCard";
 
+        setHeaders();
+
+        Map<String, String> attributes = new HashMap<>();
+
+        String body = Serializer.serializeMoveCall("buyDevCard", currentPlayerIndex, attributes);
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);
     }
 
     /**
@@ -482,8 +809,20 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void playSoldier(HexLocation location, int victimIndex) {
+    public void playSoldier(HexLocation location, int victimIndex) throws InvalidActionException {
+        urlExt = "/moves/Soldier";
 
+        setHeaders();
+
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("victimIndex", Integer.toString(victimIndex));
+        attributes.put("location", Serializer.serializeHexLocation(location));
+
+        String body = Serializer.serializeMoveCall("Soldier", currentPlayerIndex, attributes);
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);
     }
 
     /**
@@ -503,9 +842,20 @@ public class ServerProxy implements IServerProxy {
      * @post You have the requested resources and the bank does not.
      */
     @Override
-    public void playYearOfPlenty(ResourceType resource1, ResourceType resource2) {
+    public void playYearOfPlenty(ResourceType resource1, ResourceType resource2) throws InvalidActionException {
+        urlExt = "/moves/Year_Of_Plenty";
 
-    }
+        setHeaders();
+
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("resource1", Serializer.serializeResourceType(resource1));
+        attributes.put("resource2", Serializer.serializeResourceType(resource2));
+
+        String body = Serializer.serializeMoveCall("Year_Of_Plenty", currentPlayerIndex, attributes);
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);    }
 
     /**
      * Play a Road Building card, and build 2 roads.
@@ -531,12 +881,25 @@ public class ServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void playRoadBuilding(EdgeLocation location1, EdgeLocation location2) {
+    public void playRoadBuilding(EdgeLocation location1, EdgeLocation location2) throws InvalidActionException {
+        urlExt = "/moves/Road_Building";
 
+        setHeaders();
+
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("spot1", Serializer.serializeEdgeLocation(location1));
+        attributes.put("spot2", Serializer.serializeEdgeLocation(location2));
+
+        String body = Serializer.serializeMoveCall("Road_Building", currentPlayerIndex, attributes);
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);
     }
 
     /**
      * Play a Monopoly card, and collect a specific resource from all other players.
+     * Serializes itself, because the order of type/playerIndex/resource is out of whack for the server here.
      *
      * @param resource The resource being taken from the other players
      * @pre <pre>
@@ -550,8 +913,22 @@ public class ServerProxy implements IServerProxy {
      * @post All the players have given you all of their resources of the specified type
      */
     @Override
-    public void playMonopoly(ResourceType resource) {
+    public void playMonopoly(ResourceType resource) throws InvalidActionException {
+        urlExt = "/moves/Monopoly";
 
+        setHeaders();
+
+        // hard coded serialization because of difference of object order
+        JSONObject attributes = new JSONObject();
+        attributes.put("type", "Monopoly");
+        attributes.put("resource", Serializer.serializeResourceType(resource));
+        attributes.put("playerIndex", currentPlayerIndex);
+
+        String body = attributes.toJSONString();
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);
     }
 
     /**
@@ -561,7 +938,17 @@ public class ServerProxy implements IServerProxy {
      * @post You gained a victory point.
      */
     @Override
-    public void playVictoryPoint() {
+    public void playVictoryPoint() throws InvalidActionException {
+        urlExt = "/moves/Monument";
 
+        setHeaders();
+
+        Map<String, String> attributes = new HashMap<>();
+
+        String body = Serializer.serializeMoveCall("Monument", currentPlayerIndex, attributes);
+
+        RequestResponse result = post(urlExt, headers, body);
+
+        handleResult(result);
     }
 }
