@@ -7,9 +7,24 @@ import shared.definitions.ResourceType;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
+import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+
+import shared.definitions.*;
+import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
+import shared.locations.VertexLocation;
 
 /**
  * Player class
@@ -19,17 +34,66 @@ public class Player {
 	private String name;
 	private CatanColor color;
 	private int playerIndex;
-	private int playerId;
-	private boolean developmentCardPlayed;
+	private int playerID;
+	private boolean playedDevCard;
 	private int victoryPoints;
-	private HashMap<ResourceType, Integer> resourceHand;
-	private HashMap<DevCardType, Integer> playableDevCardHand;
-	private HashMap<DevCardType, Integer> unplayableDevCardHand;
-	private HashMap<PieceType, Integer> piecesAvailable;
-	private List<City> placedCities;
-	private List<Settlement> placedSettlements;
-	private List<Road> placedRoads;
+	private HashMap<ResourceType, Integer> resources;
+	private HashMap<DevCardType, Integer> oldDevCards;
+	private HashMap<DevCardType, Integer> newDevCards;
+	private int cities;
+	private int settlements;
+	private int roads;
+	private int soldiers;
+	private int monuments;
+	private boolean discarded;
 
+	Player(JsonObject playerJSON) {
+		// Parse resources
+		resources = new HashMap<>();
+		JsonObject resourcesJSON = playerJSON.getAsJsonObject("resources");
+		resources.put(ResourceType.BRICK, resourcesJSON.get("brick").getAsInt());
+		resources.put(ResourceType.ORE, resourcesJSON.get("ore").getAsInt());
+		resources.put(ResourceType.SHEEP, resourcesJSON.get("sheep").getAsInt());
+		resources.put(ResourceType.WHEAT, resourcesJSON.get("wheat").getAsInt());
+		resources.put(ResourceType.WOOD, resourcesJSON.get("wood").getAsInt());
+		System.out.println(resources.get(ResourceType.BRICK));
+
+		// Parse old dev cards
+		oldDevCards = new HashMap<>();
+		JsonObject oldDevCardsJSON = playerJSON.getAsJsonObject("oldDevCards");
+		oldDevCards.put(DevCardType.MONOPOLY, oldDevCardsJSON.get("monopoly").getAsInt());
+		oldDevCards.put(DevCardType.MONUMENT, oldDevCardsJSON.get("monument").getAsInt());
+		oldDevCards.put(DevCardType.ROAD_BUILD, oldDevCardsJSON.get("roadBuilding").getAsInt());
+		oldDevCards.put(DevCardType.SOLDIER, oldDevCardsJSON.get("soldier").getAsInt());
+		oldDevCards.put(DevCardType.YEAR_OF_PLENTY, oldDevCardsJSON.get("yearOfPlenty").getAsInt());
+		System.out.println(resources.get(ResourceType.BRICK));
+
+		// Parse new dev cards
+		newDevCards = new HashMap<>();
+		JsonObject newDevCardsJSON = playerJSON.getAsJsonObject("newDevCards");
+		newDevCards.put(DevCardType.MONOPOLY, newDevCardsJSON.get("monopoly").getAsInt());
+		newDevCards.put(DevCardType.MONUMENT, newDevCardsJSON.get("monument").getAsInt());
+		newDevCards.put(DevCardType.ROAD_BUILD, newDevCardsJSON.get("roadBuilding").getAsInt());
+		newDevCards.put(DevCardType.SOLDIER, newDevCardsJSON.get("soldier").getAsInt());
+		newDevCards.put(DevCardType.YEAR_OF_PLENTY, newDevCardsJSON.get("yearOfPlenty").getAsInt());
+		System.out.println(resources.get(ResourceType.BRICK));
+
+		// Parse all other variables
+		roads = playerJSON.get("roads").getAsInt();
+		cities = playerJSON.get("cities").getAsInt();
+		settlements = playerJSON.get("settlements").getAsInt();
+		soldiers = playerJSON.get("soldiers").getAsInt();
+		victoryPoints = playerJSON.get("victoryPoints").getAsInt();
+		monuments = playerJSON.get("monuments").getAsInt();
+		playedDevCard = playerJSON.get("playedDevCard").getAsBoolean();
+		discarded = playerJSON.get("discarded").getAsBoolean();
+		playerID = playerJSON.get("playerID").getAsInt();
+		playerIndex = playerJSON.get("playerIndex").getAsInt();
+		name = playerJSON.get("name").getAsString();
+		color = CatanColor.valueOf(playerJSON.get("color").getAsString().toUpperCase());
+
+	}
+	
 	/**
 	 * Checks whether the player can place a city.
 	 * @pre It's your turn, The city location is where you currently have a settlement, You have the required resources (2 wheat, 3 ore; 1 city)
@@ -72,6 +136,9 @@ public class Player {
 	 * 		The client model status is 'Playing'
 	 * 		You have the specific card you want to play in your old dev card hand
 	 * 		You have not yet played a non­monument dev card this turn
+	 * 		The robber is not being kept in the same location
+	 * 		If a player is being robbed (i.e., victimIndex != ­1)
+	 * 		The player being robbed has resource cards
 	 * 		</pre>
 	 * @param devCardType the type of dev card the player wants to play
 	 * @return result
@@ -282,8 +349,9 @@ public class Player {
 		return false;
 	}
 	
+	/*
 	private boolean cityExists(VertexLocation location) {
-		for (City city : placedCities) {
+		for (City city : cities) {
 			if (city.getLocation().equals(location)) {
 				return true;
 			}
@@ -292,28 +360,28 @@ public class Player {
 	}
 
 	protected boolean settlementExists(VertexLocation location) {
-		for (Settlement settlement : placedSettlements) {
+		for (Settlement settlement : settlements) {
 			if (settlement.getLocation().equals(location)) {
 				return true;
 			}
 		}
 		return false;
-	}
-
+	}*/
+	
 	protected boolean hasOfferResources(Map<ResourceType, Integer> offer) {
-		if ((offer.get("WOOD") > 0) && (resourceHand.get("WOOD") <= offer.get("WOOD"))) {
+		if ((offer.get("WOOD") > 0) && (resources.get("WOOD") <= offer.get("WOOD"))) {
 			return false;
 		}
-		if ((offer.get("BRICK") > 0) && (resourceHand.get("BRICK") <= offer.get("BRICK"))) {
+		if ((offer.get("BRICK") > 0) && (resources.get("BRICK") <= offer.get("BRICK"))) {
 			return false;
 		}
-		if ((offer.get("SHEEP") > 0) && (resourceHand.get("SHEEP") <= offer.get("SHEEP"))) {
+		if ((offer.get("SHEEP") > 0) && (resources.get("SHEEP") <= offer.get("SHEEP"))) {
 			return false;
 		}
-		if ((offer.get("WHEAT") > 0) && (resourceHand.get("WHEAT") <= offer.get("WHEAT"))) {
+		if ((offer.get("WHEAT") > 0) && (resources.get("WHEAT") <= offer.get("WHEAT"))) {
 			return false;
 		}
-		if ((offer.get("ORE") > 0) && (resourceHand.get("ORE") <= offer.get("ORE"))) {
+		if ((offer.get("ORE") > 0) && (resources.get("ORE") <= offer.get("ORE"))) {
 			return false;
 		}
 		return true;
@@ -334,44 +402,41 @@ public class Player {
 	}
 
 	public int getPlayerId() {
-		return playerId;
+		return playerID;
 	}
 
 	public boolean isDevelopmentCardPlayed() {
-		return developmentCardPlayed;
+		return playedDevCard;
 	}
 
 	public int getVictoryPoints() {
 		return victoryPoints;
 	}
 
-	public HashMap<ResourceType, Integer> getResourceHand() {
-		return resourceHand;
+	public Map<ResourceType,Integer> getResourceHand() {
+		return resources;
 	}
 
-	public HashMap<DevCardType, Integer> getPlayableDevCardHand() {
-		return playableDevCardHand;
+	public static void main(String[] args) {
+		String json = "{\"resource\":\"wheat\",\"location\":{\"x\":-1,\"y\":2}}";
+		String json2 = "{\"resources\": {\"brick\": 0,\"wood\": 0,\"sheep\": 0,\"wheat\": 0,\"ore\": 0},\"oldDevCards\": {\"yearOfPlenty\": 0,\"monopoly\": 0,\"soldier\": 0,\"roadBuilding\": 0,\"monument\": 0},\"newDevCards\": {\"yearOfPlenty\": 0,\"monopoly\": 0,\"soldier\": 0,\"roadBuilding\": 0,\"monument\": 0},\"roads\": 15,\"cities\": 4,\"settlements\": 5,\"soldiers\": 0,\"victoryPoints\": 0,\"monuments\": 0,\"playedDevCard\": false,\"discarded\": false,\"playerID\": 12,\"playerIndex\": 0,\"name\": \"jeremyk\",\"color\": \"red\"}";
+		JsonParser parser = new JsonParser();
+		JsonObject o = parser.parse(json2).getAsJsonObject();
+		//Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
+		//Player player = gson.fromJson(json2, Player.class);
+		//Type collectionType = new TypeToken<Collection<Player>>(){}.getType();
+		//Collection<Player> enums = gson.fromJson(json2, collectionType);
+		Player player = new Player(o);
+		System.out.println(player.getName());
+
+		// Testing enum stuff
+		String json3 = "{\"status\": \"FirstRound\",\"currentTurn\": 0,\"longestRoad\": -1,\"largestArmy\": -1}";
+		TurnTracker turn = new Gson().fromJson(json3, TurnTracker.class);
+		System.out.println(turn.getStatus());
 	}
 
-	public HashMap<DevCardType, Integer> getUnplayableDevCardHand() {
-		return unplayableDevCardHand;
+	public int getRoads() {
+		return roads;
 	}
-
-	public HashMap<PieceType, Integer> getPiecesAvailable() {
-		return piecesAvailable;
-	}
-
-	public List<City> getPlacedCities() {
-		return placedCities;
-	}
-
-	public List<Settlement> getPlacedSettlements() {
-		return placedSettlements;
-	}
-
-	public List<Road> getPlacedRoads() {
-		return placedRoads;
-	}
-
 
 }

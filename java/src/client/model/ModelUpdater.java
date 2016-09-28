@@ -1,5 +1,13 @@
 package client.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.simple.JSONObject;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -125,8 +133,8 @@ public class ModelUpdater {
 	 *
 	 * @param json 
 	 */
-	public void updateModel(JsonObject json) {
-		
+	public Game updateModel(JsonObject json) {
+		return new Game(updatePlayers(json),updateMap(json),updateBank(json),json);
 	}
 	
 	/**
@@ -151,8 +159,8 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updateBank(JsonObject json) {
-
+	public Bank updateBank(JsonObject json) {
+		return new Bank(json);
 	}
 	
 	/**
@@ -188,8 +196,21 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updatePlayer(JsonObject json) {
+	public ArrayList<Player> updatePlayers(JsonObject json) {
 		
+		try {
+			ArrayList<Player> players = new ArrayList<>();
+			JsonArray playerJSONArray = json.getAsJsonArray("players");
+			for (JsonElement playerElement : playerJSONArray) {
+				players.add(new Player(playerElement.getAsJsonObject()));
+			}
+			return players;
+
+		}
+		catch (Exception e) {
+			// INVALID MODEL PROVIDED
+			return null;
+		}
 	}
 	
 	/**
@@ -240,7 +261,7 @@ public class ModelUpdater {
 	 * @param json
 	 */
 	public void updateGame(JsonObject json) {
-
+		
 	}
 	
 	/**
@@ -300,7 +321,7 @@ public class ModelUpdater {
 	 */
 	public Map updateMap(JsonObject json) {
 		try {
-			JsonObject mapJSON = json.getAsJsonObject("Map");
+			JsonObject mapJSON = json.getAsJsonObject("map");
 			Map newMap = new Map(mapJSON);
 			return newMap;
 		}

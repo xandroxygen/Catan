@@ -55,6 +55,11 @@ public class Map {
      * @param mapJSON
      */
 	public Map(JsonObject mapJSON) {
+		hexes = new HashMap<>();
+		cities = new HashMap<>();
+		settlements = new HashMap<>();
+		roads = new HashMap<>();
+		ports = new HashMap<>();
 		JsonArray hexJSONArray = mapJSON.getAsJsonArray("hexes");
 		for (JsonElement hexElement: hexJSONArray) {
 			Hex hex = new Gson().fromJson(hexElement, Hex.class);
@@ -392,6 +397,14 @@ public class Map {
 	public boolean canGetRolledResourses(int diceRoll, int playerId ) {
 		return false;
 	}
+	
+	public static void main(String[] args) {
+		System.out.println("Hello");
+		String json = "{\"resource\":\"wheat\",\"location\":{\"x\":-1,\"y\":2}}";
+		Hex hex = new Gson().fromJson(json, Hex.class);
+		System.out.println(hex.getLocation().getX());
+	}
+
 
 
 }

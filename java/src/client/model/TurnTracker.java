@@ -3,8 +3,8 @@ package client.model;
 public class TurnTracker {
 	private GameStatus status;
 	private int currentTurn;
-	private DevCard longestRoad;
-	private DevCard largestArmy;
+	private int longestRoad;
+	private int largestArmy;
 	
 	public GameStatus getStatus() {
 		return status;
@@ -12,10 +12,10 @@ public class TurnTracker {
 	public int getCurrentTurn() {
 		return currentTurn;
 	}
-	public DevCard getLongestRoad() {
+	public int getLongestRoad() {
 		return longestRoad;
 	}
-	public DevCard getLargestArmy() {
+	public int getLargestArmy() {
 		return largestArmy;
 	}
 	
