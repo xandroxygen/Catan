@@ -112,14 +112,14 @@ public class Game {
      * @return result
      */
     boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){
-    	Player player = this.getPlayerById(playerId);
+    	Player player = this.getPlayerById(senderPlayerId);
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
-				(player.getResourceHand().get("WOOD") >= 1) && 
-				(player.getResourceHand().get("BRICK") >= 1) && (player.getPiecesAvailable().get("ROAD") >= 1));
+				player.hasOfferResources(offer));
     }
     
     boolean canRollDice(int playerId){
-        return false; //ME
+    	Player player = this.getPlayerById(playerId);
+    	return turnTracker.getCurrentTurn() == player.getPlayerIndex();
     }
 
     /**
@@ -128,7 +128,7 @@ public class Game {
      * @param message the message the player wishes to send.
      * @return
      */
-    boolean canSendMessage(int playerId, String message){
+    boolean sendMessage(int playerId, String message){
         return false; //ME
     }
 
@@ -137,7 +137,7 @@ public class Game {
      * @post  The cards in your new dev card hand have been transferred to your old dev card hand, It is the next player’s turn
      * @return result
      */
-    boolean canEndTurn(int playerId){
+    boolean endTurn(int playerId){
         return false; //ME
     }
     
@@ -148,7 +148,7 @@ public class Game {
      * @return true if there are resources to recieve
      */
     boolean canGetRolledResourses(int playerId, int diceRoll){
-        return false; //ME
+        // TODO: If piece is on hex with that number, return true.
     }
     
     // MARK: HELPER METHODS
