@@ -27,28 +27,26 @@ public class Map {
 	private HashMap<HexLocation, Hex> hexes;
 	private HashMap<VertexLocation, City> cities;
 	private HashMap<VertexLocation, Settlement> settlements;
-	private HashMap<EdgeLocation, Road> roads;
-	private int radius;
-	private HashMap<HexLocation, Port> ports;
-	private Robber robber;
+    private HashMap<EdgeLocation, Road> roads;
+    private int radius;
+    private HashMap<HexLocation, Port> ports;
 
-	/**
-	 * Constructor for creating Map with JsonObject
-	 * @param mapJSON
-	 */
-	private List<Port> portList;
+//    private List<Port> portList;
+
     private Robber robber;
 
 	public Robber getRobber() {
 		return robber;
 	}
 
-	public List<Port> getPortList() {
-		return portList;
-	}
-    private HashMap<HexLocation, Port> ports;
+//	public List<Port> getPortList() {
+//		return portList;
+//	}
 
-
+    /**
+     * Constructor for creating Map with JsonObject
+     * @param mapJSON
+     */
 	public Map(JsonObject mapJSON) {
 		JsonArray hexJSONArray = mapJSON.getAsJsonArray("hexes");
 		for (JsonElement hexElement: hexJSONArray) {
@@ -376,11 +374,6 @@ public class Map {
 		}
 		return false;
 	}
-
-    public boolean hasRoadAtLocation(EdgeLocation location) {
-        //if (municipalities.get(location.))
-        return false;
-    }
 
 
 	/**

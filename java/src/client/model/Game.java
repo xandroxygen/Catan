@@ -196,7 +196,7 @@ public class Game {
      * @return true if there are resources to recieve
      */
     boolean canGetRolledResourses(int playerId, int diceRoll){
-        // TODO: If piece is on hex with that number, return true.
+        // TODO: If piece is on hex with that number, return true. (Isn't this function always true -Jonathan)
         return false;
     }
     
