@@ -5,9 +5,15 @@ import shared.locations.EdgeLocation;
  * Road class
  */
 public class Road {
+	public Road(){}
+
+	public Road(EdgeLocation location, int owner) {
+		this.location = location;
+		this.owner = owner;
+	}
+
 	private EdgeLocation location;
 	private int owner;
-	// TODO: This class might need customer desrialization depending on how smart Gson is.
 
 	public EdgeLocation getLocation() {
 		return location.getNormalizedLocation();

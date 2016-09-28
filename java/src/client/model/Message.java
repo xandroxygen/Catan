@@ -1,7 +1,5 @@
 package client.model;
 
-import org.json.simple.JSONObject;
-
 /**
  * Message that will show in the chat box.
  * Contains content and a playerID.
