@@ -21,13 +21,13 @@ import static shared.definitions.ResourceType.*;
 public class Model {
 	private Game game;
 	private ModelUpdater modelUpdater;
-	private Model model;
+	private static Model model;
 	
 	private Model() {
 		modelUpdater = new ModelUpdater();
 	}
 	
-	public Model getInstance() {
+	public static Model getInstance() {
 		if (model == null) {
 			model = new Model();
 		}
