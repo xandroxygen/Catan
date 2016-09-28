@@ -90,7 +90,7 @@ public class ServerProxy implements IServerProxy {
         }
         else {
             String modelJSON = (String)result.getData();
-            // TODO: Do something with this?
+            // TODO: Do something with this? Or leave for Server Poller?
         }
     }
     
@@ -418,6 +418,8 @@ public class ServerProxy implements IServerProxy {
     	handleResult(result);
     }
 
+    // --- MOVE API ---
+
     /**
      * Sends a chat message to the group.
      *
@@ -594,7 +596,7 @@ public class ServerProxy implements IServerProxy {
         setHeaders();
 
         Map<String, String> attributes = new HashMap<>();
-        attributes.put("vertexLocation", Serializer.serializedVertexLocation(vertexLocation));
+        attributes.put("vertexLocation", Serializer.serializeVertexLocation(vertexLocation));
         attributes.put("free", booleanToString(isFree));
 
         String body = Serializer.serializeMoveCall("buildSettlement", currentPlayerIndex, attributes);
@@ -627,7 +629,7 @@ public class ServerProxy implements IServerProxy {
         setHeaders();
 
         Map<String, String> attributes = new HashMap<>();
-        attributes.put("vertexLocation", Serializer.serializedVertexLocation(vertexLocation));
+        attributes.put("vertexLocation", Serializer.serializeVertexLocation(vertexLocation));
 
         String body = Serializer.serializeMoveCall("buildCity", currentPlayerIndex, attributes);
 
@@ -720,7 +722,7 @@ public class ServerProxy implements IServerProxy {
 
         Map<String, String> attributes = new HashMap<>();
         attributes.put("victimIndex", Integer.toString(victimIndex));
-        attributes.put("location", Serializer.serializedHexLocation(location));
+        attributes.put("location", Serializer.serializeHexLocation(location));
 
         String body = Serializer.serializeMoveCall("robPlayer", currentPlayerIndex, attributes);
 
@@ -813,7 +815,7 @@ public class ServerProxy implements IServerProxy {
 
         Map<String, String> attributes = new HashMap<>();
         attributes.put("victimIndex", Integer.toString(victimIndex));
-        attributes.put("location", Serializer.serializedHexLocation(location));
+        attributes.put("location", Serializer.serializeHexLocation(location));
 
         String body = Serializer.serializeMoveCall("Soldier", currentPlayerIndex, attributes);
 
@@ -896,6 +898,7 @@ public class ServerProxy implements IServerProxy {
 
     /**
      * Play a Monopoly card, and collect a specific resource from all other players.
+     * Serializes itself, because the order of type/playerIndex/resource is out of whack for the server here.
      *
      * @param resource The resource being taken from the other players
      * @pre <pre>
@@ -914,19 +917,17 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        //String body = "JSON: type: Monopoly, resource: String, playerIndex: currentPlayerIndex";
-
-        Map<String, String> attributes = new HashMap<>();
+        // hard coded serialization because of difference of object order
+        JSONObject attributes = new JSONObject();
         attributes.put("type", "Monopoly");
         attributes.put("resource", Serializer.serializeResourceType(resource));
+        attributes.put("playerIndex", currentPlayerIndex);
 
-        String body = Serializer.serializeMoveCall("Monopoly", currentPlayerIndex, attributes);
+        String body = attributes.toJSONString();
 
         RequestResponse result = post(urlExt, headers, body);
 
         handleResult(result);
-
-
     }
 
     /**
@@ -948,6 +949,5 @@ public class ServerProxy implements IServerProxy {
         RequestResponse result = post(urlExt, headers, body);
 
         handleResult(result);
-
     }
 }
