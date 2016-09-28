@@ -39,6 +39,10 @@ public class Model {
 		return game.getVersion();
 	}
 	
+	public Game getGame() {
+		return game;
+	}
+	
     /**
      * Updates model class.
      *
@@ -424,9 +428,13 @@ public class Model {
         //Neither road location is on water
         //You have at least two unused roads
         if(bool){
-            bool = !game.theMap.hasRoadAtLocation(spot1) && !game.theMap.hasRoadAtLocation(spot2);
-            //TODO The second road location (spot2) is connected to one of your roads or to the first road location (spot1)
-            //TODO Neither road location is on water
+            bool = !game.theMap.hasRoadAtLocation(spot1) && !game.theMap.hasRoadAtLocation(spot2) &&
+                    game.theMap.edgeHasAdjacentPlayerRoad(spot1, game.playerList.get(playerIndex));
+            if(bool){
+                game.theMap.getRoads().put(spot1, new Road(spot1, playerIndex));
+                game.theMap.edgeHasAdjacentPlayerRoad(spot2, game.playerList.get(playerIndex));
+                game.theMap.getRoads().remove(spot1);
+            }
         }
         if(bool){
             bool = game.playerList.get(playerIndex).getRoads() >= 2;
@@ -542,12 +550,11 @@ public class Model {
 
     /**
      * Checks whether the player can get rolled resources.
-     * @param playerId ID of player who needs resources
      * @param diceRoll the number that was rolled
      * @return true if there are resources to receive
      */
-    boolean canGetRolledResourses(int playerId, int diceRoll){
-        return game.canGetRolledResourses(playerId, diceRoll);
+    boolean canGetRolledResourses(int diceRoll){
+        return game.canGetRolledResources(diceRoll);
     }
 
     /**
