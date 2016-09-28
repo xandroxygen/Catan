@@ -196,8 +196,21 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updatePlayer(JSONObject json) {
+	public ArrayList<Player> updatePlayer(JsonObject json) {
 		
+		try {
+			ArrayList<Player> players = new ArrayList<>();
+			JsonArray playerJSONArray = json.getAsJsonArray("players");
+			for (JsonObject playerElement : playerJSONArray) {
+				players.add(new Player(playerElement));
+			}
+			return players;
+			
+		}
+		catch (Exception e) {
+			// INVALID MODEL PROVIDED
+			return null;
+		}
 	}
 	
 	/**
@@ -308,7 +321,7 @@ public class ModelUpdater {
 	 */
 	public Map updateMap(JsonObject json) {
 		try {
-			JsonObject mapJSON = json.getAsJsonObject("Map");
+			JsonObject mapJSON = json.getAsJsonObject("map");
 			Map newMap = new Map(mapJSON);
 			return newMap;
 		}
