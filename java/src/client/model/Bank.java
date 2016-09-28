@@ -3,6 +3,8 @@ package client.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.google.gson.JsonObject;
+
 import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
 
@@ -12,7 +14,29 @@ import shared.definitions.ResourceType;
 public class Bank {
 
     public HashMap<ResourceType, Integer> resourseDeck;
-    public ArrayList<DevCardType> developmentCards;
+    public HashMap<DevCardType, Integer> developmentCards;
+    
+    public Bank(JsonObject modelJSON) {
+    	// Parse resources
+    	resourseDeck = new HashMap<>();
+		JsonObject resourcesJSON = modelJSON.getAsJsonObject("bank");
+		resourseDeck.put(ResourceType.BRICK, resourcesJSON.get("brick").getAsInt());
+		resourseDeck.put(ResourceType.ORE, resourcesJSON.get("ore").getAsInt());
+		resourseDeck.put(ResourceType.SHEEP, resourcesJSON.get("sheep").getAsInt());
+		resourseDeck.put(ResourceType.WHEAT, resourcesJSON.get("wheat").getAsInt());
+		resourseDeck.put(ResourceType.WOOD, resourcesJSON.get("wood").getAsInt());
+
+		
+		// Parse old dev cards
+		developmentCards = new HashMap<>();
+		JsonObject oldDevCardsJSON = modelJSON.getAsJsonObject("deck");
+		developmentCards.put(DevCardType.MONOPOLY, oldDevCardsJSON.get("monopoly").getAsInt());
+		developmentCards.put(DevCardType.MONUMENT, oldDevCardsJSON.get("monument").getAsInt());
+		developmentCards.put(DevCardType.ROAD_BUILD, oldDevCardsJSON.get("roadBuilding").getAsInt());
+		developmentCards.put(DevCardType.SOLDIER, oldDevCardsJSON.get("soldier").getAsInt());
+		developmentCards.put(DevCardType.YEAR_OF_PLENTY, oldDevCardsJSON.get("yearOfPlenty").getAsInt());
+
+    }
 
     /**
      * checks whether the player can buy a development card

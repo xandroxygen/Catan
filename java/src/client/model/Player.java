@@ -358,15 +358,19 @@ public class Player {
 	}
 
 	public int getPlayerId() {
-		return playerId;
+		return playerID;
 	}
 
 	public boolean isDevelopmentCardPlayed() {
-		return developmentCardPlayed;
+		return playedDevCard;
 	}
 
 	public int getVictoryPoints() {
 		return victoryPoints;
+	}
+	
+	public Map<ResourceType,Integer> getResourceHand() {
+		return resources;
 	}
 	
 	public static void main(String[] args) {
@@ -379,7 +383,16 @@ public class Player {
 		//Type collectionType = new TypeToken<Collection<Player>>(){}.getType();
 		//Collection<Player> enums = gson.fromJson(json2, collectionType);
 		Player player = new Player(o);
-		player.getName();
+		System.out.println(player.getName());
+		
+		// Testing enum stuff
+		String json3 = "{\"status\": \"FirstRound\",\"currentTurn\": 0,\"longestRoad\": -1,\"largestArmy\": -1}";
+		TurnTracker turn = new Gson().fromJson(json3, TurnTracker.class);
+		System.out.println(turn.getStatus());
+	}
+
+	public int getRoads() {
+		return roads;
 	}
 	
 }

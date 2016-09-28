@@ -133,8 +133,8 @@ public class ModelUpdater {
 	 *
 	 * @param json 
 	 */
-	public void updateModel(JSONObject json) {
-		
+	public Game updateModel(JsonObject json) {
+		return new Game(updatePlayers(json),updateMap(json),updateBank(json),json);
 	}
 	
 	/**
@@ -159,8 +159,8 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updateBank(JSONObject json) {
-		
+	public Bank updateBank(JsonObject json) {
+		return new Bank(json);
 	}
 	
 	/**
@@ -196,13 +196,13 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public ArrayList<Player> updatePlayer(JsonObject json) {
+	public ArrayList<Player> updatePlayers(JsonObject json) {
 		
 		try {
 			ArrayList<Player> players = new ArrayList<>();
 			JsonArray playerJSONArray = json.getAsJsonArray("players");
-			for (JsonObject playerElement : playerJSONArray) {
-				players.add(new Player(playerElement));
+			for (JsonElement playerElement : playerJSONArray) {
+				players.add(new Player(playerElement.getAsJsonObject()));
 			}
 			return players;
 			
@@ -260,7 +260,7 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updateGame(JSONObject json) {
+	public void updateGame(JsonObject json) {
 		
 	}
 	

@@ -1,6 +1,12 @@
 package client.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -16,9 +22,46 @@ public class Game {
     public Bank bank;
     public int currentTurnIndex;
     public TurnTracker turnTracker;
-    public MessageList log;
-    public MessageList chat;
-    public String winner;
+    public ArrayList<Line> log;
+    public ArrayList<Line> chat;
+    public int winner;
+    public int version;
+    
+    
+    public Game(ArrayList<Player> players, Map theMap, Bank bank, JsonObject modelJSON) {
+    	
+    	// Initialize players, map and bank
+    	playerList = players;
+    	this.bank = bank;
+    	this.theMap= theMap;
+    	
+    	// Create Turn Tracker
+    	turnTracker = new Gson().fromJson(modelJSON.getAsJsonObject("turnTracker"), TurnTracker.class);
+    	currentTurnIndex = turnTracker.getCurrentTurn();
+    	
+    	// Create Log
+    	log = new ArrayList<>();
+    	JsonObject logJSON = modelJSON.getAsJsonObject("log");
+    	JsonArray logLines = logJSON.getAsJsonArray("lines");
+    	for (JsonElement line : logLines) {
+    		log.add(new Line(line.getAsJsonObject().get("message").getAsString(),
+    				line.getAsJsonObject().get("source").getAsString()));
+    	}
+    	
+    	// Create Chat
+    	chat = new ArrayList<>();
+    	JsonObject chatJSON = modelJSON.getAsJsonObject("chat");
+    	JsonArray chatLines = chatJSON.getAsJsonArray("lines");
+    	for (JsonElement line : chatLines) {
+    		chat.add(new Line(line.getAsJsonObject().get("message").getAsString(),
+    				line.getAsJsonObject().get("source").getAsString()));
+    	}
+    	
+    	// Initialize remaining variables
+    	winner = modelJSON.get("winner").getAsInt();
+		version = modelJSON.get("version").getAsInt();
+    	
+    }
 
     /**
      * checks to see if the game can create a new user
@@ -127,7 +170,7 @@ public class Game {
 				theMap.hasRoadAtLocation(location) && 
 				(theMap.edgeHasPlayerMunicipality(location, player) || theMap.edgeHasAdjacentPlayerRoad(location, player)) &&
 				(player.getResourceHand().get("WOOD") >= 1) && 
-				(player.getResourceHand().get("BRICK") >= 1) && (player.getPiecesAvailable().get("ROAD") >= 1));
+				(player.getResourceHand().get("BRICK") >= 1) && (player.getRoads() >= 1));
     }
     
     /**
@@ -138,7 +181,7 @@ public class Game {
      * @param recieverPlayerId the playerIndex of the offer recipient.
      * @return result
      */
-    boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){
+    boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, HashMap<ResourceType, Integer> offer){
     	Player player = this.getPlayerById(senderPlayerId);
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
 				player.hasOfferResources(offer));
@@ -175,6 +218,7 @@ public class Game {
      * @return true if there are resources to recieve
      */
     boolean canGetRolledResourses(int playerId, int diceRoll){
+    	return false;
         // TODO: If piece is on hex with that number, return true.
     }
     
