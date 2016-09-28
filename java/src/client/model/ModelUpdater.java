@@ -1,5 +1,6 @@
 package client.model;
 
+import com.google.gson.JsonObject;
 import com.sun.org.apache.xpath.internal.operations.String;
 
 /**
@@ -151,8 +152,8 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updateBank(String json) {
-		
+	public void updateBank(JsonObject json) {
+
 	}
 	
 	/**
