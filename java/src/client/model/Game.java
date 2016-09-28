@@ -1,9 +1,9 @@
 package client.model;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import shared.definitions.ResourceType;
+import shared.locations.EdgeLocation;
 import shared.locations.VertexLocation;
 
 /**
@@ -66,13 +66,20 @@ public class Game {
     boolean canPlaceCity(int playerId, VertexLocation location){
     	Player player = this.getPlayerById(playerId);
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
-				player.settlementExists(location) && (player.getResourceHand().get("WHEAT") >= 2) && 
+				theMap.hasSettlementAtLocation(location) && (player.getResourceHand().get("WHEAT") >= 2) && 
 				(player.getResourceHand().get("ORE") >= 3) && (player.getResourceHand().get("CITY") >= 1));
     }
 
     /**
      * Checks whether the player can place a settlement.
-     * @pre It's your turn, The settlement location is open, The settlement location is not on water, The settlement location is connected to one of your roads except during setup, You have the required resources (1 wood, 1 brick, 1 wheat, 1 sheep; 1 settlement), The settlement cannot be placed adjacent to another settlement
+     * @pre <pre>
+     * 		It's your turn
+     * 		The settlement location is open
+     * 		The settlement location is not on water
+     * 		The settlement location is connected to one of your roads except during setup
+     * 		You have the required resources (1 wood, 1 brick, 1 wheat, 1 sheep; 1 settlement)
+     * 		The settlement cannot be placed adjacent to another settlement
+     * 		</pre>
      * @post You lost the resources required to build a settlement (1 wood, 1 brick, 1 wheat, 1 sheep; 1 settlement), The settlement is on the map at the specified location
      * @param playerId the ID of the player who is requesting the move
      * @param free Whether or not piece can be built for free.
@@ -81,25 +88,45 @@ public class Game {
      */
     boolean canPlaceSettlement(int playerId, boolean free, VertexLocation location){
     	Player player = this.getPlayerById(playerId);
+    	if (free) {
+    		return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
+    				!theMap.hasSettlementAtLocation(location) && !theMap.hasAdjacentSettlement(location) && 
+    				theMap.vertexIsOnPlayerRoad(location, player));
+    	}
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
-				theMap.isOpen(location) && (player.getResourceHand().get("WOOD") >= 1) && 
-				(player.getResourceHand().get("BRICK") >= 1) && (player.getResourceHand().get("WHEAT") >= 1) && 
-				(player.getResourceHand().get("SHEEP") >= 1) && (player.getResourceHand().get("SETTLEMENT") >= 1));
+				!theMap.hasSettlementAtLocation(location) && theMap.vertexIsOnPlayerRoad(location, player) && 
+				(player.getResourceHand().get("WOOD") >= 1) && (player.getResourceHand().get("BRICK") >= 1) && 
+				(player.getResourceHand().get("WHEAT") >= 1) && (player.getResourceHand().get("SHEEP") >= 1) && 
+				(player.getResourceHand().get("SETTLEMENT") >= 1));
     }
 
     /**
      * Checks whether the player can place a road.
-     * @pre It's your turn, The road location is open, The road location is connected to another road owned by the player, The road location is not on water, You have the required resources (1 wood, 1 brick; 1 road), Setup round: Must be placed by settlement owned by the player with no adjacent road.
+     * @pre <pre>
+     * 		It's your turn
+     * 		The road location is open
+     * 		The road location is connected to another road owned by the player
+     * 		The road location is not on water
+     * 		You have the required resources (1 wood, 1 brick; 1 road)
+     * 		Setup round: Must be placed by settlement owned by the player with no adjacent road.
+     * 		</pre>
      * @post You lost the resources required to build a road (1 wood, 1 brick - 1 road), The road is on the map at the specified location, If applicable, longest road has been awarded to the player with the longest road
      * @param playerId the ID of the player who is requesting the move
      * @param free Whether or not piece can be built for free.
      * @param location The location of the road.
      * @return result
      */
-    boolean canPlaceRoad(int playerId, boolean free, VertexLocation location) {
+    boolean canPlaceRoad(int playerId, boolean free, EdgeLocation location) {
     	Player player = this.getPlayerById(playerId);
+    	if (free) {
+    		return (turnTracker.getCurrentTurn() == player.getPlayerIndex() && 
+    				theMap.hasRoadAtLocation(location) && 
+    				(theMap.edgeHasPlayerMunicipality(location, player) || theMap.edgeHasAdjacentPlayerRoad(location, player)));
+    	}
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
-				theMap.isOpen(location) && (player.getResourceHand().get("WOOD") >= 1) && 
+				theMap.hasRoadAtLocation(location) && 
+				(theMap.edgeHasPlayerMunicipality(location, player) || theMap.edgeHasAdjacentPlayerRoad(location, player)) &&
+				(player.getResourceHand().get("WOOD") >= 1) && 
 				(player.getResourceHand().get("BRICK") >= 1) && (player.getPiecesAvailable().get("ROAD") >= 1));
     }
     

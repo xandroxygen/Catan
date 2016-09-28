@@ -9,4 +9,8 @@ public abstract class Municipality {
 	public VertexLocation getLocation() {
 		return location.getNormalizedLocation();
 	}
+	
+	public int getOwnerIndex() {
+		return owner;
+	}
 }
