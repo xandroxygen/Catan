@@ -14,4 +14,8 @@ public class Port {
     private ResourceType resource;
     private VertexDirection direction;
     private HexLocation location;
+    
+    public HexLocation getLocation() {
+    	return location;
+    }
 }

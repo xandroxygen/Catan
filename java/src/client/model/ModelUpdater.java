@@ -2,6 +2,15 @@ package client.model;
 
 import com.google.gson.JsonObject;
 import com.sun.org.apache.xpath.internal.operations.String;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.simple.JSONObject;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * ModelUpdater class.
@@ -299,8 +308,17 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updateMap(String json) {
-		
+	public Map updateMap(JsonObject json) {
+		try {
+			JsonObject mapJSON = json.getAsJsonObject("Map");
+			Map newMap = new Map(mapJSON);
+			return newMap;
+		}
+		catch (Exception e) {
+			// INVALID MODEL PROVIDED
+			return null;
+		}
+
 	}
 
 }
