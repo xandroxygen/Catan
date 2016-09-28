@@ -22,7 +22,8 @@ import com.google.gson.JsonObject;
 public class Map {
 	
 	private HashMap<HexLocation, Hex> hexes;
-	private HashMap<VertexLocation, Municipality> municipalities;
+	private HashMap<VertexLocation, City> cities;
+	private HashMap<VertexLocation, Settlement> settlements;
 	private HashMap<EdgeLocation, Road> roads;
 	private int radius;
 	private HashMap<HexLocation, Port> ports;
@@ -43,12 +44,12 @@ public class Map {
 		JsonArray settlementsJSON = mapJSON.getAsJsonArray("settlements");
 		for (JsonElement settlementElement : settlementsJSON) {
 			Settlement settlement = new Gson().fromJson(settlementElement, Settlement.class);
-			municipalities.put(settlement.getLocation(), settlement);
+			settlements.put(settlement.getLocation(), settlement);
 		}
 		JsonArray citiesJSON = mapJSON.getAsJsonArray("cities");
 		for (JsonElement cityElement : citiesJSON) {
 			City city = new Gson().fromJson(cityElement, City.class);
-			municipalities.put(city.getLocation(), city);
+			cities.put(city.getLocation(), city);
 		}
 		JsonArray portsJSON = mapJSON.getAsJsonArray("ports");
 		for (JsonElement portElement : portsJSON) {
@@ -57,6 +58,11 @@ public class Map {
 		}
 		radius = mapJSON.getAsJsonObject("radius").getAsInt();
 		robber = new Gson().fromJson(mapJSON.getAsJsonObject("robber"), Robber.class);
+	}
+	
+	public boolean hasCityAtLocation(VertexLocation location) {
+		//if (municipalities.get(location.))
+		return false;
 	}
 
 

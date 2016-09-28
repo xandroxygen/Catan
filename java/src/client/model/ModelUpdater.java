@@ -307,7 +307,6 @@ public class ModelUpdater {
 	 * @param json
 	 */
 	public Map updateMap(JsonObject json) {
-		List<Hex> mapHexes = new ArrayList<>();
 		try {
 			JsonObject mapJSON = json.getAsJsonObject("Map");
 			Map newMap = new Map(mapJSON);
