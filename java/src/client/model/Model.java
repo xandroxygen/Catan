@@ -4,12 +4,12 @@ package client.model;
 import com.google.gson.JsonObject;
 import com.sun.org.apache.xpath.internal.operations.String;
 import shared.definitions.DevCardType;
-import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static shared.definitions.ResourceType.*;
@@ -152,7 +152,7 @@ public class Model {
      * @return result
      */
     boolean canPlaceCity(int playerId, VertexLocation location){
-        return false;
+        return game.canPlaceCity(playerId, location);
     }
 
     /**
@@ -165,7 +165,7 @@ public class Model {
      * @return result
      */
     boolean canPlaceSettlement(int playerId, boolean free, VertexLocation location){
-        return false;
+        return canPlaceSettlement(playerId, free, location);
     }
 
     /**
@@ -177,8 +177,8 @@ public class Model {
      * @param location The location of the road.
      * @return result
      */
-    boolean canPlaceRoad(int playerId, boolean free, VertexLocation location) {
-        return false;
+    boolean canPlaceRoad(int playerId, boolean free, EdgeLocation location) {
+        return game.canPlaceRoad(playerId, free, location);
     }
 
     /**
@@ -206,8 +206,8 @@ public class Model {
      * @param recieverPlayerId the playerIndex of the offer recipient.
      * @return result
      */
-    boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){
-        return false;
+    boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, HashMap<ResourceType, Integer> offer){
+        return game.canTradeWithPlayer(senderPlayerId, recieverPlayerId, offer);
     }
 
     /**
@@ -229,28 +229,58 @@ public class Model {
             bool = game.playerList.get(playerIndex).canTradeWithBank(ratio, inputResource);
         }
         //Verifies that the ratios are correct
-        //TODO check if the location of the port matches the location of that players city or settlement locations
-        if(inputResource == WOOD){
-            bool = false;
-            //iterate through the ports
-            for(Map.Entry<EdgeLocation, Port> tempPort: game.theMap.getPorts().entrySet()) {
-                if(tempPort.getValue().getResource() == WOOD && !bool) {
-                    bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
-                            game.playerList.get(playerIndex));
+        if(bool) {
+            if (inputResource == WOOD) {
+                bool = false;
+                //iterate through the ports
+                for (Map.Entry<EdgeLocation, Port> tempPort : game.theMap.getPorts().entrySet()) {
+                    //verifies the player has a municipality at the port
+                    if (tempPort.getValue().getResource() == WOOD && !bool) {
+                        bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
+                                game.playerList.get(playerIndex));
+                    }
+                }
+            } else if (inputResource == BRICK) {
+                bool = false;
+                //iterate through the ports
+                for (Map.Entry<EdgeLocation, Port> tempPort : game.theMap.getPorts().entrySet()) {
+                    //verifies the player has a municipality at the port
+                    if (tempPort.getValue().getResource() == BRICK && !bool) {
+                        bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
+                                game.playerList.get(playerIndex));
+                    }
+                }
+            } else if (inputResource == SHEEP) {
+                bool = false;
+                //iterate through the ports
+                for (Map.Entry<EdgeLocation, Port> tempPort : game.theMap.getPorts().entrySet()) {
+                    //verifies the player has a municipality at the port
+                    if (tempPort.getValue().getResource() == SHEEP && !bool) {
+                        bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
+                                game.playerList.get(playerIndex));
+                    }
+                }
+            } else if (inputResource == WHEAT) {
+                bool = false;
+                //iterate through the ports
+                for (Map.Entry<EdgeLocation, Port> tempPort : game.theMap.getPorts().entrySet()) {
+                    //verifies the player has a municipality at the port
+                    if (tempPort.getValue().getResource() == WHEAT && !bool) {
+                        bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
+                                game.playerList.get(playerIndex));
+                    }
+                }
+            } else if (inputResource == ORE) {
+                bool = false;
+                //iterate through the ports
+                for (Map.Entry<EdgeLocation, Port> tempPort : game.theMap.getPorts().entrySet()) {
+                    //verifies the player has a municipality at the port
+                    if (tempPort.getValue().getResource() == ORE && !bool) {
+                        bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
+                                game.playerList.get(playerIndex));
+                    }
                 }
             }
-        }
-        else if(inputResource == BRICK){
-            //add stuff here
-        }
-        else if(inputResource == SHEEP){
-            //add stuff here
-        }
-        else if(inputResource == WHEAT){
-            //add stuff here
-        }
-        else if(inputResource == ORE){
-            //add stuff here
         }
         return bool;
     }
@@ -452,7 +482,7 @@ public class Model {
      * @return
      */
     boolean canRollDice(int playerId){
-        return false;
+        return game.canRollDice(playerId);
     }
 
     /**
@@ -462,7 +492,7 @@ public class Model {
      * @return
      */
     boolean canSendMessage(int playerId, String message){
-        return false;
+        return canSendMessage(playerId, message);
     }
 
     /**
@@ -492,23 +522,6 @@ public class Model {
         return game.playerList.size() < 4;
     }
 
-//    /**
-//     * Authenticates the player
-//     *
-//     * @pre <pre>
-//     *      The player must be an authorized user
-//     * 	</pre>
-//     *
-//     * @post <pre>
-//     *      returns true to authenticate the user.
-//     * </pre>
-//     *
-//     * @return
-//     */
-//    public boolean canAuthenticateUser(){
-//        return false;
-//    }
-
     /**
      * Checks whether the player can get rolled resources.
      * @param playerId ID of player who needs resources
@@ -516,7 +529,7 @@ public class Model {
      * @return true if there are resources to receive
      */
     boolean canGetRolledResourses(int playerId, int diceRoll){
-        return false;
+        return game.canGetRolledResourses(playerId, diceRoll);
     }
 
     /**
@@ -571,5 +584,4 @@ public class Model {
     boolean canAcceptTradeOffer(int receiverPlayerId){
         return game.tradeOffer != null && game.tradeOffer.getOffer() != null && game.tradeOffer.getReceiver() == receiverPlayerId;
     }
-    //Logic goes in the game
 }

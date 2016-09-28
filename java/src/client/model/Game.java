@@ -26,6 +26,7 @@ public class Game {
     public ArrayList<Line> chat;
     public int winner;
     public int version;
+    public TradeOffer tradeOffer;
 
     public boolean isTurn(int playerId){
         //look for implementation
