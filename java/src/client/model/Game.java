@@ -1,16 +1,15 @@
 package client.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.VertexLocation;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Game class.
@@ -230,13 +229,11 @@ public class Game {
     
     /**
      * Checks whether the player can get rolled resources.
-     * @param playerId ID of player who needs resources
      * @param diceRoll the number that was rolled
      * @return true if there are resources to recieve
      */
-    boolean canGetRolledResourses(int playerId, int diceRoll){
-    	return false;
-        // TODO: If piece is on hex with that number, return true.
+    boolean canGetRolledResources(int diceRoll){
+        return diceRoll <= 12 && diceRoll >= 2;
     }
     
     // MARK: HELPER METHODS
