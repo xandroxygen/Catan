@@ -76,7 +76,7 @@ public class Map {
 			}
 			JsonArray portsJSON = mapJSON.getAsJsonArray("ports");
 			for (JsonElement portElement : portsJSON) {
-				Port port = new Gson().fromJson(portElement, Port.class);
+				Port port = new Port(portElement.getAsJsonObject());
 				ports.put(port.getLocation(), port);
 			}
 			JsonObject robberJSON = mapJSON.getAsJsonObject("robber");
