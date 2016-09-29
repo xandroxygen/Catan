@@ -131,6 +131,13 @@
 					value="lib/gson-2.2.4.jar" />
 			</manifest>
 		</jar>
+		<jar jarfile="${java.dist}/catan-testing.jar" basedir="${java.build}">
+			<manifest>
+				<attribute name="Main-Class" value="testing.MainTest"/>
+				<attribute name="Class-Path"
+						   value="lib/gson-2.2.4.jar" />
+			</manifest>
+		</jar>
 	</target>
 	
 	<target name="our-client" depends="package" description="compiles, packages, and runs the student client">
@@ -144,6 +151,15 @@
  	
 	<target name="our-server" depends="package" description="compiles, packages, and runs the student server">
 		<java jar="${java.dist}/catan-server.jar" dir="${java.dist}" fork="yes">
+			<sysproperty key="com.sun.management.jmxremote" value=""/>
+			<assertions>
+				<enable/>
+			</assertions>
+		</java>
+	</target>
+
+	<target name="test" depends="package" description="compiles, packages, and runs the student server">
+		<java jar="${java.dist}/catan-testing.jar" dir="${java.dist}" fork="yes">
 			<sysproperty key="com.sun.management.jmxremote" value=""/>
 			<assertions>
 				<enable/>
