@@ -1,18 +1,48 @@
 package client.model;
 
 
+import com.google.gson.JsonObject;
+import com.sun.org.apache.xpath.internal.operations.String;
+import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
+import java.util.HashMap;
 import java.util.Map;
+
+import static shared.definitions.ResourceType.*;
 
 
 /**
  * Model Facade Class
  */
 public class Model {
+	private Game game;
+	private ModelUpdater modelUpdater;
+	private static Model model;
+	
+	private Model() {
+		modelUpdater = new ModelUpdater();
+	}
+	
+	public static Model getInstance() {
+		if (model == null) {
+			model = new Model();
+		}
+		return model;
+	}
+	
+	
+	public int getVersion() {
+		return game.getVersion();
+	}
+	
+	public Game getGame() {
+		return game;
+	}
+	
     /**
      * Updates model class.
      *
@@ -131,17 +161,20 @@ public class Model {
      *
      * @param json the Json String being passed in
      */
-    void updateModel(String json){ }
+    public void updateModel(JsonObject json){
+    	game = modelUpdater.updateModel(json);
+    }
+
     /**
      * Checks whether the player can place a city.
      * @pre It's your turn, The city location is where you currently have a settlement, You have the required resources (2 wheat, 3 ore; 1 city)
-     * @post You lost the resources required to build a city (2 wheat, 3 ore; 1 city), The city is on the map at the specified location, You got a settlement back
+     * @post You lost the resources required to build a city (2 wheat, 3 ore, 1 city), The city is on the map at the specified location, You got a settlement back
      * @param playerId the ID of the player who is requesting the move
      * @param location The location of the city.
      * @return result
      */
     boolean canPlaceCity(int playerId, VertexLocation location){
-        return false;
+        return game.canPlaceCity(playerId, location);
     }
 
     /**
@@ -154,7 +187,7 @@ public class Model {
      * @return result
      */
     boolean canPlaceSettlement(int playerId, boolean free, VertexLocation location){
-        return false;
+        return canPlaceSettlement(playerId, free, location);
     }
 
     /**
@@ -166,18 +199,25 @@ public class Model {
      * @param location The location of the road.
      * @return result
      */
-    boolean canPlaceRoad(int playerId, boolean free, VertexLocation location) {
-        return false;
+    boolean canPlaceRoad(int playerId, boolean free, EdgeLocation location) {
+        return game.canPlaceRoad(playerId, free, location);
     }
 
     /**
      * Checks whether the player can buy a development card.
      * @pre It's your turn, You have the required resources (1 ore, 1 wheat, 1 sheep), There are dev cards left in the deck.
-     * @post You have a new card; If it is a monument card, it has been added to your old devcard hand, If it is a non­monument card, it has been added to your new devcard hand (unplayable this turn)
+     * @post You have a new card; If it is a monument card, it has been added to your old devCard hand, If it is a non­monument card, it has been added to your new devcard hand (unplayable this turn)
      * @return result
      */
     boolean canBuyDevelopmentCard(int playerId){
-        return false;
+        int playerIndex = game.getPlayerIndex(playerId);
+        // Verifies that the Bank has Dev Cards
+        boolean bool = game.bank.canBuyDevelopmentCard();
+        // Verifies that the Player has enough resources
+        if (bool){
+            bool = game.playerList.get(playerIndex).canBuyDevelopmentCard();
+        }
+        return bool;
     }
 
     /**
@@ -188,8 +228,8 @@ public class Model {
      * @param recieverPlayerId the playerIndex of the offer recipient.
      * @return result
      */
-    boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){
-        return false;
+    boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, HashMap<ResourceType, Integer> offer){
+        return game.canTradeWithPlayer(senderPlayerId, recieverPlayerId, offer);
     }
 
     /**
@@ -202,7 +242,69 @@ public class Model {
      * @return result
      */
     boolean canTradeWithBank(int playerId, int ratio, ResourceType inputResource, ResourceType outputResource){
-        return false;
+        int playerIndex = game.getPlayerIndex(playerId);
+        boolean bool;
+        //Verifies that it is the turn of the PlayerId
+        bool = game.turnTracker.getCurrentTurn() == playerIndex;
+        //Verifies that the player has the resources that he wants to trade
+        if(bool) {
+            bool = game.playerList.get(playerIndex).canTradeWithBank(ratio, inputResource);
+        }
+        //Verifies that the ratios are correct
+        if(bool) {
+            if (inputResource == WOOD) {
+                bool = false;
+                //iterate through the ports
+                for (Map.Entry<EdgeLocation, Port> tempPort : game.theMap.getPorts().entrySet()) {
+                    //verifies the player has a municipality at the port
+                    if (tempPort.getValue().getResource() == WOOD && !bool) {
+                        bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
+                                game.playerList.get(playerIndex));
+                    }
+                }
+            } else if (inputResource == BRICK) {
+                bool = false;
+                //iterate through the ports
+                for (Map.Entry<EdgeLocation, Port> tempPort : game.theMap.getPorts().entrySet()) {
+                    //verifies the player has a municipality at the port
+                    if (tempPort.getValue().getResource() == BRICK && !bool) {
+                        bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
+                                game.playerList.get(playerIndex));
+                    }
+                }
+            } else if (inputResource == SHEEP) {
+                bool = false;
+                //iterate through the ports
+                for (Map.Entry<EdgeLocation, Port> tempPort : game.theMap.getPorts().entrySet()) {
+                    //verifies the player has a municipality at the port
+                    if (tempPort.getValue().getResource() == SHEEP && !bool) {
+                        bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
+                                game.playerList.get(playerIndex));
+                    }
+                }
+            } else if (inputResource == WHEAT) {
+                bool = false;
+                //iterate through the ports
+                for (Map.Entry<EdgeLocation, Port> tempPort : game.theMap.getPorts().entrySet()) {
+                    //verifies the player has a municipality at the port
+                    if (tempPort.getValue().getResource() == WHEAT && !bool) {
+                        bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
+                                game.playerList.get(playerIndex));
+                    }
+                }
+            } else if (inputResource == ORE) {
+                bool = false;
+                //iterate through the ports
+                for (Map.Entry<EdgeLocation, Port> tempPort : game.theMap.getPorts().entrySet()) {
+                    //verifies the player has a municipality at the port
+                    if (tempPort.getValue().getResource() == ORE && !bool) {
+                        bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
+                                game.playerList.get(playerIndex));
+                    }
+                }
+            }
+        }
+        return bool;
     }
 
     /**
@@ -227,7 +329,23 @@ public class Model {
      * @return result
      */
     public boolean canPlaySoldier(int playerId, HexLocation location, int victimIndex) {
-        return false;
+        int playerIndex = game.getPlayerIndex(playerId);
+        //verify it is the players turn
+        boolean bool = game.isTurn(playerId);
+        //verify the client model status is 'Playing'
+        if (bool){
+            bool = game.turnTracker.getStatus() == GameStatus.Playing;
+        }
+        //verify you have the specific card you want to play in your old dev card hand
+        //and verify you have not yet played a non­monument dev card this turn
+        if(bool){
+            bool = game.playerList.get(playerIndex).canPlayDevCard(DevCardType.SOLDIER);
+        }
+        //verify The robber is not being kept in the same location
+        if(bool){
+            bool = game.theMap.getRobber().getLocation() != location;
+        }
+        return bool;
     }
 
     /**
@@ -247,7 +365,28 @@ public class Model {
      * @return result
      */
     public boolean canPlayYearOfPlenty(int playerId, ResourceType resource1, ResourceType resource2) {
-        return false;
+        int playerIndex = game.getPlayerIndex(playerId);
+        //verify it is the players turn
+        boolean bool = game.isTurn(playerId);
+        //verify the client model status is 'Playing'
+        if (bool){
+            bool = game.turnTracker.getStatus() == GameStatus.Playing;
+        }
+        //verify you have the specific card you want to play in your old dev card hand
+        //and verify you have not yet played a non­monument dev card this turn
+        if(bool){
+            bool = game.playerList.get(playerIndex).canPlayDevCard(DevCardType.YEAR_OF_PLENTY);
+        }
+        //verify two specified resources are in the bank.
+        if(bool){
+            if(resource1 == resource2){
+                bool = game.bank.getResourceDeck().get(resource1) >= 2;
+            }else{
+                bool = game.bank.getResourceDeck().get(resource1) >= 1 &&
+                        game.bank.getResourceDeck().get(resource2) >= 1;
+            }
+        }
+        return bool;
     }
 
     /**
@@ -272,7 +411,35 @@ public class Model {
      * @return result
      */
     public boolean canPlayRoadCard(int playerId, EdgeLocation spot1, EdgeLocation spot2) {
-        return false;
+        int playerIndex = game.getPlayerIndex(playerId);
+        //verify it is the players turn
+        boolean bool = game.isTurn(playerId);
+        //verify the client model status is 'Playing'
+        if (bool){
+            bool = game.turnTracker.getStatus() == GameStatus.Playing;
+        }
+        //verify you have the specific card you want to play in your old dev card hand
+        //and verify you have not yet played a non­monument dev card this turn
+        if(bool){
+            bool = game.playerList.get(playerIndex).canPlayDevCard(DevCardType.ROAD_BUILD);
+        }
+        //verify the first road location (spot1) is connected to one of your roads.
+        //The second road location (spot2) is connected to one of your roads or to the first road location (spot1)
+        //Neither road location is on water
+        //You have at least two unused roads
+        if(bool){
+            bool = !game.theMap.hasRoadAtLocation(spot1) && !game.theMap.hasRoadAtLocation(spot2) &&
+                    game.theMap.edgeHasAdjacentPlayerRoad(spot1, game.playerList.get(playerIndex));
+            if(bool){
+                game.theMap.getRoads().put(spot1, new Road(spot1, playerIndex));
+                game.theMap.edgeHasAdjacentPlayerRoad(spot2, game.playerList.get(playerIndex));
+                game.theMap.getRoads().remove(spot1);
+            }
+        }
+        if(bool){
+            bool = game.playerList.get(playerIndex).getRoads() >= 2;
+        }
+        return bool;
     }
 
     /**
@@ -290,7 +457,19 @@ public class Model {
      * @return result
      */
     public boolean canPlayMonopolyCard(int playerId, ResourceType resource) {
-        return false;
+        int playerIndex = game.getPlayerIndex(playerId);
+        //verify it is the players turn
+        boolean bool = game.isTurn(playerId);
+        //verify the client model status is 'Playing'
+        if (bool){
+            bool = game.turnTracker.getStatus() == GameStatus.Playing;
+        }
+        //verify you have the specific card you want to play in your old dev card hand
+        //and verify you have not yet played a non­monument dev card this turn
+        if(bool){
+            bool = game.playerList.get(playerIndex).canPlayDevCard(DevCardType.MONOPOLY);
+        }
+        return bool;
     }
 
     /**
@@ -308,7 +487,19 @@ public class Model {
      * @return result
      */
     public boolean canPlayMonumentCard(int playerId) {
-        return false;
+        int playerIndex = game.getPlayerIndex(playerId);
+        //verify it is the players turn
+        boolean bool = game.isTurn(playerId);
+        //verify the client model status is 'Playing'
+        if (bool){
+            bool = game.turnTracker.getStatus() == GameStatus.Playing;
+        }
+        //verify you have the specific card you want to play in your old dev card hand
+        //and verify you have not yet played a non­monument dev card this turn
+        if(bool){
+            bool = game.playerList.get(playerIndex).canPlayDevCard(DevCardType.MONUMENT);
+        }
+        return bool;
     }
 
     /**
@@ -317,7 +508,7 @@ public class Model {
      * @return
      */
     boolean canRollDice(int playerId){
-        return false;
+        return game.canRollDice(playerId);
     }
 
     /**
@@ -327,7 +518,7 @@ public class Model {
      * @return
      */
     boolean canSendMessage(int playerId, String message){
-        return false;
+        return canSendMessage(playerId, message);
     }
 
     /**
@@ -353,48 +544,69 @@ public class Model {
      *
      * @return
      */
-    public boolean canCreateUser(){
-        return false;
-    }
-
-    /**
-     * Authenticates the user
-     *
-     * @pre <pre>
-     *      The player must be an authorized user
-     * 	</pre>
-     *
-     * @post <pre>
-     *      returns true to authenticate the user.
-     * </pre>
-     *
-     * @return
-     */
-    public boolean canAuthenticateUser(){
-        return false;
+    public boolean canCreatePlayer(){
+        return game.playerList.size() < 4;
     }
 
     /**
      * Checks whether the player can get rolled resources.
-     * @param playerId ID of player who needs resources
      * @param diceRoll the number that was rolled
-     * @return true if there are resources to recieve
+     * @return true if there are resources to receive
      */
-    boolean canGetRolledResourses(int playerId, int diceRoll){
-        return false;
+    boolean canGetRolledResourses(int diceRoll){
+        return game.canGetRolledResources(diceRoll);
     }
 
     /**
      * Make a trade offer to another player. Corresponds to canMakeTradeWithPlayer
      * @param senderPlayerId Player offering the trade
-     * @param recieverPlayerId Player being offered the trade
+     * @param receiverPlayerId Player being offered the trade
      * @param offer hand of cards to trade
      */
-    void makeTradeOffer(int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){ }
+    boolean canMakeTradeOffer(int senderPlayerId, int receiverPlayerId, Map<ResourceType, Integer> offer){
+        int senderPlayerIndex = game.getPlayerIndex(senderPlayerId);
+        int receiverPlayerIndex = game.getPlayerIndex(receiverPlayerId);
+        //Checks to see if it is the players turn
+        boolean bool = game.isTurn(senderPlayerId);
+        //Checks to see if the sender has all resources he is offering
+        if (bool && offer.get(ResourceType.BRICK) > 0){
+            bool = offer.get(ResourceType.BRICK) <= game.playerList.get(senderPlayerIndex).getResourceHand().get(ResourceType.BRICK);
+        }
+        if (bool && offer.get(ResourceType.WOOD) > 0){
+            bool = offer.get(ResourceType.WOOD) <= game.playerList.get(senderPlayerIndex).getResourceHand().get(ResourceType.WOOD);
+        }
+        if (bool && offer.get(ResourceType.WHEAT) > 0){
+            bool = offer.get(ResourceType.WHEAT) <= game.playerList.get(senderPlayerIndex).getResourceHand().get(ResourceType.WHEAT);
+        }
+        if (bool && offer.get(ResourceType.SHEEP) > 0){
+            bool = offer.get(ResourceType.SHEEP) <= game.playerList.get(senderPlayerIndex).getResourceHand().get(ResourceType.SHEEP);
+        }
+        if (bool && offer.get(ResourceType.ORE) > 0){
+            bool = offer.get(ResourceType.ORE) <= game.playerList.get(senderPlayerIndex).getResourceHand().get(ResourceType.ORE);
+        }
+        //Checks to see if the receiver has all resources he is offering
+        if (bool && offer.get(ResourceType.BRICK) < 0){
+            bool = offer.get(ResourceType.BRICK) <= game.playerList.get(receiverPlayerIndex).getResourceHand().get(ResourceType.BRICK);
+        }
+        if (bool && offer.get(ResourceType.WOOD) < 0){
+            bool = offer.get(ResourceType.WOOD) <= game.playerList.get(receiverPlayerIndex).getResourceHand().get(ResourceType.WOOD);
+        }
+        if (bool && offer.get(ResourceType.WHEAT) < 0){
+            bool = offer.get(ResourceType.WHEAT) <= game.playerList.get(receiverPlayerIndex).getResourceHand().get(ResourceType.WHEAT);
+        }
+        if (bool && offer.get(ResourceType.SHEEP) < 0){
+            bool = offer.get(ResourceType.SHEEP) <= game.playerList.get(receiverPlayerIndex).getResourceHand().get(ResourceType.SHEEP);
+        }
+        if (bool && offer.get(ResourceType.ORE) < 0){
+            bool = offer.get(ResourceType.ORE) <= game.playerList.get(receiverPlayerIndex).getResourceHand().get(ResourceType.ORE);
+        }
+        return bool;
+    }
 
     /**
      * Sent by player who has been offered a trade.
-     * @param accept true if the player wants the trade.
      */
-    void acceptTradeOffer(boolean accept){ }
+    boolean canAcceptTradeOffer(int receiverPlayerId){
+        return game.tradeOffer != null && game.tradeOffer.getOffer() != null && game.tradeOffer.getReceiver() == receiverPlayerId;
+    }
 }

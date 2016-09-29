@@ -1,6 +1,25 @@
 package client.model;
+
+import shared.definitions.CatanColor;
+import shared.definitions.DevCardType;
+import shared.definitions.PieceType;
+import shared.definitions.ResourceType;
+import shared.locations.HexLocation;
+import shared.locations.VertexLocation;
+
+import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 import shared.definitions.*;
 import shared.locations.EdgeLocation;
@@ -15,13 +34,65 @@ public class Player {
 	private String name;
 	private CatanColor color;
 	private int playerIndex;
-	private int playerId;
-	private boolean developmentCardPlayed;
+	private int playerID;
+	private boolean playedDevCard;
 	private int victoryPoints;
-	private HashMap<ResourceType, Integer> resourceHand;
-	private HashMap<DevCardType, Integer> playableDevCardHand;
-	private HashMap<DevCardType, Integer> unplayableDevCardHand;
-	private HashMap<PieceType, Integer> piecesAvailable;
+	private HashMap<ResourceType, Integer> resources;
+	private HashMap<DevCardType, Integer> oldDevCards;
+	private HashMap<DevCardType, Integer> newDevCards;
+	private int cities;
+	private int settlements;
+	private int roads;
+	private int soldiers;
+	private int monuments;
+	private boolean discarded;
+
+	Player(JsonObject playerJSON) {
+		// Parse resources
+		resources = new HashMap<>();
+		JsonObject resourcesJSON = playerJSON.getAsJsonObject("resources");
+		resources.put(ResourceType.BRICK, resourcesJSON.get("brick").getAsInt());
+		resources.put(ResourceType.ORE, resourcesJSON.get("ore").getAsInt());
+		resources.put(ResourceType.SHEEP, resourcesJSON.get("sheep").getAsInt());
+		resources.put(ResourceType.WHEAT, resourcesJSON.get("wheat").getAsInt());
+		resources.put(ResourceType.WOOD, resourcesJSON.get("wood").getAsInt());
+		System.out.println(resources.get(ResourceType.BRICK));
+
+		// Parse old dev cards
+		oldDevCards = new HashMap<>();
+		JsonObject oldDevCardsJSON = playerJSON.getAsJsonObject("oldDevCards");
+		oldDevCards.put(DevCardType.MONOPOLY, oldDevCardsJSON.get("monopoly").getAsInt());
+		oldDevCards.put(DevCardType.MONUMENT, oldDevCardsJSON.get("monument").getAsInt());
+		oldDevCards.put(DevCardType.ROAD_BUILD, oldDevCardsJSON.get("roadBuilding").getAsInt());
+		oldDevCards.put(DevCardType.SOLDIER, oldDevCardsJSON.get("soldier").getAsInt());
+		oldDevCards.put(DevCardType.YEAR_OF_PLENTY, oldDevCardsJSON.get("yearOfPlenty").getAsInt());
+		System.out.println(resources.get(ResourceType.BRICK));
+
+		// Parse new dev cards
+		newDevCards = new HashMap<>();
+		JsonObject newDevCardsJSON = playerJSON.getAsJsonObject("newDevCards");
+		newDevCards.put(DevCardType.MONOPOLY, newDevCardsJSON.get("monopoly").getAsInt());
+		newDevCards.put(DevCardType.MONUMENT, newDevCardsJSON.get("monument").getAsInt());
+		newDevCards.put(DevCardType.ROAD_BUILD, newDevCardsJSON.get("roadBuilding").getAsInt());
+		newDevCards.put(DevCardType.SOLDIER, newDevCardsJSON.get("soldier").getAsInt());
+		newDevCards.put(DevCardType.YEAR_OF_PLENTY, newDevCardsJSON.get("yearOfPlenty").getAsInt());
+		System.out.println(resources.get(ResourceType.BRICK));
+
+		// Parse all other variables
+		roads = playerJSON.get("roads").getAsInt();
+		cities = playerJSON.get("cities").getAsInt();
+		settlements = playerJSON.get("settlements").getAsInt();
+		soldiers = playerJSON.get("soldiers").getAsInt();
+		victoryPoints = playerJSON.get("victoryPoints").getAsInt();
+		monuments = playerJSON.get("monuments").getAsInt();
+		playedDevCard = playerJSON.get("playedDevCard").getAsBoolean();
+		discarded = playerJSON.get("discarded").getAsBoolean();
+		playerID = playerJSON.get("playerID").getAsInt();
+		playerIndex = playerJSON.get("playerIndex").getAsInt();
+		name = playerJSON.get("name").getAsString();
+		color = CatanColor.valueOf(playerJSON.get("color").getAsString().toUpperCase());
+
+	}
 	
 	/**
 	 * Checks whether the player can place a city.
@@ -57,9 +128,9 @@ public class Player {
 	public boolean canPlaceRoad(boolean free, VertexLocation location) {
 		return false;
 	}
-	
+
 	/**
-	 * Checks whether you can play a soldier development card
+	 * Checks whether you can play a development card
 	 * @pre <pre>
 	 * 		It's your turn
 	 * 		The client model status is 'Playing'
@@ -69,109 +140,133 @@ public class Player {
 	 * 		If a player is being robbed (i.e., victimIndex != ­1)
 	 * 		The player being robbed has resource cards
 	 * 		</pre>
-	 * @post <pre>
-	 * 		The robber is in the new location
-	 * 		The player being robbed (if any) gave you one of his resource cards (randomly selected)
-	 * 		If applicable, largest army has been awarded to the player who has played the most soldier cards
-	 * 		You are not allowed to play other development cards during this turn (except for monument cards, which may still be played)
-	 * 		</pre>
-	 * @param location New robber location.
-	 * @param victimIndex The playerIndex of the player you wish to rob, or -1 to rob no one.
+	 * @param devCardType the type of dev card the player wants to play
 	 * @return result
 	 */
-	public boolean canPlaySoldier(HexLocation location, int victimIndex) {
-		return false;
+	public boolean canPlayDevCard(DevCardType devCardType) {
+		boolean bool = oldDevCards.containsKey(devCardType);
+		if(bool){
+			bool = !playedDevCard;
+		}
+		return bool;
 	}
 	
-	/**
-	 * Checks whether you can play a year of plenty card.
-	 * @pre <pre>
-	 * 		It's your turn
-	 * 		The client model status is 'Playing'
-	 * 		You have the specific card you want to play in your old dev card hand
-	 * 		You have not yet played a non­monument dev card this turn
-	 * 		Two specified resources are in the bank.
-	 * 		</pre>
-	 * @post <pre>
-	 * 		You gained the two specified resources
-	 * 		</pre>
-	 * @param resource1 The type of the first resource you'd like to receive
-	 * @param resource2 The type of the second resource you'd like to receive
-	 * @return result
-	 */
-	public boolean canPlayYearOfPlenty(ResourceType resource1, ResourceType resource2) {
-		return false;
-	}
-	
-	/**
-	 * Checks whether a Road card can be played.
-	 * @pre <pre>
-	 * 		It's your turn
-	 * 		The client model status is 'Playing'
-	 * 		You have the specific card you want to play in your old dev card hand
-	 * 		You have not yet played a non­monument dev card this turn
-	 * 		The first road location (spot1) is connected to one of your roads.
-	 * 		The second road location (spot2) is connected to one of your roads or to the first road location (spot1)
-	 * 		Neither road location is on water
-	 * 		You have at least two unused roads
-	 * 		</pre>
-	 * @post <pre>
-	 * 		You have two fewer unused roads
-	 * 		Two new roads appear on the map at the specified locations
-	 * 		If applicable, longest road has been awarded to the player with the longest road
-	 * 		</pre>
-	 * @param spot1 first edge location of road.
-	 * @param spot2 second edge location of road.
-	 * @return result
-	 */
-	public boolean canPlayRoadCard(EdgeLocation spot1, EdgeLocation spot2) {
-		return false;
-	}
- 	
-	/**
-	 * Checks whether a Monopoly card can be played.
-	 * @pre <pre>
-	 * 		It's your turn
-	 * 		The client model status is 'Playing'
-	 * 		You have the specific card you want to play in your old dev card hand
-	 * 		You have not yet played a non­monument dev card this turn
-	 * 		</pre>
-	 * @post <pre>
-	 * 		All of the other players have given you all of their resource cards of the specified type
-	 * 		</pre>
-	 * @param resource The type of resource desired from other players.
-	 * @return result
-	 */
-	public boolean canPlayMonopolyCard(ResourceType resource) {
-		return false;
-	}
-	
-	/**
-	 * Checks whether a Monument card can be played.
-	 * @pre <pre>
-	 * 		It's your turn
-	 * 		The client model status is 'Playing'
-	 * 		You have the specific card you want to play in your old dev card hand
-	 * 		You have not yet played a non­monument dev card this turn
-	 * 		You have enough monument cards to win the game (i.e., reach 10 victory points)
-	 * 		</pre>
-	 * @post <pre>
-	 * 		You gained a victory point
-	 * 		</pre>
-	 * @return result
-	 */
-	public boolean canPlayMonumentCard() {
-		return false;
-	}
+//	/**
+//	 * Checks whether you can play a soldier development card
+//	 * @pre <pre>
+//	 * 		It's your turn
+//	 * 		The client model status is 'Playing'
+//	 * 		You have the specific card you want to play in your old dev card hand
+//	 * 		You have not yet played a non­monument dev card this turn
+//	 * 		The robber is not being kept in the same location
+//	 * 		If a player is being robbed (i.e., victimIndex != ­1)
+//	 * 		The player being robbed has resource cards
+//	 * 		</pre>
+//	 * @post <pre>
+//	 * 		The robber is in the new location
+//	 * 		The player being robbed (if any) gave you one of his resource cards (randomly selected)
+//	 * 		If applicable, largest army has been awarded to the player who has played the most soldier cards
+//	 * 		You are not allowed to play other development cards during this turn (except for monument cards, which may still be played)
+//	 * 		</pre>
+//	 * @param location New robber location.
+//	 * @param victimIndex The playerIndex of the player you wish to rob, or -1 to rob no one.
+//	 * @return result
+//	 */
+//	public boolean canPlaySoldier(HexLocation location, int victimIndex) {
+//		return false;
+//	}
+//
+//	/**
+//	 * Checks whether you can play a year of plenty card.
+//	 * @pre <pre>
+//	 * 		It's your turn
+//	 * 		The client model status is 'Playing'
+//	 * 		You have the specific card you want to play in your old dev card hand
+//	 * 		You have not yet played a non­monument dev card this turn
+//	 * 		Two specified resources are in the bank.
+//	 * 		</pre>
+//	 * @post <pre>
+//	 * 		You gained the two specified resources
+//	 * 		</pre>
+//	 * @param resource1 The type of the first resource you'd like to receive
+//	 * @param resource2 The type of the second resource you'd like to receive
+//	 * @return result
+//	 */
+//	public boolean canPlayYearOfPlenty(ResourceType resource1, ResourceType resource2) {
+//		return false;
+//	}
+//
+//	/**
+//	 * Checks whether a Road card can be played.
+//	 * @pre <pre>
+//	 * 		It's your turn
+//	 * 		The client model status is 'Playing'
+//	 * 		You have the specific card you want to play in your old dev card hand
+//	 * 		You have not yet played a non­monument dev card this turn
+//	 * 		The first road location (spot1) is connected to one of your roads.
+//	 * 		The second road location (spot2) is connected to one of your roads or to the first road location (spot1)
+//	 * 		Neither road location is on water
+//	 * 		You have at least two unused roads
+//	 * 		</pre>
+//	 * @post <pre>
+//	 * 		You have two fewer unused roads
+//	 * 		Two new roads appear on the map at the specified locations
+//	 * 		If applicable, longest road has been awarded to the player with the longest road
+//	 * 		</pre>
+//	 * @param spot1 first edge location of road.
+//	 * @param spot2 second edge location of road.
+//	 * @return result
+//	 */
+//	public boolean canPlayRoadCard(EdgeLocation spot1, EdgeLocation spot2) {
+//		return false;
+//	}
+//
+//	/**
+//	 * Checks whether a Monopoly card can be played.
+//	 * @pre <pre>
+//	 * 		It's your turn
+//	 * 		The client model status is 'Playing'
+//	 * 		You have the specific card you want to play in your old dev card hand
+//	 * 		You have not yet played a non­monument dev card this turn
+//	 * 		</pre>
+//	 * @post <pre>
+//	 * 		All of the other players have given you all of their resource cards of the specified type
+//	 * 		</pre>
+//	 * @param resource The type of resource desired from other players.
+//	 * @return result
+//	 */
+//	public boolean canPlayMonopolyCard(ResourceType resource) {
+//		return false;
+//	}
+//
+//	/**
+//	 * Checks whether a Monument card can be played.
+//	 * @pre <pre>
+//	 * 		It's your turn
+//	 * 		The client model status is 'Playing'
+//	 * 		You have the specific card you want to play in your old dev card hand
+//	 * 		You have not yet played a non­monument dev card this turn
+//	 * 		You have enough monument cards to win the game (i.e., reach 10 victory points)
+//	 * 		</pre>
+//	 * @post <pre>
+//	 * 		You gained a victory point
+//	 * 		</pre>
+//	 * @return result
+//	 */
+//	public boolean canPlayMonumentCard() {
+//		return false;
+//	}
 	
 	/**
 	 * Checks whether the player can buy a development card.
 	 * @pre It's your turn, You have the required resources (1 ore, 1 wheat, 1 sheep), There are dev cards left in the deck.
-	 * @post You have a new card; If it is a monument card, it has been added to your old devcard hand, If it is a non­monument card, it has been added to your new devcard hand (unplayable this turn)
+	 * @post You have a new card; If it is a monument card, it has been added to your old devCard hand, If it is a non­monument card, it has been added to your new devcard hand (unplayable this turn)
 	 * @return result
 	 */
 	public boolean canBuyDevelopmentCard() {
-		return false;
+		return resources.containsKey(ResourceType.ORE) &&
+				resources.containsKey(ResourceType.WHEAT) &&
+				resources.containsKey(ResourceType.SHEEP);
 	}
 	
 	/**
@@ -185,7 +280,20 @@ public class Player {
 	public boolean canTradeWithPlayer(HashMap<ResourceType, Integer> offer, int recipient) {
 		return false;
 	}
-	
+
+
+	/**
+	 * Checks whether the player can trade using a port or directly to the bank.
+	 * @pre It's your turn, You have the resources you are giving, For ratios less than 4, you have the correct port for the trade
+	 * @post The trade has been executed (the offered resources are in the bank, and the requested resource has been received)
+	 * @param ratio It must be a 2, 3, or 4.
+	 * @param inputResource Type of resource you are giving.
+	 * @return result
+	 */
+	boolean canTradeWithBank(int ratio, ResourceType inputResource){
+		return resources.get(inputResource) >= ratio;
+	}
+
 	/**
 	 * Checks whether the player can trade with the maritime.
 	 * @pre It's your turn, You have the resources you are giving, For ratios less than 4, you have the correct port for the trade
@@ -241,4 +349,94 @@ public class Player {
 		return false;
 	}
 	
+	/*
+	private boolean cityExists(VertexLocation location) {
+		for (City city : cities) {
+			if (city.getLocation().equals(location)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected boolean settlementExists(VertexLocation location) {
+		for (Settlement settlement : settlements) {
+			if (settlement.getLocation().equals(location)) {
+				return true;
+			}
+		}
+		return false;
+	}*/
+	
+	protected boolean hasOfferResources(Map<ResourceType, Integer> offer) {
+		if ((offer.get("WOOD") > 0) && (resources.get("WOOD") <= offer.get("WOOD"))) {
+			return false;
+		}
+		if ((offer.get("BRICK") > 0) && (resources.get("BRICK") <= offer.get("BRICK"))) {
+			return false;
+		}
+		if ((offer.get("SHEEP") > 0) && (resources.get("SHEEP") <= offer.get("SHEEP"))) {
+			return false;
+		}
+		if ((offer.get("WHEAT") > 0) && (resources.get("WHEAT") <= offer.get("WHEAT"))) {
+			return false;
+		}
+		if ((offer.get("ORE") > 0) && (resources.get("ORE") <= offer.get("ORE"))) {
+			return false;
+		}
+		return true;
+	}
+
+	// GETTERS AND SETTERS
+
+	public String getName() {
+		return name;
+	}
+
+	public CatanColor getColor() {
+		return color;
+	}
+
+	public int getPlayerIndex() {
+		return playerIndex;
+	}
+
+	public int getPlayerId() {
+		return playerID;
+	}
+
+	public boolean isDevelopmentCardPlayed() {
+		return playedDevCard;
+	}
+
+	public int getVictoryPoints() {
+		return victoryPoints;
+	}
+
+	public Map<ResourceType,Integer> getResourceHand() {
+		return resources;
+	}
+
+	public static void main(String[] args) {
+		String json = "{\"resource\":\"wheat\",\"location\":{\"x\":-1,\"y\":2}}";
+		String json2 = "{\"resources\": {\"brick\": 0,\"wood\": 0,\"sheep\": 0,\"wheat\": 0,\"ore\": 0},\"oldDevCards\": {\"yearOfPlenty\": 0,\"monopoly\": 0,\"soldier\": 0,\"roadBuilding\": 0,\"monument\": 0},\"newDevCards\": {\"yearOfPlenty\": 0,\"monopoly\": 0,\"soldier\": 0,\"roadBuilding\": 0,\"monument\": 0},\"roads\": 15,\"cities\": 4,\"settlements\": 5,\"soldiers\": 0,\"victoryPoints\": 0,\"monuments\": 0,\"playedDevCard\": false,\"discarded\": false,\"playerID\": 12,\"playerIndex\": 0,\"name\": \"jeremyk\",\"color\": \"red\"}";
+		JsonParser parser = new JsonParser();
+		JsonObject o = parser.parse(json2).getAsJsonObject();
+		//Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
+		//Player player = gson.fromJson(json2, Player.class);
+		//Type collectionType = new TypeToken<Collection<Player>>(){}.getType();
+		//Collection<Player> enums = gson.fromJson(json2, collectionType);
+		Player player = new Player(o);
+		System.out.println(player.getName());
+
+		// Testing enum stuff
+		String json3 = "{\"status\": \"FirstRound\",\"currentTurn\": 0,\"longestRoad\": -1,\"largestArmy\": -1}";
+		TurnTracker turn = new Gson().fromJson(json3, TurnTracker.class);
+		System.out.println(turn.getStatus());
+	}
+
+	public int getRoads() {
+		return roads;
+	}
+
 }

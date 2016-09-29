@@ -1,5 +1,7 @@
 package shared.locations;
 
+import com.google.gson.annotations.SerializedName;
+
 public enum EdgeDirection
 {
 	
@@ -20,6 +22,15 @@ public enum EdgeDirection
 	public EdgeDirection getOppositeDirection()
 	{
 		return opposite;
+	}
+	
+	public static EdgeDirection getEnumFromAbbrev(String abbrev) {
+		switch (abbrev) {
+		case "NW":
+			return NorthWest;
+		default:
+			return NorthWest;
+		}
 	}
 }
 

@@ -1,4 +1,4 @@
-package client.server;
+package client.testing;
 
 import static org.junit.Assert.*;
 
@@ -7,6 +7,13 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import client.model.Model;
+import client.server.MockServerProxy;
+import client.server.ServerPoller;
 
 public class ServerPollerTest {
 	MockServerProxy mockProxy;
@@ -53,26 +60,11 @@ public class ServerPollerTest {
 	 */
 	@Test
 	public void testPollServer() {
-		// TODO: get code for updating the model
+		JsonObject newModel = new JsonParser().parse(mockProxy.testModel1).getAsJsonObject();
+		Model.getInstance().updateModel(newModel);	
 		
-		// Test when version numbers do not match
-		poller.setVersion(0);
-		poller.pollServer();
-		// String response = get response from updateModel code
-		// assertEquals(mockProxy.testModel1, response);
-		
-		// Test after retrieving one update and another update occurred 
-		poller.setVersion(1);
-		poller.pollServer();
-		// String response = get response from updateModel code
-		// assertEquals(mockProxy.testModel1, response);
-		
-		// Test when version numbers do match and no updates have occurred
-		// TODO: How to test this???
-		poller.setVersion(3);
-		poller.pollServer();
-		
-		
+		Model model = Model.getInstance();
+		model.getVersion();
 	}
 
 	@Test

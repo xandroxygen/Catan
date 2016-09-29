@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import client.model.InvalidActionException;
+import client.model.Model;
 import client.model.ModelUpdater;
 
 import java.util.Timer;
@@ -30,24 +31,10 @@ public class ServerPoller {
 	private final long DELAY = 0;
 	
 	/**
-	 * <p>
-	 * The version of the server since the last poll. 
-	 * Used to check if changes have been made to the server
-	 * by comparing the version numbers.
-	 * </p>
-	 */
-	private int version = -1;
-	
-	/**
 	 * The proxy to use when polling the server. This will be set externally.
 	 * Could be either a mock proxy or the real server proxy.
 	 */
 	private IServerProxy server;
-
-	/**
-	 * The class that does all model updates.
-	 */
-	private ModelUpdater modelUpdater;
 
     /**
      * <pre>
@@ -64,6 +51,7 @@ public class ServerPoller {
 	 */
 	public ServerPoller(IServerProxy server) {
         this.server = server;
+        //modelUpdater = Model.getModelUpdater();
     }
 	
 	/**
@@ -102,13 +90,12 @@ public class ServerPoller {
 	 */
 	public void pollServer() {	
 		try {
-			String result = server.gameGetModel(version);
-			Gson gson = new Gson();
-			String response = gson.toJson(result);
+			String response = server.gameGetModel(Model.getInstance().getVersion());
+			
 			boolean hasChanged = checkForUpdates(response);
 			if (hasChanged) {
-				//modelUpdater.updateModel(gson.toJson(response));
-				updateVersion(response);
+				JsonObject newModel = new JsonParser().parse(response).getAsJsonObject();
+				Model.getInstance().updateModel(newModel);
 			}
 		} catch (InvalidActionException e) {
 			e.printStackTrace();
@@ -140,24 +127,6 @@ public class ServerPoller {
 	}
 	
 	/**
-	 * Extracts the version number from the server response and assigns it to the 
-	 * version number on the client side.
-	 * 
-	 * @pre response is not null
-	 * 
-	 * @post The local version number is set equal to the version number from the server
-	 * 
-	 * @param response The response from the server containing new model data
-	 */
-	public void updateVersion(String response) {
-		assert response != null;
-		
-		JsonObject obj = new JsonParser().parse(response).getAsJsonObject();
-		JsonElement version= obj.get("version");
-		setVersion(version.getAsInt());
-	}
-	
-	/**
      * Stops the poller and sets it to null
      */
     public void stop() {
@@ -169,15 +138,9 @@ public class ServerPoller {
     	return this.server;
     }
 
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
 	public void setServer(IServerProxy proxy) {
 		this.server = proxy;
 	}
-
-	public void setModelUpdater(ModelUpdater m) { this.modelUpdater = m; }
 
 }
 
