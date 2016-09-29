@@ -1,8 +1,7 @@
 package client.admin;
 
-import client.admin.User;
-import client.model.Game;
 import client.model.InvalidActionException;
+import com.google.gson.*;
 import shared.definitions.CatanColor;
 
 import java.util.ArrayList;
@@ -41,8 +40,15 @@ public class GameAdministrator {
      */
     public boolean canRegister(String username, String password) {
         if (username != null && password != null) {
-            // check if user isn't registered already ie in all current games, there are no users with that name
-            return true;
+            boolean nameIsNotTaken = true;
+            for (GameDetails game : allCurrentGames) {
+                for (PlayerDetails player : game.getPlayers()) {
+                    if (player.getName().equals(username)) {
+                        nameIsNotTaken = false;
+                    }
+                }
+            }
+            return nameIsNotTaken;
         }
         return false;
     }
@@ -57,7 +63,11 @@ public class GameAdministrator {
      * @return true if user can create game
      */
     public boolean canCreateGame(String gameName, boolean rTiles, boolean rNumbers, boolean rPorts) {
-        return false;
+        boolean canCreateGame = true;
+        canCreateGame = currentUser.isLoggedIn;
+        canCreateGame = (gameName != null) && canCreateGame;
+        // booleans are valid booleans by default?
+        return canCreateGame;
     }
 
     /**
@@ -68,7 +78,33 @@ public class GameAdministrator {
      * @return true if user can join game
      */
     public boolean canJoinGame(int gameID, CatanColor userColor) {
-        return false;
+
+        boolean canJoinGame = true;
+        canJoinGame = currentUser.isLoggedIn;
+
+        if (gameID >= allCurrentGames.size() || gameID < 0) {
+
+            // invalid gameID
+            canJoinGame = false;
+        }
+        else {
+
+            GameDetails currentGame = allCurrentGames.get(gameID);
+            if (currentGame.getPlayers().size() > 3) {
+
+                // game is full
+                canJoinGame = false;
+            }
+
+            for (PlayerDetails player : currentGame.getPlayers()) {
+                if (player.getName().equals(currentUser.getUsername()) ||
+                        player.getColor().equals(userColor)) {
+                    // player or color is already in game
+                    canJoinGame = false;
+                }
+            }
+        }
+        return canJoinGame;
     }
 
     /**
@@ -130,12 +166,17 @@ public class GameAdministrator {
 
     /**
      * Deserializes the list of games and returns list of Game objects.
-     * TODO: Game should actually be separate class GameInfo or something, since the json isn't a game model but info
-     * about the game itself.
+     * @param jsonList JSON string of list of games
+     * @return list of GameDetail objects
      */
     private List<GameDetails> deserializeGameList(String jsonList) {
-
-        return null;
+        List<GameDetails> games = new ArrayList<>();
+        JsonArray jsonGames = new JsonParser().parse(jsonList).getAsJsonArray();
+        for (JsonElement gameElement : jsonGames) {
+            GameDetails gameDetails = new Gson().fromJson(gameElement, GameDetails.class);
+            games.add(gameDetails);
+        }
+        return games;
     }
 
 }

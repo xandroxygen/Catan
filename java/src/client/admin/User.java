@@ -11,12 +11,14 @@ public class User {
     private String username;
     private String password;
     private String cookie;
+    public boolean isLoggedIn;
     private List<Integer> gamesJoined;
 
     public User() {
         username = "";
         password = "";
         cookie = "";
+        isLoggedIn = false;
         gamesJoined = new ArrayList<>();
     }
 
@@ -24,6 +26,7 @@ public class User {
         this.username = username;
         this.password = password;
         cookie = "";
+        isLoggedIn = false;
         gamesJoined = new ArrayList<>();
     }
 
