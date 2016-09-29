@@ -2,7 +2,7 @@ package client.server;
 
 import java.util.Map;
 
-import org.json.simple.JSONObject;
+import com.google.gson.JsonObject;
 import shared.definitions.ResourceType;
 import shared.locations.*;
 
@@ -20,12 +20,12 @@ public class Serializer {
 	 * @return the serialized JSON string.
 	 */
 	public static String serializeNonMoveCall(Map<String, String> jsonBody) {
-		JSONObject jo = new JSONObject();
+		JsonObject jo = new JsonObject();
 		for (Map.Entry<String, String> entrySet : jsonBody.entrySet()) {
-			jo.put(entrySet.getKey(), entrySet.getValue());
+			jo.addProperty(entrySet.getKey(), entrySet.getValue());
 		}
 		
-		return jo.toJSONString();
+		return jo.toString();
 	}
 
 	/**
@@ -37,13 +37,13 @@ public class Serializer {
 	 * @return a JSON string
 	 */
 	public static String serializeMoveCall(String type, int playerIndex, Map<String, String> jsonBody) {
-		JSONObject jo = new JSONObject();
-		jo.put("type", type);
-		jo.put("playerIndex", playerIndex); // TODO: does this need to be toString?
+		JsonObject jo = new JsonObject();
+		jo.addProperty("type", type);
+		jo.addProperty("playerIndex", playerIndex); // TODO: does this need to be toString?
 		for (Map.Entry<String, String> entrySet : jsonBody.entrySet()) {
-			jo.put(entrySet.getKey(), entrySet.getValue());
+			jo.addProperty(entrySet.getKey(), entrySet.getValue());
 		}
-		return jo.toJSONString();
+		return jo.toString();
 	}
 
 	/**
@@ -53,11 +53,11 @@ public class Serializer {
 	 * @return the JSON representation of the hand of cards
 	 */
 	public static String serializeHand(Map<ResourceType, Integer> hand) {
-		JSONObject jo = new JSONObject();
+		JsonObject jo = new JsonObject();
 		for (Map.Entry<ResourceType, Integer> entrySet : hand.entrySet()) {
-			jo.put(serializeResourceType(entrySet.getKey()), Integer.toString(entrySet.getValue()));
+			jo.addProperty(serializeResourceType(entrySet.getKey()), Integer.toString(entrySet.getValue()));
 		}
-		return jo.toJSONString();
+		return jo.toString();
 	}
 
 	/**
@@ -66,10 +66,10 @@ public class Serializer {
 	 * @return the JSON representation of the HexLocation
 	 */
 	public static String serializeHexLocation(HexLocation location) {
-		JSONObject jo = new JSONObject();
-		jo.put("x", location.getX());
-		jo.put("y", location.getY());
-		return jo.toJSONString();
+		JsonObject jo = new JsonObject();
+		jo.addProperty("x", location.getX());
+		jo.addProperty("y", location.getY());
+		return jo.toString();
 	}
 
 	/**
@@ -78,11 +78,11 @@ public class Serializer {
 	 * @return the JSON representation of the EdgeLocation
 	 */
 	public static String serializeEdgeLocation(EdgeLocation location) {
-		JSONObject jo = new JSONObject();
-		jo.put("x", location.getHexLoc().getX());
-		jo.put("y", location.getHexLoc().getY());
-		jo.put("direction", serializeEdgeDirection(location.getDir()));
-		return jo.toJSONString();
+		JsonObject jo = new JsonObject();
+		jo.addProperty("x", location.getHexLoc().getX());
+		jo.addProperty("y", location.getHexLoc().getY());
+		jo.addProperty("direction", serializeEdgeDirection(location.getDir()));
+		return jo.toString();
 	}
 
 	/**
@@ -91,11 +91,11 @@ public class Serializer {
 	 * @return the JSON representation of the VertexLocation
 	 */
 	public static String serializeVertexLocation(VertexLocation location) {
-		JSONObject jo = new JSONObject();
-		jo.put("x", location.getHexLoc().getX());
-		jo.put("y", location.getHexLoc().getY());
-		jo.put("direction", serializeVertexDirection(location.getDir()));
-		return jo.toJSONString();
+		JsonObject jo = new JsonObject();
+		jo.addProperty("x", location.getHexLoc().getX());
+		jo.addProperty("y", location.getHexLoc().getY());
+		jo.addProperty("direction", serializeVertexDirection(location.getDir()));
+		return jo.toString();
 	}
 
 	/**

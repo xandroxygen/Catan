@@ -1,8 +1,7 @@
 package client.server;
 
 import client.model.InvalidActionException;
-import client.model.ModelUpdater;
-import org.json.simple.JSONObject;
+import com.google.gson.JsonObject;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -933,12 +932,12 @@ public class ServerProxy implements IServerProxy {
         setHeaders();
 
         // hard coded serialization because of difference of object order
-        JSONObject attributes = new JSONObject();
-        attributes.put("type", "Monopoly");
-        attributes.put("resource", Serializer.serializeResourceType(resource));
-        attributes.put("playerIndex", currentPlayerIndex);
+        JsonObject attributes = new JsonObject();
+        attributes.addProperty("type", "Monopoly");
+        attributes.addProperty("resource", Serializer.serializeResourceType(resource));
+        attributes.addProperty("playerIndex", currentPlayerIndex);
 
-        String body = attributes.toJSONString();
+        String body = attributes.toString();
 
         RequestResponse result = post(urlExt, headers, body);
 

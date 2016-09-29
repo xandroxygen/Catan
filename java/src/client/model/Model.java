@@ -2,7 +2,6 @@ package client.model;
 
 
 import com.google.gson.JsonObject;
-import com.sun.org.apache.xpath.internal.operations.String;
 import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
