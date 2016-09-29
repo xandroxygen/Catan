@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -63,9 +64,15 @@ public class HTTPOperations {
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 InputStream responseBody = connection.getInputStream();
 
-                return new RequestResponse(false, responseToString(responseBody)); // response OK
+                List<String> responseCookies = connection.getHeaderFields().get("Set-Cookie");
+                if (responseCookies.size() > 0) {
+                    return new RequestResponse(false, responseToString(responseBody), responseCookies.get(0)); // response OK
+                }
+                else {
+                    return new RequestResponse(false, responseToString(responseBody)); // response OK
+                }
             } else {
-                return new RequestResponse(true, "Server returned an error oh noooeee");
+                return new RequestResponse(true, "Server returned an error oh noooeee"); // response not 200
             }
         } catch (IOException e) {
             return new RequestResponse(true, e);
@@ -99,9 +106,15 @@ public class HTTPOperations {
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 InputStream responseBody = connection.getInputStream();
 
-                return new RequestResponse(false, responseToString(responseBody)); // response OK
+                List<String> responseCookies = connection.getHeaderFields().get("Set-Cookie");
+                if (responseCookies.size() > 0) {
+                    return new RequestResponse(false, responseToString(responseBody), responseCookies.get(0)); // response OK
+                }
+                else {
+                    return new RequestResponse(false, responseToString(responseBody)); // response OK
+                }
             } else {
-                return new RequestResponse(true, "Server returned an error oh noooeee");
+                return new RequestResponse(true, "Server returned an error oh noooeee"); // response not 200
             }
         } catch (IOException e) {
             return new RequestResponse(true, e); // other error

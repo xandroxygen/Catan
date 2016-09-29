@@ -9,6 +9,7 @@ public class RequestResponse {
     private boolean hasError;
     private Exception error;
     private Object data;
+    private String cookie;
 
     public RequestResponse(boolean hasError, Exception error) {
         this.hasError = hasError;
@@ -18,6 +19,12 @@ public class RequestResponse {
     public RequestResponse(boolean hasError, Object data) {
         this.hasError = hasError;
         this.data = data;
+    }
+
+    public RequestResponse(boolean hasError, Object data, String cookie) {
+        this.hasError = hasError;
+        this.data = data;
+        this.cookie = cookie;
     }
 
     public boolean hasError() {
@@ -31,4 +38,6 @@ public class RequestResponse {
     public Object getData() {
         return data;
     }
+
+    public String getCookie() { return cookie; }
 }

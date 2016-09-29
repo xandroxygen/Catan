@@ -1,6 +1,7 @@
 package client.admin;
 
 import client.model.InvalidActionException;
+import client.server.ServerProxy;
 import com.google.gson.*;
 import shared.definitions.CatanColor;
 
@@ -14,10 +15,14 @@ import java.util.List;
 public class GameAdministrator {
     private User currentUser;
     private List<GameDetails> allCurrentGames;
+    private ServerProxy server;
 
-    public GameAdministrator() {
+    public GameAdministrator() throws InvalidActionException {
         currentUser = null;
         allCurrentGames = new ArrayList<>();
+        fetchGameList();
+        server = new ServerProxy(); // TODO this will need to change and serverProxy instance needs to be in the model
+
     }
 
     /**
@@ -37,10 +42,12 @@ public class GameAdministrator {
      * @param password Desired password.
      * @pre Username and password are not null; Username is not registered already
      * @return true if user can register
+     * @throws InvalidActionException if fetching game list fails
      */
-    public boolean canRegister(String username, String password) {
+    public boolean canRegister(String username, String password) throws InvalidActionException {
         if (username != null && password != null) {
             boolean nameIsNotTaken = true;
+            fetchGameList();
             for (GameDetails game : allCurrentGames) {
                 for (PlayerDetails player : game.getPlayers()) {
                     if (player.getName().equals(username)) {
@@ -76,11 +83,13 @@ public class GameAdministrator {
      * @param userColor Color of player in game
      * @pre User is logged in; User is already in game OR there is space in game for them; game ID is valid; color is valid
      * @return true if user can join game
+     * @throws InvalidActionException if fetching game list fails
      */
-    public boolean canJoinGame(int gameID, CatanColor userColor) {
+    public boolean canJoinGame(int gameID, CatanColor userColor) throws InvalidActionException {
 
         boolean canJoinGame = true;
         canJoinGame = currentUser.isLoggedIn;
+        fetchGameList();
 
         if (gameID >= allCurrentGames.size() || gameID < 0) {
 
@@ -98,7 +107,7 @@ public class GameAdministrator {
 
             for (PlayerDetails player : currentGame.getPlayers()) {
                 if (player.getName().equals(currentUser.getUsername()) ||
-                        player.getColor().equals(userColor)) {
+                        player.getColor().equals(userColor.toString())) {
                     // player or color is already in game
                     canJoinGame = false;
                 }
@@ -115,6 +124,15 @@ public class GameAdministrator {
      * @throws InvalidActionException if login fails for any reason.
      */
     public void login(String username, String password) throws InvalidActionException {
+        try {
+            String cookie = server.userLogin(username, password);
+            currentUser.isLoggedIn = true;
+            currentUser.setCookie(cookie);
+        }
+        catch (InvalidActionException e) {
+            e.message = "Login failed.";
+            throw e;
+        }
 
     }
 
@@ -126,7 +144,15 @@ public class GameAdministrator {
      * @throws InvalidActionException
      */
     public void register(String username, String password) throws InvalidActionException {
-
+        try {
+            String cookie = server.userRegister(username, password);
+            currentUser.isLoggedIn = true;
+            currentUser.setCookie(cookie);
+        }
+        catch (InvalidActionException e) {
+            e.message = "Register failed";
+            throw e;
+        }
     }
 
     /**
@@ -139,18 +165,36 @@ public class GameAdministrator {
      * @throws InvalidActionException
      */
     public void createGame(String gameName, boolean rTiles, boolean rNumbers, boolean rPorts) throws InvalidActionException {
-
+        try {
+            server.gamesCreate(gameName, rTiles, rNumbers, rPorts);
+        }
+        catch (InvalidActionException e) {
+            e.message = "Game creation failed.";
+            throw e;
+        }
     }
 
     /**
      * Joins existing game with the color provided.
+     * Sets the game cookie for the server to use.
      * @pre Should only be called once canJoinGame has returned true.
      * @param gameID ID of game to join.
      * @param userColor Color that user wants to be.
      * @throws InvalidActionException
      */
     public void joinGame(int gameID, CatanColor userColor) throws InvalidActionException {
-
+        try {
+            String cookie = server.gamesJoin(gameID, userColor);
+            for (GameDetails game : allCurrentGames) {
+                if (gameID == game.getId()) {
+                    game.setCookie(cookie);
+                }
+            }
+        }
+        catch (InvalidActionException e) {
+            e.message = "Joining the game failed.";
+            throw e;
+        }
     }
 
 
@@ -158,10 +202,18 @@ public class GameAdministrator {
 
     /**
      * Fetches the list of current games from the server.
-     * @throws InvalidActionException
+     * Called before canDo methods to make sure list of games is up to date
+     * @throws InvalidActionException with updated message
      */
     private void fetchGameList() throws InvalidActionException {
-
+        try {
+            String jsonGames = server.gamesList();
+            allCurrentGames = deserializeGameList(jsonGames);
+        }
+        catch (InvalidActionException e) {
+            e.message = "Fetch of games list failed.";
+            throw e;
+        }
     }
 
     /**

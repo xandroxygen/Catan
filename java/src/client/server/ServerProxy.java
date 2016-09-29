@@ -22,13 +22,10 @@ public class ServerProxy implements IServerProxy {
 
     private HTTPOperations http;
     private Map<String, String> headers;
-    private Map<String, String> gameCookies;
-    private Map<String, String> playerCookies;
     private String currentGameCookie;
     private String currentPlayerCookie;
     private int currentPlayerIndex;
     private String urlExt;
-    private ModelUpdater updater;
 
     private static final String EXCEPTION_MESSAGE_CALL = "API call failed.";
     private static final String EXCEPTION_MESSAGE_RESPONSE = "API response failed.";
@@ -41,10 +38,7 @@ public class ServerProxy implements IServerProxy {
     public ServerProxy() {
         http = new HTTPOperations("localhost", "8081"); // hard-coded for ease of use
         headers = new HashMap<>();
-        gameCookies = new HashMap<>();
-        playerCookies = new HashMap<>();
         urlExt = "";
-        updater = new ModelUpdater();
     }
 
     /**
@@ -103,6 +97,22 @@ public class ServerProxy implements IServerProxy {
     	}
     }
 
+    public String getCurrentGameCookie() {
+        return currentGameCookie;
+    }
+
+    public void setCurrentGameCookie(String currentGameCookie) {
+        this.currentGameCookie = currentGameCookie;
+    }
+
+    public String getCurrentPlayerCookie() {
+        return currentPlayerCookie;
+    }
+
+    public void setCurrentPlayerCookie(String currentPlayerCookie) {
+        this.currentPlayerCookie = currentPlayerCookie;
+    }
+
     // --- NON-MOVE API ---
 
     /**
@@ -122,9 +132,10 @@ public class ServerProxy implements IServerProxy {
      * If username/ password is not valid:
      *  	1. Server returns 400 error response and body contains an error message.
      *  </pre>
+     *  @return cookie of user who just logged in
      */
     @Override
-    public void userLogin(String username, String password) throws InvalidActionException {
+    public String userLogin(String username, String password) throws InvalidActionException {
     	String urlExt = "/user/login";
 		
 		setHeaders();
@@ -135,11 +146,11 @@ public class ServerProxy implements IServerProxy {
     	String body = Serializer.serializeNonMoveCall(m);
     	
     	RequestResponse result = post(urlExt, headers, body); 
-    	
-    	// TODO: extract and set catan.cookie
-    	
+
     	handleResult(result);
-    	
+
+        currentPlayerCookie = result.getCookie();
+        return result.getCookie();
     }
     
     /**
@@ -161,26 +172,28 @@ public class ServerProxy implements IServerProxy {
 	 * If username/ password is not valid:
 	 *  	1. Server returns 400 error response and body contains an error message.
 	 *  </pre>
-	 * 
-	 * @param username Username of the new player being registered.
-	 * @param password Password that corresponds to the username of new player being registered.
-	 */
+	 *@param username Username of the new player being registered.
+     * @param password Password that corresponds to the username of new player being registered.
+     * @return Cookie of user that just registered and logged in
+     */
     @Override
-    public void userRegister(String username, String password) throws InvalidActionException {
+    public String userRegister(String username, String password) throws InvalidActionException {
     	
-    	if (username != null && password != null) { //TODO: check that the username hasn't already been taken
+    	if (username != null && password != null) {
         	String urlExt = "/user/register";
         	
         	Map<String, String> m = new HashMap<>();
         	m.put("username", username);
         	m.put("password", password);
         	String body = Serializer.serializeNonMoveCall(m);
-        	
-        	//TODO: Set catan.cookie
-        	
+
         	RequestResponse result = post(urlExt, headers, body);
         	handleResult(result);
+            currentPlayerCookie = result.getCookie();
+            // TODO set current player index here
+            return result.getCookie();
     	}
+    	return "";
     }
 
     /**
@@ -242,11 +255,10 @@ public class ServerProxy implements IServerProxy {
     	m.put("randomPorts", booleanToString(randomPorts));
     	String body = Serializer.serializeNonMoveCall(m);
     	
-    	RequestResponse result = get(urlExt, headers);
+    	RequestResponse result = post(urlExt, headers, body);
     	if (result.hasError()) {
     		throw new InvalidActionException(EXCEPTION_MESSAGE_CALL);
     	} else {
-    		//TODO: convert to json
     		return (String)result.getData();
     	}
     	
@@ -274,9 +286,10 @@ public class ServerProxy implements IServerProxy {
      * 	If the operation fails:
      * 		1. Server returns 400 error response and body contains an error message.
      * </pre>
+     * @return Cookie of game that was just joined
      */
     @Override
-    public void gamesJoin(int gameID, CatanColor c) throws InvalidActionException {
+    public String gamesJoin(int gameID, CatanColor c) throws InvalidActionException {
     	String urlExt = "/games/join";
     	String color = c.toString(); //TODO: Make sure color is being correctly converted to a string
     	
@@ -288,10 +301,11 @@ public class ServerProxy implements IServerProxy {
     	setHeaders();
     	
     	RequestResponse result = post(urlExt, headers, body);
-    	
-    	// TODO: extract and set catan.game HTTP cookie
-    	
+
     	handleResult(result);
+
+        currentGameCookie = result.getCookie();
+        return result.getCookie();
     }
 
     /**

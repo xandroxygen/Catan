@@ -1,7 +1,6 @@
 package client.server;
 
 import client.model.InvalidActionException;
-import org.json.simple.JSONObject;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -46,9 +45,9 @@ public interface IServerProxy {
 	 *  
 	 * @param username Username of the player logging in.
 	 * @param password Password that corresponds to the username of player logging in.
-	 * @throws InvalidActionException 
+	 * @throws InvalidActionException
 	 */
-	void userLogin(String username, String password) throws InvalidActionException;
+	String userLogin(String username, String password) throws InvalidActionException;
 	
 	/**
 	 * Creates a new user account & logs the caller into the server as the new user and sets
@@ -72,9 +71,9 @@ public interface IServerProxy {
 	 * 
 	 * @param username Username of the new player being registered.
 	 * @param password Password that corresponds to the username of new player being registered.
-	 * @throws InvalidActionException 
+	 * @throws InvalidActionException
 	 */
-	void userRegister(String username, String password) throws InvalidActionException;
+	String userRegister(String username, String password) throws InvalidActionException;
 	
 	/**
 	 * Returns information about all of the current games on the server.
@@ -142,9 +141,9 @@ public interface IServerProxy {
 	 *
 	 * @param gameID ID of the game to join
 	 * @param color Player color
-	 * @throws InvalidActionException 
+	 * @throws InvalidActionException
 	 */
-	void gamesJoin(int gameID, CatanColor color) throws InvalidActionException;
+	String gamesJoin(int gameID, CatanColor color) throws InvalidActionException;
 	
 	/**
 	 * Returns the current state of the game in JSON format.

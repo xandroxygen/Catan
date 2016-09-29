@@ -1,7 +1,6 @@
 package client.server;
 
 import client.model.InvalidActionException;
-import org.json.simple.JSONObject;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -49,8 +48,8 @@ public class MockServerProxy implements IServerProxy {
      *  </pre>
      */
     @Override
-    public void userLogin(String username, String password) {
-
+    public String userLogin(String username, String password) {
+        return null;
     }
     
     /**
@@ -72,13 +71,12 @@ public class MockServerProxy implements IServerProxy {
 	 * If username/ password is not valid:
 	 *  	1. Server returns 400 error response and body contains an error message.
 	 *  </pre>
-	 * 
-	 * @param username Username of the new player being registered.
-	 * @param password Password that corresponds to the username of new player being registered.
-	 */
+	 *@param username Username of the new player being registered.
+     * @param password Password that corresponds to the username of new player being registered.
+     */
     @Override
-    public void userRegister(String username, String password) {
-    	
+    public String userRegister(String username, String password) {
+        return null;
     }
 
     /**
@@ -147,8 +145,8 @@ public class MockServerProxy implements IServerProxy {
      * </pre>
      */
     @Override
-    public void gamesJoin(int gameID, CatanColor color) {
-
+    public String gamesJoin(int gameID, CatanColor color) {
+        return null;
     }
 
     /**
