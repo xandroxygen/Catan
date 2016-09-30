@@ -1,6 +1,7 @@
 package client.admin;
 
 import client.model.InvalidActionException;
+import client.server.IServerProxy;
 import client.server.ServerProxy;
 import com.google.gson.*;
 import shared.definitions.CatanColor;
@@ -15,14 +16,26 @@ import java.util.List;
 public class GameAdministrator {
     private User currentUser;
     private List<GameDetails> allCurrentGames;
-    private ServerProxy server;
+    private IServerProxy server;
 
     public GameAdministrator() throws InvalidActionException {
         currentUser = null;
         allCurrentGames = new ArrayList<>();
-        fetchGameList();
         server = new ServerProxy(); // TODO this will need to change and serverProxy instance needs to be in the model
-
+        //fetchGameList(); 
+    }
+    
+    /**
+     * For testing
+     * 
+     * Set current user for testing on canCreateGame
+     * Set server to MockServer to have access to a list of games
+     */
+    public GameAdministrator(User user, IServerProxy server) throws InvalidActionException {
+        currentUser = user;
+        allCurrentGames = new ArrayList<>();
+       	this.server = server; // TODO this will need to change and serverProxy instance needs to be in the model
+        fetchGameList(); 
     }
 
     /**
@@ -230,5 +243,8 @@ public class GameAdministrator {
         }
         return games;
     }
-
+    
+    public List<GameDetails> getAllCurrentGames() {
+    	return allCurrentGames;
+    }
 }

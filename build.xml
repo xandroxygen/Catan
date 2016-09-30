@@ -163,6 +163,7 @@
 			<test name="testing.TestTest"/>
 			<test name="client.model.TestModelClass"/>
 			<test name="testing.ServerPollerTest"/>
+			<test name="testing.GameAdministratorTest"/>
 			<!-- TODO put the name of your test classes here, then run ant test -->
 		</junit>
 	</target>
