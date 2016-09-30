@@ -33,6 +33,102 @@ public class Player {
 	private int monuments;
 	private boolean discarded;
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setColor(CatanColor color) {
+		this.color = color;
+	}
+
+	public void setPlayerIndex(int playerIndex) {
+		this.playerIndex = playerIndex;
+	}
+
+	public int getPlayerID() {
+		return playerID;
+	}
+
+	public void setPlayerID(int playerID) {
+		this.playerID = playerID;
+	}
+
+	public boolean isPlayedDevCard() {
+		return playedDevCard;
+	}
+
+	public void setPlayedDevCard(boolean playedDevCard) {
+		this.playedDevCard = playedDevCard;
+	}
+
+	public void setVictoryPoints(int victoryPoints) {
+		this.victoryPoints = victoryPoints;
+	}
+
+	public HashMap<ResourceType, Integer> getResources() {
+		return resources;
+	}
+
+	public HashMap<DevCardType, Integer> getOldDevCards() {
+		return oldDevCards;
+	}
+
+	public void setOldDevCards(HashMap<DevCardType, Integer> oldDevCards) {
+		this.oldDevCards = oldDevCards;
+	}
+
+	public HashMap<DevCardType, Integer> getNewDevCards() {
+		return newDevCards;
+	}
+
+	public void setNewDevCards(HashMap<DevCardType, Integer> newDevCards) {
+		this.newDevCards = newDevCards;
+	}
+
+	public int getCities() {
+		return cities;
+	}
+
+	public void setCities(int cities) {
+		this.cities = cities;
+	}
+
+	public int getSettlements() {
+		return settlements;
+	}
+
+	public void setSettlements(int settlements) {
+		this.settlements = settlements;
+	}
+
+	public void setRoads(int roads) {
+		this.roads = roads;
+	}
+
+	public int getSoldiers() {
+		return soldiers;
+	}
+
+	public void setSoldiers(int soldiers) {
+		this.soldiers = soldiers;
+	}
+
+	public int getMonuments() {
+		return monuments;
+	}
+
+	public void setMonuments(int monuments) {
+		this.monuments = monuments;
+	}
+
+	public boolean isDiscarded() {
+		return discarded;
+	}
+
+	public void setDiscarded(boolean discarded) {
+		this.discarded = discarded;
+	}
+
 	Player(JsonObject playerJSON) {
 		// Parse resources
 		resources = new HashMap<>();

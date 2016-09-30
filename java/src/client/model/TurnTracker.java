@@ -18,5 +18,20 @@ public class TurnTracker {
 	public int getLargestArmy() {
 		return largestArmy;
 	}
-	
+
+	public void setStatus(GameStatus status) {
+		this.status = status;
+	}
+
+	public void setCurrentTurn(int currentTurn) {
+		this.currentTurn = currentTurn;
+	}
+
+	public void setLongestRoad(int longestRoad) {
+		this.longestRoad = longestRoad;
+	}
+
+	public void setLargestArmy(int largestArmy) {
+		this.largestArmy = largestArmy;
+	}
 }
