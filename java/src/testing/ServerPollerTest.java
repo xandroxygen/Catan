@@ -18,11 +18,13 @@ import client.server.ServerPoller;
 public class ServerPollerTest {
 	MockServerProxy mockProxy;
 	ServerPoller poller;
+	Model model;
 	
 	@Before
 	public void setUp() throws Exception {
 		mockProxy= new MockServerProxy();
 		poller = new ServerPoller(mockProxy);
+		model = Model.getInstance();
 	}
 
 	@After
@@ -47,7 +49,7 @@ public class ServerPollerTest {
 		assertEquals(true, updatesOccurred);
 		
 		//test when JSON model only contains string "true" 
-		String model3 = mockProxy.testModel3;
+		String model3 = mockProxy.testModel4;
 		updatesOccurred = poller.checkForUpdates(model3);
 		assertEquals(false, updatesOccurred);
 	}
@@ -60,16 +62,23 @@ public class ServerPollerTest {
 	 */
 	@Test
 	public void testPollServer() {
+		// initialize model with data, check that model has been updated 
 		JsonObject newModel = new JsonParser().parse(mockProxy.testModel1).getAsJsonObject();
-		Model.getInstance().updateModel(newModel);	
+		model.updateModel(newModel);
+		model.getGame().version = 1;
 		
-		Model model = Model.getInstance();
-		model.getVersion();
-	}
-
-	@Test
-	public void testUpdateVersion() {
-		fail("Not yet implemented");
+		//updates occurred, server poller should recognize and update the model
+		poller.pollServer();	
+		assertEquals(2, model.getVersion());
+		
+		//after updating the model once, does the poller correctly recognize and update a second time
+		poller.pollServer();	
+		assertEquals(3, model.getVersion());
+		
+		//does poller correctly recognize when the server model has not been changed?
+		model.getGame().version = 4;
+		poller.pollServer();	
+		assertEquals("James", model.getGame().getPlayerList().get(0).getName());
 	}
 
 	@Test
