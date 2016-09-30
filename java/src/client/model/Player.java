@@ -1,8 +1,6 @@
 package client.model;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
@@ -504,11 +502,4 @@ public class Player {
 		this.resources = resources;
 	}
 
-	public int getCities() {
-		return cities;
-	}
-
-	public int getSettlements() {
-		return settlements;
-	}
 }

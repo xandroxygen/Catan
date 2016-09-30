@@ -1,32 +1,17 @@
 package testing;
 
-import client.model.City;
-import client.model.Model;
-import client.model.Player;
-
-import client.model.Road;
-import client.model.Settlement;
+import client.model.*;
 import client.server.MockServerProxy;
 import client.server.ServerPoller;
-import junit.framework.AssertionFailedError;
-
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.junit.Before;
-import org.junit.Test;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import client.server.MockServerProxy;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.junit.Test;
 import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
+import shared.locations.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -53,7 +38,7 @@ public class ModelTest {
 		Model model = Model.getInstance();
 
 		// Make up a Vertex Location
-		VertexLocation vertex = new VertexLocation(new HexLocation(-1,0),VertexDirection.NorthWest);
+		VertexLocation vertex = new VertexLocation(new HexLocation(-1,0), VertexDirection.NorthWest);
 		assertFalse(model.canPlaceCity(0, vertex));
 
 		// Add settlement belonging to other player
@@ -88,7 +73,7 @@ public class ModelTest {
 		assertFalse(model.canPlaceSettlement(0, true, vertex2));
 
 		// Add a road to build off of
-		EdgeLocation edge = new EdgeLocation(new HexLocation(1,1),EdgeDirection.North);
+		EdgeLocation edge = new EdgeLocation(new HexLocation(1,1), EdgeDirection.North);
 		VertexLocation vertex3 = new VertexLocation(new HexLocation(1,1),VertexDirection.NorthWest);
 		model.getGame().theMap.getRoads().put(edge, new Road(edge,0));
 		assertTrue(model.canPlaceSettlement(0, false, vertex3));
@@ -163,7 +148,7 @@ public class ModelTest {
 
 	
 	
-    /*@Test
+    @Test
     public void canBuyDevelopmentCard() throws Exception {
         MockServerProxy mockProxy = new MockServerProxy();
         JsonObject newModel = new JsonParser().parse(mockProxy.testModel1).getAsJsonObject();
@@ -209,14 +194,6 @@ public class ModelTest {
             assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerId()));
         }
     }
-//*         It's your turn
-//* 		The client model status is 'Playing'
-//* 		You have the specific card you want to play in your old dev card hand
-//* 		You have not yet played a non­monument dev card this turn
-//* 		The first road location (spot1) is connected to one of your roads.
-//* 		The second road location (spot2) is connected to one of your roads or to the first road location (spot1)
-//* 		Neither road location is on water
-//* 		You have at least two unused roads
 
     @Test
     public void canPlayYearOfPlenty() throws Exception{
@@ -239,7 +216,6 @@ public class ModelTest {
             }
             i++;
         }
-    }*/
         //testing if GameStatus in not Playing
         Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.FirstRound);
         for(Player tempPlayer: Model.getInstance().getGame().playerList) {
@@ -381,7 +357,7 @@ public class ModelTest {
         Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Playing);
         for(Player tempPlayer: Model.getInstance().getGame().playerList) {
             HashMap<DevCardType, Integer> oldDevCards = new HashMap<>();
-            oldDevCards.put(DevCardType.MONOPOLY, 1);
+            oldDevCards.put(DevCardType.MONUMENT, 1);
             tempPlayer.setPlayedDevCard(false);
             tempPlayer.setOldDevCards(oldDevCards);
             if (i == Model.getInstance().getGame().getCurrentTurnIndex()) {
@@ -398,7 +374,7 @@ public class ModelTest {
             oldDevCards.put(DevCardType.MONOPOLY, 1);
             tempPlayer.setPlayedDevCard(false);
             tempPlayer.setOldDevCards(oldDevCards);
-            assertFalse(Model.getInstance().canPlayMonumentCard(tempPlayer.getPlayerId(), ResourceType.BRICK));
+            assertFalse(Model.getInstance().canPlayMonumentCard(tempPlayer.getPlayerId()));
         }
         //testing if there is no Year of Plenty Dev Card
         Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Playing);
@@ -406,7 +382,7 @@ public class ModelTest {
             HashMap<DevCardType, Integer> oldDevCards = new HashMap<>();
             tempPlayer.setPlayedDevCard(false);
             tempPlayer.setOldDevCards(oldDevCards);
-            assertFalse(Model.getInstance().canPlayMonumentCard(tempPlayer.getPlayerId(), ResourceType.BRICK));
+            assertFalse(Model.getInstance().canPlayMonumentCard(tempPlayer.getPlayerId()));
         }
         //testing if there has already been a Dev Card Played
         Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Playing);
