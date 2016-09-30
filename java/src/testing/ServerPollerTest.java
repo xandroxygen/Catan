@@ -3,9 +3,7 @@ package testing;
 import static org.junit.Assert.*;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.gson.JsonObject;
@@ -32,17 +30,15 @@ public class ServerPollerTest {
 
 	@Test
 	public void testServerPoller() {
+		System.out.println("Testing ServerPoller");
+		
 		assertEquals(mockProxy, poller.getProxy());
-	}
-
-	@Test
-	public void testStart() {
-		// how to test???
-		fail("Not yet implemented");
 	}
 	
 	@Test
 	public void testCheckForUpdates() {	
+		System.out.println("Testing checkForUpdates");
+		
 		// test when JSON model contains updated data
 		String model1 = mockProxy.testModel1;
 		boolean updatesOccurred = poller.checkForUpdates(model1);
@@ -62,6 +58,8 @@ public class ServerPollerTest {
 	 */
 	@Test
 	public void testPollServer() {
+		System.out.println("Testing pollServer");
+		
 		// initialize model with data, check that model has been updated 
 		JsonObject newModel = new JsonParser().parse(mockProxy.testModel1).getAsJsonObject();
 		model.updateModel(newModel);
@@ -79,12 +77,6 @@ public class ServerPollerTest {
 		model.getGame().version = 4;
 		poller.pollServer();	
 		assertEquals("James", model.getGame().getPlayerList().get(0).getName());
-	}
-
-	@Test
-	public void testStop() {
-		// not necessary to test???
-		fail("Not yet implemented");
 	}
 
 }
