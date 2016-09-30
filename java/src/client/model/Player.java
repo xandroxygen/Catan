@@ -352,19 +352,19 @@ public class Player {
 	}*/
 	
 	protected boolean hasOfferResources(Map<ResourceType, Integer> offer) {
-		if ((offer.get("WOOD") > 0) && (resources.get("WOOD") <= offer.get("WOOD"))) {
+		if ((offer.get(ResourceType.WOOD) > 0) && (resources.get(ResourceType.WOOD) <= offer.get(ResourceType.WOOD))) {
 			return false;
 		}
-		if ((offer.get("BRICK") > 0) && (resources.get("BRICK") <= offer.get("BRICK"))) {
+		if ((offer.get(ResourceType.BRICK) > 0) && (resources.get(ResourceType.BRICK) <= offer.get(ResourceType.BRICK))) {
 			return false;
 		}
-		if ((offer.get("SHEEP") > 0) && (resources.get("SHEEP") <= offer.get("SHEEP"))) {
+		if ((offer.get(ResourceType.SHEEP) > 0) && (resources.get(ResourceType.SHEEP) <= offer.get(ResourceType.SHEEP))) {
 			return false;
 		}
-		if ((offer.get("WHEAT") > 0) && (resources.get("WHEAT") <= offer.get("WHEAT"))) {
+		if ((offer.get(ResourceType.WHEAT) > 0) && (resources.get(ResourceType.WHEAT) <= offer.get(ResourceType.WHEAT))) {
 			return false;
 		}
-		if ((offer.get("ORE") > 0) && (resources.get("ORE") <= offer.get("ORE"))) {
+		if ((offer.get(ResourceType.ORE) > 0) && (resources.get(ResourceType.ORE) <= offer.get(ResourceType.ORE))) {
 			return false;
 		}
 		return true;
