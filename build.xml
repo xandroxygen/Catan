@@ -161,9 +161,9 @@
 			<classpath refid="junit.classpath"/>
 			<formatter type="plain" usefile="false"/>
 			<test name="testing.TestTest"/>
-			<test name="client.model.TestModelClass"/>
-			<!-- TODO put the name of your test classes here, then run ant test -->
+			<test name="testing.ServerPollerTest.java"/>
 			<test name="testing.ModelTest"/>
+			<!-- TODO put the name of your test classes here, then run ant test -->
 		</junit>
 	</target>
     
