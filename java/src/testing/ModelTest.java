@@ -41,5 +41,30 @@ public class ModelTest {
             }
             i++;
         }
+        //all prerequisites are met except their resources
+        i = 0;
+        devCardsInBank = new HashMap<>();
+        devCardsInBank.put(DevCardType.SOLDIER, 3);
+        Model.getInstance().getGame().getBank().setDevelopmentCards(devCardsInBank);
+        for(Player tempPlayer: Model.getInstance().getGame().playerList){
+            HashMap<ResourceType, Integer> resourceHand = new HashMap<>();
+            resourceHand.put(ResourceType.ORE, 1);
+            tempPlayer.setResources(resourceHand);
+            assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerId()));
+            i++;
+        }
+        //tests if there are no cards in the bank
+        i = 0;
+        devCardsInBank = new HashMap<>();
+        Model.getInstance().getGame().getBank().setDevelopmentCards(devCardsInBank);
+        for(Player tempPlayer: Model.getInstance().getGame().playerList){
+            HashMap<ResourceType, Integer> resourceHand = new HashMap<>();
+            resourceHand.put(ResourceType.ORE, 1);
+            resourceHand.put(ResourceType.WHEAT, 1);
+            resourceHand.put(ResourceType.SHEEP, 1);
+            tempPlayer.setResources(resourceHand);
+            assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerId()));
+            i++;
+        }
     }
 }
