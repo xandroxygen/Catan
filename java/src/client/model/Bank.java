@@ -1,14 +1,9 @@
 package client.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.google.gson.JsonObject;
-
 import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -61,7 +56,14 @@ public class Bank {
      * @return
      */
     public boolean canBuyDevelopmentCard(){
-        return developmentCards.size() < 0;
+        return developmentCards.size() > 0;
     }
 
+	public void setResourseDeck(HashMap<ResourceType, Integer> resourseDeck) {
+		this.resourseDeck = resourseDeck;
+	}
+
+	public void setDevelopmentCards(HashMap<DevCardType, Integer> developmentCards) {
+		this.developmentCards = developmentCards;
+	}
 }

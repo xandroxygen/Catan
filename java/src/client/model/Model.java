@@ -216,6 +216,9 @@ public class Model {
         if (bool){
             bool = game.playerList.get(playerIndex).canBuyDevelopmentCard();
         }
+        if (bool){
+            bool = game.isTurn(playerId);
+        }
         return bool;
     }
 
