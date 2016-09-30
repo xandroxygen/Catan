@@ -172,7 +172,7 @@ public class Model {
      * @param location The location of the city.
      * @return result
      */
-    boolean canPlaceCity(int playerId, VertexLocation location){
+    public boolean canPlaceCity(int playerId, VertexLocation location){
         return game.canPlaceCity(playerId, location);
     }
 
@@ -185,7 +185,7 @@ public class Model {
      * @param location The location of the settlement.
      * @return result
      */
-    boolean canPlaceSettlement(int playerId, boolean free, VertexLocation location){
+    public boolean canPlaceSettlement(int playerId, boolean free, VertexLocation location){
         return canPlaceSettlement(playerId, free, location);
     }
 
@@ -198,7 +198,7 @@ public class Model {
      * @param location The location of the road.
      * @return result
      */
-    boolean canPlaceRoad(int playerId, boolean free, EdgeLocation location) {
+    public boolean canPlaceRoad(int playerId, boolean free, EdgeLocation location) {
         return game.canPlaceRoad(playerId, free, location);
     }
 
@@ -208,7 +208,7 @@ public class Model {
      * @post You have a new card; If it is a monument card, it has been added to your old devCard hand, If it is a non­monument card, it has been added to your new devcard hand (unplayable this turn)
      * @return result
      */
-    boolean canBuyDevelopmentCard(int playerId){
+    public boolean canBuyDevelopmentCard(int playerId){
         int playerIndex = game.getPlayerIndex(playerId);
         // Verifies that the Bank has Dev Cards
         boolean bool = game.bank.canBuyDevelopmentCard();
@@ -227,7 +227,7 @@ public class Model {
      * @param recieverPlayerId the playerIndex of the offer recipient.
      * @return result
      */
-    boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, HashMap<ResourceType, Integer> offer){
+    public boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, HashMap<ResourceType, Integer> offer){
         return game.canTradeWithPlayer(senderPlayerId, recieverPlayerId, offer);
     }
 
@@ -240,7 +240,7 @@ public class Model {
      * @param outputResource Type of resource you are receiving.
      * @return result
      */
-    boolean canTradeWithBank(int playerId, int ratio, ResourceType inputResource, ResourceType outputResource){
+    public boolean canTradeWithBank(int playerId, int ratio, ResourceType inputResource, ResourceType outputResource){
         int playerIndex = game.getPlayerIndex(playerId);
         boolean bool;
         //Verifies that it is the turn of the PlayerId
@@ -506,7 +506,7 @@ public class Model {
      * @pre It's their turn, and the model status is ROLLING
      * @return
      */
-    boolean canRollDice(int playerId){
+    public boolean canRollDice(int playerId){
         return game.canRollDice(playerId);
     }
 
@@ -516,7 +516,7 @@ public class Model {
      * @param message the message the player wishes to send.
      * @return
      */
-    boolean canSendMessage(int playerId, String message){
+    public boolean canSendMessage(int playerId, String message){
         return canSendMessage(playerId, message);
     }
 
@@ -525,7 +525,7 @@ public class Model {
      * @post  The cards in your new dev card hand have been transferred to your old dev card hand, It is the next player’s turn
      * @return result
      */
-    boolean canEndTurn(int playerId){
+    public boolean canEndTurn(int playerId){
         return false;
     }
 
@@ -552,7 +552,7 @@ public class Model {
      * @param diceRoll the number that was rolled
      * @return true if there are resources to receive
      */
-    boolean canGetRolledResourses(int diceRoll){
+    public boolean canGetRolledResourses(int diceRoll){
         return game.canGetRolledResources(diceRoll);
     }
 
@@ -562,7 +562,7 @@ public class Model {
      * @param receiverPlayerId Player being offered the trade
      * @param offer hand of cards to trade
      */
-    boolean canMakeTradeOffer(int senderPlayerId, int receiverPlayerId, Map<ResourceType, Integer> offer){
+    public boolean canMakeTradeOffer(int senderPlayerId, int receiverPlayerId, Map<ResourceType, Integer> offer){
         int senderPlayerIndex = game.getPlayerIndex(senderPlayerId);
         int receiverPlayerIndex = game.getPlayerIndex(receiverPlayerId);
         //Checks to see if it is the players turn
@@ -605,7 +605,7 @@ public class Model {
     /**
      * Sent by player who has been offered a trade.
      */
-    boolean canAcceptTradeOffer(int receiverPlayerId){
+    public boolean canAcceptTradeOffer(int receiverPlayerId){
         return game.tradeOffer != null && game.tradeOffer.getOffer() != null && game.tradeOffer.getReceiver() == receiverPlayerId;
     }
 }
