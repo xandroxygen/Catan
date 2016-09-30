@@ -519,8 +519,8 @@ public class Model {
      * @param message the message the player wishes to send.
      * @return
      */
-    public boolean canSendMessage(int playerId, String message){
-        return canSendMessage(playerId, message);
+    public boolean sendMessage(int playerId, String message){
+        return game.sendMessage(playerId, message);
     }
 
     /**

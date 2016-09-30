@@ -178,14 +178,14 @@ public class Game {
     	Player player = this.getPlayerById(playerId);
     	if (free) {
     		return (turnTracker.getCurrentTurn() == player.getPlayerIndex() &&
-    				theMap.hasRoadAtLocation(location) &&
-    				(theMap.edgeHasPlayerMunicipality(location, player) || theMap.edgeHasAdjacentPlayerRoad(location, player)));
+    				!theMap.hasRoadAtLocation(location) &&
+    				(theMap.edgeHasPlayerMunicipality(location, player)));
     	}
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
-				theMap.hasRoadAtLocation(location) &&
+				!theMap.hasRoadAtLocation(location) &&
 				(theMap.edgeHasPlayerMunicipality(location, player) || theMap.edgeHasAdjacentPlayerRoad(location, player)) &&
-				(player.getResourceHand().get("WOOD") >= 1) && 
-				(player.getResourceHand().get("BRICK") >= 1) && (player.getRoads() >= 1));
+				(player.getResourceHand().get(ResourceType.WOOD) >= 1) && 
+				(player.getResourceHand().get(ResourceType.BRICK) >= 1) && (player.getRoads() >= 1));
     }
     
     /**
@@ -229,7 +229,7 @@ public class Game {
     /**
      * Checks whether the player can get rolled resources.
      * @param diceRoll the number that was rolled
-     * @return true if there are resources to recieve
+     * @return true if there are resources to receiver
      */
     boolean canGetRolledResources(int diceRoll){
         return diceRoll <= 12 && diceRoll >= 2;
