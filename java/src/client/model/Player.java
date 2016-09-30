@@ -1,30 +1,16 @@
 package client.model;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
-import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
-import java.lang.reflect.Type;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
-
-import shared.definitions.*;
-import shared.locations.EdgeLocation;
-import shared.locations.HexLocation;
-import shared.locations.VertexLocation;
 
 /**
  * Player class
@@ -439,4 +425,7 @@ public class Player {
 		return roads;
 	}
 
+	public void setResources(HashMap<ResourceType, Integer> resources) {
+		this.resources = resources;
+	}
 }
