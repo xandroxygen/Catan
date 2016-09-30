@@ -186,7 +186,7 @@ public class Model {
      * @return result
      */
     public boolean canPlaceSettlement(int playerId, boolean free, VertexLocation location){
-        return canPlaceSettlement(playerId, free, location);
+        return game.canPlaceSettlement(playerId, free, location);
     }
 
     /**

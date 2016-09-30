@@ -42,7 +42,6 @@ public class Player {
 		resources.put(ResourceType.SHEEP, resourcesJSON.get("sheep").getAsInt());
 		resources.put(ResourceType.WHEAT, resourcesJSON.get("wheat").getAsInt());
 		resources.put(ResourceType.WOOD, resourcesJSON.get("wood").getAsInt());
-		System.out.println(resources.get(ResourceType.BRICK));
 
 		// Parse old dev cards
 		oldDevCards = new HashMap<>();
@@ -52,7 +51,6 @@ public class Player {
 		oldDevCards.put(DevCardType.ROAD_BUILD, oldDevCardsJSON.get("roadBuilding").getAsInt());
 		oldDevCards.put(DevCardType.SOLDIER, oldDevCardsJSON.get("soldier").getAsInt());
 		oldDevCards.put(DevCardType.YEAR_OF_PLENTY, oldDevCardsJSON.get("yearOfPlenty").getAsInt());
-		System.out.println(resources.get(ResourceType.BRICK));
 
 		// Parse new dev cards
 		newDevCards = new HashMap<>();
@@ -62,7 +60,6 @@ public class Player {
 		newDevCards.put(DevCardType.ROAD_BUILD, newDevCardsJSON.get("roadBuilding").getAsInt());
 		newDevCards.put(DevCardType.SOLDIER, newDevCardsJSON.get("soldier").getAsInt());
 		newDevCards.put(DevCardType.YEAR_OF_PLENTY, newDevCardsJSON.get("yearOfPlenty").getAsInt());
-		System.out.println(resources.get(ResourceType.BRICK));
 
 		// Parse all other variables
 		roads = playerJSON.get("roads").getAsInt();
@@ -403,29 +400,19 @@ public class Player {
 		return resources;
 	}
 
-	public static void main(String[] args) {
-		String json = "{\"resource\":\"wheat\",\"location\":{\"x\":-1,\"y\":2}}";
-		String json2 = "{\"resources\": {\"brick\": 0,\"wood\": 0,\"sheep\": 0,\"wheat\": 0,\"ore\": 0},\"oldDevCards\": {\"yearOfPlenty\": 0,\"monopoly\": 0,\"soldier\": 0,\"roadBuilding\": 0,\"monument\": 0},\"newDevCards\": {\"yearOfPlenty\": 0,\"monopoly\": 0,\"soldier\": 0,\"roadBuilding\": 0,\"monument\": 0},\"roads\": 15,\"cities\": 4,\"settlements\": 5,\"soldiers\": 0,\"victoryPoints\": 0,\"monuments\": 0,\"playedDevCard\": false,\"discarded\": false,\"playerID\": 12,\"playerIndex\": 0,\"name\": \"jeremyk\",\"color\": \"red\"}";
-		JsonParser parser = new JsonParser();
-		JsonObject o = parser.parse(json2).getAsJsonObject();
-		//Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
-		//Player player = gson.fromJson(json2, Player.class);
-		//Type collectionType = new TypeToken<Collection<Player>>(){}.getType();
-		//Collection<Player> enums = gson.fromJson(json2, collectionType);
-		Player player = new Player(o);
-		System.out.println(player.getName());
-
-		// Testing enum stuff
-		String json3 = "{\"status\": \"FirstRound\",\"currentTurn\": 0,\"longestRoad\": -1,\"largestArmy\": -1}";
-		TurnTracker turn = new Gson().fromJson(json3, TurnTracker.class);
-		System.out.println(turn.getStatus());
-	}
-
 	public int getRoads() {
 		return roads;
 	}
 
 	public void setResources(HashMap<ResourceType, Integer> resources) {
 		this.resources = resources;
+	}
+
+	public int getCities() {
+		return cities;
+	}
+
+	public int getSettlements() {
+		return settlements;
 	}
 }

@@ -25,7 +25,7 @@ public class Port {
 	    	resource = ResourceType.valueOf(portJson.get("resource").getAsString().toUpperCase());
     	}
     	catch (Exception e) {
-    		System.out.println("No resource");
+    		// No resource
     	}
     }
 

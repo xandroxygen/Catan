@@ -85,7 +85,6 @@ public class Map {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("No radius in model..");
 		}
 	}
 
@@ -240,11 +239,18 @@ public class Map {
 	 * @return
 	 */
 	public boolean playerHasMunicipalityAtLocation(VertexLocation location, Player player) {
-		if ((cities.get(location) != null && cities.get(location).getOwnerIndex() == player.getPlayerIndex()) ||
-			(settlements.get(location) != null && settlements.get(location).getOwnerIndex() == player.getPlayerIndex())) {
-			return true;
-		}
-		return false;
+		return playerHasSettlementAtLocation(location, player) || 
+				(cities.get(location) != null && cities.get(location).getOwnerIndex() == player.getPlayerIndex());
+	}
+	
+	/**
+	 * Checks if player owns a Settlement on a given vertex
+	 * @param location
+	 * @param player
+	 * @return
+	 */
+	public boolean playerHasSettlementAtLocation(VertexLocation location, Player player) {
+		return (settlements.get(location) != null && settlements.get(location).getOwnerIndex() == player.getPlayerIndex());
 	}
 
 	/**
@@ -258,6 +264,7 @@ public class Map {
 		return playerHasMunicipalityAtLocation(vertices.get(0), player) ||
 				playerHasMunicipalityAtLocation(vertices.get(1), player);
 	}
+	
 
 	/**
 	 * Checks if an edge has an adjacent road by the same player
@@ -380,19 +387,5 @@ public class Map {
 		return false;
 	}
 	
-	public static void main(String[] args) {
-		System.out.println("Hello");
-		String json = "{\"resource\":\"wheat\",\"location\":{\"x\":-1,\"y\":2}}";
-		Hex hex = new Gson().fromJson(json, Hex.class);
-		System.out.println(hex.getLocation().getX());
-		
-		//String json2 = "{\"x\": 0,\"y\": -1}";
-		//Robber robber = new Robber
-		//System.out.println(robber.toString());
-		
-
-	}
-
-
 
 }
