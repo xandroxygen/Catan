@@ -32,14 +32,14 @@ public class Serializer {
 	 * Specialized serialization method for move API calls. This is also fairly generic in that it returns a JSON string
 	 * with anything that gets passed in, and in addition a type and playerIndex (which must be an int).
 	 * @param type Type of the API call, which is usually the same as the URL (eg, sendChat)
-	 * @param playerIndex NOT playerID, but index for turns (0-3)
+	 * @param playerIndex NOT playerID, but index for turns (0-3) *MUST be int, not String*
 	 * @param jsonBody More strings that need to be passed in.
 	 * @return a JSON string
 	 */
 	public static String serializeMoveCall(String type, int playerIndex, Map<String, String> jsonBody) {
 		JsonObject jo = new JsonObject();
 		jo.addProperty("type", type);
-		jo.addProperty("playerIndex", playerIndex); // TODO: does this need to be toString?
+		jo.addProperty("playerIndex", playerIndex);
 		for (Map.Entry<String, String> entrySet : jsonBody.entrySet()) {
 			jo.addProperty(entrySet.getKey(), entrySet.getValue());
 		}

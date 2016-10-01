@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -65,14 +66,17 @@ public class HTTPOperations {
                 InputStream responseBody = connection.getInputStream();
 
                 List<String> responseCookies = connection.getHeaderFields().get("Set-Cookie");
-                if (responseCookies.size() > 0) {
-                    return new RequestResponse(false, responseToString(responseBody), responseCookies.get(0)); // response OK
+                if (responseCookies != null && responseCookies.size() > 0) {
+                    String[] cookieParts = responseCookies.get(0).split(";");
+                    String cookie = cookieParts[0];
+                    return new RequestResponse(false, responseToString(responseBody), cookie); // response OK
                 }
                 else {
                     return new RequestResponse(false, responseToString(responseBody)); // response OK
                 }
             } else {
-                return new RequestResponse(true, "Server returned an error oh noooeee"); // response not 200
+                InputStream responseBody = connection.getInputStream();
+                return new RequestResponse(true, responseToString(responseBody)); // response not 200
             }
         } catch (IOException e) {
             return new RequestResponse(true, e);
@@ -97,7 +101,9 @@ public class HTTPOperations {
             for (String header : headers.keySet()) {
                 connection.setRequestProperty(header, headers.get(header));
             }
+            connection.setDoOutput(true);
             connection.connect();
+
 
             OutputStream requestBody = connection.getOutputStream();
             requestBody.write(body.getBytes());
@@ -106,15 +112,18 @@ public class HTTPOperations {
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 InputStream responseBody = connection.getInputStream();
 
-                List<String> responseCookies = connection.getHeaderFields().get("Set-Cookie");
-                if (responseCookies.size() > 0) {
-                    return new RequestResponse(false, responseToString(responseBody), responseCookies.get(0)); // response OK
+                List<String> responseCookies = connection.getHeaderFields().get("Set-cookie");
+                if (responseCookies != null && responseCookies.size() > 0) {
+                    String[] cookieParts = responseCookies.get(0).split(";");
+                    String cookie = cookieParts[0];
+                    return new RequestResponse(false, responseToString(responseBody), cookie); // response OK
                 }
                 else {
                     return new RequestResponse(false, responseToString(responseBody)); // response OK
                 }
             } else {
-                return new RequestResponse(true, "Server returned an error oh noooeee"); // response not 200
+                InputStream responseBody = connection.getInputStream();
+                return new RequestResponse(true, responseToString(responseBody)); // response not 200
             }
         } catch (IOException e) {
             return new RequestResponse(true, e); // other error
