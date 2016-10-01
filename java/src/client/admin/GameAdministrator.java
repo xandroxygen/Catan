@@ -120,7 +120,7 @@ public class GameAdministrator {
 
             for (PlayerDetails player : currentGame.getPlayers()) {
                 if (player.getName().equals(currentUser.getUsername()) ||
-                        player.getColor().equals(userColor.toString())) {
+                        player.getColor().equals(userColor.toString().toLowerCase())) {
                     // player or color is already in game
                     canJoinGame = false;
                 }

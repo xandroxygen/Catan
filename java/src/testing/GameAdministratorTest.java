@@ -12,19 +12,20 @@ import client.model.InvalidActionException;
 import client.model.Model;
 import client.server.MockServerProxy;
 import client.server.ServerPoller;
+import shared.definitions.CatanColor;
 
 public class GameAdministratorTest {
 	MockServerProxy mockProxy;
 	ServerPoller poller;
 	Model model;
 	GameAdministrator gameAdmin;
+	User user = new User();
 
 	@Before
 	public void setUp() throws Exception {
 		mockProxy= new MockServerProxy();
 		poller = new ServerPoller(mockProxy);
 		model = Model.getInstance();
-		User user = new User();
 		gameAdmin = new GameAdministrator(user, mockProxy);
 	}
 
@@ -79,12 +80,50 @@ public class GameAdministratorTest {
 	
 	@Test
 	public void testCanCreateGame() {
-		fail("Not yet implemented");
+		System.out.println("Testing canCreateGame");
+		boolean canCreateGame;
+		
+		// test with valid input
+		String gameName = "My Game";
+		user.isLoggedIn = true;
+		canCreateGame = gameAdmin.canCreateGame(gameName, false, false, true);
+		assertEquals(true, canCreateGame);
+		
+		// test with null game name string
+		gameName = null;
+		canCreateGame = gameAdmin.canCreateGame(gameName, true, false, true);
+		assertEquals(false, canCreateGame);
+		
+		// test when user is not logged in
+		gameName = "My Game";
+		user.isLoggedIn = false;
+		canCreateGame = gameAdmin.canCreateGame(gameName, false, true, false);
+		assertEquals(false, canCreateGame);
 	}
 	
 	@Test
-	public void testCanJoinGame() {
-		fail("Not yet implemented");
+	public void testCanJoinGame() throws InvalidActionException {
+		System.out.println("Testing canJoinGame");
+		boolean canJoinGame;
+		
+		// test joining a game that is already full
+		user.isLoggedIn = true;
+		canJoinGame = gameAdmin.canJoinGame(0, CatanColor.PUCE);
+		assertEquals(false, canJoinGame);
+		
+		// test when user is not logged in
+		user.isLoggedIn = false;
+		canJoinGame = gameAdmin.canJoinGame(2, CatanColor.RED);
+		assertEquals(false, canJoinGame);
+		
+		// test with color that has already been taken in a game that is not full
+		user.isLoggedIn = true;
+		canJoinGame = gameAdmin.canJoinGame(2, CatanColor.BLUE);
+		assertEquals(false, canJoinGame);
+		
+		// test with valid input and a game that is not already full
+		canJoinGame = gameAdmin.canJoinGame(2, CatanColor.PUCE);
+		assertEquals(true, canJoinGame);
 	}
 
 }
