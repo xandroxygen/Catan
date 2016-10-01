@@ -1,6 +1,10 @@
 package client.model;
 
-import org.json.simple.JSONObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
 
 /**
  * ModelUpdater class.
@@ -125,8 +129,8 @@ public class ModelUpdater {
 	 *
 	 * @param json 
 	 */
-	public void updateModel(JSONObject json) {
-		
+	public Game updateModel(JsonObject json) {
+		return new Game(updatePlayers(json),updateMap(json),updateBank(json),json);
 	}
 	
 	/**
@@ -151,8 +155,8 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updateBank(JSONObject json) {
-		
+	public Bank updateBank(JsonObject json) {
+		return new Bank(json);
 	}
 	
 	/**
@@ -188,59 +192,21 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updatePlayer(JSONObject json) {
+	public ArrayList<Player> updatePlayers(JsonObject json) {
 		
-	}
-	
-	/**
-	 * Updates game class.
-	 *
-	 * @pre <pre>
-	 *     json is not null
-	 *     json should look like this ...
-	 *
-	 *	   ClientModel {
-	 *     	bank (ResourceList): The cards available to be distributed to the players.
-	 *     	chat (MessageList): All the chat messages.,
-	 *     	log (MessageList): All the log messages.,
-	 *     	map (Map),
-	 *     	players (array[Player]),
-	 *     	tradeOffer (TradeOffer, optional): The current trade offer, if there is one.,
-	 *     	turnTracker (TurnTracker): This tracks who's turn it is and what action's being done.,
-	 *     	version (index): The version of the model. This is incremented whenever anyone makes a move.,
-	 *     	winner (index): This is -1 when nobody's won yet. When they have, it's their order index [0-3]
-	 *     }
-	 *     MessageList {
-	 *     	lines (array[MessageLine])
-	 *     }
-	 *     MessageLine {
-	 *     	message (string),
-	 *     	source (string)
-	 *     }
-	 *     TradeOffer {
-	 *		sender (integer): The index of the person offering the trade
-	 * 		receiver (integer): The index of the person the trade was offered to.,
-	 * 		offer (ResourceList): Positive numbers are resources being offered. Negative are resources
-	 * 		being asked for.
-	 *	   }
-	 * 	   TurnTracker {
-	 * 		currentTurn (index): Who's turn it is (0-3),
-	 * 		status (string) = ['Rolling' or 'Robbing' or 'Playing' or 'Discarding' or 'FirstRound' or
-	 * 		'SecondRound']: What's happening now,
-	 * 		longestRoad (index): The index of who has the longest road, -1 if no one has it
-	 * 		largestArmy (index): The index of who has the biggest army (3 or more), -1 if no one has it
-	 * 	   }
-	 *
-	 * 	</pre>
-	 *
-	 * @post <pre>
-	 *		the game will be updated according to the json passed into the function
-	 * </pre>
-	 *
-	 * @param json
-	 */
-	public void updateGame(JSONObject json) {
-		
+		try {
+			ArrayList<Player> players = new ArrayList<>();
+			JsonArray playerJSONArray = json.getAsJsonArray("players");
+			for (JsonElement playerElement : playerJSONArray) {
+				players.add(new Player(playerElement.getAsJsonObject()));
+			}
+			return players;
+
+		}
+		catch (Exception e) {
+			// INVALID MODEL PROVIDED
+			return null;
+		}
 	}
 	
 	/**
@@ -298,7 +264,17 @@ public class ModelUpdater {
 	 *
 	 * @param json
 	 */
-	public void updateMap(JSONObject json) {
-		
+	public Map updateMap(JsonObject json) {
+		try {
+			JsonObject mapJSON = json.getAsJsonObject("map");
+			Map newMap = new Map(mapJSON);
+			return newMap;
+		}
+		catch (Exception e) {
+			// INVALID MODEL PROVIDED
+			return null;
+		}
+
 	}
+
 }

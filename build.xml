@@ -150,6 +150,24 @@
 			</assertions>
 		</java>
 	</target>
+
+	<path id="junit.classpath">
+		<fileset dir="${java.lib.dir}"/>
+		<fileset dir="${java.dist}"/>
+	</path>
+
+	<target name="test" depends="package" description="only runs junit tests">
+		<junit printsummary="withOutAndErr">
+			<classpath refid="junit.classpath"/>
+			<formatter type="plain" usefile="false"/>
+			<test name="testing.TestTest"/>
+			<test name="testing.ServerPollerTest"/>
+			<test name="testing.ModelTest"/>
+			<test name="testing.GameAdministratorTest"/>
+			<test name="testing.ServerProxyTest"/>
+			<!-- TODO put the name of your test classes here, then run ant test -->
+		</junit>
+	</target>
     
     <target name="make-tester-zip" depends="package" description="makes a zip file for your testing team">
         <zip destfile="./tester.zip" basedir="${java.dist}" />

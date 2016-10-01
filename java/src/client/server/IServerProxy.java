@@ -1,11 +1,13 @@
 package client.server;
 
-import org.json.simple.JSONObject;
+import client.model.InvalidActionException;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+
+import java.util.Map;
 
 /**
  * Interface for the Server proxy and Mock proxy.
@@ -43,11 +45,40 @@ public interface IServerProxy {
 	 *  
 	 * @param username Username of the player logging in.
 	 * @param password Password that corresponds to the username of player logging in.
+	 * @throws InvalidActionException
 	 */
-	void userLogin(String username, String password);
+	String userLogin(String username, String password) throws InvalidActionException;
+	
+	/**
+	 * Creates a new user account & logs the caller into the server as the new user and sets
+	 * their catan.user HTTP cookie.
+	 *
+	 * @pre <pre>
+	 * 	username is not null
+	 * 	password is not null
+	 *  username has not already been taken
+	 * 	</pre>
+	 * 
+	 * @post <pre>
+	 * If username/ password is valid:
+	 * 		1. Server returns an HTTP 200 response message.
+	 * 		2. A new user account is created with the specified username and password.
+	 * 		3. HTTP response headers set catan.cookie to contain identity of the logged in player.
+	 *
+	 * If username/ password is not valid:
+	 *  	1. Server returns 400 error response and body contains an error message.
+	 *  </pre>
+	 * 
+	 * @param username Username of the new player being registered.
+	 * @param password Password that corresponds to the username of new player being registered.
+	 * @throws InvalidActionException
+	 */
+	String userRegister(String username, String password) throws InvalidActionException;
 	
 	/**
 	 * Returns information about all of the current games on the server.
+	 * @return 
+	 * @throws InvalidActionException 
 	 *
 	 * @post <pre>
 	 * 	If the operation succeeds:
@@ -58,7 +89,7 @@ public interface IServerProxy {
 	 * 		1. Server returns 400 error response and body contains an error message.
 	 * 	</pre>
 	 */
-	void gamesList();
+	String gamesList() throws InvalidActionException;
 	
 	/**
 	 * Creates a new game on the server. 
@@ -81,8 +112,10 @@ public interface IServerProxy {
      * @param randomTiles true if the tiles should be randomized, false if they should be preset
      * @param randomNumbers true if the numbers should be randomized, false if they should be preset
      * @param randomPorts true if the ports should be randomized, false if they should be preset
+	 * @return 
+	 * @throws InvalidActionException 
 	 */
-	void gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts);
+	String gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws InvalidActionException;
 	
 	/**
 	 * Adds the player to the specified game and sets their catan.game cookie.
@@ -108,11 +141,13 @@ public interface IServerProxy {
 	 *
 	 * @param gameID ID of the game to join
 	 * @param color Player color
+	 * @throws InvalidActionException
 	 */
-	void gamesJoin(int gameID, CatanColor color);
+	String gamesJoin(int gameID, CatanColor color) throws InvalidActionException;
 	
 	/**
 	 * Returns the current state of the game in JSON format.
+	 * @throws InvalidActionException 
 	 * 
 	 * @pre <pre>
 	 * 	1. The caller has previously logged into the server and joined a game (they have valid catan.game and catan.user HTTP cookies)
@@ -128,7 +163,7 @@ public interface IServerProxy {
 	 * 		1. The server returns an HTTP 400 error message and the response body contains an error message
 	 * </pre>
 	 */
-	JSONObject gameGetModel();
+	String gameGetModel() throws InvalidActionException;
 
 	/**
 	 * Returns the current state of the game in JSON format.
@@ -152,11 +187,14 @@ public interface IServerProxy {
 	 *  </pre>
 	 *
 	 * @param version The version number of the model. Used to compare and check if model has been updated.
+	 * @throws InvalidActionException 
 	 */
-	JSONObject gameGetModel(int version);
+	String gameGetModel(int version) throws InvalidActionException;	
 	
 	/**
 	 * Returns a list of supported AI player types.
+	 * @return 
+	 * @throws InvalidActionException 
 	 *
 	 * @pre <pre>
 	 * If the operation succeeds
@@ -168,7 +206,7 @@ public interface IServerProxy {
 	 * 		 1. The server returns an HTTP 400 error message and the response body contains an error message
 	 * </pre>
 	 */
-	void gameListAI();
+	String gameListAI() throws InvalidActionException;
 	
 	
 	/**
@@ -191,8 +229,9 @@ public interface IServerProxy {
 	 * </pre>
 	 *
 	 * @param aiType The AI player to add to the game
+	 * @throws InvalidActionException 
 	 */
-	void gameAddAI(String aiType);
+	void gameAddAI(String aiType) throws InvalidActionException;
 
 	/* END Non-move API */
 	
@@ -214,7 +253,7 @@ public interface IServerProxy {
 	 * @param content The message to send
      * @post the chat box contains the sent message
 	 */
-	void sendChat(String content);
+	void sendChat(String content) throws InvalidActionException;
 	
 	/**
 	 *  A domestic trade is being offered.
@@ -236,7 +275,7 @@ public interface IServerProxy {
      * 		The trade offer is removed
 	 * </pre>
 	 */
-	void acceptTrade(boolean willAccept);
+	void acceptTrade(boolean willAccept) throws InvalidActionException;
 
 	/**
      * @param hand The cards being discarded
@@ -248,9 +287,8 @@ public interface IServerProxy {
      * 		You have more than 7 cards
      * 		You have the resources you are discarding
 	 * </pre>
-     * TODO: Replace Object with correct class
 	 */
-	void discardCards(Object hand);
+	void discardCards(Map<ResourceType, Integer> hand) throws InvalidActionException;
 
     /**
      * Tell the server that the dice were rolled.
@@ -263,7 +301,7 @@ public interface IServerProxy {
      * 		The status of the client model is 'Rolling'
      * </pre>
      */
-	void rollNumber(int number);
+	void rollNumber(int number) throws InvalidActionException;
 
     /**
      * @param isFree during the setup phase, roads are free
@@ -287,7 +325,7 @@ public interface IServerProxy {
      * 		Longest road has been awarded, if applicable
 	 * </pre>
      */
-	void buildRoad(boolean isFree, EdgeLocation roadLocation );
+	void buildRoad(boolean isFree, EdgeLocation roadLocation ) throws InvalidActionException;
 
     /**
      * @param isFree during the setup phase, settlements are free
@@ -309,7 +347,7 @@ public interface IServerProxy {
      * 		The settlement is at the location on the map
 	 * </pre>
      */
-	void buildSettlement(boolean isFree, VertexLocation vertexLocation);
+	void buildSettlement(boolean isFree, VertexLocation vertexLocation) throws InvalidActionException;
 
     /**
      * @param vertexLocation the new city's location
@@ -329,7 +367,7 @@ public interface IServerProxy {
      * 		You regain 1 settlement
 	 * </pre>
      */
-	void buildCity(VertexLocation vertexLocation);
+	void buildCity(VertexLocation vertexLocation) throws InvalidActionException;
 
 	/**
 	 * Contact another player and offer to trade cards back and forth.
@@ -339,7 +377,7 @@ public interface IServerProxy {
      * @pre You have the resources you are offering
      * @post The trade is offered to the other player
 	 */
-	void offerTrade(Object offer, int receiverIndex);
+	void offerTrade(Map<ResourceType, Integer> offer, int receiverIndex) throws InvalidActionException;
 	
 	/**
 	 * Used when built on a port, or when trading to the bank.
@@ -359,7 +397,7 @@ public interface IServerProxy {
 	 * 		You have the requested resource.
 	 * </pre>
 	 */
-	void maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource);
+	void maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource) throws InvalidActionException;
 	
 	/**
 	 * Called when a 7 is rolled and the robber is being moved.
@@ -378,7 +416,7 @@ public interface IServerProxy {
      * 		The player being robbed gave you a random resource card.
 	 * </pre>
 	 */
-	void robPlayer(HexLocation location, int victimIndex);
+	void robPlayer(HexLocation location, int victimIndex) throws InvalidActionException;
 
     /**
      * Called at the end of a player's turn.
@@ -387,7 +425,7 @@ public interface IServerProxy {
      * 		It is the next player's turn.
 	 * </pre>
      */
-    void finishTurn();
+    void finishTurn() throws InvalidActionException;
 
     /**
      * Purchase a development card for 1 wheat, 1 sheep, and 1 ore.
@@ -405,7 +443,7 @@ public interface IServerProxy {
      * 		You have spent the required resources
 	 * </pre>
      */
-	void buyDevCard();
+	void buyDevCard() throws InvalidActionException;
 
     /**
      * Play a soldier/knight dev card. Analogous to moving the robber.
@@ -430,7 +468,7 @@ public interface IServerProxy {
      * 		You are not allowed to play non-monument dev cards
 	 * </pre>
      */
-	void playSoldier(HexLocation location, int victimIndex);
+	void playSoldier(HexLocation location, int victimIndex) throws InvalidActionException;
 
 	/**
 	 * Play a Year of Plenty card, and receive 2 free resources.
@@ -449,7 +487,7 @@ public interface IServerProxy {
 	 *
      * @post You have the requested resources and the bank does not.
 	 */
-	void playYearOfPlenty(ResourceType resource1, ResourceType resource2);
+	void playYearOfPlenty(ResourceType resource1, ResourceType resource2) throws InvalidActionException;
 	
 	/**
 	 * Play a Road Building card, and build 2 roads.
@@ -475,7 +513,7 @@ public interface IServerProxy {
      * 		Longest road is awarded, if applicable.
 	 * </pre>
 	 */
-	void playRoadBuilding(EdgeLocation location1, EdgeLocation location2);
+	void playRoadBuilding(EdgeLocation location1, EdgeLocation location2) throws InvalidActionException;
 	
 	/**
 	 * Play a Monopoly card, and collect a specific resource from all other players.
@@ -492,14 +530,14 @@ public interface IServerProxy {
 	 *
      * @post All the players have given you all of their resources of the specified type
 	 */
-	void playMonopoly(ResourceType resource);
+	void playMonopoly(ResourceType resource) throws InvalidActionException;
 	
 	/**
 	 * Play a Monument card, and be awarded a victory point.
      * @pre You have enough monument cards to reach 10 pts and win the game.
      * @post You gained a victory point.
 	 */
-	void playVictoryPoint();
+	void playVictoryPoint() throws InvalidActionException;
 
 	/* END Move API */
 }

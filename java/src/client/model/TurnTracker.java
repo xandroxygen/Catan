@@ -3,8 +3,8 @@ package client.model;
 public class TurnTracker {
 	private GameStatus status;
 	private int currentTurn;
-	private DevCard longestRoad;
-	private DevCard largestArmy;
+	private int longestRoad;
+	private int largestArmy;
 	
 	public GameStatus getStatus() {
 		return status;
@@ -12,11 +12,26 @@ public class TurnTracker {
 	public int getCurrentTurn() {
 		return currentTurn;
 	}
-	public DevCard getLongestRoad() {
+	public int getLongestRoad() {
 		return longestRoad;
 	}
-	public DevCard getLargestArmy() {
+	public int getLargestArmy() {
 		return largestArmy;
 	}
-	
+
+	public void setStatus(GameStatus status) {
+		this.status = status;
+	}
+
+	public void setCurrentTurn(int currentTurn) {
+		this.currentTurn = currentTurn;
+	}
+
+	public void setLongestRoad(int longestRoad) {
+		this.longestRoad = longestRoad;
+	}
+
+	public void setLargestArmy(int largestArmy) {
+		this.largestArmy = largestArmy;
+	}
 }
