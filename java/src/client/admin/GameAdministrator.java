@@ -22,7 +22,7 @@ public class GameAdministrator {
         currentUser = null;
         allCurrentGames = new ArrayList<>();
         server = new ServerProxy(); // TODO this will need to change and serverProxy instance needs to be in the model
-        //fetchGameList(); 
+        fetchGameList(); 
     }
     
     /**
