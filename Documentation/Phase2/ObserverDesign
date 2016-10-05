@@ -1,0 +1,56 @@
+Observable Pattern
+
+The main idea will be for the controller classes to implement an Observer interface that listens to any changes to the Observable model.  The model is a singleton and will only be initialized once, however the game and it’s attributes will be frequently deleted and reinitialized.  By using an Observer pattern, we can watch for these changes and make necessary modifications to the view. One advantage to the Observer pattern is the ability to add and remove observers with flexibility. For example, if the player is about to start a game and is currently waiting for other players, an observer can be created to watch for a change in the number of players. This observer can then be removed once all players have joined the game.  The next observer can then be added to listen for changes in some of the game components like the chat/log, and the end of a players turn.  The Observer pattern will be implemented as follows:
+
+class Model extends Observable {
+	...
+	void addObserver(Observer o) { …}
+	void deleteObserver(Observer o) { … }
+	void notifyObservers(Object arg) { … }	
+	void updateModel() {
+		setChanged();
+		notifyObservers();
+	}
+}
+
+class JoinGameController implements Observer {
+	…
+	@Override
+	public void update(Observable o, Object arg) {
+		// Implement logic to update view with new players that have joined the game
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
