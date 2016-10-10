@@ -5,9 +5,12 @@ import shared.definitions.CatanColor;
 import java.util.Observable;
 import java.util.Observer;
 
+import client.admin.GameAdministrator;
 import client.base.*;
 import client.data.*;
 import client.misc.*;
+import client.model.InvalidActionException;
+import client.model.Model;
 
 
 /**
@@ -19,6 +22,10 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	private ISelectColorView selectColorView;
 	private IMessageView messageView;
 	private IAction joinAction;
+	
+	
+	// Is this good practice???
+	int gameID = -1;
 	
 	/**
 	 * JoinGameController constructor
@@ -92,13 +99,25 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	}
 
 	@Override
-	public void start() {
+	public void start() {		
 		
-		getJoinGameView().showModal();
+		try {
+			GameAdministrator.getInstance().fetchGameList();
+			
+			//TODO: where is the current player stored??
+			getJoinGameView().setGames(GameAdministrator.getInstance().getAllCurrentGames(), null);
+			
+			getJoinGameView().showModal();
+		} catch (InvalidActionException e) {
+			getMessageView().showModal();
+            getMessageView().setTitle("Error");
+            getMessageView().setMessage(e.getMessage());
+		}
 	}
 
 	@Override
 	public void startCreateNewGame() {
+		
 		
 		getNewGameView().showModal();
 	}
@@ -117,7 +136,13 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void startJoinGame(GameInfo game) {
-
+		gameID = game.getId();
+		
+		// disable the colors that have already been taken
+		// TODO: Do I need to explicitly enable to other colors that haven't been take, or does that happen by default?
+		for(PlayerInfo p : game.getPlayers()) {
+			getSelectColorView().setColorEnabled(p.getColor(), false);
+		}
 		getSelectColorView().showModal();
 	}
 
@@ -129,6 +154,15 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void joinGame(CatanColor color) {
+		try {
+			if(GameAdministrator.getInstance().canJoinGame(gameID, color)){
+				GameAdministrator.getInstance().joinGame(gameID, color);
+			}
+		} catch (InvalidActionException e) {
+			getMessageView().showModal();
+            getMessageView().setTitle("Error");
+            getMessageView().setMessage("Error joining the game: " + e.getMessage());
+		}
 		
 		// If join succeeded
 		getSelectColorView().closeModal();
@@ -138,7 +172,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
