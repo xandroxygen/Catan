@@ -1,6 +1,8 @@
 package client.model;
 
 
+import client.server.IServerProxy;
+import client.server.ServerProxy;
 import com.google.gson.JsonObject;
 import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
@@ -21,10 +23,12 @@ import static shared.definitions.ResourceType.*;
 public class Model extends Observable {
 	private Game game;
 	private ModelUpdater modelUpdater;
+    private IServerProxy server;
 	private static Model model;
 	
 	private Model() {
 		modelUpdater = new ModelUpdater();
+        server = new ServerProxy();
 	}
 	
 	public static Model getInstance() {
@@ -42,6 +46,8 @@ public class Model extends Observable {
 	public Game getGame() {
 		return game;
 	}
+
+	public IServerProxy getServer() { return server; }
 	
     /**
      * Updates model class.

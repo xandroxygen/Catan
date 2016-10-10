@@ -3,6 +3,7 @@ package client.admin;
 import client.data.GameInfo;
 import client.data.PlayerInfo;
 import client.model.InvalidActionException;
+import client.model.Model;
 import client.server.IServerProxy;
 import client.server.ServerProxy;
 import com.google.gson.*;
@@ -19,12 +20,20 @@ public class GameAdministrator {
     private User currentUser;
     private List<GameInfo> allCurrentGames;
     private IServerProxy server;
+    private static GameAdministrator gameAdministrator;
 
-    public GameAdministrator() throws InvalidActionException {
+    private GameAdministrator() throws InvalidActionException {
         currentUser = null;
         allCurrentGames = new ArrayList<>();
-        server = new ServerProxy(); // TODO this will need to change and serverProxy instance needs to be in the model
+        server = Model.getInstance().getServer();
         fetchGameList(); 
+    }
+
+    public static GameAdministrator getInstance() throws InvalidActionException {
+        if (gameAdministrator == null) {
+            gameAdministrator = new GameAdministrator();
+        }
+        return gameAdministrator;
     }
     
     /**
@@ -220,7 +229,7 @@ public class GameAdministrator {
      * Called before canDo methods to make sure list of games is up to date
      * @throws InvalidActionException with updated message
      */
-    private void fetchGameList() throws InvalidActionException {
+    public void fetchGameList() throws InvalidActionException {
         try {
             String jsonGames = server.gamesList();
             allCurrentGames = deserializeGameList(jsonGames);
