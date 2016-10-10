@@ -18,6 +18,7 @@ public class GameInfo
 	private int id;
 	private String title;
 	private List<PlayerInfo> players;
+	private String cookie;
 	
 	public GameInfo()
 	{
@@ -39,6 +40,14 @@ public class GameInfo
 	public String getTitle()
 	{
 		return title;
+	}
+	
+	public String getCookie() {
+		return cookie;
+	}
+	
+	public void setCookie(String cookie) {
+		this.cookie = cookie;
 	}
 	
 	public void setTitle(String title)

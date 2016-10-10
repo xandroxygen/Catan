@@ -10,6 +10,7 @@ import shared.locations.VertexLocation;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
 
 import static shared.definitions.ResourceType.*;
 
@@ -17,7 +18,7 @@ import static shared.definitions.ResourceType.*;
 /**
  * Model Facade Class
  */
-public class Model {
+public class Model extends Observable {
 	private Game game;
 	private ModelUpdater modelUpdater;
 	private static Model model;
@@ -162,6 +163,8 @@ public class Model {
      */
     public void updateModel(JsonObject json){
     	game = modelUpdater.updateModel(json);
+    	this.setChanged();
+    	this.notifyObservers(game);
     }
 
     /**

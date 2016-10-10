@@ -1,5 +1,7 @@
 package client.admin;
 
+import client.data.GameInfo;
+import client.data.PlayerInfo;
 import client.model.InvalidActionException;
 import client.server.IServerProxy;
 import client.server.ServerProxy;
@@ -15,7 +17,7 @@ import java.util.List;
  */
 public class GameAdministrator {
     private User currentUser;
-    private List<GameDetails> allCurrentGames;
+    private List<GameInfo> allCurrentGames;
     private IServerProxy server;
 
     public GameAdministrator() throws InvalidActionException {
@@ -61,8 +63,8 @@ public class GameAdministrator {
         if (username != null && password != null) {
             boolean nameIsNotTaken = true;
             fetchGameList();
-            for (GameDetails game : allCurrentGames) {
-                for (PlayerDetails player : game.getPlayers()) {
+            for (GameInfo game : allCurrentGames) {
+                for (PlayerInfo player : game.getPlayers()) {
                     if (player.getName().equals(username)) {
                         nameIsNotTaken = false;
                     }
@@ -111,14 +113,14 @@ public class GameAdministrator {
         }
         else {
 
-            GameDetails currentGame = allCurrentGames.get(gameID);
+        	GameInfo currentGame = allCurrentGames.get(gameID);
             if (currentGame.getPlayers().size() > 3) {
 
                 // game is full
                 canJoinGame = false;
             }
 
-            for (PlayerDetails player : currentGame.getPlayers()) {
+            for (PlayerInfo player : currentGame.getPlayers()) {
                 if (player.getName().equals(currentUser.getUsername()) ||
                         player.getColor().equals(userColor.toString().toLowerCase())) {
                     // player or color is already in game
@@ -198,7 +200,7 @@ public class GameAdministrator {
     public void joinGame(int gameID, CatanColor userColor) throws InvalidActionException {
         try {
             String cookie = server.gamesJoin(gameID, userColor);
-            for (GameDetails game : allCurrentGames) {
+            for (GameInfo game : allCurrentGames) {
                 if (gameID == game.getId()) {
                     game.setCookie(cookie);
                 }
@@ -234,17 +236,17 @@ public class GameAdministrator {
      * @param jsonList JSON string of list of games
      * @return list of GameDetail objects
      */
-    private List<GameDetails> deserializeGameList(String jsonList) {
-        List<GameDetails> games = new ArrayList<>();
+    private List<GameInfo> deserializeGameList(String jsonList) {
+        List<GameInfo> games = new ArrayList<>();
         JsonArray jsonGames = new JsonParser().parse(jsonList).getAsJsonArray();
         for (JsonElement gameElement : jsonGames) {
-            GameDetails gameDetails = new Gson().fromJson(gameElement, GameDetails.class);
+        	GameInfo gameDetails = new Gson().fromJson(gameElement, GameInfo.class);
             games.add(gameDetails);
         }
         return games;
     }
     
-    public List<GameDetails> getAllCurrentGames() {
+    public List<GameInfo> getAllCurrentGames() {
     	return allCurrentGames;
     }
 }
