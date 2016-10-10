@@ -104,8 +104,8 @@ public class ServerProxyTest {
      */
     @Test
     public void shouldSetAndUsePlayerCookie() {
-        String username = "Xyze";
-        String password = "x";
+        String username = "Sam";
+        String password = "sam";
 
         try {
             String pCookie = server.userLogin(username, password);

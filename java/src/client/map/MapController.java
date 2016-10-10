@@ -125,7 +125,7 @@ public class MapController extends Controller implements IMapController {
 
 	public void placeRoad(EdgeLocation edgeLoc) {
 		
-		getView().placeRoad(edgeLoc, CatanColor.ORANGE);
+		//getView().placeRoad(edgeLoc, CatanColor.ORANGE);
 	}
 
 	public void placeSettlement(VertexLocation vertLoc) {
