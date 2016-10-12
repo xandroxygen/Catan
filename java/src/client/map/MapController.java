@@ -1,11 +1,17 @@
 package client.map;
 
-import java.util.*;
-
-import shared.definitions.*;
+import client.base.Controller;
+import client.data.RobPlayerInfo;
+import client.model.GameStatus;
+import shared.definitions.CatanColor;
+import shared.definitions.HexType;
+import shared.definitions.PieceType;
+import shared.definitions.PortType;
 import shared.locations.*;
-import client.base.*;
-import client.data.*;
+
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Random;
 
 
 /**
@@ -14,7 +20,9 @@ import client.data.*;
 public class MapController extends Controller implements IMapController, Observer {
 	
 	private IRobView robView;
-	
+
+	private GameStatus state;
+
 	public MapController(IMapView view, IRobView robView) {
 		
 		super(view);
@@ -104,73 +112,202 @@ public class MapController extends Controller implements IMapController, Observe
 	}
 
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) {
-		
-		return true;
+		//TODO im not sure we did the model right for this function
+		switch (state){
+			case Rolling:
+			case Trading:
+			case WaitingForResponse:
+			case WaitingForTurn:
+			case RespondToTrade:
+			case Robber:
+			break;
+			case Building:
+//				return Model.getInstance().canPlaceRoad(edgeLoc);
+		}
+		return false;
 	}
 
 	public boolean canPlaceSettlement(VertexLocation vertLoc) {
-		
+		//TODO im not sure we did the model right for this function
+		switch (state){
+			case Rolling:
+			case Trading:
+			case WaitingForResponse:
+			case WaitingForTurn:
+			case RespondToTrade:
+			case Robber:
+				break;
+			case Building:
+//				return Model.getInstance().canPlaceSettlement(vertLoc);
+		}
 		return true;
 	}
 
 	public boolean canPlaceCity(VertexLocation vertLoc) {
-		
-		return true;
+		//TODO im not sure we did the model right for this function
+		switch (state){
+			case Rolling:
+			case Trading:
+			case WaitingForResponse:
+			case WaitingForTurn:
+			case RespondToTrade:
+			case Robber:
+				break;
+			case Building:
+//				return Model.getInstance().canPlaceCity(vertLoc);
+		}
+		return false;
 	}
 
 	public boolean canPlaceRobber(HexLocation hexLoc) {
-		
-		return true;
+		//TODO im not sure we did the model right for this function
+		switch (state){
+			case Rolling:
+			case Trading:
+			case Building:
+			case WaitingForResponse:
+			case WaitingForTurn:
+			case RespondToTrade:
+				break;
+			case Robber:
+//				return Model.getInstance().canPlaceRobber(hexLoc);
+		}
+		return false;
 	}
 
 	public void placeRoad(EdgeLocation edgeLoc) {
-		
-		//getView().placeRoad(edgeLoc, CatanColor.ORANGE);
+		switch (state){
+			case Building:
+				getView().placeRoad(edgeLoc, CatanColor.ORANGE);
+			case Rolling:
+			case Trading:
+			case WaitingForResponse:
+			case WaitingForTurn:
+			case RespondToTrade:
+			case Robber:
+				break;
+		}
 	}
 
 	public void placeSettlement(VertexLocation vertLoc) {
-		
-		getView().placeSettlement(vertLoc, CatanColor.ORANGE);
+		switch (state){
+			case Building:
+				getView().placeSettlement(vertLoc, CatanColor.ORANGE);
+			case Rolling:
+			case Trading:
+			case WaitingForResponse:
+			case WaitingForTurn:
+			case RespondToTrade:
+			case Robber:
+				break;
+		}
 	}
 
 	public void placeCity(VertexLocation vertLoc) {
-		
-		getView().placeCity(vertLoc, CatanColor.ORANGE);
+		switch (state){
+			case Building:
+				getView().placeCity(vertLoc, CatanColor.ORANGE);
+			case Rolling:
+			case Trading:
+			case WaitingForResponse:
+			case WaitingForTurn:
+			case RespondToTrade:
+			case Robber:
+				break;
+		}
 	}
 
 	public void placeRobber(HexLocation hexLoc) {
-		
-		getView().placeRobber(hexLoc);
-		
-		getRobView().showModal();
+		switch (state){
+			case Robber:
+				getView().placeRobber(hexLoc);
+				getRobView().showModal();
+			case Rolling:
+			case Trading:
+			case Building:
+			case WaitingForResponse:
+			case WaitingForTurn:
+			case RespondToTrade:
+				break;
+		}
+
 	}
 	
-	public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) {	
-		
-		getView().startDrop(pieceType, CatanColor.ORANGE, true);
+	public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) {
+		switch (state){
+			case Rolling:
+				getView().startDrop(pieceType, CatanColor.ORANGE, true);
+			case Trading:
+			case Building:
+			case WaitingForResponse:
+			case WaitingForTurn:
+			case RespondToTrade:
+			case Robber:
+				break;
+		}
 	}
 	
 	public void cancelMove() {
-		
+		//TODO not sure what this is used for.
+		switch (state){
+			case Rolling:
+//				getView().cancelMove(pieceType, CatanColor.ORANGE, true);
+			case Trading:
+			case Building:
+			case WaitingForResponse:
+			case WaitingForTurn:
+			case RespondToTrade:
+			case Robber:
+		}
 	}
 	
-	public void playSoldierCard() {	
-		
+	public void playSoldierCard() {
+		switch (state){
+			case Trading:
+			case Building:
+//				Model.getInstance().playSoldierCard();
+			case Rolling:
+			case WaitingForResponse:
+			case WaitingForTurn:
+			case RespondToTrade:
+			case Robber:
+				break;
+		}
 	}
 	
-	public void playRoadBuildingCard() {	
-		
+	public void playRoadBuildingCard() {
+		switch (state){
+			case Trading:
+			case Building:
+//				Model.getInstance().playRoadBuildingCard();
+			case Rolling:
+			case WaitingForResponse:
+			case WaitingForTurn:
+			case RespondToTrade:
+			case Robber:
+				break;
+		}
 	}
 	
-	public void robPlayer(RobPlayerInfo victim) {	
-		
+	public void robPlayer(RobPlayerInfo victim) {
+		switch (state){
+			case Rolling:
+			case Trading:
+			case Building:
+			case WaitingForResponse:
+			case WaitingForTurn:
+			case RespondToTrade:
+				break;
+			case Robber:
+//				Model.getInstance().robPlayer();
+		}
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }
 
