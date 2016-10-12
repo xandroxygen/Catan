@@ -387,7 +387,7 @@ public class ServerProxy implements IServerProxy {
      */
     @Override
     public String gameListAI() throws InvalidActionException {
-    	String urlExt = "/game/reset";
+    	String urlExt = "/game/listAI";
     	
     	setHeaders();
     	

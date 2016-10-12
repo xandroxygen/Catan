@@ -26,7 +26,7 @@ public class GameAdministratorTest {
 		mockProxy= new MockServerProxy();
 		poller = new ServerPoller(mockProxy);
 		model = Model.getInstance();
-		gameAdmin = new GameAdministrator(user, mockProxy);
+		gameAdmin = GameAdministrator.getInstance();
 	}
 
 	@After
@@ -126,4 +126,11 @@ public class GameAdministratorTest {
 		assertEquals(true, canJoinGame);
 	}
 
+	@Test
+	public void testLogin() throws InvalidActionException {
+		String username = "Sam";
+		String password = "sam";
+
+		gameAdmin.login(username, password);
+	}
 }
