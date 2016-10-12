@@ -5,6 +5,8 @@ import java.util.Observer;
 
 import client.admin.GameAdministrator;
 import client.base.*;
+import client.data.GameInfo;
+import client.data.PlayerInfo;
 import client.model.InvalidActionException;
 import client.model.Model;
 
@@ -22,7 +24,11 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		this.view = view;
 		
 		Model.getInstance().addObserver(this);
-		view.setPlayers(GameAdministrator.getInstance().get);
+		GameInfo currentGame = GameAdministrator.getInstance().getCurrentGame();
+		PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
+		currentGame.getPlayers().toArray(players);
+		
+		view.setPlayers(players);
 		try {
 			view.setAIChoices(GameAdministrator.getInstance().getAIList());
 		}

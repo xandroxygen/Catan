@@ -29,7 +29,7 @@ public class GameAdministrator {
         fetchGameList(); 
     }
 
-    public synchronized static GameAdministrator getInstance() throws InvalidActionException {
+    public static GameAdministrator getInstance() throws InvalidActionException {
         if (gameAdministrator == null) {
             gameAdministrator = new GameAdministrator();
         }
