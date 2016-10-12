@@ -24,7 +24,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	private IAction joinAction;
 	
 	
-	// Is this good practice???
 	int gameID = -1;
 	
 	/**
@@ -104,8 +103,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		try {
 			GameAdministrator.getInstance().fetchGameList();
 			
-			//TODO: where is the current player stored??
-			getJoinGameView().setGames(GameAdministrator.getInstance().getAllCurrentGames(), null);
+			getJoinGameView().setGames(GameAdministrator.getInstance().getAllCurrentGames(), 
+					GameAdministrator.getInstance().getCurrentUser().getLocalPlayer());
 			
 			getJoinGameView().showModal();
 		} catch (InvalidActionException e) {
@@ -116,22 +115,32 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	}
 
 	@Override
-	public void startCreateNewGame() {
-		
-		
+	public void startCreateNewGame() {		
 		getNewGameView().showModal();
 	}
 
 	@Override
 	public void cancelCreateNewGame() {
-		
 		getNewGameView().closeModal();
+		getJoinGameView().showModal();
 	}
 
 	@Override
 	public void createNewGame() {
-		
-		getNewGameView().closeModal();
+		try {
+			if(GameAdministrator.getInstance().canCreateGame(newGameView.getTitle(), newGameView.getRandomlyPlaceHexes(), 
+					newGameView.getRandomlyPlaceNumbers(), newGameView.getUseRandomPorts())) {
+				
+				GameAdministrator.getInstance().createGame(newGameView.getTitle(), newGameView.getRandomlyPlaceHexes(),
+						newGameView.getRandomlyPlaceNumbers(), newGameView.getUseRandomPorts());
+				getNewGameView().closeModal();
+				joinAction.execute();
+			}			
+		} catch (InvalidActionException e) {
+			getMessageView().showModal();
+            getMessageView().setTitle("Error");
+            getMessageView().setMessage("Error joining the game: " + e.getMessage());
+		}
 	}
 
 	@Override
@@ -146,7 +155,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		gameID = game.getId();
 		
 		// disable the colors that have already been taken
-		// TODO: Do I need to explicitly enable to other colors that haven't been take, or does that happen by default?
+		// TODO: Do we need to explicitly enable the other colors that haven't been take, or does that happen by default?
 		for(PlayerInfo p : game.getPlayers()) {
 			getSelectColorView().setColorEnabled(p.getColor(), false);
 		}
@@ -155,8 +164,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void cancelJoinGame() {
-	
-		getJoinGameView().closeModal();
+		getSelectColorView().closeModal();
+		getJoinGameView().showModal();
 	}
 
 	@Override
@@ -164,18 +173,16 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		try {
 			if(GameAdministrator.getInstance().canJoinGame(gameID, color)){
 				GameAdministrator.getInstance().joinGame(gameID, color);
+				
+				getSelectColorView().closeModal();
+				joinAction.execute();
 			}
 			//TODO: Should we display something here??
 		} catch (InvalidActionException e) {
 			getMessageView().showModal();
             getMessageView().setTitle("Error");
             getMessageView().setMessage("Error joining the game: " + e.getMessage());
-		}
-		
-		// If join succeeded
-		getSelectColorView().closeModal();
-		getJoinGameView().closeModal();
-		joinAction.execute();
+		}		
 	}
 
 	@Override
