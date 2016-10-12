@@ -9,6 +9,7 @@ import java.io.*;
 import java.util.*;
 import java.lang.reflect.*;
 
+import client.model.InvalidActionException;
 import client.model.Model;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
@@ -77,18 +78,23 @@ public class LoginController extends Controller implements ILoginController, Obs
             String username = getLoginView().getLoginUsername();
             String password = getLoginView().getLoginPassword();
 
+            System.out.println(username);
+            System.out.println(password);
+
             if (GameAdministrator.getInstance().canLogin(username, password)) {
+                System.out.println("Can login");
                 GameAdministrator.getInstance().login(username, password);
             }
+            getLoginView().closeModal();
+            loginAction.execute();
 		}
-		catch (Exception e) {
+		catch (InvalidActionException e) {
 			getMessageView().showModal();
             getMessageView().setTitle("Error");
             getMessageView().setMessage("There was an error logging in:" + e.getMessage());
 		}
 
-		getLoginView().closeModal();
-		loginAction.execute();
+
 	}
 
 	@Override
