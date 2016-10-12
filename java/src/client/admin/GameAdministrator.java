@@ -195,9 +195,15 @@ public class GameAdministrator {
      * @param rPorts true if ports should be randomized
      * @throws InvalidActionException
      */
-    public void createGame(String gameName, boolean rTiles, boolean rNumbers, boolean rPorts) throws InvalidActionException {
+    public GameInfo createGame(String gameName, boolean rTiles, boolean rNumbers, boolean rPorts) throws InvalidActionException {
         try {
-            server.gamesCreate(gameName, rTiles, rNumbers, rPorts);
+            String gameInfo = server.gamesCreate(gameName, rTiles, rNumbers, rPorts);
+            JsonObject newModel = new JsonParser().parse(gameInfo).getAsJsonObject();
+            
+            int id  = newModel.get("id").getAsInt();
+            String title = newModel.get("title").getAsString();
+            GameInfo g = new GameInfo(title, id);
+            return g;
         }
         catch (InvalidActionException e) {
             e.message = "Game creation failed.";

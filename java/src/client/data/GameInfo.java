@@ -27,6 +27,12 @@ public class GameInfo
 		players = new ArrayList<PlayerInfo>();
 	}
 	
+	public GameInfo(String title, int id) {
+		this.title = title;
+		this.id = id;
+		players = new ArrayList<PlayerInfo>();
+	}
+	
 	public int getId()
 	{
 		return id;

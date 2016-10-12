@@ -131,8 +131,10 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			if(GameAdministrator.getInstance().canCreateGame(newGameView.getTitle(), newGameView.getRandomlyPlaceHexes(), 
 					newGameView.getRandomlyPlaceNumbers(), newGameView.getUseRandomPorts())) {
 				
-				GameAdministrator.getInstance().createGame(newGameView.getTitle(), newGameView.getRandomlyPlaceHexes(),
+				GameInfo currentGame = GameAdministrator.getInstance().createGame(newGameView.getTitle(), newGameView.getRandomlyPlaceHexes(),
 						newGameView.getRandomlyPlaceNumbers(), newGameView.getUseRandomPorts());
+				GameAdministrator.getInstance().setCurrentGame(currentGame);
+				
 				getNewGameView().closeModal();
 				joinAction.execute();
 			}			
