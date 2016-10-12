@@ -155,6 +155,7 @@ public class GameAdministrator {
             currentUser.setPassword(password);
             currentUser.isLoggedIn = true;
             currentUser.setCookie(cookie);
+            currentUser.createLocalPlayer();
         }
         catch (InvalidActionException e) {
             e.message = "Login failed.";
@@ -177,6 +178,7 @@ public class GameAdministrator {
             currentUser.setPassword(password);
             currentUser.isLoggedIn = true;
             currentUser.setCookie(cookie);
+            currentUser.createLocalPlayer();
         }
         catch (InvalidActionException e) {
             e.message = "Register failed";
