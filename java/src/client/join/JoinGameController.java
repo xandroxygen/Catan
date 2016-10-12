@@ -136,6 +136,13 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void startJoinGame(GameInfo game) {
+		try {
+			GameAdministrator.getInstance().setCurrentGame(game);
+		} catch (InvalidActionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		gameID = game.getId();
 		
 		// disable the colors that have already been taken
@@ -158,6 +165,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			if(GameAdministrator.getInstance().canJoinGame(gameID, color)){
 				GameAdministrator.getInstance().joinGame(gameID, color);
 			}
+			//TODO: Should we display something here??
 		} catch (InvalidActionException e) {
 			getMessageView().showModal();
             getMessageView().setTitle("Error");
