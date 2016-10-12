@@ -5,9 +5,12 @@ import shared.definitions.CatanColor;
 import java.util.Observable;
 import java.util.Observer;
 
+import client.admin.GameAdministrator;
 import client.base.*;
 import client.data.*;
 import client.misc.*;
+import client.model.InvalidActionException;
+import client.model.Model;
 
 
 /**
@@ -19,6 +22,9 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	private ISelectColorView selectColorView;
 	private IMessageView messageView;
 	private IAction joinAction;
+	
+	
+	int gameID = -1;
 	
 	/**
 	 * JoinGameController constructor
@@ -92,53 +98,96 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	}
 
 	@Override
-	public void start() {
+	public void start() {		
 		
-		getJoinGameView().showModal();
+		try {
+			GameAdministrator.getInstance().fetchGameList();
+			
+			getJoinGameView().setGames(GameAdministrator.getInstance().getAllCurrentGames(), 
+					GameAdministrator.getInstance().getCurrentUser().getLocalPlayer());
+			
+			getJoinGameView().showModal();
+		} catch (InvalidActionException e) {
+			getMessageView().showModal();
+            getMessageView().setTitle("Error");
+            getMessageView().setMessage(e.getMessage());
+		}
 	}
 
 	@Override
-	public void startCreateNewGame() {
-		
+	public void startCreateNewGame() {		
 		getNewGameView().showModal();
 	}
 
 	@Override
 	public void cancelCreateNewGame() {
-		
 		getNewGameView().closeModal();
+		getJoinGameView().showModal();
 	}
 
 	@Override
 	public void createNewGame() {
-		
-		getNewGameView().closeModal();
+		try {
+			if(GameAdministrator.getInstance().canCreateGame(newGameView.getTitle(), newGameView.getRandomlyPlaceHexes(), 
+					newGameView.getRandomlyPlaceNumbers(), newGameView.getUseRandomPorts())) {
+				
+				GameAdministrator.getInstance().createGame(newGameView.getTitle(), newGameView.getRandomlyPlaceHexes(),
+						newGameView.getRandomlyPlaceNumbers(), newGameView.getUseRandomPorts());
+				getNewGameView().closeModal();
+				joinAction.execute();
+			}			
+		} catch (InvalidActionException e) {
+			getMessageView().showModal();
+            getMessageView().setTitle("Error");
+            getMessageView().setMessage("Error joining the game: " + e.getMessage());
+		}
 	}
 
 	@Override
 	public void startJoinGame(GameInfo game) {
-
+		try {
+			GameAdministrator.getInstance().setCurrentGame(game);
+		} catch (InvalidActionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		gameID = game.getId();
+		
+		// disable the colors that have already been taken
+		// TODO: Do we need to explicitly enable the other colors that haven't been take, or does that happen by default?
+		for(PlayerInfo p : game.getPlayers()) {
+			getSelectColorView().setColorEnabled(p.getColor(), false);
+		}
 		getSelectColorView().showModal();
 	}
 
 	@Override
 	public void cancelJoinGame() {
-	
-		getJoinGameView().closeModal();
+		getSelectColorView().closeModal();
+		getJoinGameView().showModal();
 	}
 
 	@Override
 	public void joinGame(CatanColor color) {
-		
-		// If join succeeded
-		getSelectColorView().closeModal();
-		getJoinGameView().closeModal();
-		joinAction.execute();
+		try {
+			if(GameAdministrator.getInstance().canJoinGame(gameID, color)){
+				GameAdministrator.getInstance().joinGame(gameID, color);
+				
+				getSelectColorView().closeModal();
+				joinAction.execute();
+			}
+			//TODO: Should we display something here??
+		} catch (InvalidActionException e) {
+			getMessageView().showModal();
+            getMessageView().setTitle("Error");
+            getMessageView().setMessage("Error joining the game: " + e.getMessage());
+		}		
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
