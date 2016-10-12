@@ -42,6 +42,13 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		setNewGameView(newGameView);
 		setSelectColorView(selectColorView);
 		setMessageView(messageView);
+		
+		try {
+			GameAdministrator.getInstance().addObserver(this);
+		} catch (InvalidActionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public IJoinGameView getJoinGameView() {
@@ -136,7 +143,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 				GameAdministrator.getInstance().setCurrentGame(currentGame);
 				
 				getNewGameView().closeModal();
-				joinAction.execute();
+				
+				getJoinGameView().showModal();
 			}			
 		} catch (InvalidActionException e) {
 			getMessageView().showModal();
@@ -189,7 +197,23 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void update(Observable o, Object arg) {
+		//testing
+		System.out.println("entered join game updater");
+		try {
+			System.out.println(GameAdministrator.getInstance().getAllCurrentGames().get(0));
+		} catch (InvalidActionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		// end testing
 		
+		try {
+			getJoinGameView().setGames(GameAdministrator.getInstance().getAllCurrentGames(), 
+					GameAdministrator.getInstance().getCurrentUser().getLocalPlayer());
+		} catch (InvalidActionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

@@ -11,6 +11,8 @@ import java.lang.reflect.*;
 
 import client.model.InvalidActionException;
 import client.model.Model;
+import client.server.ServerPoller;
+
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
@@ -22,7 +24,6 @@ public class LoginController extends Controller implements ILoginController, Obs
 
 	private IMessageView messageView;
 	private IAction loginAction;
-	
 	/**
 	 * LoginController constructor
 	 * 
@@ -82,6 +83,7 @@ public class LoginController extends Controller implements ILoginController, Obs
                 GameAdministrator.getInstance().login(username, password);
             }
             getLoginView().closeModal();
+            
             loginAction.execute();
 		}
 		catch (InvalidActionException e) {

@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import client.admin.GameAdministrator;
 import client.model.InvalidActionException;
 import client.model.Model;
 import client.model.ModelUpdater;
@@ -23,7 +24,7 @@ public class ServerPoller {
 	/**
 	 * The number of milliseconds at which to poll the server for updates.
 	 */
-	private final long POLL_INTERVAL = 1000;
+	private final long POLL_INTERVAL = 3500;
 	
 	/**
 	 * The number of milliseconds to delay before executing the timer task
@@ -89,13 +90,19 @@ public class ServerPoller {
 	 * </pre>
 	 */
 	public void pollServer() {	
-		try {
-			String response = server.gameGetModel(Model.getInstance().getVersion());
-			
-			boolean hasChanged = checkForUpdates(response);
-			if (hasChanged) {
-				JsonObject newModel = new JsonParser().parse(response).getAsJsonObject();
-				Model.getInstance().updateModel(newModel);
+		try {			
+			if(GameAdministrator.getInstance().isSettingUp()) {
+				System.out.println("in pollServer");
+				GameAdministrator.getInstance().fetchGameList();
+			}
+			else {
+				String response = server.gameGetModel(Model.getInstance().getVersion());
+				
+				boolean hasChanged = checkForUpdates(response);
+				if (hasChanged) {
+					JsonObject newModel = new JsonParser().parse(response).getAsJsonObject();
+					Model.getInstance().updateModel(newModel);
+				}
 			}
 		} catch (InvalidActionException e) {
 			e.printStackTrace();

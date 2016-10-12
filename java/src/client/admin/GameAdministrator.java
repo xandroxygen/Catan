@@ -5,27 +5,32 @@ import client.data.PlayerInfo;
 import client.model.InvalidActionException;
 import client.model.Model;
 import client.server.IServerProxy;
+import client.server.ServerPoller;
+
 import com.google.gson.*;
 import shared.definitions.CatanColor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * Superintendent, in charge of current user and all games.
  * Users may login and register here, and games can be created and joined.
  */
-public class GameAdministrator {
+public class GameAdministrator extends Observable{
     private User currentUser;
     private GameInfo currentGame;
 	private List<GameInfo> allCurrentGames;
     private IServerProxy server;
     private static GameAdministrator gameAdministrator;
+    private ServerPoller poller;
+    private boolean isSettingUp = true;
 
     private GameAdministrator() throws InvalidActionException {
         currentUser = new User();
         allCurrentGames = new ArrayList<>();
-        server = Model.getInstance().getServer();
+       	server = Model.getInstance().getServer();
         fetchGameList(); 
     }
 
@@ -46,6 +51,7 @@ public class GameAdministrator {
         currentUser = user;
         allCurrentGames = new ArrayList<>();
        	this.server = server; // TODO this will need to change and serverProxy instance needs to be in the model
+       	
         fetchGameList(); 
     }
 
@@ -156,6 +162,8 @@ public class GameAdministrator {
             currentUser.isLoggedIn = true;
             currentUser.setCookie(cookie);
             currentUser.createLocalPlayer();
+            poller = new ServerPoller(server);
+           	poller.start();
         }
         catch (InvalidActionException e) {
             e.message = "Login failed.";
@@ -179,6 +187,9 @@ public class GameAdministrator {
             currentUser.isLoggedIn = true;
             currentUser.setCookie(cookie);
             currentUser.createLocalPlayer();
+            
+            poller = new ServerPoller(server);
+           	poller.start();
         }
         catch (InvalidActionException e) {
             e.message = "Register failed";
@@ -267,7 +278,13 @@ public class GameAdministrator {
     public void fetchGameList() throws InvalidActionException {
         try {
             String jsonGames = server.gamesList();
+            // testing
+            System.out.println(jsonGames);
+            //end testing
             allCurrentGames = deserializeGameList(jsonGames);
+            
+            setChanged();
+            notifyObservers(allCurrentGames);
         }
         catch (InvalidActionException e) {
             e.message = "Fetch of games list failed.";
@@ -308,5 +325,13 @@ public class GameAdministrator {
 
 	public void setCurrentUser(User currentUser) {
 		this.currentUser = currentUser;
+	}
+
+	public boolean isSettingUp() {
+		return isSettingUp && currentUser != null;
+	}
+
+	public void setSettingUp(boolean isSettingUp) {
+		this.isSettingUp = isSettingUp;
 	}
 }
