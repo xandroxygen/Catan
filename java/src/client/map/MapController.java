@@ -9,6 +9,8 @@ import shared.definitions.PieceType;
 import shared.definitions.PortType;
 import shared.locations.*;
 
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 
 

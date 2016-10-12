@@ -635,4 +635,8 @@ public class Model extends Observable {
         //TODO implement
         return false;
     }
+
+    public Player getCurrentPlayer(){
+        return game.getPlayerList().get(game.getCurrentTurnIndex());
+    }
 }
