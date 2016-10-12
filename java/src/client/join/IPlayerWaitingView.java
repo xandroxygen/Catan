@@ -1,9 +1,9 @@
 package client.join;
 
-import java.util.ArrayList;
+
 
 import client.base.*;
-import client.model.Player;
+import client.data.PlayerInfo;
 
 /**
  * Interface for the player waiting view, which is displayed when the user is
@@ -18,7 +18,7 @@ public interface IPlayerWaitingView extends IOverlayView
 	 * @param value
 	 *            List of players who have already joined the game
 	 */
-	void setPlayers(ArrayList<Player> players);
+	void setPlayers(PlayerInfo[] value);
 	
 	/**
 	 * Sets the list of AI types from which the user may select

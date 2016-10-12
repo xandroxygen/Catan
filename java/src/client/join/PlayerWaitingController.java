@@ -24,17 +24,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		this.view = view;
 		
 		Model.getInstance().addObserver(this);
-		GameInfo currentGame = GameAdministrator.getInstance().getCurrentGame();
-		PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
-		currentGame.getPlayers().toArray(players);
 		
-		view.setPlayers(players);
-		try {
-			view.setAIChoices(GameAdministrator.getInstance().getAIList());
-		}
-		catch (InvalidActionException e) {
-			// Error getting list
-		}
 	}
 
 	@Override
@@ -47,6 +37,18 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	public void start() {
 
 		getView().showModal();
+		
+		try {
+			GameInfo currentGame = GameAdministrator.getInstance().getCurrentGame();
+			PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
+			currentGame.getPlayers().toArray(players);
+			view.setPlayers(players);
+			
+			view.setAIChoices(GameAdministrator.getInstance().getAIList());
+		}
+		catch (InvalidActionException e) {
+			// Error getting list
+		}
 	}
 
 	@Override
@@ -59,7 +61,15 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
-		view.setPlayers(Model.getInstance().getGame().getPlayerList());
+		try {
+			GameInfo currentGame = GameAdministrator.getInstance().getCurrentGame();
+			PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
+			currentGame.getPlayers().toArray(players);
+			view.setPlayers(players);
+		}
+		catch (InvalidActionException e) {
+			// Error getting list
+		}
 	}
 
 }
