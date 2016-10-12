@@ -24,7 +24,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	private IAction joinAction;
 	
 	
-	// Is this good practice???
 	int gameID = -1;
 	
 	/**
@@ -146,7 +145,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		gameID = game.getId();
 		
 		// disable the colors that have already been taken
-		// TODO: Do I need to explicitly enable to other colors that haven't been take, or does that happen by default?
+		// TODO: Do we need to explicitly enable the other colors that haven't been take, or does that happen by default?
 		for(PlayerInfo p : game.getPlayers()) {
 			getSelectColorView().setColorEnabled(p.getColor(), false);
 		}
@@ -164,6 +163,10 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		try {
 			if(GameAdministrator.getInstance().canJoinGame(gameID, color)){
 				GameAdministrator.getInstance().joinGame(gameID, color);
+				
+				getSelectColorView().closeModal();
+				getJoinGameView().closeModal();
+				joinAction.execute();
 			}
 			//TODO: Should we display something here??
 		} catch (InvalidActionException e) {
@@ -172,10 +175,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
             getMessageView().setMessage("Error joining the game: " + e.getMessage());
 		}
 		
-		// If join succeeded
-		getSelectColorView().closeModal();
-		getJoinGameView().closeModal();
-		joinAction.execute();
+		
 	}
 
 	@Override
