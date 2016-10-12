@@ -17,7 +17,8 @@ import java.util.List;
  */
 public class GameAdministrator {
     private User currentUser;
-    private List<GameInfo> allCurrentGames;
+    private GameInfo currentGame;
+	private List<GameInfo> allCurrentGames;
     private IServerProxy server;
     private static GameAdministrator gameAdministrator;
 
@@ -284,4 +285,12 @@ public class GameAdministrator {
     public List<GameInfo> getAllCurrentGames() {
     	return allCurrentGames;
     }
+    
+    public GameInfo getCurrentGame() {
+		return currentGame;
+	}
+
+	public void setCurrentGame(GameInfo currentGame) {
+		this.currentGame = currentGame;
+	}
 }
