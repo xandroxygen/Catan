@@ -1,5 +1,7 @@
 package client.join;
 
+import java.util.List;
+
 import client.base.*;
 import client.data.*;
 
@@ -17,7 +19,7 @@ public interface IJoinGameView extends IOverlayView
 	 * @param localPlayer
 	 *            Information about the local player
 	 */
-	void setGames(GameInfo[] games, PlayerInfo localPlayer);
+	void setGames(List<GameInfo> games, PlayerInfo localPlayer);
 	
 }
 
