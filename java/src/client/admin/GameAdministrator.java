@@ -23,13 +23,13 @@ public class GameAdministrator {
     private static GameAdministrator gameAdministrator;
 
     private GameAdministrator() throws InvalidActionException {
-        currentUser = null;
+        currentUser = new User();
         allCurrentGames = new ArrayList<>();
         server = Model.getInstance().getServer();
         fetchGameList(); 
     }
 
-    public static GameAdministrator getInstance() throws InvalidActionException {
+    public synchronized static GameAdministrator getInstance() throws InvalidActionException {
         if (gameAdministrator == null) {
             gameAdministrator = new GameAdministrator();
         }
@@ -149,7 +149,10 @@ public class GameAdministrator {
      */
     public void login(String username, String password) throws InvalidActionException {
         try {
+
             String cookie = server.userLogin(username, password);
+            currentUser.setUsername(username);
+            currentUser.setPassword(password);
             currentUser.isLoggedIn = true;
             currentUser.setCookie(cookie);
         }
@@ -170,6 +173,8 @@ public class GameAdministrator {
     public void register(String username, String password) throws InvalidActionException {
         try {
             String cookie = server.userRegister(username, password);
+            currentUser.setUsername(username);
+            currentUser.setPassword(password);
             currentUser.isLoggedIn = true;
             currentUser.setCookie(cookie);
         }

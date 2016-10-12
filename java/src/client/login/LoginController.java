@@ -78,11 +78,7 @@ public class LoginController extends Controller implements ILoginController, Obs
             String username = getLoginView().getLoginUsername();
             String password = getLoginView().getLoginPassword();
 
-            System.out.println(username);
-            System.out.println(password);
-
             if (GameAdministrator.getInstance().canLogin(username, password)) {
-                System.out.println("Can login");
                 GameAdministrator.getInstance().login(username, password);
             }
             getLoginView().closeModal();
