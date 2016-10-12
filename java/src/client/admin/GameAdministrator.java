@@ -293,4 +293,12 @@ public class GameAdministrator {
 	public void setCurrentGame(GameInfo currentGame) {
 		this.currentGame = currentGame;
 	}
+
+	public User getCurrentUser() {
+		return currentUser;
+	}
+
+	public void setCurrentUser(User currentUser) {
+		this.currentUser = currentUser;
+	}
 }
