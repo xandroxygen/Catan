@@ -3,6 +3,8 @@ package client.admin;
 import java.util.ArrayList;
 import java.util.List;
 
+import client.data.PlayerInfo;
+
 /**
  * Superclass for a player. A user is someone who has logged in to the application.
  * Once a user joins a game, a player is created with the same ID.
@@ -13,6 +15,7 @@ public class User {
     private String cookie;
     public boolean isLoggedIn;
     private List<Integer> gamesJoined;
+    private PlayerInfo localPlayer;
 
     public User() {
         username = "";
@@ -71,4 +74,12 @@ public class User {
     public void setCookie(String cookie) {
         this.cookie = cookie;
     }
+
+	public PlayerInfo getLocalPlayer() {
+		return localPlayer;
+	}
+
+	public void setLocalPlayer(PlayerInfo localPlayer) {
+		this.localPlayer = localPlayer;
+	}
 }
