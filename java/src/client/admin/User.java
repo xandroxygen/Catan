@@ -1,9 +1,13 @@
 package client.admin;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import client.data.PlayerInfo;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /**
  * Superclass for a player. A user is someone who has logged in to the application.
@@ -23,6 +27,7 @@ public class User {
         cookie = "";
         isLoggedIn = false;
         gamesJoined = new ArrayList<>();
+        localPlayer = new PlayerInfo();
     }
 
     public User(String username, String password) {
@@ -31,6 +36,7 @@ public class User {
         cookie = "";
         isLoggedIn = false;
         gamesJoined = new ArrayList<>();
+        localPlayer = new PlayerInfo();
     }
 
     public boolean canJoinGame() {
@@ -82,4 +88,26 @@ public class User {
 	public void setLocalPlayer(PlayerInfo localPlayer) {
 		this.localPlayer = localPlayer;
 	}
+
+    /**
+     * Decodes cookie to get name and ID, and creates PlayerInfo from that.
+     */
+	public void createLocalPlayer() {
+
+        try {
+            String decodedCookie = URLDecoder.decode(cookie, "UTF-8");
+            decodedCookie = decodedCookie.substring(11);
+            JsonObject jsonCookie = new JsonParser().parse(decodedCookie).getAsJsonObject();
+
+            String name = jsonCookie.get("name").getAsString();
+            int id = jsonCookie.get("playerID").getAsInt();
+
+            localPlayer = new PlayerInfo();
+            localPlayer.setName(name);
+            localPlayer.setId(id);
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
 }
