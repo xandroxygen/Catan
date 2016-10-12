@@ -3,7 +3,9 @@ package client.join;
 import java.util.Observable;
 import java.util.Observer;
 
+import client.admin.GameAdministrator;
 import client.base.*;
+import client.model.InvalidActionException;
 import client.model.Model;
 
 
@@ -20,7 +22,13 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		this.view = view;
 		
 		Model.getInstance().addObserver(this);
-		view.setPlayers(Model.getInstance().getGame().getPlayerList());
+		view.setPlayers(GameAdministrator.getInstance().get);
+		try {
+			view.setAIChoices(GameAdministrator.getInstance().getAIList());
+		}
+		catch (InvalidActionException e) {
+			// Error getting list
+		}
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import client.data.PlayerInfo;
 import client.model.InvalidActionException;
 import client.model.Model;
 import client.server.IServerProxy;
-import client.server.ServerProxy;
 import com.google.gson.*;
 import shared.definitions.CatanColor;
 
@@ -221,6 +220,28 @@ public class GameAdministrator {
         }
     }
 
+    /**
+     * Gets the list of possible AI Types from the server
+     * @pre Player is logged in, has the right cookie, and has joined a game
+     */
+    public String[] getAIList() {
+    	try {
+    		// Get type list from the server
+			String response = server.gameListAI();
+			JsonArray listAIArray = new JsonParser().parse(response).getAsJsonArray();
+			
+			// Convert response json into an array
+			ArrayList<String> types = new ArrayList<>();
+			for (JsonElement aIType : listAIArray) {
+				types.add(aIType.getAsString());
+			}
+			String[] values = new String[types.size()];
+			return types.toArray(values);
+		} catch (InvalidActionException e) {
+			e.printStackTrace();
+		}
+    	return null;
+    }
 
     // --- HELPER FUNCTIONS ----
 
