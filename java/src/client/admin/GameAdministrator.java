@@ -137,7 +137,7 @@ public class GameAdministrator extends Observable{
             }
 
             for (PlayerInfo player : currentGame.getPlayers()) {
-                if (player.getColor().equals(userColor) && !isUsersColor(player)) {
+                if (player.getColor().equals(userColor) && !isUser(player)) {
                     // player or color is already in game
                     canJoinGame = false;
                 }
@@ -351,8 +351,8 @@ public class GameAdministrator extends Observable{
     	return false;
     }
     
-    private boolean isUsersColor(PlayerInfo player) {
-    	return currentUser.getLocalPlayer().getColor().equals(player.getColor());
+    private boolean isUser(PlayerInfo player) {
+    	return currentUser.getLocalPlayer().getName().equals(player.getName());
     }
     
     public List<GameInfo> getAllCurrentGames() {
