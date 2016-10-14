@@ -1,6 +1,8 @@
 package shared.definitions;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 public enum CatanColor
 {
@@ -24,6 +26,21 @@ public enum CatanColor
 	public Color getJavaColor()
 	{
 		return color;
+	}
+	
+	public static List<CatanColor> getColors() {
+		ArrayList<CatanColor> colors = new ArrayList<>();
+		colors.add(RED);
+		colors.add(ORANGE);
+		colors.add(YELLOW);
+		colors.add(BLUE);
+		colors.add(GREEN);
+		colors.add(PURPLE);
+		colors.add(PUCE);
+		colors.add(WHITE);
+		colors.add(BROWN);
+		
+		return colors;
 	}
 }
 

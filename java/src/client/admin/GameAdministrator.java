@@ -280,8 +280,6 @@ public class GameAdministrator extends Observable{
             String jsonGames = server.gamesList();
             allCurrentGames = deserializeGameList(jsonGames);
             
-            
-            
             setChanged();
             notifyObservers(allCurrentGames);
         }
