@@ -129,15 +129,15 @@ public class GameAdministrator extends Observable{
         else {
 
         	GameInfo currentGame = allCurrentGames.get(gameID);
-            if (currentGame.getPlayers().size() > 3) {
+        	
+            if (currentGame.getPlayers().size() > 3 && !alreadyInGame()) {
 
                 // game is full
                 canJoinGame = false;
             }
 
             for (PlayerInfo player : currentGame.getPlayers()) {
-                if (player.getName().equals(currentUser.getUsername()) ||
-                        player.getColor().equals(userColor.toString().toLowerCase())) {
+                if (player.getColor().equals(userColor.toString().toLowerCase()) && !isUsersColor(player)) {
                     // player or color is already in game
                     canJoinGame = false;
                 }
@@ -303,6 +303,29 @@ public class GameAdministrator extends Observable{
             games.add(new GameInfo(gameElement.getAsJsonObject()));
         }
         return games;
+    }
+    
+    /**
+     * Checks if the current user is already in the game he is trying to join
+     * @return true if already a member of the game, false if not
+     */
+    private boolean alreadyInGame() {
+    	for(PlayerInfo p : currentGame.getPlayers()) {
+    		if(currentUser.getUsername().equals(p.getName())) {
+    			return true;
+    		}
+    	}
+    	
+    	return false;
+    }
+    
+    private boolean isUsersColor(PlayerInfo player) {
+    	if(currentUser.getLocalPlayer().getColor().equals(player.getColor().toString().toLowerCase())) {
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}	
     }
     
     public List<GameInfo> getAllCurrentGames() {

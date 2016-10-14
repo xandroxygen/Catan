@@ -2,7 +2,6 @@ package client.join;
 
 import shared.definitions.CatanColor;
 
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -11,8 +10,6 @@ import client.base.*;
 import client.data.*;
 import client.misc.*;
 import client.model.InvalidActionException;
-import client.model.Model;
-
 
 /**
  * Implementation for the join game controller
@@ -23,9 +20,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	private ISelectColorView selectColorView;
 	private IMessageView messageView;
 	private IAction joinAction;
-	private int count = 3;
 	
-	
+	GameAdministrator gameAdmin;
 	int gameID = -1;
 	
 	/**
@@ -46,7 +42,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		setMessageView(messageView);
 		
 		try {
-			GameAdministrator.getInstance().addObserver(this);
+			gameAdmin = GameAdministrator.getInstance();
+			gameAdmin.addObserver(this);
 		} catch (InvalidActionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -110,12 +107,11 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	public void start() {		
 		
 		try {
-			GameAdministrator.getInstance().fetchGameList();
-			
-			getJoinGameView().setGames(GameAdministrator.getInstance().getAllCurrentGames(), 
-					GameAdministrator.getInstance().getCurrentUser().getLocalPlayer());
+			gameAdmin.fetchGameList();
+			getJoinGameView().setGames(gameAdmin.getAllCurrentGames(), gameAdmin.getCurrentUser().getLocalPlayer());
 			
 			getJoinGameView().showModal();
+			
 		} catch (InvalidActionException e) {
 			getMessageView().showModal();
             getMessageView().setTitle("Error");
@@ -130,19 +126,25 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void cancelCreateNewGame() {
-		getNewGameView().closeModal();
+		//getNewGameView().closeModal();
 		getJoinGameView().showModal();
 	}
 
 	@Override
 	public void createNewGame() {
 		try {
-			if(GameAdministrator.getInstance().canCreateGame(newGameView.getTitle(), newGameView.getRandomlyPlaceHexes(), 
+			if(gameAdmin.canCreateGame(newGameView.getTitle(), newGameView.getRandomlyPlaceHexes(), 
 					newGameView.getRandomlyPlaceNumbers(), newGameView.getUseRandomPorts())) {
 				
-				GameInfo currentGame = GameAdministrator.getInstance().createGame(newGameView.getTitle(), newGameView.getRandomlyPlaceHexes(),
+				GameInfo currentGame = gameAdmin.createGame(newGameView.getTitle(), newGameView.getRandomlyPlaceHexes(),
 						newGameView.getRandomlyPlaceNumbers(), newGameView.getUseRandomPorts());
-				GameAdministrator.getInstance().setCurrentGame(currentGame);
+				
+				currentGame.addPlayer(gameAdmin.getCurrentUser().getLocalPlayer());
+				gameAdmin.setCurrentGame(currentGame);
+				gameAdmin.getAllCurrentGames().add(currentGame);
+				
+				gameAdmin.fetchGameList();
+				getJoinGameView().setGames(gameAdmin.getAllCurrentGames(), gameAdmin.getCurrentUser().getLocalPlayer());
 				
 				getNewGameView().closeModal();
 				
@@ -151,30 +153,24 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		} catch (InvalidActionException e) {
 			getMessageView().showModal();
             getMessageView().setTitle("Error");
-            getMessageView().setMessage("Error joining the game: " + e.getMessage());
+            getMessageView().setMessage("Error creating the game: " + e.getMessage());
 		}
 	}
 
 	@Override
 	public void startJoinGame(GameInfo game) {
-		try {
-			GameAdministrator.getInstance().setCurrentGame(game);
-		} catch (InvalidActionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		gameAdmin.setCurrentGame(game);
 		
 		gameID = game.getId();
 		
-		// disable the colors that have already been taken
-		// TODO: Do we need to explicitly enable the other colors that haven't been take, or does that happen by default?
-		
 		getSelectColorView().showModal();
 		
-		
-		//for(PlayerInfo p : game.getPlayers()) {
-			//getSelectColorView().setColorEnabled(p.getColor(), false);
-		//}
+		// disable the colors that have already been taken
+		for(PlayerInfo p : game.getPlayers()) {
+			if (!p.getName().equals(gameAdmin.getCurrentUser().getLocalPlayer().getName())) {
+				getSelectColorView().setColorEnabled(p.getColor(), false);
+			}
+		}
 	}
 
 	@Override
@@ -187,13 +183,13 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	public void joinGame(CatanColor color) {
 		System.out.println("Joining game");
 		try {
-			if(GameAdministrator.getInstance().canJoinGame(gameID, color)){
-				GameAdministrator.getInstance().joinGame(gameID, color);
+			if(gameAdmin.canJoinGame(gameID, color)){
+				gameAdmin.getCurrentUser().getLocalPlayer().setColor(color);
+				gameAdmin.joinGame(gameID, color);
 				
 				getSelectColorView().closeModal();
 				joinAction.execute();
 			}
-			//TODO: Should we display something here??
 		} catch (InvalidActionException e) {
 			getMessageView().showModal();
             getMessageView().setTitle("Error");
@@ -202,23 +198,12 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
-		
-		try {
-			// Update the view
-			getJoinGameView().setGames(GameAdministrator.getInstance().getAllCurrentGames(), 
-					GameAdministrator.getInstance().getCurrentUser().getLocalPlayer());
-
-		} catch (InvalidActionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+	public void update(Observable o, Object arg) {	
+		getJoinGameView().setGames(gameAdmin.getAllCurrentGames(), gameAdmin.getCurrentUser().getLocalPlayer());
 	}
 	
-	public void updateView() throws InvalidActionException {
-		getJoinGameView().setGames(GameAdministrator.getInstance().getAllCurrentGames(), 
-				GameAdministrator.getInstance().getCurrentUser().getLocalPlayer());
+	public void updateView() {
+		getJoinGameView().setGames(gameAdmin.getAllCurrentGames(), gameAdmin.getCurrentUser().getLocalPlayer());
 	}
 
 }
