@@ -280,6 +280,8 @@ public class GameAdministrator extends Observable{
             String jsonGames = server.gamesList();
             allCurrentGames = deserializeGameList(jsonGames);
             
+            
+            
             setChanged();
             notifyObservers(allCurrentGames);
         }
@@ -298,8 +300,7 @@ public class GameAdministrator extends Observable{
         List<GameInfo> games = new ArrayList<>();
         JsonArray jsonGames = new JsonParser().parse(jsonList).getAsJsonArray();
         for (JsonElement gameElement : jsonGames) {
-        	GameInfo gameDetails = new Gson().fromJson(gameElement.getAsJsonObject(), GameInfo.class);
-            games.add(gameDetails);
+            games.add(new GameInfo(gameElement.getAsJsonObject()));
         }
         return games;
     }

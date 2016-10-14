@@ -168,10 +168,13 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		
 		// disable the colors that have already been taken
 		// TODO: Do we need to explicitly enable the other colors that haven't been take, or does that happen by default?
-		for(PlayerInfo p : game.getPlayers()) {
-			getSelectColorView().setColorEnabled(p.getColor(), false);
-		}
+		
 		getSelectColorView().showModal();
+		
+		
+		//for(PlayerInfo p : game.getPlayers()) {
+			//getSelectColorView().setColorEnabled(p.getColor(), false);
+		//}
 	}
 
 	@Override
@@ -182,6 +185,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void joinGame(CatanColor color) {
+		System.out.println("Joining game");
 		try {
 			if(GameAdministrator.getInstance().canJoinGame(gameID, color)){
 				GameAdministrator.getInstance().joinGame(gameID, color);

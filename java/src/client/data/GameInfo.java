@@ -2,6 +2,10 @@ package client.data;
 
 import java.util.*;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 /**
  * Used to pass game information into views<br>
  * <br>
@@ -31,6 +35,22 @@ public class GameInfo
 		this.title = title;
 		this.id = id;
 		players = new ArrayList<PlayerInfo>();
+	}
+	
+	//[{"title":"Default Game","id":0,"players":[{"color":"orange","name":"Sam","id":0}
+	
+	public GameInfo(JsonObject json) {
+		players = new ArrayList<PlayerInfo>();
+		this.id = json.get("id").getAsInt();
+		this.title = json.get("title").getAsString();
+		JsonArray playerArray = json.getAsJsonArray("players");
+		for (JsonElement player : playerArray) {
+			// TODO: Make this more efficent. The json gives an empty object {}, not sure hwo to check for that.
+			PlayerInfo playerInfo = new PlayerInfo(player.getAsJsonObject());
+			if (playerInfo.getId() != -1) {
+				players.add(new PlayerInfo(player.getAsJsonObject()));
+			}
+		}
 	}
 	
 	public int getId()
