@@ -145,6 +145,21 @@ public class GameAdministrator extends Observable{
         }
         return canJoinGame;
     }
+    
+    /**
+     * Ensures that the current game has room for an AI to be added to it
+     */
+    public boolean canAddAI() {
+    	try {
+			fetchGameList();
+			return currentGame != null && currentGame.getPlayers().size() < 4;
+		} catch (InvalidActionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return false;
+    	
+    }
 
     /**
      * Logs a user into the Catan game.
@@ -267,6 +282,17 @@ public class GameAdministrator extends Observable{
 		}
     	return null;
     }
+    
+    /**
+     * Adds an AI to the current game
+     * @throws InvalidActionException 
+     * @param aIType the type of AI to add
+     */
+    public void addAI(String aIType) throws InvalidActionException {
+    	if (canAddAI()) {
+    		server.gameAddAI(aIType);
+    	}
+    }
 
     // --- HELPER FUNCTIONS ----
 
@@ -279,6 +305,11 @@ public class GameAdministrator extends Observable{
         try {
             String jsonGames = server.gamesList();
             allCurrentGames = deserializeGameList(jsonGames);
+            
+            // If currently in a game, ensure the variable is updated
+            if (currentGame != null) {
+				currentGame = allCurrentGames.get(currentGame.getId());
+            }
             
             setChanged();
             notifyObservers(allCurrentGames);

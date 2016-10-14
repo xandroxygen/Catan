@@ -1,5 +1,6 @@
 package client.join;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -23,7 +24,11 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		super(view);
 		this.view = view;
 		
-		Model.getInstance().addObserver(this);
+		try {
+			GameAdministrator.getInstance().addObserver(this);
+		} catch (InvalidActionException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
@@ -53,19 +58,28 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 
 	@Override
 	public void addAI() {
-
-		// TEMPORARY
-		getView().closeModal();
+		try {
+			GameAdministrator.getInstance().addAI(view.getSelectedAI());
+		} catch (InvalidActionException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
 		try {
-			GameInfo currentGame = GameAdministrator.getInstance().getCurrentGame();
-			PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
-			currentGame.getPlayers().toArray(players);
-			view.setPlayers(players);
+			if (GameAdministrator.getInstance().getCurrentGame() != null) {
+				if (GameAdministrator.getInstance().getCurrentGame().getPlayers().size() == 4) {
+					// SOME KIND OF ACTION TO START GAME.....
+					getView().closeModal();
+				}
+				List<GameInfo> games = (List<GameInfo>) arg;
+				GameInfo currentGame = games.get(GameAdministrator.getInstance().getCurrentGame().getId());
+				PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
+				currentGame.getPlayers().toArray(players);
+				view.setPlayers(players);
+			}
 		}
 		catch (InvalidActionException e) {
 			// Error getting list
