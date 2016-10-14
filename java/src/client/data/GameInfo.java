@@ -70,5 +70,10 @@ public class GameInfo
 	{
 		return Collections.unmodifiableList(players);
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return ((GameInfo) o).getId() == this.id;
+	}
 }
 

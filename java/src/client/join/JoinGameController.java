@@ -2,6 +2,7 @@ package client.join;
 
 import shared.definitions.CatanColor;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -22,6 +23,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	private ISelectColorView selectColorView;
 	private IMessageView messageView;
 	private IAction joinAction;
+	private int count = 3;
 	
 	
 	int gameID = -1;
@@ -197,24 +199,22 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void update(Observable o, Object arg) {
-		//testing
-		System.out.println("entered join game updater");
-		try {
-			System.out.println(GameAdministrator.getInstance().getAllCurrentGames().get(0));
-		} catch (InvalidActionException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		// end testing
 		
 		try {
+			// Update the view
 			getJoinGameView().setGames(GameAdministrator.getInstance().getAllCurrentGames(), 
 					GameAdministrator.getInstance().getCurrentUser().getLocalPlayer());
+
 		} catch (InvalidActionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void updateView() throws InvalidActionException {
+		getJoinGameView().setGames(GameAdministrator.getInstance().getAllCurrentGames(), 
+				GameAdministrator.getInstance().getCurrentUser().getLocalPlayer());
 	}
 
 }

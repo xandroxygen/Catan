@@ -92,7 +92,6 @@ public class ServerPoller {
 	public void pollServer() {	
 		try {			
 			if(GameAdministrator.getInstance().isSettingUp()) {
-				System.out.println("in pollServer");
 				GameAdministrator.getInstance().fetchGameList();
 			}
 			else {

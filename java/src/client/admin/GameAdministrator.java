@@ -278,9 +278,6 @@ public class GameAdministrator extends Observable{
     public void fetchGameList() throws InvalidActionException {
         try {
             String jsonGames = server.gamesList();
-            // testing
-            System.out.println(jsonGames);
-            //end testing
             allCurrentGames = deserializeGameList(jsonGames);
             
             setChanged();
@@ -301,7 +298,7 @@ public class GameAdministrator extends Observable{
         List<GameInfo> games = new ArrayList<>();
         JsonArray jsonGames = new JsonParser().parse(jsonList).getAsJsonArray();
         for (JsonElement gameElement : jsonGames) {
-        	GameInfo gameDetails = new Gson().fromJson(gameElement, GameInfo.class);
+        	GameInfo gameDetails = new Gson().fromJson(gameElement.getAsJsonObject(), GameInfo.class);
             games.add(gameDetails);
         }
         return games;
