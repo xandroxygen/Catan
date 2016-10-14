@@ -40,8 +40,6 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 
 	@Override
 	public void start() {
-
-		getView().showModal();
 		
 		try {
 			GameInfo currentGame = GameAdministrator.getInstance().getCurrentGame();
@@ -54,6 +52,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		catch (InvalidActionException e) {
 			// Error getting list
 		}
+		getView().showModal();
 	}
 
 	@Override
@@ -79,6 +78,8 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 				PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
 				currentGame.getPlayers().toArray(players);
 				view.setPlayers(players);
+				view.closeModal();
+				view.showModal();
 			}
 		}
 		catch (InvalidActionException e) {
