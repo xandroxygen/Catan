@@ -98,11 +98,13 @@ public class LoginController extends Controller implements ILoginController, Obs
 	@Override
 	public void register() {
         try {
-            String username = getLoginView().getLoginUsername();
-            String password = getLoginView().getLoginPassword();
+            String username = getLoginView().getRegisterUsername();
+            String password = getLoginView().getRegisterPassword();
 
             if (GameAdministrator.getInstance().canRegister(username, password)) {
                 GameAdministrator.getInstance().register(username, password);
+				getLoginView().closeModal();
+				loginAction.execute();
             }
         }
         catch (Exception e) {
@@ -111,8 +113,6 @@ public class LoginController extends Controller implements ILoginController, Obs
             getMessageView().setMessage("There was an error registering:" + e.getMessage());
         }
 
-		getLoginView().closeModal();
-		loginAction.execute();
 	}
 
 	/**
