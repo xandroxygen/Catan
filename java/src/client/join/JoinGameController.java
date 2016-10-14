@@ -186,8 +186,16 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		System.out.println("Joining game");
 		try {
 			if(gameAdmin.canJoinGame(gameID, color)){
-				gameAdmin.getCurrentUser().getLocalPlayer().setColor(color);
+				for(PlayerInfo p : gameAdmin.getAllCurrentGames().get(gameID).getPlayers()) {
+					if(p.getId() == gameAdmin.getCurrentUser().getLocalPlayer().getId()) {
+						gameAdmin.getCurrentUser().setLocalPlayer(p);
+					}
+				}
+				
 				gameAdmin.joinGame(gameID, color);
+				gameAdmin.getCurrentUser().getLocalPlayer().setColor(color);
+				gameAdmin.setCurrentGame(gameAdmin.getAllCurrentGames().get(gameID));
+	
 				
 				getSelectColorView().closeModal();
 				joinAction.execute();
