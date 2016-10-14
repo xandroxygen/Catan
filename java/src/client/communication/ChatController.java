@@ -11,6 +11,7 @@ public class ChatController extends Controller implements IChatController {
 	public ChatController(IChatView view) {
 		
 		super(view);
+		System.out.println("Chat Constructor");
 	}
 
 	@Override

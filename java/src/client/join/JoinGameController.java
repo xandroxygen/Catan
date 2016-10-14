@@ -41,13 +41,9 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		setSelectColorView(selectColorView);
 		setMessageView(messageView);
 		
-		try {
-			gameAdmin = GameAdministrator.getInstance();
-			gameAdmin.addObserver(this);
-		} catch (InvalidActionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		gameAdmin = GameAdministrator.getInstance();
+		gameAdmin.addObserver(this);
+
 	}
 	
 	public IJoinGameView getJoinGameView() {

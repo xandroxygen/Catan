@@ -24,11 +24,9 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		super(view);
 		this.view = view;
 		
-		try {
-			GameAdministrator.getInstance().addObserver(this);
-		} catch (InvalidActionException e) {
-			e.printStackTrace();
-		}
+
+		GameAdministrator.getInstance().addObserver(this);
+
 		
 	}
 
@@ -41,17 +39,12 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	@Override
 	public void start() {
 		
-		try {
-			GameInfo currentGame = GameAdministrator.getInstance().getCurrentGame();
-			PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
-			currentGame.getPlayers().toArray(players);
-			view.setPlayers(players);
-			
-			view.setAIChoices(GameAdministrator.getInstance().getAIList());
-		}
-		catch (InvalidActionException e) {
-			// Error getting list
-		}
+		GameInfo currentGame = GameAdministrator.getInstance().getCurrentGame();
+		PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
+		currentGame.getPlayers().toArray(players);
+		view.setPlayers(players);
+		
+		view.setAIChoices(GameAdministrator.getInstance().getAIList());
 		getView().showModal();
 	}
 
@@ -68,23 +61,24 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 
 	@Override
 	public void update(Observable o, Object arg) {
-		try {
-			if (GameAdministrator.getInstance().getCurrentGame() != null) {
-				if (GameAdministrator.getInstance().getCurrentGame().getPlayers().size() == 4) {
-					// SOME KIND OF ACTION TO START GAME.....
-					view.closeModal();
-				}
-				GameInfo currentGame= (GameInfo) arg;
-				PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
-				currentGame.getPlayers().toArray(players);
-				view.setPlayers(players);
+		if (GameAdministrator.getInstance().getCurrentGame() != null) {
+			if (GameAdministrator.getInstance().getCurrentGame().getPlayers().size() == 4) {
+				// SOME KIND OF ACTION TO START GAME.....
 				view.closeModal();
-				view.showModal();
+				startGame();
 			}
-		}
-		catch (InvalidActionException e) {
-			// Error getting list
-		}
+			GameInfo currentGame= (GameInfo) arg;
+			PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
+			currentGame.getPlayers().toArray(players);
+			view.setPlayers(players);
+			view.closeModal();
+			view.showModal();
+		}	
+	}
+	
+	public void startGame() {
+		// Change status so that poller starts getting the model information
+		GameAdministrator.getInstance().setSettingUp(false);
 	}
 
 }

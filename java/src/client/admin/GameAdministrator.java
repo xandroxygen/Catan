@@ -34,11 +34,16 @@ public class GameAdministrator extends Observable{
         fetchGameList(); 
     }
 
-    public static GameAdministrator getInstance() throws InvalidActionException {
-        if (gameAdministrator == null) {
-            gameAdministrator = new GameAdministrator();
-        }
-        return gameAdministrator;
+    public static GameAdministrator getInstance() {
+    	try {
+	        if (gameAdministrator == null) {
+	            gameAdministrator = new GameAdministrator();
+	        }
+	        return gameAdministrator;
+    	}
+    	catch (InvalidActionException e) {
+    		return null;
+    	}
     }
     
     /**
@@ -320,6 +325,9 @@ public class GameAdministrator extends Observable{
         catch (InvalidActionException e) {
             e.message = "Fetch of games list failed.";
             throw e;
+        }
+        catch (Exception e) {
+        	e.printStackTrace();
         }
     }
 
