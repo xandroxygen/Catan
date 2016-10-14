@@ -60,6 +60,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	public void addAI() {
 		try {
 			GameAdministrator.getInstance().addAI(view.getSelectedAI());
+			getView().showModal();
 		} catch (InvalidActionException e) {
 			e.printStackTrace();
 		}
@@ -72,10 +73,9 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			if (GameAdministrator.getInstance().getCurrentGame() != null) {
 				if (GameAdministrator.getInstance().getCurrentGame().getPlayers().size() == 4) {
 					// SOME KIND OF ACTION TO START GAME.....
-					getView().closeModal();
+					view.closeModal();
 				}
-				List<GameInfo> games = (List<GameInfo>) arg;
-				GameInfo currentGame = games.get(GameAdministrator.getInstance().getCurrentGame().getId());
+				GameInfo currentGame= (GameInfo) arg;
 				PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
 				currentGame.getPlayers().toArray(players);
 				view.setPlayers(players);

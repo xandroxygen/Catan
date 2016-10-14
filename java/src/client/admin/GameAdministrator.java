@@ -307,12 +307,15 @@ public class GameAdministrator extends Observable{
             allCurrentGames = deserializeGameList(jsonGames);
             
             // If currently in a game, ensure the variable is updated
-            if (currentGame != null) {
+            if (currentGame != null && !currentGame.equals(allCurrentGames.get(currentGame.getId()))) {
 				currentGame = allCurrentGames.get(currentGame.getId());
+				setChanged();
+				notifyObservers(currentGame);
             }
-            
-            setChanged();
-            notifyObservers(allCurrentGames);
+            else if (currentGame == null) {
+            	setChanged();
+            	notifyObservers(allCurrentGames);
+            }
         }
         catch (InvalidActionException e) {
             e.message = "Fetch of games list failed.";
