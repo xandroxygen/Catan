@@ -93,7 +93,7 @@ public class GameInfo
 	
 	@Override
 	public boolean equals(Object o) {
-		return ((GameInfo) o).getId() == this.id;
+		return ((GameInfo) o).getId() == this.id && this.players.equals(((GameInfo)o).getPlayers());
 	}
 }
 
