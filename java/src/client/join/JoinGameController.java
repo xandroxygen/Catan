@@ -126,7 +126,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void cancelCreateNewGame() {
-		//getNewGameView().closeModal();
 		getJoinGameView().showModal();
 	}
 
@@ -141,13 +140,11 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 				
 				currentGame.addPlayer(gameAdmin.getCurrentUser().getLocalPlayer());
 				gameAdmin.setCurrentGame(currentGame);
-				//TODO: Add current game to list of all games 
+				gameAdmin.joinGame(currentGame.getId(), CatanColor.BLUE);
 				gameAdmin.getAllCurrentGames().add(currentGame);
 				
 				gameAdmin.fetchGameList();
 				getJoinGameView().setGames(gameAdmin.getAllCurrentGames(), gameAdmin.getCurrentUser().getLocalPlayer());
-				
-				getNewGameView().closeModal();
 				
 				getJoinGameView().showModal();
 			}			
@@ -176,8 +173,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 				getSelectColorView().setColorEnabled(p.getColor(), false);
 			}
 		}
-		
-		
 	}
 
 	@Override
