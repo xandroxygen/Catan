@@ -123,7 +123,8 @@ public class ServerPoller {
 	 * @return true if the JSON contains new data, otherwise false
 	 */
 	public boolean checkForUpdates(String response) { 
-		if(response.equals("true")) {
+		
+		if(response.equals("\"true\"")) {
 			// no updates occurred, the version numbers matched up
 			return false;
 		}
