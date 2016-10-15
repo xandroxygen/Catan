@@ -47,17 +47,19 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		initPlayers(players);
 		
 		// update each player in the view (victory points, who's turn it is, largest army, longest road)
-		int largestArmy = game.getTurnTracker().getLargestArmy();
-		int longestRoad = game.getTurnTracker().getLongestRoad();
-		for (Player p : players) {
-			int playerIndex = p.getPlayerIndex();
-			
-			boolean isMyTurn = game.isTurn(p.getPlayerID());
-			int victoryPoints = p.getVictoryPoints();
-			boolean isLargestArmy = (playerIndex == largestArmy);
-			boolean isLongestRoad = (playerIndex == longestRoad);
-			
-			this.getView().updatePlayer(playerIndex, victoryPoints, isMyTurn, isLargestArmy, isLongestRoad);	
+		if(game.getTurnTracker() != null) {
+			int largestArmy = game.getTurnTracker().getLargestArmy();
+			int longestRoad = game.getTurnTracker().getLongestRoad();
+			for (Player p : players) {
+				int playerIndex = p.getPlayerIndex();
+				
+				boolean isMyTurn = game.isTurn(p.getPlayerID());
+				int victoryPoints = p.getVictoryPoints();
+				boolean isLargestArmy = (playerIndex == largestArmy);
+				boolean isLongestRoad = (playerIndex == longestRoad);
+				
+				this.getView().updatePlayer(playerIndex, victoryPoints, isMyTurn, isLargestArmy, isLongestRoad);	
+			}
 		}
 	}
 	
@@ -67,9 +69,12 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	 * @param players The list of players to initialize
 	 */
 	private void initPlayers(List<Player> players) {
-		for(Player p : players) {
-			this.getView().initializePlayer(p.getPlayerID(), p.getName(), p.getColor());
+		if (players != null) {
+			for(Player p : players) {
+				this.getView().initializePlayer(p.getPlayerID(), p.getName(), p.getColor());
+			}
 		}
+		
 	}
 
 	@Override
