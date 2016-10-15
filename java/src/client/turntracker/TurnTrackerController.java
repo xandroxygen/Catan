@@ -99,30 +99,30 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		GameStatus state = game.getTurnTracker().getStatus();
 		if(state != null) {
 			switch (state) {
-			case Rolling:
-				this.getView().updateGameState("Rolling", false);
-				break;
-			case Trading:
-				this.getView().updateGameState("Trading", false);
-				break;
-			case Building:
-				this.getView().updateGameState("Building", false);
-				break;
-			case WaitingForResponse:
-				this.getView().updateGameState("Waiting for response", false);
-				break;
-			case WaitingForTurn:
-				this.getView().updateGameState("Waiting for turn", false);
-				break;
-			case RespondToTrade:
-				this.getView().updateGameState("Responding to trade", false);
-				break;
-			case Robber:
-				this.getView().updateGameState("Robbin", false);
-				break;
-			default:
-				break;
-		}
+				case Rolling:
+					this.getView().updateGameState("Rolling", false);
+					break;
+				case Trading:
+					this.getView().updateGameState("Trading", false);
+					break;
+				case Building:
+					this.getView().updateGameState("Building", false);
+					break;
+				case WaitingForResponse:
+					this.getView().updateGameState("Waiting for response", false);
+					break;
+				case WaitingForTurn:
+					this.getView().updateGameState("Waiting for turn", false);
+					break;
+				case RespondToTrade:
+					this.getView().updateGameState("Responding to trade", false);
+					break;
+				case Robber:
+					this.getView().updateGameState("Robbin", false);
+					break;
+				default:
+					break;
+			}
 		}
 		
 			

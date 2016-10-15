@@ -85,7 +85,10 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	
 	public void startGame() {
 		// Change status so that poller starts getting the model information
-		getView().closeModal();
+		if(getView().isModalShowing()) {
+			getView().closeModal();
+		}
+		
 		GameAdministrator.getInstance().setSettingUp(false);
 	}
 
