@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.JOptionPane;
+
 import client.admin.GameAdministrator;
 import client.base.*;
 import client.model.Game;
 import client.model.GameStatus;
+import client.model.InvalidActionException;
 import client.model.Model;
 import client.model.Player;
 
@@ -34,7 +37,14 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 
 	@Override
 	public void endTurn() {
-		
+		if(Model.getInstance().canEndTurn(GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId())) {
+			try {
+				System.out.println("Ending turn");
+				Model.getInstance().getServer().finishTurn();
+			} catch (InvalidActionException e) {
+				JOptionPane.showMessageDialog((TurnTrackerView)getView(), "Something went wrong ending your turn!");
+			}
+		}
 	}
 	
 	private void initFromModel() {
