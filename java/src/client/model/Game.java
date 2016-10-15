@@ -313,5 +313,9 @@ public class Game {
 	public List<LogEntry> getChat() {
 		return chat;
 	}
+	
+	public List<LogEntry> getLog() {
+		return log;
+	}
     
 }

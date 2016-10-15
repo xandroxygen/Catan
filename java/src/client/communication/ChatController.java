@@ -17,7 +17,6 @@ public class ChatController extends Controller implements IChatController, Obser
 	public ChatController(IChatView view) {
 		
 		super(view);
-		System.out.println("Chat Constructor");
 		Model.getInstance().addObserver(this);
 	}
 
@@ -33,7 +32,6 @@ public class ChatController extends Controller implements IChatController, Obser
 
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("Model is updated!");
 		Game game = (Game)arg;
 		getView().setEntries(game.getChat());
 	}

@@ -3,6 +3,7 @@ package client.communication;
 import java.util.*;
 
 import client.base.*;
+import client.model.Game;
 import client.model.Model;
 import shared.definitions.*;
 
@@ -29,27 +30,16 @@ public class GameHistoryController extends Controller implements IGameHistoryCon
 	
 	private void initFromModel() {
 		
-		//<temp>
-		
-		List<LogEntry> entries = new ArrayList<LogEntry>();
-		entries.add(new LogEntry(CatanColor.BROWN, "This is a brown message"));
-		entries.add(new LogEntry(CatanColor.ORANGE, "This is an orange message ss x y z w.  This is an orange message.  This is an orange message.  This is an orange message."));
-		entries.add(new LogEntry(CatanColor.BROWN, "This is a brown message"));
-		entries.add(new LogEntry(CatanColor.ORANGE, "This is an orange message ss x y z w.  This is an orange message.  This is an orange message.  This is an orange message."));
-		entries.add(new LogEntry(CatanColor.BROWN, "This is a brown message"));
-		entries.add(new LogEntry(CatanColor.ORANGE, "This is an orange message ss x y z w.  This is an orange message.  This is an orange message.  This is an orange message."));
-		entries.add(new LogEntry(CatanColor.BROWN, "This is a brown message"));
-		entries.add(new LogEntry(CatanColor.ORANGE, "This is an orange message ss x y z w.  This is an orange message.  This is an orange message.  This is an orange message."));
-		
-		getView().setEntries(entries);
+		if (Model.getInstance().getGame() != null) {
+			getView().setEntries(Model.getInstance().getGame().getLog());
+		}
 	
-		//</temp>
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
+		Game game = (Game)arg;
+		getView().setEntries(game.getLog());
 	}
 	
 }
