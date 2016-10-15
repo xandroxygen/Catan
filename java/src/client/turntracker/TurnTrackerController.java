@@ -15,6 +15,7 @@ import client.model.Player;
  * Implementation for the turn tracker controller
  */
 public class TurnTrackerController extends Controller implements ITurnTrackerController, Observer {
+	Game game;
 	
 	public TurnTrackerController(ITurnTrackerView view) {
 		
@@ -37,19 +38,46 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	}
 	
 	private void initFromModel() {
-		Game game = Model.getInstance().getGame();
+		game = Model.getInstance().getGame();
 		List<Player> players = game.getPlayerList();
 		
 		// set local player color
 		this.getView().setLocalPlayerColor(GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getColor());
 		
-		// initialize each player in the view (name and color)
 		initPlayers(players);
 		
-		// update each player in the view (victory points, who's turn it is, largest army, longest road)
+		updatePlayers(players);
+	}
+	
+	/**
+	 * Tells the view to initialize each player with their name and color
+	 * 
+	 * @param players The list of players to initialize
+	 */
+	private void initPlayers(List<Player> players) {
+		if (players != null) {
+			for(Player p : players) {
+				this.getView().initializePlayer(p.getPlayerIndex(), p.getName(), p.getColor());
+			}
+		}
+		
+	}
+	
+	/** Updates the view for each player's victory points, who's turn it is, and who has
+	 * the largest army and longest road
+	 * 
+	 * @param players The list of players to update the view on
+	 */
+	private void updatePlayers(List<Player> players) {		
+		int largestArmy = -1;
+		int longestRoad = -1;
+		
 		if(game.getTurnTracker() != null) {
-			int largestArmy = game.getTurnTracker().getLargestArmy();
-			int longestRoad = game.getTurnTracker().getLongestRoad();
+			largestArmy = game.getTurnTracker().getLargestArmy();
+			longestRoad = game.getTurnTracker().getLongestRoad();
+		}
+		
+		if (players != null) {
 			for (Player p : players) {
 				int playerIndex = p.getPlayerIndex();
 				
@@ -61,19 +89,6 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 				this.getView().updatePlayer(playerIndex, victoryPoints, isMyTurn, isLargestArmy, isLongestRoad);	
 			}
 		}
-	}
-	
-	/**
-	 * Tells the view to initialize each player with their name and color
-	 * 
-	 * @param players The list of players to initialize
-	 */
-	private void initPlayers(List<Player> players) {
-		if (players != null) {
-			for(Player p : players) {
-				this.getView().initializePlayer(p.getPlayerID(), p.getName(), p.getColor());
-			}
-		}
 		
 	}
 
@@ -81,8 +96,9 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	public void update(Observable arg0, Object arg1) {
 		initFromModel();
 		
-		GameStatus state = Model.getInstance().getGame().getTurnTracker().getStatus();
-		switch (state) {
+		GameStatus state = game.getTurnTracker().getStatus();
+		if(state != null) {
+			switch (state) {
 			case Rolling:
 				this.getView().updateGameState("Rolling", false);
 				break;
@@ -107,6 +123,8 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			default:
 				break;
 		}
+		}
+		
 			
 	}
 
