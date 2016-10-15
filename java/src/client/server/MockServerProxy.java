@@ -256,7 +256,7 @@ public class MockServerProxy implements IServerProxy {
      * @post the chat box contains the sent message
      */
     @Override
-    public void sendChat(String content) {
+    public void sendChat(int playerIndex, String message) {
 
     }
 

@@ -4,12 +4,18 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import client.admin.GameAdministrator;
+import client.communication.LogEntry;
+import client.server.IServerProxy;
+import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.VertexLocation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Game class.
@@ -21,11 +27,12 @@ public class Game {
     public Bank bank;
     public int currentTurnIndex;
     public TurnTracker turnTracker;
-    public ArrayList<Line> log;
-    public ArrayList<Line> chat;
+    public List<LogEntry> log;
+    public List<LogEntry> chat;
     public int winner;
     public int version;
     public TradeOffer tradeOffer;
+    public Player currentPlayer;
 
     public boolean isTurn(int playerId){
         //look for implementation
@@ -35,7 +42,7 @@ public class Game {
     public int getPlayerIndex(int playerId){
         int i = 0;
         for (Player tempPlayer  : playerList) {
-            if(tempPlayer.getPlayerId() == playerId){
+            if(tempPlayer.getPlayerID() == playerId){
                 return i;
             }
             i++;
@@ -54,6 +61,13 @@ public class Game {
     	playerList = players;
     	this.bank = bank;
     	this.theMap= theMap;
+    	
+    	// Init the current player
+    	for (Player player : players) {
+    		if (player.getPlayerID() == GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId()) {
+    			this.currentPlayer = player;
+    		}
+    	}
 
     	// Create Turn Tracker
     	turnTracker = new Gson().fromJson(modelJSON.getAsJsonObject("turnTracker"), TurnTracker.class);
@@ -64,8 +78,8 @@ public class Game {
     	JsonObject logJSON = modelJSON.getAsJsonObject("log");
     	JsonArray logLines = logJSON.getAsJsonArray("lines");
     	for (JsonElement line : logLines) {
-    		log.add(new Line(line.getAsJsonObject().get("message").getAsString(),
-    				line.getAsJsonObject().get("source").getAsString()));
+    		CatanColor color = getPlayerColorByName(line.getAsJsonObject().get("source").getAsString());
+    		log.add(new LogEntry(color,line.getAsJsonObject().get("message").getAsString()));
     	}
 
     	// Create Chat
@@ -73,8 +87,8 @@ public class Game {
     	JsonObject chatJSON = modelJSON.getAsJsonObject("chat");
     	JsonArray chatLines = chatJSON.getAsJsonArray("lines");
     	for (JsonElement line : chatLines) {
-    		chat.add(new Line(line.getAsJsonObject().get("message").getAsString(),
-    				line.getAsJsonObject().get("source").getAsString()));
+    		CatanColor color = getPlayerColorByName(line.getAsJsonObject().get("source").getAsString());
+    		chat.add(new LogEntry(color,line.getAsJsonObject().get("message").getAsString()));
     	}
 
     	// Initialize remaining variables
@@ -212,13 +226,18 @@ public class Game {
     }
 
     /**
-     * Checks whether the player can send a message.
+     * Sends a message from the logged in user.
      * @post  The chat contains your message at the end.
      * @param message the message the player wishes to send.
      * @return
      */
-    boolean sendMessage(int playerId, String message){
-        return false; //ME
+    void sendMessage(String message, IServerProxy server){
+    	try {
+			server.sendChat(currentPlayer.getPlayerIndex(),message);
+		} catch (InvalidActionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     /**
@@ -242,8 +261,17 @@ public class Game {
     // MARK: HELPER METHODS
     private Player getPlayerById(int playerId) {
     	for (Player player : playerList) {
-    		if (player.getPlayerId() == playerId) {
+    		if (player.getPlayerID() == playerId) {
     			return player;
+    		}
+    	}
+    	return null;
+    }
+    
+    private CatanColor getPlayerColorByName(String name) {
+    	for (Player player : playerList) {
+    		if (player.getName().equals(name)) {
+    			return player.getColor();
     		}
     	}
     	return null;
@@ -270,14 +298,6 @@ public class Game {
 		return turnTracker;
 	}
 
-	public ArrayList<Line> getLog() {
-		return log;
-	}
-
-	public ArrayList<Line> getChat() {
-		return chat;
-	}
-
 	public int getWinner() {
 		return winner;
 	}
@@ -288,6 +308,10 @@ public class Game {
 
 	public TradeOffer getTradeOffer() {
 		return tradeOffer;
+	}
+	
+	public List<LogEntry> getChat() {
+		return chat;
 	}
     
 }

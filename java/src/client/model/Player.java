@@ -478,10 +478,6 @@ public class Player {
 		return playerIndex;
 	}
 
-	public int getPlayerId() {
-		return playerID;
-	}
-
 	public boolean isDevelopmentCardPlayed() {
 		return playedDevCard;
 	}

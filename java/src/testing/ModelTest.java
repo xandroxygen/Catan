@@ -166,9 +166,9 @@ public class ModelTest {
             resourceHand.put(ResourceType.SHEEP, 1);
             tempPlayer.setResources(resourceHand);
             if(i == Model.getInstance().getGame().getCurrentTurnIndex()){
-                assertTrue(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerId()));
+                assertTrue(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerID()));
             } else {
-                assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerId()));
+                assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerID()));
             }
             i++;
         }
@@ -180,7 +180,7 @@ public class ModelTest {
             HashMap<ResourceType, Integer> resourceHand = new HashMap<>();
             resourceHand.put(ResourceType.ORE, 1);
             tempPlayer.setResources(resourceHand);
-            assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerId()));
+            assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerID()));
         }
         //tests if there are no cards in the bank
         devCardsInBank = new HashMap<>();
@@ -191,7 +191,7 @@ public class ModelTest {
             resourceHand.put(ResourceType.WHEAT, 1);
             resourceHand.put(ResourceType.SHEEP, 1);
             tempPlayer.setResources(resourceHand);
-            assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerId()));
+            assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerID()));
         }
     }
 
@@ -210,9 +210,9 @@ public class ModelTest {
             tempPlayer.setOldDevCards(oldDevCards);
             //add stuff here
             if (i == Model.getInstance().getGame().getCurrentTurnIndex()) {
-                assertTrue(Model.getInstance().canPlayYearOfPlenty(tempPlayer.getPlayerId(), ResourceType.BRICK, ResourceType.ORE));
+                assertTrue(Model.getInstance().canPlayYearOfPlenty(tempPlayer.getPlayerID(), ResourceType.BRICK, ResourceType.ORE));
             } else {
-                assertFalse(Model.getInstance().canPlayYearOfPlenty(tempPlayer.getPlayerId(), ResourceType.BRICK, ResourceType.ORE));
+                assertFalse(Model.getInstance().canPlayYearOfPlenty(tempPlayer.getPlayerID(), ResourceType.BRICK, ResourceType.ORE));
             }
             i++;
         }
@@ -224,7 +224,7 @@ public class ModelTest {
             tempPlayer.setPlayedDevCard(false);
             tempPlayer.setOldDevCards(oldDevCards);
             //add stuff here
-            assertFalse(Model.getInstance().canPlayYearOfPlenty(tempPlayer.getPlayerId(), ResourceType.BRICK, ResourceType.ORE));
+            assertFalse(Model.getInstance().canPlayYearOfPlenty(tempPlayer.getPlayerID(), ResourceType.BRICK, ResourceType.ORE));
         }
         //testing if there is no Year of Plenty Dev Card
         Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Building);
@@ -233,7 +233,7 @@ public class ModelTest {
             tempPlayer.setPlayedDevCard(false);
             tempPlayer.setOldDevCards(oldDevCards);
             //add stuff here
-            assertFalse(Model.getInstance().canPlayYearOfPlenty(tempPlayer.getPlayerId(), ResourceType.BRICK, ResourceType.ORE));
+            assertFalse(Model.getInstance().canPlayYearOfPlenty(tempPlayer.getPlayerID(), ResourceType.BRICK, ResourceType.ORE));
         }
         //testing if there has already been a Dev Card Played
         Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Building);
@@ -243,7 +243,7 @@ public class ModelTest {
             tempPlayer.setPlayedDevCard(true);
             tempPlayer.setOldDevCards(oldDevCards);
             //add stuff here
-            assertFalse(Model.getInstance().canPlayYearOfPlenty(tempPlayer.getPlayerId(), ResourceType.BRICK, ResourceType.ORE));
+            assertFalse(Model.getInstance().canPlayYearOfPlenty(tempPlayer.getPlayerID(), ResourceType.BRICK, ResourceType.ORE));
         }
     }
 
@@ -262,9 +262,9 @@ public class ModelTest {
 //            tempPlayer.setOldDevCards(oldDevCards);
 //            //add stuff here
 //            if (i == Model.getInstance().getGame().getCurrentTurnIndex()) {
-//                assertTrue(Model.getInstance().canPlayRoadCard(tempPlayer.getPlayerId(), ));
+//                assertTrue(Model.getInstance().canPlayRoadCard(tempPlayer.getPlayerID(), ));
 //            } else {
-//                assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerId()));
+//                assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerID()));
 //            }
 //            i++;
 //        }
@@ -276,7 +276,7 @@ public class ModelTest {
 //            tempPlayer.setPlayedDevCard(false);
 //            tempPlayer.setOldDevCards(oldDevCards);
 //            //add stuff here
-//            assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerId()));
+//            assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerID()));
 //        }
 //        //testing if there is no ROAD_BUILD
 //        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Playing);
@@ -285,7 +285,7 @@ public class ModelTest {
 //            tempPlayer.setPlayedDevCard(false);
 //            tempPlayer.setOldDevCards(oldDevCards);
 //            //add stuff here
-//            assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerId()));
+//            assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerID()));
 //        }
 //        //testing if there has already been a Dev Card Played
 //        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Playing);
@@ -295,7 +295,7 @@ public class ModelTest {
 //            tempPlayer.setPlayedDevCard(true);
 //            tempPlayer.setOldDevCards(oldDevCards);
 //            //add stuff here
-//            assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerId()));
+//            assertFalse(Model.getInstance().canBuyDevelopmentCard(tempPlayer.getPlayerID()));
 //        }
 //    }
 
@@ -313,9 +313,9 @@ public class ModelTest {
             tempPlayer.setPlayedDevCard(false);
             tempPlayer.setOldDevCards(oldDevCards);
             if (i == Model.getInstance().getGame().getCurrentTurnIndex()) {
-                assertTrue(Model.getInstance().canPlayMonopolyCard(tempPlayer.getPlayerId(), ResourceType.BRICK));
+                assertTrue(Model.getInstance().canPlayMonopolyCard(tempPlayer.getPlayerID(), ResourceType.BRICK));
             } else {
-                assertFalse(Model.getInstance().canPlayMonopolyCard(tempPlayer.getPlayerId(), ResourceType.BRICK));
+                assertFalse(Model.getInstance().canPlayMonopolyCard(tempPlayer.getPlayerID(), ResourceType.BRICK));
             }
             i++;
         }
@@ -326,7 +326,7 @@ public class ModelTest {
             oldDevCards.put(DevCardType.MONOPOLY, 1);
             tempPlayer.setPlayedDevCard(false);
             tempPlayer.setOldDevCards(oldDevCards);
-            assertFalse(Model.getInstance().canPlayMonopolyCard(tempPlayer.getPlayerId(), ResourceType.BRICK));
+            assertFalse(Model.getInstance().canPlayMonopolyCard(tempPlayer.getPlayerID(), ResourceType.BRICK));
         }
         //testing if there is no Year of Plenty Dev Card
         Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Building);
@@ -334,7 +334,7 @@ public class ModelTest {
             HashMap<DevCardType, Integer> oldDevCards = new HashMap<>();
             tempPlayer.setPlayedDevCard(false);
             tempPlayer.setOldDevCards(oldDevCards);
-            assertFalse(Model.getInstance().canPlayMonopolyCard(tempPlayer.getPlayerId(), ResourceType.BRICK));
+            assertFalse(Model.getInstance().canPlayMonopolyCard(tempPlayer.getPlayerID(), ResourceType.BRICK));
         }
         //testing if there has already been a Dev Card Played
         Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Building);
@@ -343,7 +343,7 @@ public class ModelTest {
             oldDevCards.put(DevCardType.MONOPOLY, 1);
             tempPlayer.setPlayedDevCard(true);
             tempPlayer.setOldDevCards(oldDevCards);
-            assertFalse(Model.getInstance().canPlayMonopolyCard(tempPlayer.getPlayerId(), ResourceType.BRICK));
+            assertFalse(Model.getInstance().canPlayMonopolyCard(tempPlayer.getPlayerID(), ResourceType.BRICK));
         }
     }
 
@@ -361,9 +361,9 @@ public class ModelTest {
             tempPlayer.setPlayedDevCard(false);
             tempPlayer.setOldDevCards(oldDevCards);
             if (i == Model.getInstance().getGame().getCurrentTurnIndex()) {
-                assertTrue(Model.getInstance().canPlayMonumentCard(tempPlayer.getPlayerId()));
+                assertTrue(Model.getInstance().canPlayMonumentCard(tempPlayer.getPlayerID()));
             } else {
-                assertFalse(Model.getInstance().canPlayMonumentCard(tempPlayer.getPlayerId()));
+                assertFalse(Model.getInstance().canPlayMonumentCard(tempPlayer.getPlayerID()));
             }
             i++;
         }
@@ -374,7 +374,7 @@ public class ModelTest {
             oldDevCards.put(DevCardType.MONOPOLY, 1);
             tempPlayer.setPlayedDevCard(false);
             tempPlayer.setOldDevCards(oldDevCards);
-            assertFalse(Model.getInstance().canPlayMonumentCard(tempPlayer.getPlayerId()));
+            assertFalse(Model.getInstance().canPlayMonumentCard(tempPlayer.getPlayerID()));
         }
         //testing if there is no Year of Plenty Dev Card
         Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Building);
@@ -382,7 +382,7 @@ public class ModelTest {
             HashMap<DevCardType, Integer> oldDevCards = new HashMap<>();
             tempPlayer.setPlayedDevCard(false);
             tempPlayer.setOldDevCards(oldDevCards);
-            assertFalse(Model.getInstance().canPlayMonumentCard(tempPlayer.getPlayerId()));
+            assertFalse(Model.getInstance().canPlayMonumentCard(tempPlayer.getPlayerID()));
         }
         //testing if there has already been a Dev Card Played
         Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Building);
@@ -391,7 +391,7 @@ public class ModelTest {
             oldDevCards.put(DevCardType.MONOPOLY, 1);
             tempPlayer.setPlayedDevCard(true);
             tempPlayer.setOldDevCards(oldDevCards);
-            assertFalse(Model.getInstance().canPlayMonumentCard(tempPlayer.getPlayerId()));
+            assertFalse(Model.getInstance().canPlayMonumentCard(tempPlayer.getPlayerID()));
         }
     }
 }

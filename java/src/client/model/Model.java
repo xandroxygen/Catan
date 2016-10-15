@@ -539,8 +539,8 @@ public class Model extends Observable {
      * @param message the message the player wishes to send.
      * @return
      */
-    public boolean sendMessage(int playerId, String message){
-        return game.sendMessage(playerId, message);
+    public void sendMessage(String message){
+        game.sendMessage(message, server);
     }
 
     /**

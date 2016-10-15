@@ -446,15 +446,15 @@ public class ServerProxy implements IServerProxy {
      * @post the chat box contains the sent message
      */
     @Override
-    public void sendChat(String content) throws InvalidActionException {
+    public void sendChat(int playerIndex, String message) throws InvalidActionException {
         urlExt = "/moves/sendChat";
 
         setHeaders();
 
         Map<String, String> attributes = new LinkedHashMap<>();
-        attributes.put("content", content);
+        attributes.put("content", message);
 
-        String body = Serializer.serializeMoveCall("sendChat", currentPlayerIndex, attributes);
+        String body = Serializer.serializeMoveCall("sendChat", playerIndex, attributes);
 
         RequestResponse result = post(urlExt, headers, body);
 

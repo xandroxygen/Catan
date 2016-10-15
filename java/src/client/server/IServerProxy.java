@@ -253,7 +253,7 @@ public interface IServerProxy {
 	 * @param content The message to send
      * @post the chat box contains the sent message
 	 */
-	void sendChat(String content) throws InvalidActionException;
+	void sendChat(int playerIndex, String message) throws InvalidActionException;
 	
 	/**
 	 *  A domestic trade is being offered.
