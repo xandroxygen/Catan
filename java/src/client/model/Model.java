@@ -29,6 +29,7 @@ public class Model extends Observable {
 	private Model() {
 		modelUpdater = new ModelUpdater();
         server = new ServerProxy();
+        game = new Game();
 	}
 	
 	public static Model getInstance() {

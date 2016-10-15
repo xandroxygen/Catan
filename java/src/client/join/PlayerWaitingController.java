@@ -40,12 +40,18 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	public void start() {
 		
 		GameInfo currentGame = GameAdministrator.getInstance().getCurrentGame();
-		PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
-		currentGame.getPlayers().toArray(players);
-		view.setPlayers(players);
 		
-		view.setAIChoices(GameAdministrator.getInstance().getAIList());
-		getView().showModal();
+		if (currentGame.getPlayers().size() == 4) {
+			startGame();
+		}
+		else {
+			PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
+			currentGame.getPlayers().toArray(players);
+			view.setPlayers(players);
+			
+			view.setAIChoices(GameAdministrator.getInstance().getAIList());
+			getView().showModal();
+		}
 	}
 
 	@Override
@@ -64,20 +70,22 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		if (GameAdministrator.getInstance().getCurrentGame() != null) {
 			if (GameAdministrator.getInstance().getCurrentGame().getPlayers().size() == 4) {
 				// SOME KIND OF ACTION TO START GAME.....
-				view.closeModal();
 				startGame();
 			}
-			GameInfo currentGame= (GameInfo) arg;
-			PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
-			currentGame.getPlayers().toArray(players);
-			view.setPlayers(players);
-			view.closeModal();
-			view.showModal();
+			else {
+				GameInfo currentGame= (GameInfo) arg;
+				PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
+				currentGame.getPlayers().toArray(players);
+				view.setPlayers(players);
+				view.closeModal();
+				view.showModal();
+			}
 		}	
 	}
 	
 	public void startGame() {
 		// Change status so that poller starts getting the model information
+		getView().closeModal();
 		GameAdministrator.getInstance().setSettingUp(false);
 	}
 

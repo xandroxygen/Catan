@@ -61,17 +61,17 @@ public class Map {
 			}
 			JsonArray roadsJSON = mapJSON.getAsJsonArray("roads");
 			for (JsonElement roadElement : roadsJSON) {
-				Road road = new Gson().fromJson(roadElement, Road.class);
+				Road road = new Road(roadElement.getAsJsonObject());
 				roads.put(road.getLocation(), road);
 			}
 			JsonArray settlementsJSON = mapJSON.getAsJsonArray("settlements");
 			for (JsonElement settlementElement : settlementsJSON) {
-				Settlement settlement = new Gson().fromJson(settlementElement, Settlement.class);
+				Settlement settlement = new Settlement(settlementElement.getAsJsonObject());
 				settlements.put(settlement.getLocation(), settlement);
 			}
 			JsonArray citiesJSON = mapJSON.getAsJsonArray("cities");
 			for (JsonElement cityElement : citiesJSON) {
-				City city = new Gson().fromJson(cityElement, City.class);
+				City city = new City(cityElement.getAsJsonObject());
 				cities.put(city.getLocation(), city);
 			}
 			JsonArray portsJSON = mapJSON.getAsJsonArray("ports");

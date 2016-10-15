@@ -43,6 +43,10 @@ public class Game {
         //throw invalidExceptionError();
         return -1;
     }
+    
+    public Game() {
+    	this.version = -1;
+    }
 
     public Game(ArrayList<Player> players, Map theMap, Bank bank, JsonObject modelJSON) {
 

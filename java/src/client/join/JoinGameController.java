@@ -194,6 +194,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	
 				
 				getSelectColorView().closeModal();
+				getJoinGameView().closeModal();
+				getNewGameView().closeModal();
 				joinAction.execute();
 			}
 		} catch (InvalidActionException e) {
