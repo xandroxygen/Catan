@@ -250,7 +250,6 @@ public interface IServerProxy {
 	 * 		Player has joined a game
 	 * </pre>
 	 * 
-	 * @param content The message to send
      * @post the chat box contains the sent message
 	 */
 	void sendChat(int playerIndex, String message) throws InvalidActionException;
@@ -490,7 +489,7 @@ public interface IServerProxy {
 	void playYearOfPlenty(ResourceType resource1, ResourceType resource2) throws InvalidActionException;
 	
 	/**
-	 * Play a Road Building card, and build 2 roads.
+	 * Play a Road Playing card, and build 2 roads.
 	 * @param location1 The first location to build a road
 	 * @param location2 The second location to build a road
 	 *
@@ -499,7 +498,7 @@ public interface IServerProxy {
 	 *		Player has joined a game
      * 		It is your turn.
      * 		The status of the client model is 'Playing'
-     * 		You have a Road Building card in your old dev card hand
+     * 		You have a Road Playing card in your old dev card hand
      * 		You have not yet played a non-monument dev card this turn
      * 		The first road location is connected to one of your roads
      * 		The second road location is connected to one of your roads, or to the first road

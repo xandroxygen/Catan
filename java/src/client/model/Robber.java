@@ -3,7 +3,7 @@ package client.model;
 import shared.locations.HexLocation;
 
 /**
- * Robber Class
+ * Robbing Class
  */
 public class Robber {
 	private HexLocation location;

@@ -1,6 +1,7 @@
 package client.model;
 
+//status (string) = ['FirstRound' or 'SecondRound' or 'Rolling' or 'Robbing' or 'Playing' or 'Discarding' or ]: What's happening now,
 public enum GameStatus
 {
-	Rolling, Trading, Building, WaitingForResponse, WaitingForTurn, RespondToTrade, Robber
+	FirstRound, SecondRound, Rolling, Robbing, Playing, Discarding
 }

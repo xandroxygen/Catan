@@ -1,8 +1,10 @@
 package client.map;
 
+import client.admin.GameAdministrator;
 import client.base.Controller;
 import client.data.RobPlayerInfo;
 import client.model.GameStatus;
+import client.model.Model;
 import shared.definitions.CatanColor;
 import shared.definitions.HexType;
 import shared.definitions.PieceType;
@@ -112,122 +114,121 @@ public class MapController extends Controller implements IMapController, Observe
 	}
 
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) {
-		//TODO im not sure we did the model right for this function
+		int playerID;
 		switch (state){
+            case FirstRound:
+            case SecondRound:
+				playerID = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId();
+				return Model.getInstance().canPlaceRoad(playerID, true, edgeLoc);
 			case Rolling:
-			case Trading:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
-			break;
-			case Building:
-//				return Model.getInstance().canPlaceRoad(edgeLoc);
+			case Robbing:
+			case Discarding:
+				break;
+			case Playing:
+				playerID = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId();
+				return Model.getInstance().canPlaceRoad(playerID, false, edgeLoc);
 		}
 		return false;
 	}
 
 	public boolean canPlaceSettlement(VertexLocation vertLoc) {
-		//TODO im not sure we did the model right for this function
+		int playerID;
 		switch (state){
+            case FirstRound:
+            case SecondRound:
+				playerID = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId();
+				return Model.getInstance().canPlaceSettlement(playerID, true, vertLoc);
 			case Rolling:
-			case Trading:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
+			case Robbing:
+			case Discarding:
 				break;
-			case Building:
-//				return Model.getInstance().canPlaceSettlement(vertLoc);
+			case Playing:
+				playerID = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId();
+				return Model.getInstance().canPlaceSettlement(playerID, false, vertLoc);
 		}
 		return true;
 	}
 
 	public boolean canPlaceCity(VertexLocation vertLoc) {
-		//TODO im not sure we did the model right for this function
+		int playerID;
 		switch (state){
+			case FirstRound:
+            case SecondRound:
 			case Rolling:
-			case Trading:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
+			case Robbing:
+			case Discarding:
 				break;
-			case Building:
-//				return Model.getInstance().canPlaceCity(vertLoc);
+			case Playing:
+				playerID = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId();
+				return Model.getInstance().canPlaceCity(playerID, vertLoc);
 		}
 		return false;
 	}
 
 	public boolean canPlaceRobber(HexLocation hexLoc) {
-		//TODO im not sure we did the model right for this function
 		switch (state){
+            case FirstRound:
+            case SecondRound:
 			case Rolling:
-			case Trading:
-			case Building:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
+			case Playing:
+			case Discarding:
 				break;
-			case Robber:
-//				return Model.getInstance().canPlaceRobber(hexLoc);
+			case Robbing:
+				return Model.getInstance().canPlaceRobber(hexLoc);
+
 		}
 		return false;
 	}
 
 	public void placeRoad(EdgeLocation edgeLoc) {
 		switch (state){
-			case Building:
+            case FirstRound:
+            case SecondRound:
+			case Playing:
 				getView().placeRoad(edgeLoc, CatanColor.ORANGE);
 			case Rolling:
-			case Trading:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
+			case Robbing:
+			case Discarding:
 				break;
 		}
 	}
 
 	public void placeSettlement(VertexLocation vertLoc) {
 		switch (state){
-			case Building:
+            case FirstRound:
+            case SecondRound:
+			case Playing:
 				getView().placeSettlement(vertLoc, CatanColor.ORANGE);
 			case Rolling:
-			case Trading:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
+			case Robbing:
+			case Discarding:
 				break;
 		}
 	}
 
 	public void placeCity(VertexLocation vertLoc) {
 		switch (state){
-			case Building:
+            case FirstRound:
+            case SecondRound:
+			case Playing:
 				getView().placeCity(vertLoc, CatanColor.ORANGE);
 			case Rolling:
-			case Trading:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
+			case Robbing:
+			case Discarding:
 				break;
 		}
 	}
 
 	public void placeRobber(HexLocation hexLoc) {
 		switch (state){
-			case Robber:
+            case FirstRound:
+            case SecondRound:
+			case Robbing:
 				getView().placeRobber(hexLoc);
 				getRobView().showModal();
 			case Rolling:
-			case Trading:
-			case Building:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
+			case Playing:
+			case Discarding:
 				break;
 		}
 
@@ -235,14 +236,13 @@ public class MapController extends Controller implements IMapController, Observe
 	
 	public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) {
 		switch (state){
+            case FirstRound:
+            case SecondRound:
 			case Rolling:
 				getView().startDrop(pieceType, CatanColor.ORANGE, true);
-			case Trading:
-			case Building:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
+			case Playing:
+			case Robbing:
+			case Discarding:
 				break;
 		}
 	}
@@ -250,55 +250,51 @@ public class MapController extends Controller implements IMapController, Observe
 	public void cancelMove() {
 		//TODO not sure what this is used for.
 		switch (state){
+            case FirstRound:
+            case SecondRound:
 			case Rolling:
 //				getView().cancelMove(pieceType, CatanColor.ORANGE, true);
-			case Trading:
-			case Building:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
+			case Playing:
+			case Robbing:
+			case Discarding:
 		}
 	}
 	
 	public void playSoldierCard() {
 		switch (state){
-			case Trading:
-			case Building:
+			case Playing:
 //				Model.getInstance().playSoldierCard();
+			case FirstRound:
+			case SecondRound:
 			case Rolling:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
+			case Robbing:
+			case Discarding:
 				break;
 		}
 	}
 	
 	public void playRoadBuildingCard() {
 		switch (state){
-			case Trading:
-			case Building:
+			case Playing:
 //				Model.getInstance().playRoadBuildingCard();
+			case FirstRound:
+			case SecondRound:
 			case Rolling:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
+			case Robbing:
+			case Discarding:
 				break;
 		}
 	}
 	
 	public void robPlayer(RobPlayerInfo victim) {
 		switch (state){
+            case FirstRound:
+            case SecondRound:
 			case Rolling:
-			case Trading:
-			case Building:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
+			case Playing:
+			case Discarding:
 				break;
-			case Robber:
+			case Robbing:
 //				Model.getInstance().robPlayer();
 		}
 	}

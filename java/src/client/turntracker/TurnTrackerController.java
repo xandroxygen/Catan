@@ -1,18 +1,13 @@
 package client.turntracker;
 
+import client.admin.GameAdministrator;
+import client.base.Controller;
+import client.model.*;
+
+import javax.swing.*;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-
-import javax.swing.JOptionPane;
-
-import client.admin.GameAdministrator;
-import client.base.*;
-import client.model.Game;
-import client.model.GameStatus;
-import client.model.InvalidActionException;
-import client.model.Model;
-import client.model.Player;
 
 /**
  * Implementation for the turn tracker controller
@@ -109,26 +104,23 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		GameStatus state = game.getTurnTracker().getStatus();
 		if(state != null) {
 			switch (state) {
+				case FirstRound:
+					this.getView().updateGameState("FirstRound", false);
+					break;
+				case SecondRound:
+					this.getView().updateGameState("SecondRound", false);
+					break;
 				case Rolling:
 					this.getView().updateGameState("Rolling", false);
 					break;
-				case Trading:
-					this.getView().updateGameState("Trading", false);
+				case Robbing:
+					this.getView().updateGameState("Robbing", false);
 					break;
-				case Building:
-					this.getView().updateGameState("Building", false);
+				case Playing:
+					this.getView().updateGameState("Playing", false);
 					break;
-				case WaitingForResponse:
-					this.getView().updateGameState("Waiting for response", false);
-					break;
-				case WaitingForTurn:
-					this.getView().updateGameState("Waiting for turn", false);
-					break;
-				case RespondToTrade:
-					this.getView().updateGameState("Responding to trade", false);
-					break;
-				case Robber:
-					this.getView().updateGameState("Robbin", false);
+				case Discarding:
+					this.getView().updateGameState("Discarding", false);
 					break;
 				default:
 					break;

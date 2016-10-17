@@ -202,7 +202,7 @@ public class ModelTest {
         Model.getInstance().updateModel(newModel);
         //all requirements are met / testing is players turn
         int i = 0;
-        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Building);
+        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Playing);
         for(Player tempPlayer: Model.getInstance().getGame().playerList) {
             HashMap<DevCardType, Integer> oldDevCards = new HashMap<>();
             oldDevCards.put(DevCardType.YEAR_OF_PLENTY, 1);
@@ -217,7 +217,7 @@ public class ModelTest {
             i++;
         }
         //testing if GameStatus in not Playing
-        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.WaitingForTurn);
+        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.FirstRound);
         for(Player tempPlayer: Model.getInstance().getGame().playerList) {
             HashMap<DevCardType, Integer> oldDevCards = new HashMap<>();
             oldDevCards.put(DevCardType.YEAR_OF_PLENTY, 1);
@@ -227,7 +227,7 @@ public class ModelTest {
             assertFalse(Model.getInstance().canPlayYearOfPlenty(tempPlayer.getPlayerID(), ResourceType.BRICK, ResourceType.ORE));
         }
         //testing if there is no Year of Plenty Dev Card
-        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Building);
+        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Playing);
         for(Player tempPlayer: Model.getInstance().getGame().playerList) {
             HashMap<DevCardType, Integer> oldDevCards = new HashMap<>();
             tempPlayer.setPlayedDevCard(false);
@@ -236,7 +236,7 @@ public class ModelTest {
             assertFalse(Model.getInstance().canPlayYearOfPlenty(tempPlayer.getPlayerID(), ResourceType.BRICK, ResourceType.ORE));
         }
         //testing if there has already been a Dev Card Played
-        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Building);
+        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Playing);
         for(Player tempPlayer: Model.getInstance().getGame().playerList) {
             HashMap<DevCardType, Integer> oldDevCards = new HashMap<>();
             oldDevCards.put(DevCardType.YEAR_OF_PLENTY, 1);
@@ -306,7 +306,7 @@ public class ModelTest {
         Model.getInstance().updateModel(newModel);
         //all requirements are met / testing is players turn
         int i = 0;
-        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Building);
+        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Playing);
         for(Player tempPlayer: Model.getInstance().getGame().playerList) {
             HashMap<DevCardType, Integer> oldDevCards = new HashMap<>();
             oldDevCards.put(DevCardType.MONOPOLY, 1);
@@ -320,7 +320,7 @@ public class ModelTest {
             i++;
         }
         //testing if GameStatus in not Playing
-        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.WaitingForTurn);
+        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.FirstRound);
         for(Player tempPlayer: Model.getInstance().getGame().playerList) {
             HashMap<DevCardType, Integer> oldDevCards = new HashMap<>();
             oldDevCards.put(DevCardType.MONOPOLY, 1);
@@ -329,7 +329,7 @@ public class ModelTest {
             assertFalse(Model.getInstance().canPlayMonopolyCard(tempPlayer.getPlayerID(), ResourceType.BRICK));
         }
         //testing if there is no Year of Plenty Dev Card
-        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Building);
+        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Playing);
         for(Player tempPlayer: Model.getInstance().getGame().playerList) {
             HashMap<DevCardType, Integer> oldDevCards = new HashMap<>();
             tempPlayer.setPlayedDevCard(false);
@@ -337,7 +337,7 @@ public class ModelTest {
             assertFalse(Model.getInstance().canPlayMonopolyCard(tempPlayer.getPlayerID(), ResourceType.BRICK));
         }
         //testing if there has already been a Dev Card Played
-        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Building);
+        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Playing);
         for(Player tempPlayer: Model.getInstance().getGame().playerList) {
             HashMap<DevCardType, Integer> oldDevCards = new HashMap<>();
             oldDevCards.put(DevCardType.MONOPOLY, 1);
@@ -354,7 +354,7 @@ public class ModelTest {
         Model.getInstance().updateModel(newModel);
         //all requirements are met / testing is players turn
         int i = 0;
-        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Building);
+        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Playing);
         for(Player tempPlayer: Model.getInstance().getGame().playerList) {
             HashMap<DevCardType, Integer> oldDevCards = new HashMap<>();
             oldDevCards.put(DevCardType.MONUMENT, 1);
@@ -368,7 +368,7 @@ public class ModelTest {
             i++;
         }
         //testing if GameStatus in not Playing
-        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.WaitingForTurn);
+        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.FirstRound);
         for(Player tempPlayer: Model.getInstance().getGame().playerList) {
             HashMap<DevCardType, Integer> oldDevCards = new HashMap<>();
             oldDevCards.put(DevCardType.MONOPOLY, 1);
@@ -377,7 +377,7 @@ public class ModelTest {
             assertFalse(Model.getInstance().canPlayMonumentCard(tempPlayer.getPlayerID()));
         }
         //testing if there is no Year of Plenty Dev Card
-        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Building);
+        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Playing);
         for(Player tempPlayer: Model.getInstance().getGame().playerList) {
             HashMap<DevCardType, Integer> oldDevCards = new HashMap<>();
             tempPlayer.setPlayedDevCard(false);
@@ -385,7 +385,7 @@ public class ModelTest {
             assertFalse(Model.getInstance().canPlayMonumentCard(tempPlayer.getPlayerID()));
         }
         //testing if there has already been a Dev Card Played
-        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Building);
+        Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Playing);
         for(Player tempPlayer: Model.getInstance().getGame().playerList) {
             HashMap<DevCardType, Integer> oldDevCards = new HashMap<>();
             oldDevCards.put(DevCardType.MONOPOLY, 1);
