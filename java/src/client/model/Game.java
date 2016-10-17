@@ -143,8 +143,8 @@ public class Game {
     boolean canPlaceCity(int playerId, VertexLocation location){
     	Player player = this.getPlayerById(playerId);
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
-				theMap.playerHasSettlementAtLocation(location, player) && (player.getResourceHand().get(ResourceType.WHEAT) >= 2) &&
-				(player.getResourceHand().get(ResourceType.ORE) >= 3) && (player.getCities() >= 1));
+				theMap.playerHasSettlementAtLocation(location, player) && (player.getResources().get(ResourceType.WHEAT) >= 2) &&
+				(player.getResources().get(ResourceType.ORE) >= 3) && (player.getCities() >= 1));
     }
 
     /**
@@ -171,8 +171,8 @@ public class Game {
     	}
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
 				!theMap.hasSettlementAtLocation(location) && theMap.vertexIsOnPlayerRoad(location, player) && 
-				(player.getResourceHand().get(ResourceType.WOOD) >= 1) && (player.getResourceHand().get(ResourceType.BRICK) >= 1) && 
-				(player.getResourceHand().get(ResourceType.WHEAT) >= 1) && (player.getResourceHand().get(ResourceType.SHEEP) >= 1) && 
+				(player.getResources().get(ResourceType.WOOD) >= 1) && (player.getResources().get(ResourceType.BRICK) >= 1) && 
+				(player.getResources().get(ResourceType.WHEAT) >= 1) && (player.getResources().get(ResourceType.SHEEP) >= 1) && 
 				(player.getSettlements() >= 1));
     }
 
@@ -202,8 +202,8 @@ public class Game {
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
 				!theMap.hasRoadAtLocation(location) &&
 				(theMap.edgeHasPlayerMunicipality(location, player) || theMap.edgeHasAdjacentPlayerRoad(location, player)) &&
-				(player.getResourceHand().get(ResourceType.WOOD) >= 1) && 
-				(player.getResourceHand().get(ResourceType.BRICK) >= 1) && (player.getRoads() >= 1));
+				(player.getResources().get(ResourceType.WOOD) >= 1) && 
+				(player.getResources().get(ResourceType.BRICK) >= 1) && (player.getRoads() >= 1));
     }
     
     /**
