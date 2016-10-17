@@ -91,7 +91,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			for (Player p : players) {
 				int playerIndex = p.getPlayerIndex();
 				
-				boolean isMyTurn = game.isTurn(p.getPlayerID());
+				boolean isMyTurn = game.isMyTurn();
 				int victoryPoints = p.getVictoryPoints();
 				boolean isLargestArmy = (playerIndex == largestArmy);
 				boolean isLongestRoad = (playerIndex == longestRoad);
@@ -128,7 +128,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 					this.getView().updateGameState("Responding to trade", false);
 					break;
 				case Robber:
-					this.getView().updateGameState("Robbin", false);
+					this.getView().updateGameState("Robbin'", false);
 					break;
 				default:
 					break;
