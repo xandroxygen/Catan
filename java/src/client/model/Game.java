@@ -59,16 +59,15 @@ public class Game {
     
     public Game() {
     	this.version = -1;
-		server = new ServerProxy();
     }
 
-    public Game(ArrayList<Player> players, Map theMap, Bank bank, JsonObject modelJSON) {
+    public Game(ArrayList<Player> players, Map theMap, Bank bank, JsonObject modelJSON, IServerProxy server) {
 
     	// Initialize players, map and bank
     	playerList = players;
     	this.bank = bank;
-    	this.theMap= theMap;
-		server = new ServerProxy();
+    	this.theMap = theMap;
+		this.server = server;
     	
     	// Init the current player
     	for (Player player : players) {

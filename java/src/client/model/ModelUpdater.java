@@ -1,5 +1,6 @@
 package client.model;
 
+import client.server.IServerProxy;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -129,8 +130,8 @@ public class ModelUpdater {
 	 *
 	 * @param json 
 	 */
-	public Game updateModel(JsonObject json) {
-		return new Game(updatePlayers(json),updateMap(json),updateBank(json),json);
+	public Game updateModel(JsonObject json, IServerProxy server) {
+		return new Game(updatePlayers(json),updateMap(json),updateBank(json),json, server);
 	}
 	
 	/**
