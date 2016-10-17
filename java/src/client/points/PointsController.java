@@ -50,25 +50,22 @@ public class PointsController extends Controller implements IPointsController, O
 			getPointsView().setPoints(victoryPoints);
 		}
 		else {
-			getPointsView().setPoints(0);
+			getPointsView().setPoints(5);
 		}		
 	}
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		for(Player p : Model.getInstance().getGame().getPlayerList()) {
-			if(p.getVictoryPoints() >= 10) {
-				this.getFinishedView().setWinner(p.getName(), isLocalPlayer(p));
-				this.finishedView.showModal();
-				
-				//TODO What should happen once the game is done??
-			}
+		int winnerIndex = Model.getInstance().getGame().getWinner();
+		if(winnerIndex != -1) {	// someone won the game
+			Player p = Model.getInstance().getGame().getPlayerList().get(winnerIndex);
+			this.getFinishedView().setWinner(p.getName(), isLocalPlayer(p));
+			this.finishedView.showModal();
 		}
 		
 		if(Model.getInstance().getGame() != null) {
 			initFromModel();
-		}
-		
+		}	
 	}
 	
 	private boolean isLocalPlayer(Player p) {
