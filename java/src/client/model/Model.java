@@ -24,10 +24,12 @@ public class Model extends Observable {
 	private Game game;
 	private ModelUpdater modelUpdater;
 	private static Model model;
+    private IServerProxy server;
 	
 	private Model() {
 		modelUpdater = new ModelUpdater();
         game = new Game();
+        server = new ServerProxy();
 	}
 	
 	public static Model getInstance() {
@@ -46,7 +48,7 @@ public class Model extends Observable {
 		return game;
 	}
 
-	public IServerProxy getServer() { return game.getServer(); }
+	public IServerProxy getServer() { return server; }
 	
     /**
      * Updates model class.
@@ -167,7 +169,7 @@ public class Model extends Observable {
      * @param json the Json String being passed in
      */
     public void updateModel(JsonObject json){
-    	game = modelUpdater.updateModel(json);
+    	game = modelUpdater.updateModel(json, server);
     	this.setChanged();
     	this.notifyObservers(game);
     }
@@ -538,7 +540,7 @@ public class Model extends Observable {
      * @return
      */
     public void sendMessage(String message){
-        game.sendMessage(message, game.getServer());
+        game.sendMessage(message, server);
     }
 
     /**

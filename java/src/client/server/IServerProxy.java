@@ -24,7 +24,7 @@ public interface IServerProxy {
 	 *
 	 * @param playerID ID to give to the player
 	 */
-	void setPlayer(int playerID);
+	void setPlayerIndex(int playerID);
 	
 	/**
 	 * Logs the caller into the server and sets their catan.user HTTP cookie.
@@ -250,7 +250,7 @@ public interface IServerProxy {
 	 * 		Player has joined a game
 	 * </pre>
 	 * 
-	 * @param content The message to send
+	 * @param message The message to send
      * @post the chat box contains the sent message
 	 */
 	void sendChat(int playerIndex, String message) throws InvalidActionException;

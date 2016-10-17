@@ -47,7 +47,7 @@ public class ServerProxy implements IServerProxy {
      * @param playerIndex index (NOT id) of the player whose turn it is
      */
     @Override
-    public void setPlayer(int playerIndex) {
+    public void setPlayerIndex(int playerIndex) {
         currentPlayerIndex = playerIndex;
     }
 
@@ -438,7 +438,7 @@ public class ServerProxy implements IServerProxy {
     /**
      * Sends a chat message to the group.
      *
-     * @param content The message to send
+     * @param message The message to send
      * @pre <pre>
      *      Player is logged in
      * 		Player has joined a game
