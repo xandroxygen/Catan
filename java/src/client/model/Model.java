@@ -23,12 +23,10 @@ import static shared.definitions.ResourceType.*;
 public class Model extends Observable {
 	private Game game;
 	private ModelUpdater modelUpdater;
-    private IServerProxy server;
 	private static Model model;
 	
 	private Model() {
 		modelUpdater = new ModelUpdater();
-        server = new ServerProxy();
         game = new Game();
 	}
 	
@@ -48,7 +46,7 @@ public class Model extends Observable {
 		return game;
 	}
 
-	public IServerProxy getServer() { return server; }
+	public IServerProxy getServer() { return game.getServer(); }
 	
     /**
      * Updates model class.
@@ -540,7 +538,7 @@ public class Model extends Observable {
      * @return
      */
     public void sendMessage(String message){
-        game.sendMessage(message, server);
+        game.sendMessage(message, game.getServer());
     }
 
     /**

@@ -1,5 +1,6 @@
 package client.model;
 
+import client.server.ServerProxy;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -33,6 +34,7 @@ public class Game {
     public int version;
     public TradeOffer tradeOffer;
     public Player currentPlayer;
+	private IServerProxy server;
 
     public boolean isTurn(int playerId){
         //look for implementation
@@ -57,6 +59,7 @@ public class Game {
     
     public Game() {
     	this.version = -1;
+		server = new ServerProxy();
     }
 
     public Game(ArrayList<Player> players, Map theMap, Bank bank, JsonObject modelJSON) {
@@ -65,6 +68,7 @@ public class Game {
     	playerList = players;
     	this.bank = bank;
     	this.theMap= theMap;
+		server = new ServerProxy();
     	
     	// Init the current player
     	for (Player player : players) {
@@ -101,7 +105,11 @@ public class Game {
 
     }
 
-    /**
+	public IServerProxy getServer() {
+		return server;
+	}
+
+	/**
      * checks to see if the game can create a new user
      *
      * @pre <pre>
