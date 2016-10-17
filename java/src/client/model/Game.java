@@ -38,6 +38,10 @@ public class Game {
         //look for implementation
         return getPlayerIndex(playerId) == turnTracker.getCurrentTurn();
     }
+    
+    public boolean isMyTurn() {
+    	return currentPlayer.getPlayerIndex() == turnTracker.getCurrentTurn();
+    }
 
     public int getPlayerIndex(int playerId){
         int i = 0;
