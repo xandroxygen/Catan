@@ -1,13 +1,17 @@
 package client.points;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import client.base.*;
 import client.model.Model;
+import client.model.Player;
 
 
 /**
  * Implementation for the points controller
  */
-public class PointsController extends Controller implements IPointsController {
+public class PointsController extends Controller implements IPointsController, Observer {
 
 	private IGameFinishedView finishedView;
 	
@@ -22,6 +26,8 @@ public class PointsController extends Controller implements IPointsController {
 		super(view);
 		
 		setFinishedView(finishedView);
+		
+		Model.getInstance().addObserver(this);
 		
 		initFromModel();
 	}
@@ -45,15 +51,28 @@ public class PointsController extends Controller implements IPointsController {
 		}
 		else {
 			getPointsView().setPoints(0);
-		}
-			
-		
+		}		
 	}
-	
-	public void update() {
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		for(Player p : Model.getInstance().getGame().getPlayerList()) {
+			if(p.getVictoryPoints() >= 10) {
+				this.getFinishedView().setWinner(p.getName(), isLocalPlayer(p));
+				this.finishedView.showModal();
+				
+				//TODO What should happen once the game is done??
+			}
+		}
+		
 		if(Model.getInstance().getGame() != null) {
 			initFromModel();
 		}
+		
+	}
+	
+	private boolean isLocalPlayer(Player p) {
+		return p.getPlayerID() == Model.getInstance().getGame().currentPlayer.getPlayerID();	
 	}
 	
 }
