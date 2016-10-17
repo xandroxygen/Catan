@@ -592,35 +592,35 @@ public class Model extends Observable {
         boolean bool = game.isTurn(senderPlayerId);
         //Checks to see if the sender has all resources he is offering
         if (bool && offer.get(ResourceType.BRICK) > 0){
-            bool = offer.get(ResourceType.BRICK) <= game.playerList.get(senderPlayerIndex).getResourceHand().get(ResourceType.BRICK);
+            bool = offer.get(ResourceType.BRICK) <= game.playerList.get(senderPlayerIndex).getResources().get(ResourceType.BRICK);
         }
         if (bool && offer.get(ResourceType.WOOD) > 0){
-            bool = offer.get(ResourceType.WOOD) <= game.playerList.get(senderPlayerIndex).getResourceHand().get(ResourceType.WOOD);
+            bool = offer.get(ResourceType.WOOD) <= game.playerList.get(senderPlayerIndex).getResources().get(ResourceType.WOOD);
         }
         if (bool && offer.get(ResourceType.WHEAT) > 0){
-            bool = offer.get(ResourceType.WHEAT) <= game.playerList.get(senderPlayerIndex).getResourceHand().get(ResourceType.WHEAT);
+            bool = offer.get(ResourceType.WHEAT) <= game.playerList.get(senderPlayerIndex).getResources().get(ResourceType.WHEAT);
         }
         if (bool && offer.get(ResourceType.SHEEP) > 0){
-            bool = offer.get(ResourceType.SHEEP) <= game.playerList.get(senderPlayerIndex).getResourceHand().get(ResourceType.SHEEP);
+            bool = offer.get(ResourceType.SHEEP) <= game.playerList.get(senderPlayerIndex).getResources().get(ResourceType.SHEEP);
         }
         if (bool && offer.get(ResourceType.ORE) > 0){
-            bool = offer.get(ResourceType.ORE) <= game.playerList.get(senderPlayerIndex).getResourceHand().get(ResourceType.ORE);
+            bool = offer.get(ResourceType.ORE) <= game.playerList.get(senderPlayerIndex).getResources().get(ResourceType.ORE);
         }
         //Checks to see if the receiver has all resources he is offering
         if (bool && offer.get(ResourceType.BRICK) < 0){
-            bool = offer.get(ResourceType.BRICK) <= game.playerList.get(receiverPlayerIndex).getResourceHand().get(ResourceType.BRICK);
+            bool = offer.get(ResourceType.BRICK) <= game.playerList.get(receiverPlayerIndex).getResources().get(ResourceType.BRICK);
         }
         if (bool && offer.get(ResourceType.WOOD) < 0){
-            bool = offer.get(ResourceType.WOOD) <= game.playerList.get(receiverPlayerIndex).getResourceHand().get(ResourceType.WOOD);
+            bool = offer.get(ResourceType.WOOD) <= game.playerList.get(receiverPlayerIndex).getResources().get(ResourceType.WOOD);
         }
         if (bool && offer.get(ResourceType.WHEAT) < 0){
-            bool = offer.get(ResourceType.WHEAT) <= game.playerList.get(receiverPlayerIndex).getResourceHand().get(ResourceType.WHEAT);
+            bool = offer.get(ResourceType.WHEAT) <= game.playerList.get(receiverPlayerIndex).getResources().get(ResourceType.WHEAT);
         }
         if (bool && offer.get(ResourceType.SHEEP) < 0){
-            bool = offer.get(ResourceType.SHEEP) <= game.playerList.get(receiverPlayerIndex).getResourceHand().get(ResourceType.SHEEP);
+            bool = offer.get(ResourceType.SHEEP) <= game.playerList.get(receiverPlayerIndex).getResources().get(ResourceType.SHEEP);
         }
         if (bool && offer.get(ResourceType.ORE) < 0){
-            bool = offer.get(ResourceType.ORE) <= game.playerList.get(receiverPlayerIndex).getResourceHand().get(ResourceType.ORE);
+            bool = offer.get(ResourceType.ORE) <= game.playerList.get(receiverPlayerIndex).getResources().get(ResourceType.ORE);
         }
         return bool;
     }
