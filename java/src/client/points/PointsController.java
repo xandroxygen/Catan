@@ -39,15 +39,15 @@ public class PointsController extends Controller implements IPointsController {
 	}
 
 	private void initFromModel() {
-		//<temp>		
-		getPointsView().setPoints(Model.getInstance().getGame().currentPlayer.getVictoryPoints());
-		//</temp>
+		if(Model.getInstance().getGame().currentPlayer != null) {
+			int victoryPoints = Model.getInstance().getGame().currentPlayer.getVictoryPoints();
+			getPointsView().setPoints(victoryPoints);
+		}
+		else {
+			getPointsView().setPoints(0);
+		}
+			
 		
-	}
-	
-	private int getVictoryPoints() {
-		
-		return 0;
 	}
 	
 	public void update() {
