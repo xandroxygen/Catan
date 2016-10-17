@@ -91,7 +91,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			for (Player p : players) {
 				int playerIndex = p.getPlayerIndex();
 				
-				boolean isMyTurn = game.isMyTurn();
+				boolean isMyTurn = game.isTurn(p.getPlayerID());
 				int victoryPoints = p.getVictoryPoints();
 				boolean isLargestArmy = (playerIndex == largestArmy);
 				boolean isLongestRoad = (playerIndex == longestRoad);
