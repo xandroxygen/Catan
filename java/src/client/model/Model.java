@@ -346,8 +346,8 @@ public class Model extends Observable {
         boolean bool = game.isTurn(playerId);
         //verify the client model status is 'Playing'
         if (bool){
-            bool = game.turnTracker.getStatus() == GameStatus.Rolling ||
-                    game.turnTracker.getStatus() == GameStatus.Playing;
+            bool = game.getTurnTracker().getStatus() == GameStatus.Rolling ||
+                    game.getTurnTracker().getStatus() == GameStatus.Playing;
         }
         //verify you have the specific card you want to play in your old dev card hand
         //and verify you have not yet played a non­monument dev card this turn
@@ -384,10 +384,9 @@ public class Model extends Observable {
         //verify the client model status is 'Playing'
         if (bool){
             bool = game.getTurnTracker().getStatus() == GameStatus.Rolling ||
-                    game.getTurnTracker().getStatus() == GameStatus.Trading ||
-                    game.getTurnTracker().getStatus() == GameStatus.Building;;
-            bool = game.turnTracker.getStatus() == GameStatus.Rolling ||
-                    game.turnTracker.getStatus() == GameStatus.Playing;;
+                    game.getTurnTracker().getStatus() == GameStatus.Playing;;
+            bool = game.getTurnTracker().getStatus() == GameStatus.Rolling ||
+                    game.getTurnTracker().getStatus() == GameStatus.Playing;
         }
         //verify you have the specific card you want to play in your old dev card hand
         //and verify you have not yet played a non­monument dev card this turn
@@ -433,8 +432,8 @@ public class Model extends Observable {
         boolean bool = game.isTurn(playerId);
         //verify the client model status is 'Playing'
         if (bool){
-            bool = game.turnTracker.getStatus() == GameStatus.Rolling ||
-                    game.turnTracker.getStatus() == GameStatus.Playing;;
+            bool = game.getTurnTracker().getStatus() == GameStatus.Rolling ||
+                    game.getTurnTracker().getStatus() == GameStatus.Playing;
         }
         //verify you have the specific card you want to play in your old dev card hand
         //and verify you have not yet played a non­monument dev card this turn
@@ -480,8 +479,8 @@ public class Model extends Observable {
         boolean bool = game.isTurn(playerId);
         //verify the client model status is 'Playing'
         if (bool){
-            bool = game.turnTracker.getStatus() == GameStatus.Rolling ||
-                    game.turnTracker.getStatus() == GameStatus.Playing;;
+            bool = game.getTurnTracker().getStatus() == GameStatus.Rolling ||
+                    game.getTurnTracker().getStatus() == GameStatus.Playing;;
         }
         //verify you have the specific card you want to play in your old dev card hand
         //and verify you have not yet played a non­monument dev card this turn
@@ -511,8 +510,8 @@ public class Model extends Observable {
         boolean bool = game.isTurn(playerId);
         //verify the client model status is 'Playing'
         if (bool){
-            bool = game.turnTracker.getStatus() == GameStatus.Rolling ||
-                    game.turnTracker.getStatus() == GameStatus.Playing;;
+            bool = game.getTurnTracker().getStatus() == GameStatus.Rolling ||
+                    game.getTurnTracker().getStatus() == GameStatus.Playing;;
         }
         //verify you have the specific card you want to play in your old dev card hand
         //and verify you have not yet played a non­monument dev card this turn
