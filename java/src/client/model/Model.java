@@ -544,15 +544,6 @@ public class Model extends Observable {
     }
 
     /**
-     * Checks whether the player can end the turn.
-     * @post  The cards in your new dev card hand have been transferred to your old dev card hand, It is the next player’s turn
-     * @return result
-     */
-    public boolean canEndTurn(int playerId){
-        return false;
-    }
-
-    /**
      * checks to see if the game can create a new user
      *
      * @pre <pre>
