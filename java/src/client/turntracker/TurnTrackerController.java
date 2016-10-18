@@ -110,7 +110,8 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		initFromModel();
 		
 		GameStatus state = game.getTurnTracker().getStatus();
-		if(state != null) {
+		if (game.isMyTurn()) {
+			if(state != null) {
 			switch (state) {
 				case FirstRound:
 					this.getView().updateGameState("FirstRound", false);
@@ -132,13 +133,12 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 					break;
 				default:
 					break;
+				}
 			}
 		}
-//		else {
-//			this.getView().updateGameState("Waiting for other players", false);
-//		}
-
-			
+		else {
+			this.getView().updateGameState("Waiting for other players", false);
+		}
 	}
 
 }
