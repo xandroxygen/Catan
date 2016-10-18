@@ -540,7 +540,7 @@ public class Model extends Observable {
      * @return
      */
     public void sendMessage(String message){
-        game.sendMessage(message, server);
+        game.sendMessage(message);
     }
 
     /**
@@ -577,6 +577,19 @@ public class Model extends Observable {
      */
     public boolean canGetRolledResourses(int diceRoll){
         return game.canGetRolledResources(diceRoll);
+    }
+    
+    /**
+     * Make Maritime trade
+     * 
+     */
+    public void maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource) {
+    	try {
+			server.maritimeTrade(ratio, inputResource, outputResource);
+		} catch (InvalidActionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     /**

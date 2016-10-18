@@ -73,6 +73,7 @@ public class Game {
     	for (Player player : players) {
     		if (player.getPlayerID() == GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId()) {
     			this.currentPlayer = player;
+    			server.setPlayerIndex(player.getPlayerIndex());
     		}
     	}
 
@@ -242,9 +243,9 @@ public class Game {
      * @param message the message the player wishes to send.
      * @return
      */
-    void sendMessage(String message, IServerProxy server){
+    void sendMessage(String message){
     	try {
-			server.sendChat(currentPlayer.getPlayerIndex(),message);
+			server.sendChat(message);
 		} catch (InvalidActionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
