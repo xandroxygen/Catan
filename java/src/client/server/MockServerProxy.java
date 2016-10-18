@@ -25,7 +25,7 @@ public class MockServerProxy implements IServerProxy {
      * @param playerID ID to give to the player
      */
     @Override
-    public void setPlayer(int playerID) {
+    public void setPlayerIndex(int playerID) {
 
     }
 
@@ -256,7 +256,7 @@ public class MockServerProxy implements IServerProxy {
      * @post the chat box contains the sent message
      */
     @Override
-    public void sendChat(int playerIndex, String message) {
+    public void sendChat(String message) {
 
     }
 
