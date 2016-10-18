@@ -138,7 +138,7 @@ public class MapController extends Controller implements IMapController, Observe
 	}
 
 	private CatanColor getCatanColorFromPlayerIndex(int playerIndex){
-		Player player = Model.getInstance().getGame().playerList.get(playerIndex);
+		Player player = Model.getInstance().getGame().getPlayerList().get(playerIndex);
 		return player.getColor();
 	}
 
