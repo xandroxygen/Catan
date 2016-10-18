@@ -23,6 +23,14 @@ public class Map {
 
     private Robber robber;
 
+	public HashMap<HexLocation, Hex> getHexes() {
+		return hexes;
+	}
+
+	public int getRadius() {
+		return radius;
+	}
+
 	public HashMap<VertexLocation, City> getCities() {
 		return cities;
 	}
