@@ -42,8 +42,22 @@ public class MapController extends Controller implements IMapController, Observe
 	}
 	
 	protected void initFromModel() {
+		//add Hexes and their numbers
+		addHexes();
+		//add Ports
+		addPorts();
+		//place robber
+		placeRobber();
+		//add roads
+		addRoads();
+		//add cities
+		addCities();
+		//add settlements
+		addSettlements();
+	}
 
-		//add hex's and their
+	private void addHexes(){
+		//add hex's and their numbers
 		for (Map.Entry<HexLocation, Hex> entry : Model.getInstance().getGame().getTheMap().getHexes().entrySet()) {
 			HexLocation hexLoc = entry.getValue().getLocation();
 			HexType hexType = entry.getValue().getResource();
@@ -57,49 +71,7 @@ public class MapController extends Controller implements IMapController, Observe
 				getView().addNumber(hexLoc, hexNumber);
 			}
 		}
-
-//		for (int x = 0; x <= 2; ++x) {
-//			int maxY = 2 - x;
-//			for (int y = -2; y <= maxY; ++y) {
-//				HexLocation hexLoc = new HexLocation(x, y);
-//				HexType hexType = Model.getInstance().getGame().getTheMap().getHexes().get(hexLoc).getResource();
-//				if (hexType == null) {
-//					hexType = HexType.DESERT;
-//				}
-//				getView().addHex(hexLoc, hexType);
-//
-////				getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.NorthWest),
-////						CatanColor.RED);
-////				getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.SouthWest),
-////						CatanColor.BLUE);
-////				getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.South),
-////						CatanColor.ORANGE);
-////				getView().placeSettlement(new VertexLocation(hexLoc,  VertexDirection.NorthWest), CatanColor.GREEN);
-////				getView().placeCity(new VertexLocation(hexLoc,  VertexDirection.NorthEast), CatanColor.PURPLE);
-//			}
-//			if (x != 0) {
-//				int minY = x - 2;
-//				for (int y = minY; y <= 2; ++y) {
-//					HexLocation hexLoc = new HexLocation(x, y);
-//					HexType hexType = Model.getInstance().getGame().getTheMap().getHexes().get(hexLoc).getResource();
-//					if (hexType == null) {
-//						hexType = HexType.DESERT;
-//					}
-//					getView().addHex(hexLoc, hexType);
-
-//					getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.NorthWest),
-//							CatanColor.RED);
-//					getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.SouthWest),
-//							CatanColor.BLUE);
-//					getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.South),
-//							CatanColor.ORANGE);
-//					getView().placeSettlement(new VertexLocation(hexLoc,  VertexDirection.NorthWest), CatanColor.GREEN);
-//					getView().placeCity(new VertexLocation(hexLoc,  VertexDirection.NorthEast), CatanColor.PURPLE);
-
-//				}
-//			}
-//		}
-		//add Water Hex Boarder
+		//add the water boarder
 		getView().addHex(new HexLocation(0, -3), HexType.WATER);
 		getView().addHex(new HexLocation(1, -3), HexType.WATER);
 		getView().addHex(new HexLocation(2, -3), HexType.WATER);
@@ -118,8 +90,10 @@ public class MapController extends Controller implements IMapController, Observe
 		getView().addHex(new HexLocation(-3, 0), HexType.WATER);
 		getView().addHex(new HexLocation(-2, -1), HexType.WATER);
 		getView().addHex(new HexLocation(-1, -2), HexType.WATER);
+	}
 
-		//add Ports
+
+	private void addPorts(){
 		for (Map.Entry<EdgeLocation, Port> entry : Model.getInstance().getGame().getTheMap().getPorts().entrySet()) {
 			entry.getValue().getRatio();
 			EdgeLocation edgeLocation = entry.getValue().getLocation();
@@ -132,11 +106,40 @@ public class MapController extends Controller implements IMapController, Observe
 				getView().addPort(new EdgeLocation(edgeLocation.getHexLoc(), edgeLocation.getDir()), portType);
 			}
 		}
+	}
 
-		//place robber
+	private void placeRobber(){
 		Robber robber = Model.getInstance().getGame().getTheMap().getRobber();
 		getView().placeRobber(robber.getLocation());
+	}
 
+	private void addRoads(){
+		for (Map.Entry<EdgeLocation, Road> entry : Model.getInstance().getGame().getTheMap().getRoads().entrySet()) {
+			EdgeLocation edgeLocation = entry.getValue().getLocation().getNormalizedLocation();
+			CatanColor catanColor = getCatanColorFromPlayerIndex(entry.getValue().getOwnerIndex());
+			getView().placeRoad(edgeLocation, catanColor);
+		}
+	}
+
+	private void addCities(){
+		for (Map.Entry<VertexLocation, City> entry : Model.getInstance().getGame().getTheMap().getCities().entrySet()) {
+			VertexLocation vertexLocation = entry.getValue().getLocation().getNormalizedLocation();
+			CatanColor catanColor = getCatanColorFromPlayerIndex(entry.getValue().getOwnerIndex());
+			getView().placeCity(vertexLocation, catanColor);
+		}
+	}
+
+	private void addSettlements(){
+		for (Map.Entry<VertexLocation, Settlement> entry : Model.getInstance().getGame().getTheMap().getSettlements().entrySet()) {
+			VertexLocation vertexLocation = entry.getValue().getLocation().getNormalizedLocation();
+			CatanColor catanColor = getCatanColorFromPlayerIndex(entry.getValue().getOwnerIndex());
+			getView().placeSettlement(vertexLocation, catanColor);
+		}
+	}
+
+	private CatanColor getCatanColorFromPlayerIndex(int playerIndex){
+		Player player = Model.getInstance().getGame().playerList.get(playerIndex);
+		return player.getColor();
 	}
 
 	private PortType convertFromResourceToPortType(ResourceType resourceType){
