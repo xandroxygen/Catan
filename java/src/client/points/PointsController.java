@@ -45,8 +45,8 @@ public class PointsController extends Controller implements IPointsController, O
 	}
 
 	private void initFromModel() {
-		if(Model.getInstance().getGame().currentPlayer != null) {
-			int victoryPoints = Model.getInstance().getGame().currentPlayer.getVictoryPoints();
+		if(Model.getInstance().getGame().getCurrentPlayer() != null) {
+			int victoryPoints = Model.getInstance().getGame().getCurrentPlayer().getVictoryPoints();
 			getPointsView().setPoints(victoryPoints);
 		}
 		else {
@@ -69,7 +69,7 @@ public class PointsController extends Controller implements IPointsController, O
 	}
 	
 	private boolean isLocalPlayer(Player p) {
-		return p.getPlayerID() == Model.getInstance().getGame().currentPlayer.getPlayerID();	
+		return p.getPlayerID() == Model.getInstance().getGame().getCurrentPlayer().getPlayerID();	
 	}
 	
 }

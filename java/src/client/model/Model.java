@@ -221,10 +221,10 @@ public class Model extends Observable {
     public boolean canBuyDevelopmentCard(int playerId){
         int playerIndex = game.getPlayerIndex(playerId);
         // Verifies that the Bank has Dev Cards
-        boolean bool = game.bank.canBuyDevelopmentCard();
+        boolean bool = game.getBank().canBuyDevelopmentCard();
         // Verifies that the Player has enough resources
         if (bool){
-            bool = game.playerList.get(playerIndex).canBuyDevelopmentCard();
+            bool = game.getPlayerList().get(playerIndex).canBuyDevelopmentCard();
         }
         if (bool){
             bool = game.isTurn(playerId);
@@ -257,61 +257,61 @@ public class Model extends Observable {
         int playerIndex = game.getPlayerIndex(playerId);
         boolean bool;
         //Verifies that it is the turn of the PlayerId
-        bool = game.turnTracker.getCurrentTurn() == playerIndex;
+        bool = game.getTurnTracker().getCurrentTurn() == playerIndex;
         //Verifies that the player has the resources that he wants to trade
         if(bool) {
-            bool = game.playerList.get(playerIndex).canTradeWithBank(ratio, inputResource);
+            bool = game.getPlayerList().get(playerIndex).canTradeWithBank(ratio, inputResource);
         }
         //Verifies that the ratios are correct
         if(bool) {
             if (inputResource == WOOD) {
                 bool = false;
                 //iterate through the ports
-                for (Map.Entry<EdgeLocation, Port> tempPort : game.theMap.getPorts().entrySet()) {
+                for (Map.Entry<EdgeLocation, Port> tempPort : game.getTheMap().getPorts().entrySet()) {
                     //verifies the player has a municipality at the port
                     if (tempPort.getValue().getResource() == WOOD && !bool) {
-                        bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
-                                game.playerList.get(playerIndex));
+                        bool = game.getTheMap().edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
+                                game.getPlayerList().get(playerIndex));
                     }
                 }
             } else if (inputResource == BRICK) {
                 bool = false;
                 //iterate through the ports
-                for (Map.Entry<EdgeLocation, Port> tempPort : game.theMap.getPorts().entrySet()) {
+                for (Map.Entry<EdgeLocation, Port> tempPort : game.getTheMap().getPorts().entrySet()) {
                     //verifies the player has a municipality at the port
                     if (tempPort.getValue().getResource() == BRICK && !bool) {
-                        bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
-                                game.playerList.get(playerIndex));
+                        bool = game.getTheMap().edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
+                                game.getPlayerList().get(playerIndex));
                     }
                 }
             } else if (inputResource == SHEEP) {
                 bool = false;
                 //iterate through the ports
-                for (Map.Entry<EdgeLocation, Port> tempPort : game.theMap.getPorts().entrySet()) {
+                for (Map.Entry<EdgeLocation, Port> tempPort : game.getTheMap().getPorts().entrySet()) {
                     //verifies the player has a municipality at the port
                     if (tempPort.getValue().getResource() == SHEEP && !bool) {
-                        bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
-                                game.playerList.get(playerIndex));
+                        bool = game.getTheMap().edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
+                                game.getPlayerList().get(playerIndex));
                     }
                 }
             } else if (inputResource == WHEAT) {
                 bool = false;
                 //iterate through the ports
-                for (Map.Entry<EdgeLocation, Port> tempPort : game.theMap.getPorts().entrySet()) {
+                for (Map.Entry<EdgeLocation, Port> tempPort : game.getTheMap().getPorts().entrySet()) {
                     //verifies the player has a municipality at the port
                     if (tempPort.getValue().getResource() == WHEAT && !bool) {
-                        bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
-                                game.playerList.get(playerIndex));
+                        bool = game.getTheMap().edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
+                                game.getPlayerList().get(playerIndex));
                     }
                 }
             } else if (inputResource == ORE) {
                 bool = false;
                 //iterate through the ports
-                for (Map.Entry<EdgeLocation, Port> tempPort : game.theMap.getPorts().entrySet()) {
+                for (Map.Entry<EdgeLocation, Port> tempPort : game.getTheMap().getPorts().entrySet()) {
                     //verifies the player has a municipality at the port
                     if (tempPort.getValue().getResource() == ORE && !bool) {
-                        bool = game.theMap.edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
-                                game.playerList.get(playerIndex));
+                        bool = game.getTheMap().edgeHasPlayerMunicipality(tempPort.getValue().getLocation(),
+                                game.getPlayerList().get(playerIndex));
                     }
                 }
             }
@@ -346,18 +346,18 @@ public class Model extends Observable {
         boolean bool = game.isTurn(playerId);
         //verify the client model status is 'Playing'
         if (bool){
-            bool = game.turnTracker.getStatus() == GameStatus.Rolling ||
-                    game.turnTracker.getStatus() == GameStatus.Trading ||
-                    game.turnTracker.getStatus() == GameStatus.Building;
+            bool = game.getTurnTracker().getStatus() == GameStatus.Rolling ||
+                    game.getTurnTracker().getStatus() == GameStatus.Trading ||
+                    game.getTurnTracker().getStatus() == GameStatus.Building;
         }
         //verify you have the specific card you want to play in your old dev card hand
         //and verify you have not yet played a non­monument dev card this turn
         if(bool){
-            bool = game.playerList.get(playerIndex).canPlayDevCard(DevCardType.SOLDIER);
+            bool = game.getPlayerList().get(playerIndex).canPlayDevCard(DevCardType.SOLDIER);
         }
         //verify The robber is not being kept in the same location
         if(bool){
-            bool = game.theMap.getRobber().getLocation() != location;
+            bool = game.getTheMap().getRobber().getLocation() != location;
         }
         return bool;
     }
@@ -384,22 +384,22 @@ public class Model extends Observable {
         boolean bool = game.isTurn(playerId);
         //verify the client model status is 'Playing'
         if (bool){
-            bool = game.turnTracker.getStatus() == GameStatus.Rolling ||
-                    game.turnTracker.getStatus() == GameStatus.Trading ||
-                    game.turnTracker.getStatus() == GameStatus.Building;;
+            bool = game.getTurnTracker().getStatus() == GameStatus.Rolling ||
+                    game.getTurnTracker().getStatus() == GameStatus.Trading ||
+                    game.getTurnTracker().getStatus() == GameStatus.Building;;
         }
         //verify you have the specific card you want to play in your old dev card hand
         //and verify you have not yet played a non­monument dev card this turn
         if(bool){
-            bool = game.playerList.get(playerIndex).canPlayDevCard(DevCardType.YEAR_OF_PLENTY);
+            bool = game.getPlayerList().get(playerIndex).canPlayDevCard(DevCardType.YEAR_OF_PLENTY);
         }
         //verify two specified resources are in the bank.
         if(bool){
             if(resource1 == resource2){
-                bool = game.bank.getResourceDeck().get(resource1) >= 2;
+                bool = game.getBank().getResourceDeck().get(resource1) >= 2;
             }else{
-                bool = game.bank.getResourceDeck().get(resource1) >= 1 &&
-                        game.bank.getResourceDeck().get(resource2) >= 1;
+                bool = game.getBank().getResourceDeck().get(resource1) >= 1 &&
+                        game.getBank().getResourceDeck().get(resource2) >= 1;
             }
         }
         return bool;
@@ -432,30 +432,30 @@ public class Model extends Observable {
         boolean bool = game.isTurn(playerId);
         //verify the client model status is 'Playing'
         if (bool){
-            bool = game.turnTracker.getStatus() == GameStatus.Rolling ||
-                    game.turnTracker.getStatus() == GameStatus.Trading ||
-                    game.turnTracker.getStatus() == GameStatus.Building;;
+            bool = game.getTurnTracker().getStatus() == GameStatus.Rolling ||
+                    game.getTurnTracker().getStatus() == GameStatus.Trading ||
+                    game.getTurnTracker().getStatus() == GameStatus.Building;;
         }
         //verify you have the specific card you want to play in your old dev card hand
         //and verify you have not yet played a non­monument dev card this turn
         if(bool){
-            bool = game.playerList.get(playerIndex).canPlayDevCard(DevCardType.ROAD_BUILD);
+            bool = game.getPlayerList().get(playerIndex).canPlayDevCard(DevCardType.ROAD_BUILD);
         }
         //verify the first road location (spot1) is connected to one of your roads.
         //The second road location (spot2) is connected to one of your roads or to the first road location (spot1)
         //Neither road location is on water
         //You have at least two unused roads
         if(bool){
-            bool = !game.theMap.hasRoadAtLocation(spot1) && !game.theMap.hasRoadAtLocation(spot2) &&
-                    game.theMap.edgeHasAdjacentPlayerRoad(spot1, game.playerList.get(playerIndex));
+            bool = !game.getTheMap().hasRoadAtLocation(spot1) && !game.getTheMap().hasRoadAtLocation(spot2) &&
+                    game.getTheMap().edgeHasAdjacentPlayerRoad(spot1, game.getPlayerList().get(playerIndex));
             if(bool){
-                game.theMap.getRoads().put(spot1, new Road(spot1, playerIndex));
-                game.theMap.edgeHasAdjacentPlayerRoad(spot2, game.playerList.get(playerIndex));
-                game.theMap.getRoads().remove(spot1);
+                game.getTheMap().getRoads().put(spot1, new Road(spot1, playerIndex));
+                game.getTheMap().edgeHasAdjacentPlayerRoad(spot2, game.getPlayerList().get(playerIndex));
+                game.getTheMap().getRoads().remove(spot1);
             }
         }
         if(bool){
-            bool = game.playerList.get(playerIndex).getRoads() >= 2;
+            bool = game.getPlayerList().get(playerIndex).getRoads() >= 2;
         }
         return bool;
     }
@@ -480,14 +480,14 @@ public class Model extends Observable {
         boolean bool = game.isTurn(playerId);
         //verify the client model status is 'Playing'
         if (bool){
-            bool = game.turnTracker.getStatus() == GameStatus.Rolling ||
-                    game.turnTracker.getStatus() == GameStatus.Trading ||
-                    game.turnTracker.getStatus() == GameStatus.Building;;
+            bool = game.getTurnTracker().getStatus() == GameStatus.Rolling ||
+                    game.getTurnTracker().getStatus() == GameStatus.Trading ||
+                    game.getTurnTracker().getStatus() == GameStatus.Building;;
         }
         //verify you have the specific card you want to play in your old dev card hand
         //and verify you have not yet played a non­monument dev card this turn
         if(bool){
-            bool = game.playerList.get(playerIndex).canPlayDevCard(DevCardType.MONOPOLY);
+            bool = game.getPlayerList().get(playerIndex).canPlayDevCard(DevCardType.MONOPOLY);
         }
         return bool;
     }
@@ -512,14 +512,14 @@ public class Model extends Observable {
         boolean bool = game.isTurn(playerId);
         //verify the client model status is 'Playing'
         if (bool){
-            bool = game.turnTracker.getStatus() == GameStatus.Rolling ||
-                    game.turnTracker.getStatus() == GameStatus.Trading ||
-                    game.turnTracker.getStatus() == GameStatus.Building;;
+            bool = game.getTurnTracker().getStatus() == GameStatus.Rolling ||
+                    game.getTurnTracker().getStatus() == GameStatus.Trading ||
+                    game.getTurnTracker().getStatus() == GameStatus.Building;;
         }
         //verify you have the specific card you want to play in your old dev card hand
         //and verify you have not yet played a non­monument dev card this turn
         if(bool){
-            bool = game.playerList.get(playerIndex).canPlayDevCard(DevCardType.MONUMENT);
+            bool = game.getPlayerList().get(playerIndex).canPlayDevCard(DevCardType.MONUMENT);
         }
         return bool;
     }
@@ -558,7 +558,7 @@ public class Model extends Observable {
      * @return
      */
     public boolean canCreatePlayer(){
-        return game.playerList.size() < 4;
+        return game.getPlayerList().size() < 4;
     }
 
     /**
@@ -596,35 +596,35 @@ public class Model extends Observable {
         boolean bool = game.isTurn(senderPlayerId);
         //Checks to see if the sender has all resources he is offering
         if (bool && offer.get(ResourceType.BRICK) > 0){
-            bool = offer.get(ResourceType.BRICK) <= game.playerList.get(senderPlayerIndex).getResources().get(ResourceType.BRICK);
+            bool = offer.get(ResourceType.BRICK) <= game.getPlayerList().get(senderPlayerIndex).getResources().get(ResourceType.BRICK);
         }
         if (bool && offer.get(ResourceType.WOOD) > 0){
-            bool = offer.get(ResourceType.WOOD) <= game.playerList.get(senderPlayerIndex).getResources().get(ResourceType.WOOD);
+            bool = offer.get(ResourceType.WOOD) <= game.getPlayerList().get(senderPlayerIndex).getResources().get(ResourceType.WOOD);
         }
         if (bool && offer.get(ResourceType.WHEAT) > 0){
-            bool = offer.get(ResourceType.WHEAT) <= game.playerList.get(senderPlayerIndex).getResources().get(ResourceType.WHEAT);
+            bool = offer.get(ResourceType.WHEAT) <= game.getPlayerList().get(senderPlayerIndex).getResources().get(ResourceType.WHEAT);
         }
         if (bool && offer.get(ResourceType.SHEEP) > 0){
-            bool = offer.get(ResourceType.SHEEP) <= game.playerList.get(senderPlayerIndex).getResources().get(ResourceType.SHEEP);
+            bool = offer.get(ResourceType.SHEEP) <= game.getPlayerList().get(senderPlayerIndex).getResources().get(ResourceType.SHEEP);
         }
         if (bool && offer.get(ResourceType.ORE) > 0){
-            bool = offer.get(ResourceType.ORE) <= game.playerList.get(senderPlayerIndex).getResources().get(ResourceType.ORE);
+            bool = offer.get(ResourceType.ORE) <= game.getPlayerList().get(senderPlayerIndex).getResources().get(ResourceType.ORE);
         }
         //Checks to see if the receiver has all resources he is offering
         if (bool && offer.get(ResourceType.BRICK) < 0){
-            bool = offer.get(ResourceType.BRICK) <= game.playerList.get(receiverPlayerIndex).getResources().get(ResourceType.BRICK);
+            bool = offer.get(ResourceType.BRICK) <= game.getPlayerList().get(receiverPlayerIndex).getResources().get(ResourceType.BRICK);
         }
         if (bool && offer.get(ResourceType.WOOD) < 0){
-            bool = offer.get(ResourceType.WOOD) <= game.playerList.get(receiverPlayerIndex).getResources().get(ResourceType.WOOD);
+            bool = offer.get(ResourceType.WOOD) <= game.getPlayerList().get(receiverPlayerIndex).getResources().get(ResourceType.WOOD);
         }
         if (bool && offer.get(ResourceType.WHEAT) < 0){
-            bool = offer.get(ResourceType.WHEAT) <= game.playerList.get(receiverPlayerIndex).getResources().get(ResourceType.WHEAT);
+            bool = offer.get(ResourceType.WHEAT) <= game.getPlayerList().get(receiverPlayerIndex).getResources().get(ResourceType.WHEAT);
         }
         if (bool && offer.get(ResourceType.SHEEP) < 0){
-            bool = offer.get(ResourceType.SHEEP) <= game.playerList.get(receiverPlayerIndex).getResources().get(ResourceType.SHEEP);
+            bool = offer.get(ResourceType.SHEEP) <= game.getPlayerList().get(receiverPlayerIndex).getResources().get(ResourceType.SHEEP);
         }
         if (bool && offer.get(ResourceType.ORE) < 0){
-            bool = offer.get(ResourceType.ORE) <= game.playerList.get(receiverPlayerIndex).getResources().get(ResourceType.ORE);
+            bool = offer.get(ResourceType.ORE) <= game.getPlayerList().get(receiverPlayerIndex).getResources().get(ResourceType.ORE);
         }
         return bool;
     }
@@ -633,7 +633,7 @@ public class Model extends Observable {
      * Sent by player who has been offered a trade.
      */
     public boolean canAcceptTradeOffer(int receiverPlayerId){
-        return game.tradeOffer != null && game.tradeOffer.getOffer() != null && game.tradeOffer.getReceiver() == receiverPlayerId;
+        return game.getTradeOffer() != null && game.getTradeOffer().getOffer() != null && game.getTradeOffer().getReceiver() == receiverPlayerId;
     }
 
     public boolean canPlaceRobber(HexLocation hexLoc){

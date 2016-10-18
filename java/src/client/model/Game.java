@@ -23,17 +23,17 @@ import java.util.List;
  */
 public class Game {
 
-    public ArrayList<Player> playerList;
-    public client.model.Map theMap;
-    public Bank bank;
-    public int currentTurnIndex;
-    public TurnTracker turnTracker;
-    public List<LogEntry> log;
-    public List<LogEntry> chat;
-    public int winner;
-    public int version;
-    public TradeOffer tradeOffer;
-    public Player currentPlayer;
+    private ArrayList<Player> playerList;
+    private client.model.Map theMap;
+    private Bank bank;
+    private int currentTurnIndex;
+    private TurnTracker turnTracker;
+    private List<LogEntry> log;
+    private List<LogEntry> chat;
+    private int winner;
+    private int version;
+    private TradeOffer tradeOffer;
+    private Player currentPlayer;
 	private IServerProxy server;
 
     public boolean isTurn(int playerId){
@@ -328,6 +328,15 @@ public class Game {
 	
 	public List<LogEntry> getLog() {
 		return log;
+	}
+
+	public Player getCurrentPlayer() {
+		return currentPlayer;
+	}
+
+	public void setVersion(int i) {
+		this.version = i;
+		
 	}
     
 }

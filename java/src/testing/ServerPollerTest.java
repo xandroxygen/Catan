@@ -63,7 +63,7 @@ public class ServerPollerTest {
 		// initialize model with data, check that model has been updated 
 		JsonObject newModel = new JsonParser().parse(mockProxy.testModel1).getAsJsonObject();
 		model.updateModel(newModel);
-		model.getGame().version = 1;
+		model.getGame().setVersion(1);
 		
 		//updates occurred, server poller should recognize and update the model
 		poller.pollServer();	
@@ -74,7 +74,7 @@ public class ServerPollerTest {
 		assertEquals(3, model.getVersion());
 		
 		//does poller correctly recognize when the server model has not been changed?
-		model.getGame().version = 4;
+		model.getGame().setVersion(4);
 		poller.pollServer();	
 		assertEquals("James", model.getGame().getPlayerList().get(0).getName());
 	}

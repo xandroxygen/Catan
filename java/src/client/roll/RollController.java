@@ -112,7 +112,7 @@ public class RollController extends Controller implements IRollController, Obser
 	public void update(java.util.Observable o, Object arg) {
 
 		Game game = (Game) arg;
-		if (game.isMyTurn() && (game.turnTracker.getStatus() == GameStatus.Rolling)) { // for testing
+		if (game.isMyTurn() && (game.getTurnTracker().getStatus() == GameStatus.Rolling)) { // for testing
 
 			getRollView().showModal();
 
