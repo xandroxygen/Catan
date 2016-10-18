@@ -47,7 +47,7 @@ public class ServerProxy implements IServerProxy {
      * @param playerIndex index (NOT id) of the player whose turn it is
      */
     @Override
-    public void setPlayer(int playerIndex) {
+    public void setPlayerIndex(int playerIndex) {
         currentPlayerIndex = playerIndex;
     }
 
@@ -438,7 +438,7 @@ public class ServerProxy implements IServerProxy {
     /**
      * Sends a chat message to the group.
      *
-     * @param content The message to send
+     * @param message The message to send
      * @pre <pre>
      *      Player is logged in
      * 		Player has joined a game
@@ -446,7 +446,7 @@ public class ServerProxy implements IServerProxy {
      * @post the chat box contains the sent message
      */
     @Override
-    public void sendChat(int playerIndex, String message) throws InvalidActionException {
+    public void sendChat(String message) throws InvalidActionException {
         urlExt = "/moves/sendChat";
 
         setHeaders();
@@ -454,7 +454,7 @@ public class ServerProxy implements IServerProxy {
         Map<String, String> attributes = new LinkedHashMap<>();
         attributes.put("content", message);
 
-        String body = Serializer.serializeMoveCall("sendChat", playerIndex, attributes);
+        String body = Serializer.serializeMoveCall("sendChat", currentPlayerIndex, attributes);
 
         RequestResponse result = post(urlExt, headers, body);
 

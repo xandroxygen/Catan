@@ -463,6 +463,10 @@ public class Player {
 		}
 		return true;
 	}
+	
+	public int getNumberOfResourceType(ResourceType type) {
+		return resources.get(type);
+	}
 
 	// GETTERS AND SETTERS
 
@@ -484,10 +488,6 @@ public class Player {
 
 	public int getVictoryPoints() {
 		return victoryPoints;
-	}
-
-	public Map<ResourceType,Integer> getResourceHand() {
-		return resources;
 	}
 
 	public int getRoads() {

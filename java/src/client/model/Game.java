@@ -1,5 +1,6 @@
 package client.model;
 
+import client.server.ServerProxy;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -22,21 +23,26 @@ import java.util.List;
  */
 public class Game {
 
-    public ArrayList<Player> playerList;
-    public client.model.Map theMap;
-    public Bank bank;
-    public int currentTurnIndex;
-    public TurnTracker turnTracker;
-    public List<LogEntry> log;
-    public List<LogEntry> chat;
-    public int winner;
-    public int version;
-    public TradeOffer tradeOffer;
-    public Player currentPlayer;
+    private ArrayList<Player> playerList;
+    private client.model.Map theMap;
+    private Bank bank;
+    private int currentTurnIndex;
+    private TurnTracker turnTracker;
+    private List<LogEntry> log;
+    private List<LogEntry> chat;
+    private int winner;
+    private int version;
+    private TradeOffer tradeOffer;
+    private Player currentPlayer;
+	private IServerProxy server;
 
     public boolean isTurn(int playerId){
         //look for implementation
         return getPlayerIndex(playerId) == turnTracker.getCurrentTurn();
+    }
+    
+    public boolean isMyTurn() {
+    	return currentPlayer.getPlayerIndex() == turnTracker.getCurrentTurn();
     }
 
     public int getPlayerIndex(int playerId){
@@ -55,17 +61,19 @@ public class Game {
     	this.version = -1;
     }
 
-    public Game(ArrayList<Player> players, Map theMap, Bank bank, JsonObject modelJSON) {
+    public Game(ArrayList<Player> players, Map theMap, Bank bank, JsonObject modelJSON, IServerProxy server) {
 
     	// Initialize players, map and bank
     	playerList = players;
     	this.bank = bank;
-    	this.theMap= theMap;
+    	this.theMap = theMap;
+		this.server = server;
     	
     	// Init the current player
     	for (Player player : players) {
     		if (player.getPlayerID() == GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId()) {
     			this.currentPlayer = player;
+    			server.setPlayerIndex(player.getPlayerIndex());
     		}
     	}
 
@@ -97,7 +105,11 @@ public class Game {
 
     }
 
-    /**
+	public IServerProxy getServer() {
+		return server;
+	}
+
+	/**
      * checks to see if the game can create a new user
      *
      * @pre <pre>
@@ -143,8 +155,8 @@ public class Game {
     boolean canPlaceCity(int playerId, VertexLocation location){
     	Player player = this.getPlayerById(playerId);
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
-				theMap.playerHasSettlementAtLocation(location, player) && (player.getResourceHand().get(ResourceType.WHEAT) >= 2) &&
-				(player.getResourceHand().get(ResourceType.ORE) >= 3) && (player.getCities() >= 1));
+				theMap.playerHasSettlementAtLocation(location, player) && (player.getResources().get(ResourceType.WHEAT) >= 2) &&
+				(player.getResources().get(ResourceType.ORE) >= 3) && (player.getCities() >= 1));
     }
 
     /**
@@ -171,8 +183,8 @@ public class Game {
     	}
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
 				!theMap.hasSettlementAtLocation(location) && theMap.vertexIsOnPlayerRoad(location, player) && 
-				(player.getResourceHand().get(ResourceType.WOOD) >= 1) && (player.getResourceHand().get(ResourceType.BRICK) >= 1) && 
-				(player.getResourceHand().get(ResourceType.WHEAT) >= 1) && (player.getResourceHand().get(ResourceType.SHEEP) >= 1) && 
+				(player.getResources().get(ResourceType.WOOD) >= 1) && (player.getResources().get(ResourceType.BRICK) >= 1) && 
+				(player.getResources().get(ResourceType.WHEAT) >= 1) && (player.getResources().get(ResourceType.SHEEP) >= 1) && 
 				(player.getSettlements() >= 1));
     }
 
@@ -202,8 +214,8 @@ public class Game {
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
 				!theMap.hasRoadAtLocation(location) &&
 				(theMap.edgeHasPlayerMunicipality(location, player) || theMap.edgeHasAdjacentPlayerRoad(location, player)) &&
-				(player.getResourceHand().get(ResourceType.WOOD) >= 1) && 
-				(player.getResourceHand().get(ResourceType.BRICK) >= 1) && (player.getRoads() >= 1));
+				(player.getResources().get(ResourceType.WOOD) >= 1) && 
+				(player.getResources().get(ResourceType.BRICK) >= 1) && (player.getRoads() >= 1));
     }
     
     /**
@@ -231,9 +243,9 @@ public class Game {
      * @param message the message the player wishes to send.
      * @return
      */
-    void sendMessage(String message, IServerProxy server){
+    void sendMessage(String message){
     	try {
-			server.sendChat(currentPlayer.getPlayerIndex(),message);
+			server.sendChat(message);
 		} catch (InvalidActionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -316,6 +328,15 @@ public class Game {
 	
 	public List<LogEntry> getLog() {
 		return log;
+	}
+
+	public Player getCurrentPlayer() {
+		return currentPlayer;
+	}
+
+	public void setVersion(int i) {
+		this.version = i;
+		
 	}
     
 }
