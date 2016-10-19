@@ -88,14 +88,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	}
 
 	@Override
-	public void cancelTrade() {
-		try {
-			Model.getInstance().getServer().finishTurn();
-		} catch (InvalidActionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+	public void cancelTrade() {		
 		getTradeOverlay().closeModal();
 		resourceRatios.clear();
 	}
