@@ -116,7 +116,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 					this.getView().updateGameState("Robbing", false);
 					break;
 				case Playing:
-					this.getView().updateGameState("Playing", false);
+					this.getView().updateGameState("Finish Turn", true);
 					break;
 				case Discarding:
 					this.getView().updateGameState("Discarding", false);
