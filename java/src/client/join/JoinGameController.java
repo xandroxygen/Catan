@@ -141,7 +141,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 				
 				gameAdmin.fetchGameList();
 				getJoinGameView().setGames(gameAdmin.getAllCurrentGames(), gameAdmin.getCurrentUser().getLocalPlayer());
-				
+
+				getNewGameView().closeModal();
 				getJoinGameView().showModal();
 			}			
 		} catch (InvalidActionException e) {
@@ -156,7 +157,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		gameAdmin.setCurrentGame(game);
 		
 		gameID = game.getId();
-		
+
+		getJoinGameView().closeModal();
 		getSelectColorView().showModal();
 		
 		// disable the colors that have already been taken
