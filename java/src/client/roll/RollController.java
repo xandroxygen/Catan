@@ -115,19 +115,6 @@ public class RollController extends Controller implements IRollController, Obser
 		Game game = (Game) arg;
 
 		/**
-		 * To prevent modal opening twice\staying open,
-		 * if status is not rolling or user has already rolled
-		 * and the modal is showing for some reason,
-		 * close it
-		 */
-		if ((game.getTurnTracker().getStatus() != GameStatus.Rolling
-				|| hasRolled)
-				&& getRollView().isModalShowing()) {
-
-			getRollView().closeModal();
-		}
-
-		/**
 		 * When player's turn and status is rolling,
 		 * start the timer and check for when they roll
 		 */
