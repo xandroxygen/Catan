@@ -566,6 +566,14 @@ public class Model extends Observable {
     public boolean canGetRolledResourses(int diceRoll){
         return game.canGetRolledResources(diceRoll);
     }
+    
+    public void placeRoad(boolean isFree, EdgeLocation roadLocation) {
+    	game.placeRoad(isFree, roadLocation);
+    }
+    
+    public void placeSettlement(boolean isFree, VertexLocation vertexLocation) {
+    	game.placSettlement(isFree, vertexLocation);
+    }
 
     /**
      * Make Maritime trade
@@ -574,6 +582,15 @@ public class Model extends Observable {
     public void maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource) {
     	try {
 			server.maritimeTrade(ratio, inputResource, outputResource);
+		} catch (InvalidActionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    public void finishTurn() {
+    	try {
+			server.finishTurn();
 		} catch (InvalidActionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

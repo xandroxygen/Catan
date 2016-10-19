@@ -70,17 +70,17 @@ public class Map {
 			JsonArray roadsJSON = mapJSON.getAsJsonArray("roads");
 			for (JsonElement roadElement : roadsJSON) {
 				Road road = new Road(roadElement.getAsJsonObject());
-				roads.put(road.getLocation(), road);
+				roads.put(road.getLocation().getNormalizedLocation(), road);
 			}
 			JsonArray settlementsJSON = mapJSON.getAsJsonArray("settlements");
 			for (JsonElement settlementElement : settlementsJSON) {
 				Settlement settlement = new Settlement(settlementElement.getAsJsonObject());
-				settlements.put(settlement.getLocation(), settlement);
+				settlements.put(settlement.getLocation().getNormalizedLocation(), settlement);
 			}
 			JsonArray citiesJSON = mapJSON.getAsJsonArray("cities");
 			for (JsonElement cityElement : citiesJSON) {
 				City city = new City(cityElement.getAsJsonObject());
-				cities.put(city.getLocation(), city);
+				cities.put(city.getLocation().getNormalizedLocation(), city);
 			}
 			JsonArray portsJSON = mapJSON.getAsJsonArray("ports");
 			for (JsonElement portElement : portsJSON) {
@@ -117,14 +117,14 @@ public class Map {
 			int newY = location.getHexLoc().getY() - 1;
 			int newX = location.getHexLoc().getX() - 1;
 			// If a hex exists above it, get the vertex from that hex
-			if (newY >= radius) {
+			if (Math.abs(newY) <= Math.abs(radius)) {
 				HexLocation aboveHex = new HexLocation(location.getHexLoc().getX(), newY);
 				VertexLocation vertexH = new VertexLocation(aboveHex,VertexDirection.West);
 				return hasSettlementAtLocation(vertexH.getNormalizedLocation()) || hasSettlementAtLocation(vertexNE.getNormalizedLocation()) ||
 						hasSettlementAtLocation(vertexW.getNormalizedLocation());
 			}
 			// Otherwise, if a hex exists to the left of it, get the vertex from that hex
-			else if (newX >= radius) {
+			else if (Math.abs(newX) <= Math.abs(radius)) {
 				HexLocation sideHex = new HexLocation(newX,location.getHexLoc().getY());
 				VertexLocation vertexH = new VertexLocation(sideHex,VertexDirection.NorthEast);
 				return hasSettlementAtLocation(vertexH.getNormalizedLocation()) || hasSettlementAtLocation(vertexNE.getNormalizedLocation()) ||
@@ -141,7 +141,7 @@ public class Map {
 			// Create a vertex location for each of the 2 points around the point
 			VertexLocation vertexNW = new VertexLocation(location.getHexLoc(),VertexDirection.NorthWest);
 			VertexLocation vertexE = new VertexLocation(location.getHexLoc(),VertexDirection.East);
-			int newY = location.getHexLoc().getY() + 1;
+			int newY = location.getHexLoc().getY() - 1;
 			int newX = location.getHexLoc().getX() + 1;
 			// If a hex exists above it, get the vertex from that hex
 			if (newY <= radius) {
@@ -202,7 +202,7 @@ public class Map {
 			// Create edges for that share the same hex as the vertex
 			EdgeLocation edgeN = new EdgeLocation(location.getHexLoc(),EdgeDirection.North);
 			EdgeLocation edgeNE = new EdgeLocation(location.getHexLoc(),EdgeDirection.NorthEast);
-			int newY = location.getHexLoc().getY() + 1;
+			int newY = location.getHexLoc().getY() - 1;
 			int newX = location.getHexLoc().getX() + 1;
 			// If a hex exists above it, get the edge from that hex
 			if (newY <= radius) {
@@ -357,11 +357,11 @@ public class Map {
 
 			// Possible hexes around this hex with adjacent edges
 			HexLocation aboveHex = new HexLocation(location.getHexLoc().getX(),location.getHexLoc().getY() - 1);
-			HexLocation rightHex = new HexLocation(location.getHexLoc().getX() + 1,location.getHexLoc().getY() + 1);
+			HexLocation rightHex = new HexLocation(location.getHexLoc().getX() + 1,location.getHexLoc().getY() - 1);
 			if (hexes.get(rightHex) != null) {
 				// Create Edges for this hex to the right to check for player roads
-				EdgeLocation edgeNW = new EdgeLocation(aboveHex,EdgeDirection.NorthWest);
-				EdgeLocation edgeS = new EdgeLocation(aboveHex,EdgeDirection.South);
+				EdgeLocation edgeNW = new EdgeLocation(rightHex,EdgeDirection.NorthWest);
+				EdgeLocation edgeS = new EdgeLocation(rightHex,EdgeDirection.South);
 				return playerHasRoadAtLocation(edgeN.getNormalizedLocation(), player) ||
 						playerHasRoadAtLocation(edgeSE.getNormalizedLocation(), player) ||
 						playerHasRoadAtLocation(edgeNW.getNormalizedLocation(), player) ||

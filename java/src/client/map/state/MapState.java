@@ -8,6 +8,11 @@ import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
 public abstract class MapState {
+	
+	public void initiateSetup(MapController controller) {
+		
+	}
+	
 	/**
 	 * This method is called whenever the user is trying to place a road on the
 	 * map. It is called by the view for each "mouse move" event. The returned
