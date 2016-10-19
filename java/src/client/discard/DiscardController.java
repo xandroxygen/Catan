@@ -22,9 +22,9 @@ public class DiscardController extends Controller implements IDiscardController,
 
 	private IWaitView waitView;
 	
-	private int totalRemainingCards;
-	private int totalDiscardedCards;
-	private int numDiscarding;
+	private int totalRemaining;
+	private int totalDiscarded;
+	private int numToDiscard;
 	
 	private int discardedBrick;
     private int discardedOre;
@@ -93,12 +93,13 @@ public class DiscardController extends Controller implements IDiscardController,
 	            break;
 		}
 		
-	    totalDiscardedCards++;
-	    totalRemainingCards--;
-	    getDiscardView().setStateMessage(totalDiscardedCards + "/" + numDiscarding);
+	    totalDiscarded++;
+	    totalRemaining--;
+	    getDiscardView().setStateMessage(totalDiscarded + "/" + numToDiscard);
 	    
-	    if(totalDiscardedCards == numDiscarding) {
+	    if(totalDiscarded == numToDiscard) {
 	        getDiscardView().setDiscardButtonEnabled(true);
+	        
 	        getDiscardView().setResourceAmountChangeEnabled(ResourceType.BRICK, false, discardedBrick > 0);
 	        getDiscardView().setResourceAmountChangeEnabled(ResourceType.ORE, false, discardedOre > 0);
 	        getDiscardView().setResourceAmountChangeEnabled(ResourceType.SHEEP, false, discardedSheep > 0);
@@ -111,7 +112,7 @@ public class DiscardController extends Controller implements IDiscardController,
 	        getDiscardView().setResourceAmountChangeEnabled(ResourceType.WHEAT, remainingWheat > 0, discardedWheat > 0);
 	        getDiscardView().setResourceAmountChangeEnabled(ResourceType.WOOD, remainingWood > 0, discardedWood > 0);
 	    }
-}
+	}
 
 	@Override
 	public void decreaseAmount(ResourceType resource) {
@@ -145,20 +146,20 @@ public class DiscardController extends Controller implements IDiscardController,
 	            break;
 	    }
 		
-	    totalDiscardedCards--;
-	    totalRemainingCards++;
-	    getDiscardView().setStateMessage(totalDiscardedCards + "/" + numDiscarding);
+	    totalDiscarded--;
+	    totalRemaining++;
+	    getDiscardView().setStateMessage(totalDiscarded + "/" + numToDiscard);
 	    
-	    if(totalDiscardedCards != numDiscarding) {
+	    if(totalDiscarded != numToDiscard) {
 	        getDiscardView().setDiscardButtonEnabled(false);
+	        
 	        getDiscardView().setResourceAmountChangeEnabled(ResourceType.BRICK, remainingBrick > 0, discardedBrick > 0);
 	        getDiscardView().setResourceAmountChangeEnabled(ResourceType.ORE, remainingOre > 0, discardedOre > 0);
 	        getDiscardView().setResourceAmountChangeEnabled(ResourceType.SHEEP, remainingSheep > 0, discardedSheep > 0);
 	        getDiscardView().setResourceAmountChangeEnabled(ResourceType.WHEAT, remainingWheat > 0, discardedWheat > 0);
 	        getDiscardView().setResourceAmountChangeEnabled(ResourceType.WOOD, remainingWood > 0, discardedWood > 0);
 	    }
-	}
-	
+	}	
 
 	@Override
 	public void discard() {
@@ -183,7 +184,7 @@ public class DiscardController extends Controller implements IDiscardController,
 	}
 
 	private void initFromModel() {
-		totalDiscardedCards = 0;
+		totalDiscarded = 0;
         discardedBrick = 0;
         discardedOre = 0;
         discardedSheep = 0;
@@ -197,11 +198,13 @@ public class DiscardController extends Controller implements IDiscardController,
         remainingSheep = p.getNumberOfResourceType(ResourceType.SHEEP);
         remainingWheat= p.getNumberOfResourceType(ResourceType.WHEAT);
         remainingWood= p.getNumberOfResourceType(ResourceType.WOOD);
+        totalRemaining = remainingBrick + remainingOre + remainingSheep + remainingWheat + remainingWood;
         
-        numDiscarding = totalRemainingCards /2;
+        numToDiscard = totalRemaining / 2;
         
         if(!p.isDiscarded()) {
         	if(!getDiscardView().isModalShowing()) {
+        		
         		getDiscardView().setDiscardButtonEnabled(false);
             	
             	getDiscardView().setResourceAmountChangeEnabled(ResourceType.BRICK, remainingBrick > 0, false);
@@ -210,17 +213,9 @@ public class DiscardController extends Controller implements IDiscardController,
             	getDiscardView().setResourceAmountChangeEnabled(ResourceType.WHEAT, remainingWheat > 0, false);
             	getDiscardView().setResourceAmountChangeEnabled(ResourceType.WOOD, remainingWood > 0, false);
             	
-            	getDiscardView().setResourceDiscardAmount(ResourceType.BRICK, 0);
-            	getDiscardView().setResourceDiscardAmount(ResourceType.ORE, 0);
-            	getDiscardView().setResourceDiscardAmount(ResourceType.SHEEP, 0);
-            	getDiscardView().setResourceDiscardAmount(ResourceType.WHEAT, 0);
-            	getDiscardView().setResourceDiscardAmount(ResourceType.WOOD, 0);
+            	setResourceDiscardAmount();
             	
-            	getDiscardView().setResourceMaxAmount(ResourceType.BRICK, remainingBrick);
-            	getDiscardView().setResourceMaxAmount(ResourceType.ORE, remainingOre);
-            	getDiscardView().setResourceMaxAmount(ResourceType.SHEEP, remainingSheep);
-            	getDiscardView().setResourceMaxAmount(ResourceType.WHEAT, remainingWheat);
-            	getDiscardView().setResourceMaxAmount(ResourceType.WOOD, remainingWood);
+            	setResourceMaxAmount();
             	
             	getDiscardView().showModal();
         	}       	
@@ -229,6 +224,22 @@ public class DiscardController extends Controller implements IDiscardController,
     		getWaitView().setMessage("Your fellow players are a tad slower than you... Just hang tight.");
     		getWaitView().showModal();
         } 
+	}
+	
+	private void setResourceDiscardAmount() {
+		getDiscardView().setResourceDiscardAmount(ResourceType.BRICK, 0);
+    	getDiscardView().setResourceDiscardAmount(ResourceType.ORE, 0);
+    	getDiscardView().setResourceDiscardAmount(ResourceType.SHEEP, 0);
+    	getDiscardView().setResourceDiscardAmount(ResourceType.WHEAT, 0);
+    	getDiscardView().setResourceDiscardAmount(ResourceType.WOOD, 0);
+	}
+	
+	private void setResourceMaxAmount() {
+		getDiscardView().setResourceMaxAmount(ResourceType.BRICK, remainingBrick);
+    	getDiscardView().setResourceMaxAmount(ResourceType.ORE, remainingOre);
+    	getDiscardView().setResourceMaxAmount(ResourceType.SHEEP, remainingSheep);
+    	getDiscardView().setResourceMaxAmount(ResourceType.WHEAT, remainingWheat);
+    	getDiscardView().setResourceMaxAmount(ResourceType.WOOD, remainingWood);
 	}
 	
 	private Map<ResourceType, Integer> fillHand() {

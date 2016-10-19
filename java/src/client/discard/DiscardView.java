@@ -281,9 +281,7 @@ public class DiscardView extends OverlayView implements IDiscardView
 	 *            decreased
 	 */
 	@Override
-	public void setResourceAmountChangeEnabled(ResourceType resource,
-											   boolean increase,
-											   boolean decrease)
+	public void setResourceAmountChangeEnabled(ResourceType resource, boolean increase, boolean decrease)
 	{   
 		resources.get(resource).setIncrease(increase);
 		resources.get(resource).setDecrease(decrease);
