@@ -451,7 +451,7 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, Object> attributes = new LinkedHashMap<>();
         attributes.put("content", message);
 
         String body = Serializer.serializeMoveCall("sendChat", currentPlayerIndex, attributes);
@@ -486,7 +486,7 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, Object> attributes = new LinkedHashMap<>();
         attributes.put("willAccept", booleanToString(willAccept));
 
         String body = Serializer.serializeMoveCall("acceptTrade", currentPlayerIndex, attributes);
@@ -512,7 +512,7 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, Object> attributes = new LinkedHashMap<>();
         attributes.put("discardedCards", Serializer.serializeHand(hand));
 
         String body = Serializer.serializeMoveCall("discardCards", currentPlayerIndex, attributes);
@@ -539,7 +539,7 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, Object> attributes = new LinkedHashMap<>();
         attributes.put("number", Integer.toString(number));
 
         String body = Serializer.serializeMoveCall("rollNumber", currentPlayerIndex, attributes);
@@ -575,7 +575,7 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, Object> attributes = new LinkedHashMap<>();
         attributes.put("roadLocation", Serializer.serializeEdgeLocation(roadLocation));
         attributes.put("free", booleanToString(isFree));
 
@@ -610,7 +610,7 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, Object> attributes = new LinkedHashMap<>();
         attributes.put("vertexLocation", Serializer.serializeVertexLocation(vertexLocation));
         attributes.put("free", booleanToString(isFree));
 
@@ -643,7 +643,7 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, Object> attributes = new LinkedHashMap<>();
         attributes.put("vertexLocation", Serializer.serializeVertexLocation(vertexLocation));
 
         String body = Serializer.serializeMoveCall("buildCity", currentPlayerIndex, attributes);
@@ -667,7 +667,7 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, Object> attributes = new LinkedHashMap<>();
         attributes.put("offer", Serializer.serializeHand(offer));
         attributes.put("receiver", Integer.toString(receiverIndex));
 
@@ -701,7 +701,7 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, Object> attributes = new LinkedHashMap<>();
         attributes.put("ratio", Integer.toString(ratio));
         attributes.put("inputResource", Serializer.serializeResourceType(inputResource));
         attributes.put("outputResource", Serializer.serializeResourceType(outputResource));
@@ -735,7 +735,7 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, Object> attributes = new LinkedHashMap<>();
         attributes.put("victimIndex", Integer.toString(victimIndex));
         attributes.put("location", Serializer.serializeHexLocation(location));
 
@@ -760,7 +760,7 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, Object> attributes = new LinkedHashMap<>();
 
         String body = Serializer.serializeMoveCall("finishTurn", currentPlayerIndex, attributes);
 
@@ -791,7 +791,7 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, Object> attributes = new LinkedHashMap<>();
 
         String body = Serializer.serializeMoveCall("buyDevCard", currentPlayerIndex, attributes);
 
@@ -828,7 +828,7 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, Object> attributes = new LinkedHashMap<>();
         attributes.put("victimIndex", Integer.toString(victimIndex));
         attributes.put("location", Serializer.serializeHexLocation(location));
 
@@ -861,7 +861,7 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, Object> attributes = new LinkedHashMap<>();
         attributes.put("resource1", Serializer.serializeResourceType(resource1));
         attributes.put("resource2", Serializer.serializeResourceType(resource2));
 
@@ -900,7 +900,7 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, Object> attributes = new LinkedHashMap<>();
         attributes.put("spot1", Serializer.serializeEdgeLocation(location1));
         attributes.put("spot2", Serializer.serializeEdgeLocation(location2));
 
@@ -957,7 +957,7 @@ public class ServerProxy implements IServerProxy {
 
         setHeaders();
 
-        Map<String, String> attributes = new LinkedHashMap<>();
+        Map<String, Object> attributes = new LinkedHashMap<>();
 
         String body = Serializer.serializeMoveCall("Monument", currentPlayerIndex, attributes);
 

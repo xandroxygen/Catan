@@ -1,11 +1,15 @@
 package testing;
 
+import client.model.InvalidActionException;
 import client.server.HTTPOperations;
 import client.server.RequestResponse;
 import client.server.ServerProxy;
 import org.junit.Before;
 import org.junit.Test;
 import shared.definitions.CatanColor;
+import shared.locations.EdgeDirection;
+import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -137,5 +141,21 @@ public class ServerProxyTest {
 
 
 
+    }
+
+    @Test
+    public void shouldBuildRoad() {
+
+		try {
+			server.userLogin("Sam", "sam");
+			server.gamesJoin(0, CatanColor.PURPLE);
+
+
+			EdgeLocation edge = new EdgeLocation(new HexLocation(0,0), EdgeDirection.North);
+            server.buildRoad(true, edge);
+
+        } catch (InvalidActionException e) {
+            e.printStackTrace();
+        }
     }
 }

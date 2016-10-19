@@ -179,7 +179,8 @@ public class Game {
     	Player player = this.getPlayerById(playerId);
     	if (free) {
     		return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
-    				!theMap.hasSettlementAtLocation(location) && !theMap.hasAdjacentSettlement(location));
+    				!theMap.hasSettlementAtLocation(location) && !theMap.hasAdjacentSettlement(location) && 
+    				theMap.vertexIsOnPlayerRoad(location, player));
     	}
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
 				!theMap.hasSettlementAtLocation(location) && theMap.vertexIsOnPlayerRoad(location, player) && 
@@ -208,8 +209,12 @@ public class Game {
     	Player player = this.getPlayerById(playerId);
     	if (free) {
     		return (turnTracker.getCurrentTurn() == player.getPlayerIndex() &&
-    				!theMap.hasRoadAtLocation(location) &&
-    				(theMap.edgeHasPlayerMunicipality(location, player)));
+    				!theMap.hasRoadAtLocation(location) && 
+    				!theMap.edgeHasPlayerMunicipality(location, playerList.get(0)) &&
+    				!theMap.edgeHasPlayerMunicipality(location, playerList.get(1)) && 
+    				!theMap.edgeHasPlayerMunicipality(location, playerList.get(2)) &&
+    				!theMap.edgeHasPlayerMunicipality(location, playerList.get(3)) &&
+    				!theMap.edgeHasAdjacentPlayerRoad(location, player));
     	}
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
 				!theMap.hasRoadAtLocation(location) &&
@@ -236,7 +241,26 @@ public class Game {
     	Player player = this.getPlayerById(playerId);
     	return turnTracker.getCurrentTurn() == player.getPlayerIndex();
     }
+    
+    public void placeRoad(boolean isFree, EdgeLocation roadLocation) {
+    	try {
+			server.buildRoad(isFree, roadLocation);
+		} catch (InvalidActionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 
+    public void placSettlement(boolean isFree, VertexLocation vertexLocation) {
+    	try {
+			server.buildSettlement(isFree, vertexLocation);
+		} catch (InvalidActionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    
     /**
      * Sends a message from the logged in user.
      * @post  The chat contains your message at the end.

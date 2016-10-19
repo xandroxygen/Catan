@@ -2,7 +2,9 @@ package client.map;
 
 import client.base.Controller;
 import client.data.RobPlayerInfo;
+import client.map.state.FirstRound;
 import client.map.state.MapState;
+import client.map.state.SecondRound;
 import client.model.*;
 import shared.definitions.*;
 import shared.locations.EdgeLocation;
@@ -217,10 +219,19 @@ public class MapController extends Controller implements IMapController, Observe
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if(Model.getInstance().getGame() != null &&
-				Model.getInstance().getGame().getTheMap() != null &&
-				Model.getInstance().getGame().getTheMap().getHexes() != null){
+		Game game = Model.getInstance().getGame();
+		if(game != null && game.getTheMap() != null && 
+				game.getTheMap().getHexes() != null) {
 			initFromModel();
+			
+			if (game.getTurnTracker().getStatus() == GameStatus.FirstRound && game.isMyTurn()) {
+				state = FirstRound.instance();
+				state.initiateSetup(this);
+			}
+			
+			else if (game.getTurnTracker().getStatus() == GameStatus.SecondRound && game.isMyTurn()) {
+				state.initiateSetup(this);
+			}
 		}
 
 	}

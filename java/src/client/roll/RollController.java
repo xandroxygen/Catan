@@ -65,6 +65,7 @@ public class RollController extends Controller implements IRollController, Obser
 			int roll = rollOneDie() + rollOneDie();
 			Model.getInstance().getServer().rollNumber(roll);
 			getResultView().setRollValue(roll);
+			getRollView().closeModal();
 			getResultView().showModal();
 		}
 		catch (InvalidActionException e) {
@@ -112,13 +113,20 @@ public class RollController extends Controller implements IRollController, Obser
 	public void update(java.util.Observable o, Object arg) {
 
 		Game game = (Game) arg;
-		if (game.isMyTurn() && (game.getTurnTracker().getStatus() == GameStatus.Rolling)) { // for testing
+
+		/**
+		 * When player's turn and status is rolling,
+		 * start the timer and check for when they roll
+		 */
+		if (game.isMyTurn() && (game.getTurnTracker().getStatus() == GameStatus.Rolling)) {
 
 			getRollView().showModal();
 
 			hasRolled = false;
 			startTimer();
 		}
+
+
 	}
 }
 
