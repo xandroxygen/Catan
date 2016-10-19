@@ -3,12 +3,15 @@ package client.resources;
 import java.util.*;
 
 import client.base.*;
+import client.model.Game;
+import client.model.Model;
+import shared.definitions.ResourceType;
 
 
 /**
  * Implementation for the resource bar controller
  */
-public class ResourceBarController extends Controller implements IResourceBarController {
+public class ResourceBarController extends Controller implements IResourceBarController, Observer {
 
 	private Map<ResourceBarElement, IAction> elementActions;
 	
@@ -17,6 +20,7 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		super(view);
 		
 		elementActions = new HashMap<ResourceBarElement, IAction>();
+		Model.getInstance().addObserver(this);
 	}
 
 	@Override
@@ -69,5 +73,30 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		}
 	}
 
+	/**
+	 * This method is called whenever the observed object is changed. An
+	 * application calls an <tt>Observable</tt> object's
+	 * <code>notifyObservers</code> method to have all the object's
+	 * observers notified of the change.
+	 *
+	 * @param o   the observable object.
+	 * @param arg an argument passed to the <code>notifyObservers</code>
+	 */
+	@Override
+	public void update(Observable o, Object arg) {
+
+		Game game = (Game) arg;
+
+		// update number of resources
+		getView().setElementAmount(ResourceBarElement.WOOD, game.getCurrentPlayer().getNumberOfResourceType(ResourceType.WOOD));
+		getView().setElementAmount(ResourceBarElement.WHEAT, game.getCurrentPlayer().getNumberOfResourceType(ResourceType.WHEAT));
+		getView().setElementAmount(ResourceBarElement.BRICK, game.getCurrentPlayer().getNumberOfResourceType(ResourceType.BRICK));
+		getView().setElementAmount(ResourceBarElement.ORE, game.getCurrentPlayer().getNumberOfResourceType(ResourceType.ORE));
+		getView().setElementAmount(ResourceBarElement.SHEEP, game.getCurrentPlayer().getNumberOfResourceType(ResourceType.SHEEP));
+
+		// update number of soldiers
+		getView().setElementAmount(ResourceBarElement.SOLDIERS, game.getCurrentPlayer().getSoldiers()); // is this soldiers in hand or soldiers played?
+
+	}
 }
 

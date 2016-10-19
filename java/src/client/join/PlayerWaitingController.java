@@ -58,6 +58,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	public void addAI() {
 		try {
 			GameAdministrator.getInstance().addAI(view.getSelectedAI());
+			getView().closeModal();
 			getView().showModal();
 		} catch (InvalidActionException e) {
 			e.printStackTrace();
