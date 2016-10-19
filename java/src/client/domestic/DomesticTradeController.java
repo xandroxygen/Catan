@@ -170,10 +170,10 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			getTradeOverlay().setStateMessage("Select player to trade with");
 			getTradeOverlay().setTradeEnabled(false);
 		} else if (!(sendBrick+sendWood+sendSheep+sendWheat+sendOre > 0)) {
-			getTradeOverlay().setStateMessage("Select Resource to send to other player");
+			getTradeOverlay().setStateMessage("Select resource to send to another player");
 			getTradeOverlay().setTradeEnabled(false);
 		} else if (!(receiveBrick+receiveWood+receiveOre+receiveSheep+receiveWheat > 0)) {
-			getTradeOverlay().setStateMessage("Select Resource to receive from other player");
+			getTradeOverlay().setStateMessage("Select resource to receive from another player");
 			getTradeOverlay().setTradeEnabled(false);
 		}
 	}
@@ -184,7 +184,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		case BRICK:
 			if(brickStatus) {
 				receiveBrick++;
-				getTradeOverlay().setResourceAmountChangeEnabled(ResourceType.BRICK, receiveBrick < 20, receiveBrick > 0);
+				getTradeOverlay().setResourceAmountChangeEnabled(ResourceType.BRICK, receiveBrick < brickCount, receiveBrick > 0);
 			} 
 			else {
 				sendBrick++;
@@ -194,7 +194,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		case WOOD:
 			if(woodStatus) {
 				receiveWood++;
-				getTradeOverlay().setResourceAmountChangeEnabled(ResourceType.WOOD, receiveWood < 20, receiveWood > 0);
+				getTradeOverlay().setResourceAmountChangeEnabled(ResourceType.WOOD, receiveWood < woodCount, receiveWood > 0);
 			} 
 			else {
 				sendWood++;
@@ -204,7 +204,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		case WHEAT:
 			if(wheatStatus) {
 				receiveWheat++;
-				getTradeOverlay().setResourceAmountChangeEnabled(ResourceType.WHEAT, receiveWheat < 20, receiveWheat > 0);
+				getTradeOverlay().setResourceAmountChangeEnabled(ResourceType.WHEAT, receiveWheat < wheatCount, receiveWheat > 0);
 			} 
 			else {
 				sendWheat++;
@@ -214,7 +214,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		case SHEEP:
 			if(sheepStatus) {
 				receiveSheep++;
-				getTradeOverlay().setResourceAmountChangeEnabled(ResourceType.SHEEP, receiveSheep < 20, receiveSheep > 0);
+				getTradeOverlay().setResourceAmountChangeEnabled(ResourceType.SHEEP, receiveSheep < sheepCount, receiveSheep > 0);
 			} 
 			else {
 				sendSheep++;
@@ -224,7 +224,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		case ORE:
 			if(oreStatus) {
 				receiveOre++;
-				getTradeOverlay().setResourceAmountChangeEnabled(ResourceType.ORE, receiveOre < 20, receiveOre > 0);
+				getTradeOverlay().setResourceAmountChangeEnabled(ResourceType.ORE, receiveOre < oreCount, receiveOre > 0);
 			} 
 			else {
 				sendOre++;
@@ -233,16 +233,16 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			break;
 		}
 		if (sendBrick+sendWood+sendSheep+sendWheat+sendOre > 0 && receiveBrick+receiveWood+receiveOre+receiveSheep+receiveWheat > 0 && tradePartner != -1) {
-			getTradeOverlay().setTradeEnabled(true);
 			getTradeOverlay().setStateMessage("Trade!");
+			getTradeOverlay().setTradeEnabled(true);
 		} else if (tradePartner == -1) {
 			getTradeOverlay().setStateMessage("Select player to trade with");
 			getTradeOverlay().setTradeEnabled(false);
 		} else if (!(sendBrick+sendWood+sendSheep+sendWheat+sendOre > 0)) {
-			getTradeOverlay().setStateMessage("Select Resource to send to other player");
+			getTradeOverlay().setStateMessage("Select resource(s) to send to another player");
 			getTradeOverlay().setTradeEnabled(false);
 		} else if (!(receiveBrick+receiveWood+receiveOre+receiveSheep+receiveWheat > 0)) {
-			getTradeOverlay().setStateMessage("Select Resource to receive from other player");
+			getTradeOverlay().setStateMessage("Select resource(s) to receive from another player");
 			getTradeOverlay().setTradeEnabled(false);
 		}
 	}
