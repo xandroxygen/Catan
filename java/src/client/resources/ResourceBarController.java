@@ -97,6 +97,32 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		// update number of soldiers
 		getView().setElementAmount(ResourceBarElement.SOLDIERS, game.getCurrentPlayer().getSoldiers()); // is this soldiers in hand or soldiers played?
 
+		// update number of buyables
+		getView().setElementAmount(ResourceBarElement.ROAD, game.getCurrentPlayer().getRoads());
+		getView().setElementAmount(ResourceBarElement.SETTLEMENT, game.getCurrentPlayer().getSettlements());
+		getView().setElementAmount(ResourceBarElement.CITY, game.getCurrentPlayer().getCities());
+
+		if (game.isMyTurn()) {
+
+			// enable buyables, cards
+			getView().setElementEnabled(ResourceBarElement.ROAD, true);
+			getView().setElementEnabled(ResourceBarElement.SETTLEMENT, true);
+			getView().setElementEnabled(ResourceBarElement.CITY, true);
+			getView().setElementEnabled(ResourceBarElement.BUY_CARD, true);
+			getView().setElementEnabled(ResourceBarElement.PLAY_CARD, true);
+
+		}
+		else {
+
+			// disable buyables, cards
+			getView().setElementEnabled(ResourceBarElement.ROAD, false);
+			getView().setElementEnabled(ResourceBarElement.SETTLEMENT, false);
+			getView().setElementEnabled(ResourceBarElement.CITY, false);
+			getView().setElementEnabled(ResourceBarElement.BUY_CARD, false);
+			getView().setElementEnabled(ResourceBarElement.PLAY_CARD, false);
+		}
+
+
 	}
 }
 

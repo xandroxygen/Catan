@@ -57,7 +57,8 @@ public class CatanPanel extends JPanel
 		rollController = new RollController(rollView, rollResultView);
 		rollView.setController(rollController);
 		rollResultView.setController(rollController);
-		
+
+		/*
 		JButton testButton = new JButton("Test");
 		testButton.addActionListener(new ActionListener() {
 			
@@ -112,9 +113,10 @@ public class CatanPanel extends JPanel
 					discardWaitView.showModal();
 					state = 2;
 				}
-			}*/
+			}
 		});
 		this.add(testButton, BorderLayout.SOUTH);
+		*/
 	}
 	
 }
