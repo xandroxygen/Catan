@@ -95,7 +95,7 @@ public class DiscardController extends Controller implements IDiscardController,
 		
 	    totalDiscarded++;
 	    totalRemaining--;
-	    getDiscardView().setStateMessage(totalDiscarded + "/" + numToDiscard);
+	    getDiscardView().setStateMessage("Discard: " + totalDiscarded + "/" + numToDiscard);
 	    
 	    if(totalDiscarded == numToDiscard) {
 	        getDiscardView().setDiscardButtonEnabled(true);
@@ -148,7 +148,7 @@ public class DiscardController extends Controller implements IDiscardController,
 		
 	    totalDiscarded--;
 	    totalRemaining++;
-	    getDiscardView().setStateMessage(totalDiscarded + "/" + numToDiscard);
+	    getDiscardView().setStateMessage("Discard: " + totalDiscarded + "/" + numToDiscard);
 	    
 	    if(totalDiscarded != numToDiscard) {
 	        getDiscardView().setDiscardButtonEnabled(false);
@@ -191,7 +191,7 @@ public class DiscardController extends Controller implements IDiscardController,
         discardedWheat = 0;
         discardedWood = 0;
         
-        Player p = Model.getInstance().getCurrentPlayer();
+        Player p = Model.getInstance().getGame().getCurrentPlayer();
         
         remainingBrick = p.getNumberOfResourceType(ResourceType.BRICK);
         remainingOre = p.getNumberOfResourceType(ResourceType.ORE);
@@ -204,6 +204,7 @@ public class DiscardController extends Controller implements IDiscardController,
         
         if(!p.isDiscarded()) {
         	if(!getDiscardView().isModalShowing()) {
+        		getDiscardView().setStateMessage("Discard: " + totalDiscarded + "/" + numToDiscard);
         		
         		getDiscardView().setDiscardButtonEnabled(false);
             	
