@@ -1,8 +1,8 @@
 package client.map;
 
-import client.admin.GameAdministrator;
 import client.base.Controller;
 import client.data.RobPlayerInfo;
+import client.map.state.MapState;
 import client.model.*;
 import shared.definitions.*;
 import shared.locations.EdgeLocation;
@@ -21,7 +21,7 @@ public class MapController extends Controller implements IMapController, Observe
 	
 	private IRobView robView;
 
-	private GameStatus state;
+	private MapState state;
 
 	public MapController(IMapView view, IRobView robView) {
 		super(view);
@@ -39,6 +39,10 @@ public class MapController extends Controller implements IMapController, Observe
 	}
 	private void setRobView(IRobView robView) {
 		this.robView = robView;
+	}
+	
+	public void setState(MapState state) {
+		this.state = state;
 	}
 	
 	protected void initFromModel() {
@@ -160,194 +164,59 @@ public class MapController extends Controller implements IMapController, Observe
 	}
 
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) {
-		int playerID;
-		switch (state){
-            case FirstRound:
-            case SecondRound:
-				playerID = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId();
-				return Model.getInstance().canPlaceRoad(playerID, true, edgeLoc);
-			case Rolling:
-			case Robbing:
-			case Discarding:
-				break;
-			case Playing:
-				playerID = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId();
-				return Model.getInstance().canPlaceRoad(playerID, false, edgeLoc);
-		}
-		return false;
+		return state.canPlaceRoad(edgeLoc,this);
 	}
 
 	public boolean canPlaceSettlement(VertexLocation vertLoc) {
-		int playerID;
-		switch (state){
-            case FirstRound:
-            case SecondRound:
-				playerID = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId();
-				return Model.getInstance().canPlaceSettlement(playerID, true, vertLoc);
-			case Rolling:
-			case Robbing:
-			case Discarding:
-				break;
-			case Playing:
-				playerID = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId();
-				return Model.getInstance().canPlaceSettlement(playerID, false, vertLoc);
-		}
-		return true;
+		return state.canPlaceSettlement(vertLoc, this);
 	}
 
 	public boolean canPlaceCity(VertexLocation vertLoc) {
-		int playerID;
-		switch (state){
-			case FirstRound:
-            case SecondRound:
-			case Rolling:
-			case Robbing:
-			case Discarding:
-				break;
-			case Playing:
-				playerID = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId();
-				return Model.getInstance().canPlaceCity(playerID, vertLoc);
-		}
-		return false;
+		return state.canPlaceCity(vertLoc, this);
 	}
 
 	public boolean canPlaceRobber(HexLocation hexLoc) {
-		switch (state){
-            case FirstRound:
-            case SecondRound:
-			case Rolling:
-			case Playing:
-			case Discarding:
-				break;
-			case Robbing:
-				return Model.getInstance().canPlaceRobber(hexLoc);
-
-		}
-		return false;
+		return state.canPlaceRobber(hexLoc, this);
 	}
 
 	public void placeRoad(EdgeLocation edgeLoc) {
-		switch (state){
-            case FirstRound:
-            case SecondRound:
-			case Playing:
-				getView().placeRoad(edgeLoc, CatanColor.ORANGE);
-			case Rolling:
-			case Robbing:
-			case Discarding:
-				break;
-		}
+		state.placeRoad(edgeLoc, this);
 	}
 
 	public void placeSettlement(VertexLocation vertLoc) {
-		switch (state){
-            case FirstRound:
-            case SecondRound:
-			case Playing:
-				getView().placeSettlement(vertLoc, CatanColor.ORANGE);
-			case Rolling:
-			case Robbing:
-			case Discarding:
-				break;
-		}
+		state.placeSettlement(vertLoc, this);
 	}
 
 	public void placeCity(VertexLocation vertLoc) {
-		switch (state){
-            case FirstRound:
-            case SecondRound:
-			case Playing:
-				getView().placeCity(vertLoc, CatanColor.ORANGE);
-			case Rolling:
-			case Robbing:
-			case Discarding:
-				break;
-		}
+		state.placeCity(vertLoc, this);
 	}
 
 	public void placeRobber(HexLocation hexLoc) {
-		switch (state){
-            case FirstRound:
-            case SecondRound:
-			case Robbing:
-				getView().placeRobber(hexLoc);
-				getRobView().showModal();
-			case Rolling:
-			case Playing:
-			case Discarding:
-				break;
-		}
-
+		state.placeRobber(hexLoc, this);
 	}
 	
 	public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) {
-		switch (state){
-            case FirstRound:
-            case SecondRound:
-			case Rolling:
-				getView().startDrop(pieceType, CatanColor.ORANGE, true);
-			case Playing:
-			case Robbing:
-			case Discarding:
-				break;
-		}
+		state.startMove(pieceType, isFree, allowDisconnected, this);
 	}
 	
 	public void cancelMove() {
-		//TODO not sure what this is used for.
-		switch (state){
-            case FirstRound:
-            case SecondRound:
-			case Rolling:
-//				getView().cancelMove(pieceType, CatanColor.ORANGE, true);
-			case Playing:
-			case Robbing:
-			case Discarding:
-		}
+		state.cancelMove(this);
 	}
 	
 	public void playSoldierCard() {
-		switch (state){
-			case Playing:
-//				Model.getInstance().playSoldierCard();
-			case FirstRound:
-			case SecondRound:
-			case Rolling:
-			case Robbing:
-			case Discarding:
-				break;
-		}
+		state.playSoldierCard(this);
 	}
 	
 	public void playRoadBuildingCard() {
-		switch (state){
-			case Playing:
-//				Model.getInstance().playRoadBuildingCard();
-			case FirstRound:
-			case SecondRound:
-			case Rolling:
-			case Robbing:
-			case Discarding:
-				break;
-		}
+		state.playRoadBuildingCard(this);
 	}
 	
 	public void robPlayer(RobPlayerInfo victim) {
-		switch (state){
-            case FirstRound:
-            case SecondRound:
-			case Rolling:
-			case Playing:
-			case Discarding:
-				break;
-			case Robbing:
-//				Model.getInstance().robPlayer();
-		}
+		state.robPlayer(victim, this);
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
 		if(Model.getInstance().getGame() != null &&
 				Model.getInstance().getGame().getTheMap() != null &&
 				Model.getInstance().getGame().getTheMap().getHexes() != null){
