@@ -32,16 +32,16 @@ public class Playing extends MapState {
 	}
 	
 	public void placeRoad(EdgeLocation edgeLoc, MapController controller) {
-		controller.getView().placeRoad(edgeLoc, CatanColor.ORANGE);
+		controller.getView().placeRoad(edgeLoc, Model.getInstance().getCurrentPlayer().getColor());
 
 	}
 
 	public void placeSettlement(VertexLocation vertLoc, MapController controller) {
-		controller.getView().placeSettlement(vertLoc, CatanColor.ORANGE);
+		controller.getView().placeSettlement(vertLoc, Model.getInstance().getCurrentPlayer().getColor());
 
 	}
 
 	public void placeCity(VertexLocation vertLoc, MapController controller) {
-		controller.getView().placeCity(vertLoc, CatanColor.ORANGE);
+		controller.getView().placeCity(vertLoc, Model.getInstance().getCurrentPlayer().getColor());
 	}
 }
