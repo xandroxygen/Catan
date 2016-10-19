@@ -2,8 +2,12 @@ package client.map;
 
 import client.base.Controller;
 import client.data.RobPlayerInfo;
+import client.map.state.Discarding;
 import client.map.state.FirstRound;
 import client.map.state.MapState;
+import client.map.state.Playing;
+import client.map.state.Robbing;
+import client.map.state.Rolling;
 import client.map.state.SecondRound;
 import client.model.*;
 import shared.definitions.*;
@@ -221,19 +225,48 @@ public class MapController extends Controller implements IMapController, Observe
 	public void update(Observable o, Object arg) {
 		Game game = Model.getInstance().getGame();
 		if(game != null && game.getTheMap() != null && 
-				game.getTheMap().getHexes() != null) {
+				game.getTheMap().getHexes() != null && game.isMyTurn()) {
 			initFromModel();
 			
-			if (game.getTurnTracker().getStatus() == GameStatus.FirstRound && game.isMyTurn()) {
+			/*if (game.getTurnTracker().getStatus() == GameStatus.FirstRound && game.isMyTurn()) {
 				state = FirstRound.instance();
 				state.initiateSetup(this);
 			}
 			
 			else if (game.getTurnTracker().getStatus() == GameStatus.SecondRound && game.isMyTurn()) {
 				state.initiateSetup(this);
+			}*/
+			
+			GameStatus modelStatus = game.getTurnTracker().getStatus();
+			
+			switch (modelStatus) {
+				case FirstRound:
+					this.setState(FirstRound.instance());
+					break;
+				case SecondRound:
+					this.setState(SecondRound.instance());
+					break;
+				case Discarding:
+					this.setState(Discarding.instance());
+					break;
+				case Playing:
+					this.setState(Playing.instance());
+					break;
+				case Robbing:
+					this.setState(Robbing.instance());
+					break;
+				case Rolling:
+					this.setState(Rolling.instance());
+					break;
+				default:
+					this.setState(Playing.instance());
 			}
+			
+			state.initiateSetup(this);
 		}
-
+		
+		
+			
 	}
 
 }
