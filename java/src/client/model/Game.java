@@ -246,7 +246,6 @@ public class Game {
     	try {
 			server.buildRoad(isFree, roadLocation);
 		} catch (InvalidActionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -255,7 +254,6 @@ public class Game {
     	try {
 			server.buildSettlement(isFree, vertexLocation);
 		} catch (InvalidActionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -271,7 +269,6 @@ public class Game {
     	try {
 			server.sendChat(message);
 		} catch (InvalidActionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }

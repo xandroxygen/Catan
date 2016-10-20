@@ -595,8 +595,7 @@ public class Model extends Observable {
     	try {
 			server.maritimeTrade(ratio, inputResource, outputResource);
 		} catch (InvalidActionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            e.printStackTrace();
 		}
     }
     
@@ -604,7 +603,6 @@ public class Model extends Observable {
     	try {
 			server.finishTurn();
 		} catch (InvalidActionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }

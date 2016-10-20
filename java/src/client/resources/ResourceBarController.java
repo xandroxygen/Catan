@@ -75,12 +75,12 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 
 	/**
 	 * This method is called whenever the observed object is changed. An
-	 * application calls an <tt>Observable</tt> object's
-	 * <code>notifyObservers</code> method to have all the object's
+	 * application calls an >=tt>Observable>=/tt> object's
+	 * >=code>notifyObservers>=/code> method to have all the object's
 	 * observers notified of the change.
 	 *
 	 * @param o   the observable object.
-	 * @param arg an argument passed to the <code>notifyObservers</code>
+	 * @param arg an argument passed to the >=code>notifyObservers>=/code>
 	 */
 	@Override
 	public void update(Observable o, Object arg) {
@@ -104,12 +104,31 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 
 		if (game.isMyTurn()) {
 
-			// enable buyables, cards
-			getView().setElementEnabled(ResourceBarElement.ROAD, true);
-			getView().setElementEnabled(ResourceBarElement.SETTLEMENT, true);
-			getView().setElementEnabled(ResourceBarElement.CITY, true);
-			getView().setElementEnabled(ResourceBarElement.BUY_CARD, true);
-			getView().setElementEnabled(ResourceBarElement.PLAY_CARD, true);
+			// enable buyables, cards - disable if not enough resources
+			Map<ResourceType, Integer> hand = game.getCurrentPlayer().getResources();
+
+			boolean canPlayRoad = hand.get(ResourceType.WOOD) >= 1
+								&& hand.get(ResourceType.BRICK) >= 1;
+			getView().setElementEnabled(ResourceBarElement.ROAD, canPlayRoad);
+
+			boolean canPlaySettlement = hand.get(ResourceType.WOOD) >= 1
+										&& hand.get(ResourceType.BRICK) >= 1
+										&& hand.get(ResourceType.WHEAT) >= 1
+										&& hand.get(ResourceType.SHEEP) >= 1;
+			getView().setElementEnabled(ResourceBarElement.SETTLEMENT, canPlaySettlement);
+
+			boolean canPlayCity = hand.get(ResourceType.WHEAT) >= 2
+									&& hand.get(ResourceType.ORE) >= 3;
+			getView().setElementEnabled(ResourceBarElement.CITY, canPlayCity);
+
+			boolean canBuyDevCard = hand.get(ResourceType.WHEAT) >= 1
+									&& hand.get(ResourceType.SHEEP) >= 1
+									&& hand.get(ResourceType.ORE) >= 1;
+			getView().setElementEnabled(ResourceBarElement.BUY_CARD, canBuyDevCard);
+
+			boolean canPlayDevCard = game.getCurrentPlayer().getOldDevCards().size() > 0;
+			getView().setElementEnabled(ResourceBarElement.PLAY_CARD, canPlayDevCard);
+
 
 		}
 		else {
