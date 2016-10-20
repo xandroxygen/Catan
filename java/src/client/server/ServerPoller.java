@@ -24,7 +24,7 @@ public class ServerPoller {
 	/**
 	 * The number of milliseconds at which to poll the server for updates.
 	 */
-	private final long POLL_INTERVAL = 3500;
+	private final long POLL_INTERVAL = 800;
 	
 	/**
 	 * The number of milliseconds to delay before executing the timer task

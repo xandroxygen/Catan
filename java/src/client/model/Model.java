@@ -1,6 +1,8 @@
 package client.model;
 
 
+import client.admin.GameAdministrator;
+import client.data.PlayerInfo;
 import client.server.IServerProxy;
 import client.server.ServerProxy;
 import com.google.gson.JsonObject;
@@ -230,6 +232,16 @@ public class Model extends Observable {
             bool = game.isTurn(playerId);
         }
         return bool;
+    }
+    
+    /**
+     * Checks whether a player can trade at all
+     * @pre It's your turn and the GameStatus is Playing
+     * @return
+     */
+    public boolean canTrade()
+    {
+    	return getGame().isMyTurn() && (getGame().getTurnTracker().getStatus() == GameStatus.Playing);
     }
 
     /**
