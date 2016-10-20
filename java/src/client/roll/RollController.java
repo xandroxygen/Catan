@@ -65,7 +65,10 @@ public class RollController extends Controller implements IRollController, Obser
 			int roll = rollOneDie() + rollOneDie();
 			Model.getInstance().getServer().rollNumber(roll);
 			getResultView().setRollValue(roll);
-			getRollView().closeModal();
+			
+			if(getRollView().isModalShowing())
+				getRollView().closeModal();
+			
 			getResultView().showModal();
 		}
 		catch (InvalidActionException e) {
