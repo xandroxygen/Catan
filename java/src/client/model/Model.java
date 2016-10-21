@@ -583,8 +583,10 @@ public class Model extends Observable {
     }
     
     public void placeSettlement(boolean isFree, VertexLocation vertexLocation) {
-    	game.placSettlement(isFree, vertexLocation);
+    	game.placeSettlement(isFree, vertexLocation);
     }
+
+    public void placeCity(VertexLocation vertexLocation) { game.placeCity(vertexLocation); }
 
     /**
      * Make Maritime trade

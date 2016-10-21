@@ -43,7 +43,7 @@ public class Playing extends MapState {
 	}
 
 	public void placeCity(VertexLocation vertLoc, MapController controller) {
-		controller.getView().placeCity(vertLoc, Model.getInstance().getCurrentPlayer().getColor());
+		Model.getInstance().placeCity(vertLoc);
 	}
 	
 	public void startMove(PieceType pieceType, boolean isFree,

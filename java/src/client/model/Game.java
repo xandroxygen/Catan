@@ -253,13 +253,21 @@ public class Game {
 		}
     }
 
-    public void placSettlement(boolean isFree, VertexLocation vertexLocation) {
+    public void placeSettlement(boolean isFree, VertexLocation vertexLocation) {
     	try {
 			server.buildSettlement(isFree, vertexLocation);
 		} catch (InvalidActionException e) {
 			e.printStackTrace();
 		}
     }
+
+	public void placeCity(VertexLocation vertexLocation) {
+		try {
+			server.buildCity(vertexLocation);
+		} catch (InvalidActionException e) {
+			e.printStackTrace();
+		}
+	}
     
     
     /**
