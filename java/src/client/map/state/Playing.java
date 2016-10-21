@@ -5,6 +5,7 @@ import client.admin.GameAdministrator;
 import client.map.MapController;
 import client.model.Model;
 import shared.definitions.CatanColor;
+import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;
 import shared.locations.VertexLocation;
 
@@ -32,16 +33,21 @@ public class Playing extends MapState {
 	}
 	
 	public void placeRoad(EdgeLocation edgeLoc, MapController controller) {
-		controller.getView().placeRoad(edgeLoc, Model.getInstance().getCurrentPlayer().getColor());
+		Model.getInstance().placeRoad(true,edgeLoc);
 
 	}
 
 	public void placeSettlement(VertexLocation vertLoc, MapController controller) {
-		controller.getView().placeSettlement(vertLoc, Model.getInstance().getCurrentPlayer().getColor());
+		Model.getInstance().placeSettlement(true, vertLoc);
 
 	}
 
 	public void placeCity(VertexLocation vertLoc, MapController controller) {
-		controller.getView().placeCity(vertLoc, Model.getInstance().getCurrentPlayer().getColor());
+		Model.getInstance().placeCity(vertLoc);
+	}
+	
+	public void startMove(PieceType pieceType, boolean isFree,
+			   boolean allowDisconnected, MapController controller) { 
+		controller.getView().startDrop(pieceType, Model.getInstance().getCurrentPlayer().getColor(),true);
 	}
 }

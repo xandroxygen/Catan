@@ -1,8 +1,7 @@
 package client.model;
 
 
-import client.admin.GameAdministrator;
-import client.data.PlayerInfo;
+import client.data.RobPlayerInfo;
 import client.server.IServerProxy;
 import client.server.ServerProxy;
 import com.google.gson.JsonObject;
@@ -584,8 +583,10 @@ public class Model extends Observable {
     }
     
     public void placeSettlement(boolean isFree, VertexLocation vertexLocation) {
-    	game.placSettlement(isFree, vertexLocation);
+    	game.placeSettlement(isFree, vertexLocation);
     }
+
+    public void placeCity(VertexLocation vertexLocation) { game.placeCity(vertexLocation); }
 
     /**
      * Make Maritime trade
@@ -595,8 +596,7 @@ public class Model extends Observable {
     	try {
 			server.maritimeTrade(ratio, inputResource, outputResource);
 		} catch (InvalidActionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            e.printStackTrace();
 		}
     }
     
@@ -604,7 +604,6 @@ public class Model extends Observable {
     	try {
 			server.finishTurn();
 		} catch (InvalidActionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -663,11 +662,15 @@ public class Model extends Observable {
     }
 
     public boolean canPlaceRobber(HexLocation hexLoc){
-        //TODO implement
-        return false;
+        return game.canPlaceRobber(hexLoc);
     }
 
     public Player getCurrentPlayer(){
         return game.getPlayerList().get(game.getCurrentTurnIndex());
     }
+
+	public RobPlayerInfo[] getCandidateVictims(HexLocation hexLoc) {
+		return game.getCandidateVictims(hexLoc);
+		
+	}
 }
