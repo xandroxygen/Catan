@@ -195,11 +195,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 				gameAdmin.setCurrentGame(gameAdmin.getAllCurrentGames().get(gameID));
 	
 				
-				getSelectColorView().closeModal();
-				getJoinGameView().closeModal();
-				if(getNewGameView().isModalShowing()) {
-					getNewGameView().closeModal();
-				}
+				closeOpenModals();
 				
 				joinAction.execute();
 			}
@@ -217,6 +213,22 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	
 	public void updateView() {
 		getJoinGameView().setGames(gameAdmin.getAllCurrentGames(), gameAdmin.getCurrentUser().getLocalPlayer());
+	}
+	
+	/**
+	 * Closes all open modals that shouldn't be open
+	 */
+	private void closeOpenModals() {
+		if(getSelectColorView().isModalShowing()) {
+			getSelectColorView().closeModal();
+		}
+		if(getJoinGameView().isModalShowing()) {
+			getJoinGameView().closeModal();
+		}
+		
+		if(getNewGameView().isModalShowing()) {
+			getNewGameView().closeModal();
+		}
 	}
 
 }

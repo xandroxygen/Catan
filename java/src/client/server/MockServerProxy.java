@@ -248,7 +248,7 @@ public class MockServerProxy implements IServerProxy {
     /**
      * Sends a chat message to the group.
      *
-     * @param content The message to send
+     * @param message The message to send
      * @pre <pre>
      *      Player is logged in
      * 		Player has joined a game
@@ -554,14 +554,12 @@ public class MockServerProxy implements IServerProxy {
 
 	@Override
 	public void discardCards(Map<ResourceType, Integer> hand) throws InvalidActionException {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void offerTrade(Map<ResourceType, Integer> offer, int receiverIndex) throws InvalidActionException {
-		// TODO Auto-generated method stub
-		
+
 	}
 	
 	

@@ -55,7 +55,7 @@ public class GameAdministrator extends Observable{
     public GameAdministrator(User user, IServerProxy server) throws InvalidActionException {
         currentUser = user;
         allCurrentGames = new ArrayList<>();
-       	this.server = server; // TODO this will need to change and serverProxy instance needs to be in the model
+       	this.server = server;
        	
         fetchGameList(); 
     }
@@ -159,7 +159,6 @@ public class GameAdministrator extends Observable{
 			fetchGameList();
 			return currentGame != null && currentGame.getPlayers().size() < 4;
 		} catch (InvalidActionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	return false;

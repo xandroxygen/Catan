@@ -232,6 +232,16 @@ public class Model extends Observable {
         }
         return bool;
     }
+    
+    /**
+     * Checks whether a player can trade at all
+     * @pre It's your turn and the GameStatus is Playing
+     * @return
+     */
+    public boolean canTrade()
+    {
+    	return getGame().isMyTurn() && (getGame().getTurnTracker().getStatus() == GameStatus.Playing);
+    }
 
     /**
      * Checks whether the player can trade with another player
@@ -584,8 +594,7 @@ public class Model extends Observable {
     	try {
 			server.maritimeTrade(ratio, inputResource, outputResource);
 		} catch (InvalidActionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            e.printStackTrace();
 		}
     }
     
@@ -593,7 +602,6 @@ public class Model extends Observable {
     	try {
 			server.finishTurn();
 		} catch (InvalidActionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
