@@ -341,9 +341,9 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canBuyDevelopmentCard() {
-		return resources.containsKey(ResourceType.ORE) &&
-				resources.containsKey(ResourceType.WHEAT) &&
-				resources.containsKey(ResourceType.SHEEP);
+		return resources.get(ResourceType.ORE) >= 1 &&
+				resources.get(ResourceType.WHEAT) >= 1 &&
+				resources.get(ResourceType.SHEEP) >= 1 ;
 	}
 	
 	/**
