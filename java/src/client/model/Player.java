@@ -498,4 +498,12 @@ public class Player {
 		this.resources = resources;
 	}
 
+	public int getTotalOfResources() {
+		int total = 0;
+		for (ResourceType key : resources.keySet()) {
+			total += resources.get(key);
+		}
+		return total;
+	}
+
 }

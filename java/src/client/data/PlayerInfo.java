@@ -31,7 +31,7 @@ public class PlayerInfo
 		setName("");
 		setColor(CatanColor.WHITE);
 	}
-	//"players":[{"color":"orange","name":"Sam","id":0}
+
 	public PlayerInfo(JsonObject json) {
 		try {
 			this.id = json.get("id").getAsInt();
@@ -42,6 +42,13 @@ public class PlayerInfo
 		catch (Exception e) {
 			this.id = -1;
 		}
+	}
+	
+	public PlayerInfo(int id, int playerIndex, String name, CatanColor color) {
+		this.id = id;
+		this.playerIndex = playerIndex;
+		this.name = name;
+		this.color = color;
 	}
 	
 	public int getId()

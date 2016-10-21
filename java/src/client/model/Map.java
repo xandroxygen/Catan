@@ -383,6 +383,14 @@ public class Map {
 		}
 		return false;
 	}
+	
+	public boolean edgeIsOnWater(EdgeLocation edge) {
+		EdgeLocation location = edge.getNormalizedLocation();
+		HexLocation hex1 = location.getHexLoc();
+		HexLocation hex2 = new HexLocation(location.getHexLoc().getNeighborLoc(location.getDir()).getX(),
+				location.getHexLoc().getNeighborLoc(location.getDir()).getY());
+		return !hexes.containsKey(hex1) && !hexes.containsKey(hex2);
+	}
 
 
 	/**
@@ -394,6 +402,71 @@ public class Map {
 	public boolean canGetRolledResourses(int diceRoll, int playerId ) {
 		return false;
 	}
+
+	public int[] getPlayersWithMunicipalityOn(HexLocation hexLoc) {
+		// Check add the owner of each municipality if it does not already exist in the array
+		int[] indicies = new int[4];
+		
+		// Create vertices and check in city and settlement arrays
+		VertexLocation vertexW = new VertexLocation(hexLoc,VertexDirection.West);
+		
+		// If municipality exists, set the array at the player index to 1;
+		if (cities.get(vertexW.getNormalizedLocation()) != null) {
+			indicies[cities.get(vertexW.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		else if (settlements.get(vertexW.getNormalizedLocation()) != null) {
+			indicies[settlements.get(vertexW.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		
+		VertexLocation vertexE = new VertexLocation(hexLoc,VertexDirection.East);
+		if (cities.get(vertexE.getNormalizedLocation()) != null) {
+			indicies[cities.get(vertexE.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		else if (settlements.get(vertexE.getNormalizedLocation()) != null) {
+			indicies[settlements.get(vertexE.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		
+		VertexLocation vertexNE = new VertexLocation(hexLoc,VertexDirection.NorthEast);
+		if (cities.get(vertexNE.getNormalizedLocation()) != null) {
+			indicies[cities.get(vertexNE.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		else if (settlements.get(vertexNE.getNormalizedLocation()) != null) {
+			indicies[settlements.get(vertexNE.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		
+		VertexLocation vertexNW = new VertexLocation(hexLoc,VertexDirection.NorthWest);
+		if (cities.get(vertexNW.getNormalizedLocation()) != null) {
+			indicies[cities.get(vertexNW.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		else if (settlements.get(vertexNW.getNormalizedLocation()) != null) {
+			indicies[settlements.get(vertexNW.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		
+		VertexLocation vertexSE = new VertexLocation(hexLoc,VertexDirection.SouthEast);
+		if (cities.get(vertexSE.getNormalizedLocation()) != null) {
+			indicies[cities.get(vertexSE.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		else if (settlements.get(vertexSE.getNormalizedLocation()) != null) {
+			indicies[settlements.get(vertexSE.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		
+		VertexLocation vertexSW = new VertexLocation(hexLoc,VertexDirection.SouthWest);
+		if (cities.get(vertexSW.getNormalizedLocation()) != null) {
+			indicies[cities.get(vertexSW.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		else if (settlements.get(vertexSW.getNormalizedLocation()) != null) {
+			indicies[settlements.get(vertexSW.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		
+		// ensure that current player can't rob himself
+		indicies[Model.getInstance().getCurrentPlayer().getPlayerIndex()] = 0;
+		return indicies;
+		
+	}
+	
+	
+	
+	
 	
 
 }

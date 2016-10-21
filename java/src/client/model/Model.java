@@ -1,6 +1,7 @@
 package client.model;
 
 
+import client.data.RobPlayerInfo;
 import client.server.IServerProxy;
 import client.server.ServerProxy;
 import com.google.gson.JsonObject;
@@ -651,11 +652,15 @@ public class Model extends Observable {
     }
 
     public boolean canPlaceRobber(HexLocation hexLoc){
-        //TODO implement
-        return false;
+        return game.canPlaceRobber(hexLoc);
     }
 
     public Player getCurrentPlayer(){
         return game.getPlayerList().get(game.getCurrentTurnIndex());
     }
+
+	public RobPlayerInfo[] getCandidateVictims(HexLocation hexLoc) {
+		return game.getCandidateVictims(hexLoc);
+		
+	}
 }

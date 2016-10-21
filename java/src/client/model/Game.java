@@ -1,6 +1,5 @@
 package client.model;
 
-import client.server.ServerProxy;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -8,10 +7,12 @@ import com.google.gson.JsonObject;
 
 import client.admin.GameAdministrator;
 import client.communication.LogEntry;
+import client.data.RobPlayerInfo;
 import client.server.IServerProxy;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
 import java.util.ArrayList;
@@ -182,7 +183,7 @@ public class Game {
     				!theMap.hasSettlementAtLocation(location) && !theMap.hasAdjacentSettlement(location) && 
     				theMap.vertexIsOnPlayerRoad(location, player));
     	}
-    	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
+    	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && !theMap.hasAdjacentSettlement(location) &&
 				!theMap.hasSettlementAtLocation(location) && theMap.vertexIsOnPlayerRoad(location, player) && 
 				(player.getResources().get(ResourceType.WOOD) >= 1) && (player.getResources().get(ResourceType.BRICK) >= 1) && 
 				(player.getResources().get(ResourceType.WHEAT) >= 1) && (player.getResources().get(ResourceType.SHEEP) >= 1) && 
@@ -214,9 +215,11 @@ public class Game {
     				!theMap.edgeHasPlayerMunicipality(location, playerList.get(1)) && 
     				!theMap.edgeHasPlayerMunicipality(location, playerList.get(2)) &&
     				!theMap.edgeHasPlayerMunicipality(location, playerList.get(3)) &&
-    				!theMap.edgeHasAdjacentPlayerRoad(location, player));
+    				!theMap.edgeHasAdjacentPlayerRoad(location, player) &&
+    				!theMap.edgeIsOnWater(location));
     	}
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
+    			!theMap.edgeIsOnWater(location) &&
 				!theMap.hasRoadAtLocation(location) &&
 				(theMap.edgeHasPlayerMunicipality(location, player) || theMap.edgeHasAdjacentPlayerRoad(location, player)) &&
 				(player.getResources().get(ResourceType.WOOD) >= 1) && 
@@ -361,6 +364,32 @@ public class Game {
 	public void setVersion(int i) {
 		this.version = i;
 		
+	}
+
+	public boolean canPlaceRobber(HexLocation hexLoc) {
+		return !hexLoc.equals(theMap.getRobber().getLocation()) &&
+				(theMap.getHexes().get(hexLoc) != null);
+	}
+
+	public RobPlayerInfo[] getCandidateVictims(HexLocation hexLoc) {
+		List<RobPlayerInfo> infoList = new ArrayList<>();
+		int[] victimIndicies = theMap.getPlayersWithMunicipalityOn(hexLoc);
+		
+		// Create array of Robbing Info
+		for (int i = 0; i < victimIndicies.length; i++) {
+			if (victimIndicies[i] == 1) {
+				infoList.add(new RobPlayerInfo(playerList.get(i)));
+			}
+		}
+		
+		if (infoList.size() != 0) {
+			RobPlayerInfo[] result = new RobPlayerInfo[infoList.size()];
+			infoList.toArray(result);
+			return result;
+		}
+		else {
+			return null;
+		}
 	}
     
 }

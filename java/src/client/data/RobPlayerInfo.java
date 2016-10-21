@@ -1,5 +1,8 @@
 package client.data;
 
+import client.model.Player;
+import shared.definitions.CatanColor;
+
 /**
  * Used to pass player information into the rob view<br>
  * <br>
@@ -21,6 +24,11 @@ public class RobPlayerInfo extends PlayerInfo
 	public RobPlayerInfo()
 	{
 		super();
+	}
+	
+	public RobPlayerInfo(Player p) {
+		super(p.getPlayerID(), p.getPlayerIndex(), p.getName(), p.getColor());
+		this.numCards = p.getTotalOfResources();
 	}
 	
 	public int getNumCards()
