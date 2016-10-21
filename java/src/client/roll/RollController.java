@@ -62,8 +62,7 @@ public class RollController extends Controller implements IRollController, Obser
 
 		try {
 			hasRolled = true;
-			//int roll = rollOneDie() + rollOneDie();
-			int roll = 7;
+			int roll = rollOneDie() + rollOneDie();
 			Model.getInstance().getServer().rollNumber(roll);
 			getResultView().setRollValue(roll);
 			
