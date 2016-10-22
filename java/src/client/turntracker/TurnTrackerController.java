@@ -14,6 +14,7 @@ import java.util.Observer;
  */
 public class TurnTrackerController extends Controller implements ITurnTrackerController, Observer {
 	Game game;
+	List<Player> players;
 	
 	public TurnTrackerController(ITurnTrackerView view) {
 		
@@ -42,10 +43,12 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	
 	private void initFromModel() {
 		game = Model.getInstance().getGame();
-		List<Player> players = game.getPlayerList();
+		players = game.getPlayerList();
 		
 		// set local player color
 		this.getView().setLocalPlayerColor(GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getColor());
+	
+		((TurnTrackerView)this.getView()).reset();
 		
 		initPlayers(players);
 		
