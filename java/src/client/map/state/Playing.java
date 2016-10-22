@@ -33,12 +33,12 @@ public class Playing extends MapState {
 	}
 	
 	public void placeRoad(EdgeLocation edgeLoc, MapController controller) {
-		Model.getInstance().placeRoad(true,edgeLoc);
+		Model.getInstance().placeRoad(false,edgeLoc);
 
 	}
 
 	public void placeSettlement(VertexLocation vertLoc, MapController controller) {
-		Model.getInstance().placeSettlement(true, vertLoc);
+		Model.getInstance().placeSettlement(false, vertLoc);
 
 	}
 
