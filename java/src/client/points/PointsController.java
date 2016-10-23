@@ -3,7 +3,9 @@ package client.points;
 import java.util.Observable;
 import java.util.Observer;
 
+import client.admin.GameAdministrator;
 import client.base.*;
+import client.model.GameStatus;
 import client.model.Model;
 import client.model.Player;
 
@@ -60,7 +62,7 @@ public class PointsController extends Controller implements IPointsController, O
 		if(winnerIndex != -1) {	// someone won the game
 			Player p = Model.getInstance().getGame().getPlayerList().get(winnerIndex);
 			this.getFinishedView().setWinner(p.getName(), isLocalPlayer(p));
-			this.finishedView.showModal();
+			this.getFinishedView().showModal();
 		}
 		
 		if(Model.getInstance().getGame() != null) {

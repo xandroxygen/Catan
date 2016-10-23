@@ -458,7 +458,9 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 
 	@Override
 	public void acceptTrade(boolean willAccept) {
-		getAcceptOverlay().closeModal();
+		if(getAcceptOverlay().isModalShowing()) {
+			getAcceptOverlay().closeModal();
+		}	
 		getAcceptOverlay().reset();
 		try {
 			Model.getInstance().getServer().acceptTrade(willAccept);
