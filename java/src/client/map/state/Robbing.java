@@ -28,7 +28,6 @@ public class Robbing extends MapState {
 	public void placeRobber(HexLocation hexLoc, MapController controller) {
 		controller.getView().placeRobber(hexLoc);
 		newLocation = hexLoc;
-
 	}
 	
 	public void robPlayer(RobPlayerInfo victim, MapController controller) {

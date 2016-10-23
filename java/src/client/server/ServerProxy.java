@@ -869,7 +869,8 @@ public class ServerProxy implements IServerProxy {
 
         RequestResponse result = post(urlExt, headers, body);
 
-        handleResult(result);    }
+        handleResult(result);
+    }
 
     /**
      * Play a Road Building card, and build 2 roads.

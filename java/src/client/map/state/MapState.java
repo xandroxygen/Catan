@@ -141,8 +141,8 @@ public abstract class MapState {
 	 * This method is called when the user plays a "soldier" development card.
 	 * It should initiate robber placement.
 	 */
-	public void playSoldierCard(MapController controller) { 
-		
+	public void playSoldierCard(MapController controller) {
+
 	}
 	
 	/**

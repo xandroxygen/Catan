@@ -40,7 +40,7 @@ public class MapController extends Controller implements IMapController, Observe
 		return (IMapView)super.getView();
 	}
 	
-	private IRobView getRobView() {
+	public IRobView getRobView() {
 		return robView;
 	}
 	private void setRobView(IRobView robView) {
@@ -118,7 +118,7 @@ public class MapController extends Controller implements IMapController, Observe
 		}
 	}
 
-	private void placeRobber(){
+	public void placeRobber(){
 		Robber robber = Model.getInstance().getGame().getTheMap().getRobber();
 		getView().placeRobber(robber.getLocation());
 	}

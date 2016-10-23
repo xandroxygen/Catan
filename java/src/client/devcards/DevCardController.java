@@ -4,6 +4,7 @@ import client.base.Controller;
 import client.base.IAction;
 import client.model.InvalidActionException;
 import client.model.Model;
+import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
 
 
@@ -64,10 +65,23 @@ public class DevCardController extends Controller implements IDevCardController 
 		}
 	}
 
+    public void setPlayDevCard(DevCardType devCardType) {
+        getPlayCardView().setCardEnabled(devCardType,
+                Model.getInstance().getGame().getCurrentPlayer().getOldDevCards().get(devCardType) != 0);
+        getPlayCardView().setCardAmount(devCardType,
+                Model.getInstance().getGame().getCurrentPlayer().getOldDevCards().get(devCardType) +
+                Model.getInstance().getGame().getCurrentPlayer().getNewDevCards().get(devCardType));
+    }
+
 	@Override
 	public void startPlayCard() {
 		getPlayCardView().showModal();
-	}
+        setPlayDevCard(DevCardType.SOLDIER);
+        setPlayDevCard(DevCardType.MONOPOLY);
+        setPlayDevCard(DevCardType.MONUMENT);
+        setPlayDevCard(DevCardType.ROAD_BUILD);
+        setPlayDevCard(DevCardType.YEAR_OF_PLENTY);
+    }
 
 	@Override
 	public void cancelPlayCard() {
@@ -99,6 +113,7 @@ public class DevCardController extends Controller implements IDevCardController 
 	@Override
 	public void playRoadBuildCard() {
 		roadAction.execute();
+        //TODO
 //		if (Model.getInstance().canPlayRoadCard(Model.getInstance().getGame().getCurrentPlayer().getPlayerID(), )) {
 //			try {
 //				Model.getInstance().getServer().playRoadBuilding();
@@ -111,6 +126,7 @@ public class DevCardController extends Controller implements IDevCardController 
 	@Override
 	public void playSoldierCard() {
 		soldierAction.execute();
+        //TODO
 //		if (Model.getInstance().canPlaySoldier(Model.getInstance().getGame().getCurrentPlayer().getPlayerID(), )) {
 //			try {
 //				Model.getInstance().getServer().playSoldier();

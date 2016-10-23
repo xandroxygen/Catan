@@ -4,7 +4,6 @@ package client.map.state;
 import client.admin.GameAdministrator;
 import client.map.MapController;
 import client.model.Model;
-import shared.definitions.CatanColor;
 import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;
 import shared.locations.VertexLocation;
@@ -34,12 +33,10 @@ public class Playing extends MapState {
 	
 	public void placeRoad(EdgeLocation edgeLoc, MapController controller) {
 		Model.getInstance().placeRoad(false,edgeLoc);
-
 	}
 
 	public void placeSettlement(VertexLocation vertLoc, MapController controller) {
 		Model.getInstance().placeSettlement(false, vertLoc);
-
 	}
 
 	public void placeCity(VertexLocation vertLoc, MapController controller) {
@@ -49,5 +46,15 @@ public class Playing extends MapState {
 	public void startMove(PieceType pieceType, boolean isFree,
 			   boolean allowDisconnected, MapController controller) { 
 		controller.getView().startDrop(pieceType, Model.getInstance().getCurrentPlayer().getColor(),true);
+	}
+
+	public void playSoldierCard(MapController controller) {
+		//TODO
+//		controller.setState(Robbing.instance());
+//		controller.placeRobber(Model.getInstance().getGame().getTheMap().getRobber().getLocation());
+	}
+
+	public void playRoadBuildingCard(MapController controller) {
+		//TODO
 	}
 }
