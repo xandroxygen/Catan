@@ -389,4 +389,12 @@ public class GameAdministrator extends Observable{
 	public void setSettingUp(boolean isSettingUp) {
 		this.isSettingUp = isSettingUp;
 	}
+
+	public void setHost(String host) {
+		this.server.setHost(host);
+	}
+
+	public void setPort(String port) {
+		this.server.setPort(port);
+	}
 }
