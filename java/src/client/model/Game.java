@@ -225,7 +225,25 @@ public class Game {
 				(player.getResources().get(ResourceType.WOOD) >= 1) && 
 				(player.getResources().get(ResourceType.BRICK) >= 1) && (player.getRoads() >= 1));
     }
-    
+
+	boolean canPlaceRoad(int playerId, EdgeLocation firstLocation, EdgeLocation location) {
+		Player player = this.getPlayerById(playerId);
+		if (firstLocation == null) {
+			return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
+					!theMap.edgeIsOnWater(location) &&
+					!theMap.hasRoadAtLocation(location) &&
+					(theMap.edgeHasPlayerMunicipality(location, player) || theMap.edgeHasAdjacentPlayerRoad(location, player)) &&
+					(player.getRoads() >= 1));
+		}
+		else{
+			return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
+					!theMap.edgeIsOnWater(location) &&
+					!theMap.hasRoadAtLocation(location) && firstLocation != location &&
+					(theMap.edgeHasPlayerMunicipality(location, player) || theMap.edgeHasAdjacentPlayerRoad(location, player)) &&
+					(player.getRoads() >= 1));
+		}
+	}
+
     /**
      * Checks whether the player can trade with another player
      * @pre It's your turn, You have the resources you are offering.
@@ -245,7 +263,7 @@ public class Game {
     	return turnTracker.getCurrentTurn() == player.getPlayerIndex();
     }
     
-    public void placeRoad(boolean isFree, EdgeLocation roadLocation) {
+    public void  placeRoad(boolean isFree, EdgeLocation roadLocation) {
     	try {
 			server.buildRoad(isFree, roadLocation);
 		} catch (InvalidActionException e) {

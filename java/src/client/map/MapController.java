@@ -118,7 +118,7 @@ public class MapController extends Controller implements IMapController, Observe
 		}
 	}
 
-	public void placeRobber(){
+	private void placeRobber(){
 		Robber robber = Model.getInstance().getGame().getTheMap().getRobber();
 		getView().placeRobber(robber.getLocation());
 	}
@@ -231,17 +231,7 @@ public class MapController extends Controller implements IMapController, Observe
 		Game game = Model.getInstance().getGame();
 		if(game != null && game.getTheMap() != null && 
 				game.getTheMap().getHexes() != null && game.isMyTurn()) {
-			
-			
-			/*if (game.getTurnTracker().getStatus() == GameStatus.FirstRound && game.isMyTurn()) {
-				state = FirstRound.instance();
-				state.initiateSetup(this);
-			}
-			
-			else if (game.getTurnTracker().getStatus() == GameStatus.SecondRound && game.isMyTurn()) {
-				state.initiateSetup(this);
-			}*/
-			
+
 			GameStatus modelStatus = game.getTurnTracker().getStatus();
 			
 			switch (modelStatus) {
@@ -267,14 +257,9 @@ public class MapController extends Controller implements IMapController, Observe
 				default:
 					this.setState(Playing.instance());
 			}
-			
 			state.initiateSetup(this);
 			initFromModel();
 		}
-		
-		
-			
 	}
-
 }
 

@@ -213,6 +213,11 @@ public class Model extends Observable {
         return game.canPlaceRoad(playerId, free, location);
     }
 
+    //used for Build Roads DevCard
+    public boolean canPlaceRoad(int playerId, EdgeLocation firstLocation, EdgeLocation location){
+        return game.canPlaceRoad(playerId, firstLocation, location);
+    }
+
     /**
      * Checks whether the player can buy a development card.
      * @pre It's your turn, You have the required resources (1 ore, 1 wheat, 1 sheep), There are dev cards left in the deck.

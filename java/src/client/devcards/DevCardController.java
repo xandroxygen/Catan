@@ -66,22 +66,31 @@ public class DevCardController extends Controller implements IDevCardController 
 	}
 
     public void setPlayDevCard(DevCardType devCardType) {
-        getPlayCardView().setCardEnabled(devCardType,
-                Model.getInstance().getGame().getCurrentPlayer().getOldDevCards().get(devCardType) != 0);
-        getPlayCardView().setCardAmount(devCardType,
-                Model.getInstance().getGame().getCurrentPlayer().getOldDevCards().get(devCardType) +
-                Model.getInstance().getGame().getCurrentPlayer().getNewDevCards().get(devCardType));
-    }
+		if (devCardType != DevCardType.MONUMENT) {
+			getPlayCardView().setCardEnabled(devCardType,
+					Model.getInstance().getGame().getCurrentPlayer().getOldDevCards().get(devCardType) != 0 &&
+					!Model.getInstance().getGame().getCurrentPlayer().isPlayedDevCard());
+
+		}
+		else{
+			getPlayCardView().setCardEnabled(devCardType,
+					Model.getInstance().getGame().getCurrentPlayer().getOldDevCards().get(devCardType) +
+					Model.getInstance().getGame().getCurrentPlayer().getNewDevCards().get(devCardType) != 0);
+		}
+		getPlayCardView().setCardAmount(devCardType,
+				Model.getInstance().getGame().getCurrentPlayer().getOldDevCards().get(devCardType) +
+				Model.getInstance().getGame().getCurrentPlayer().getNewDevCards().get(devCardType));
+	}
 
 	@Override
 	public void startPlayCard() {
 		getPlayCardView().showModal();
         setPlayDevCard(DevCardType.SOLDIER);
         setPlayDevCard(DevCardType.MONOPOLY);
-        setPlayDevCard(DevCardType.MONUMENT);
         setPlayDevCard(DevCardType.ROAD_BUILD);
-        setPlayDevCard(DevCardType.YEAR_OF_PLENTY);
-    }
+		setPlayDevCard(DevCardType.YEAR_OF_PLENTY);
+		setPlayDevCard(DevCardType.MONUMENT);
+	}
 
 	@Override
 	public void cancelPlayCard() {
@@ -113,27 +122,11 @@ public class DevCardController extends Controller implements IDevCardController 
 	@Override
 	public void playRoadBuildCard() {
 		roadAction.execute();
-        //TODO
-//		if (Model.getInstance().canPlayRoadCard(Model.getInstance().getGame().getCurrentPlayer().getPlayerID(), )) {
-//			try {
-//				Model.getInstance().getServer().playRoadBuilding();
-//			} catch (InvalidActionException e) {
-//				e.printStackTrace();
-//			}
-//		}
 	}
 
 	@Override
 	public void playSoldierCard() {
 		soldierAction.execute();
-        //TODO
-//		if (Model.getInstance().canPlaySoldier(Model.getInstance().getGame().getCurrentPlayer().getPlayerID(), )) {
-//			try {
-//				Model.getInstance().getServer().playSoldier();
-//			} catch (InvalidActionException e) {
-//				e.printStackTrace();
-//			}
-//		}
 	}
 
 	@Override
