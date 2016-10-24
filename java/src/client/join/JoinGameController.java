@@ -181,7 +181,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void joinGame(CatanColor color) {
-		System.out.println("Joining game");
+
 		try {
 			if(gameAdmin.canJoinGame(gameID, color)){
 				for(PlayerInfo p : gameAdmin.getAllCurrentGames().get(gameID).getPlayers()) {
