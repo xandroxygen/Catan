@@ -25,21 +25,12 @@ public class HTTPOperations {
     private static final String HTTP_GET = "GET";
     private static final String HTTP_POST = "POST";
 
-    public HTTPOperations() {
-        host = new String();
-        port = new String();
-        baseUrl = new String();
-    }
-
     /**
      * Constructor for the HTTPOperations class.
-     *
-     * @param h host of server to talk to
-     * @param p port to talk on (usually 8081)
      */
-    public HTTPOperations(String h, String p) {
-        host = h;
-        port = p;
+    public HTTPOperations() {
+        host = "localhost";
+        port = "8081";
         baseUrl = "http://" + host + ":" + port;
     }
 
@@ -142,5 +133,25 @@ public class HTTPOperations {
         }
         return byteStream.toString();
     }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+        baseUrl = "http://" + this.host + ":" + port;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+        baseUrl = "http://" + host + ":" + this.port;
+    }
 }
+
+
 

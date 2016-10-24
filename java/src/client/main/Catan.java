@@ -8,6 +8,7 @@ import client.join.*;
 import client.misc.*;
 import client.admin.GameAdministrator;
 import client.base.*;
+import client.model.Game;
 
 /**
  * Main entry point for the Catan program
@@ -58,6 +59,13 @@ public class Catan extends JFrame
 			{
 				
 				if(GameAdministrator.getInstance() != null) {
+
+					// set host and port from ant command
+					String host = (args.length > 0 && args[0] != null) ? args[0] : "localhost";
+					String port = (args.length > 1 && args[1] != null) ? args[1] : "8081";
+					GameAdministrator.getInstance().setHost(host);
+					GameAdministrator.getInstance().setPort(port);
+
 					new Catan();
 					
 					PlayerWaitingView playerWaitingView = new PlayerWaitingView();

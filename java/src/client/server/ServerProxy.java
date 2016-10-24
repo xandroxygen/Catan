@@ -1,5 +1,7 @@
 package client.server;
 
+import client.admin.GameAdministrator;
+import client.model.Game;
 import client.model.InvalidActionException;
 import com.google.gson.JsonObject;
 import shared.definitions.CatanColor;
@@ -35,7 +37,7 @@ public class ServerProxy implements IServerProxy {
      * Also sets host, port, and base URL for the communicator class.
      */
     public ServerProxy() {
-        http = new HTTPOperations("localhost", "8081"); // hard-coded for ease of use
+        http = new HTTPOperations();
         headers = new LinkedHashMap<>();
         urlExt = "";
     }
@@ -110,6 +112,14 @@ public class ServerProxy implements IServerProxy {
     public void setCurrentPlayerCookie(String currentPlayerCookie) {
         this.currentPlayerCookie = currentPlayerCookie;
     }
+
+    public void setHost(String host) {
+		http.setHost(host);
+	}
+
+	public void setPort(String port) {
+		http.setPort(port);
+	}
 
     // --- NON-MOVE API ---
 

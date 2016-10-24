@@ -25,6 +25,18 @@ public interface IServerProxy {
 	 * @param playerID ID to give to the player
 	 */
 	void setPlayerIndex(int playerID);
+
+	/**
+	 * Sets the host in the HTTP
+	 * @param host
+	 */
+	void setHost(String host);
+
+	/**
+	 * Sets the port in the HTTP
+	 * @param port
+	 */
+	void setPort(String port);
 	
 	/**
 	 * Logs the caller into the server and sets their catan.user HTTP cookie.

@@ -1,14 +1,11 @@
 package client.server;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import client.admin.GameAdministrator;
 import client.model.InvalidActionException;
 import client.model.Model;
-import client.model.ModelUpdater;
 
 import java.util.Timer;
 import java.util.TimerTask;

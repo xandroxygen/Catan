@@ -3,7 +3,6 @@ package client.communication;
 import java.util.Observable;
 import java.util.Observer;
 
-import client.admin.GameAdministrator;
 import client.base.*;
 import client.model.Game;
 import client.model.Model;

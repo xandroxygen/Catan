@@ -2,10 +2,7 @@ package client.domestic;
 
 import shared.definitions.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -13,7 +10,6 @@ import client.admin.GameAdministrator;
 import client.base.*;
 import client.data.PlayerInfo;
 import client.misc.*;
-import client.model.GameStatus;
 import client.model.InvalidActionException;
 import client.model.Model;
 import client.model.Player;
@@ -269,7 +265,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		getTradeOverlay().closeModal();
 		
 		//TODO: if the player receiving the trade offer is an AI, don't show the wait modal
-		//getWaitOverlay().showModal();
+		getWaitOverlay().showModal();
 	}
 	
 	/**
@@ -458,7 +454,9 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 
 	@Override
 	public void acceptTrade(boolean willAccept) {
-		getAcceptOverlay().closeModal();
+		if(getAcceptOverlay().isModalShowing()) {
+			getAcceptOverlay().closeModal();
+		}	
 		getAcceptOverlay().reset();
 		try {
 			Model.getInstance().getServer().acceptTrade(willAccept);

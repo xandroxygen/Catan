@@ -100,6 +100,12 @@ public class Game {
     		chat.add(new LogEntry(color,line.getAsJsonObject().get("message").getAsString()));
     	}
 
+    	// Create Trade offer, if any
+		if (modelJSON.has("tradeOffer")) {
+			tradeOffer = new TradeOffer(modelJSON.getAsJsonObject("tradeOffer"));
+		}
+
+
     	// Initialize remaining variables
     	winner = modelJSON.get("winner").getAsInt();
 		version = modelJSON.get("version").getAsInt();
@@ -216,6 +222,8 @@ public class Game {
     				!theMap.edgeHasPlayerMunicipality(location, playerList.get(2)) &&
     				!theMap.edgeHasPlayerMunicipality(location, playerList.get(3)) &&
     				!theMap.edgeHasAdjacentPlayerRoad(location, player) &&
+    				(theMap.futureCanPlaceSettlement(location.getNormalizedVertices().get(0)) ||
+    				theMap.futureCanPlaceSettlement(location.getNormalizedVertices().get(1))) &&
     				!theMap.edgeIsOnWater(location));
     	}
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
