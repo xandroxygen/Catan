@@ -481,6 +481,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		reInitValues();
 		
 		getTradeOverlay().setTradeEnabled(false);
+		
 		if(Model.getInstance().getGame().getTradeOffer() != null){
 			int receiver = Model.getInstance().getGame().getTradeOffer().getReceiver();
 			int sender = Model.getInstance().getGame().getTradeOffer().getSender();
