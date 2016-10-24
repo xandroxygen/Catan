@@ -373,12 +373,93 @@ public class Map {
 				return playerHasRoadAtLocation(edgeN.getNormalizedLocation(), player) ||
 						playerHasRoadAtLocation(edgeSE.getNormalizedLocation(), player) ||
 						playerHasRoadAtLocation(edgeHSE.getNormalizedLocation(), player);
-
 			}
 			else {
 				// No hexes above this hex.  Only need to check it's own sides
 				return playerHasRoadAtLocation(edgeN.getNormalizedLocation(), player) ||
 						playerHasRoadAtLocation(edgeSE.getNormalizedLocation(), player);
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * checks if two roads are next to each other
+	 * @return
+	 */
+	public boolean roadsAreNextToEachOther(EdgeLocation firstLocation, EdgeLocation location) {
+		firstLocation = firstLocation.getNormalizedLocation();
+		location = location.getNormalizedLocation();
+		if(firstLocation == location){
+			return false;
+		}
+		if (firstLocation.getDir() == EdgeDirection.NorthWest) {
+			EdgeLocation edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setDir(EdgeDirection.North);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setHexLoc(new HexLocation(firstLocation.getHexLoc().getX() - 1, firstLocation.getHexLoc().getY()));
+			edgeLocation.setDir(EdgeDirection.NorthEast);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setHexLoc(new HexLocation(firstLocation.getHexLoc().getX() - 1, firstLocation.getHexLoc().getY() + 1));
+			edgeLocation.setDir(EdgeDirection.North);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation.setDir(EdgeDirection.NorthEast);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+		}
+		else if (firstLocation.getDir() == EdgeDirection.North) {
+			EdgeLocation edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setDir(EdgeDirection.NorthEast);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation.setDir(EdgeDirection.NorthWest);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setHexLoc(new HexLocation(firstLocation.getHexLoc().getX() - 1, firstLocation.getHexLoc().getY()));
+			edgeLocation.setDir(EdgeDirection.NorthEast);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setHexLoc(new HexLocation(firstLocation.getHexLoc().getX() + 1, firstLocation.getHexLoc().getY() + 1));
+			edgeLocation.setDir(EdgeDirection.NorthWest);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+		}
+		else if (firstLocation.getDir() == EdgeDirection.NorthEast) {
+			EdgeLocation edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setDir(EdgeDirection.North);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setHexLoc(new HexLocation(firstLocation.getHexLoc().getX() + 1, firstLocation.getHexLoc().getY()));
+			edgeLocation.setDir(EdgeDirection.NorthWest);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation.setDir(EdgeDirection.North);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setHexLoc(new HexLocation(firstLocation.getHexLoc().getX() + 1, firstLocation.getHexLoc().getY() - 1));
+			edgeLocation.setDir(EdgeDirection.NorthWest);
+			if(location.equals(edgeLocation)){
+				return true;
 			}
 		}
 		return false;

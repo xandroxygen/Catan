@@ -857,7 +857,7 @@ public class ServerProxy implements IServerProxy {
      */
     @Override
     public void playYearOfPlenty(ResourceType resource1, ResourceType resource2) throws InvalidActionException {
-        urlExt = "/moves/Year_Of_Plenty";
+        urlExt = "/moves/Year_of_Plenty";
 
         setHeaders();
 
@@ -865,7 +865,7 @@ public class ServerProxy implements IServerProxy {
         attributes.put("resource1", Serializer.serializeResourceType(resource1));
         attributes.put("resource2", Serializer.serializeResourceType(resource2));
 
-        String body = Serializer.serializeMoveCall("Year_Of_Plenty", currentPlayerIndex, attributes);
+        String body = Serializer.serializeMoveCall("Year_of_Plenty", currentPlayerIndex, attributes);
 
         RequestResponse result = post(urlExt, headers, body);
 

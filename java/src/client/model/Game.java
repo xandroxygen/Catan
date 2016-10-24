@@ -239,7 +239,8 @@ public class Game {
 			return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
 					!theMap.edgeIsOnWater(location) &&
 					!theMap.hasRoadAtLocation(location) && firstLocation != location &&
-					(theMap.edgeHasPlayerMunicipality(location, player) || theMap.edgeHasAdjacentPlayerRoad(location, player)) &&
+					(theMap.edgeHasPlayerMunicipality(location, player) || theMap.edgeHasAdjacentPlayerRoad(location, player) ||
+					theMap.roadsAreNextToEachOther(firstLocation, location)) &&
 					(player.getRoads() >= 1));
 		}
 	}

@@ -4,6 +4,7 @@ package client.map.state;
 import client.admin.GameAdministrator;
 import client.data.RobPlayerInfo;
 import client.map.MapController;
+import client.map.MapView;
 import client.model.InvalidActionException;
 import client.model.Model;
 import shared.definitions.PieceType;
@@ -49,6 +50,8 @@ public class Playing extends MapState {
 		else{
 			if(firstRoad == null){
 				firstRoad = edgeLoc;
+				controller.getView().startDrop(PieceType.ROAD, Model.getInstance().getCurrentPlayer().getColor(), false);
+				((MapView)controller.getView()).getMap().placeRoad(firstRoad, Model.getInstance().getCurrentPlayer().getColor());
 			}
 			else{
 				try {
@@ -80,7 +83,6 @@ public class Playing extends MapState {
 	}
 
 	public void playRoadBuildingCard(MapController controller) {
-		controller.getView().startDrop(PieceType.ROAD, Model.getInstance().getCurrentPlayer().getColor(), false);
 		controller.getView().startDrop(PieceType.ROAD, Model.getInstance().getCurrentPlayer().getColor(), false);
 		isRoadBuildingCard = true;
 	}

@@ -14,6 +14,12 @@ public class HexLocation
 		setX(x);
 		setY(y);
 	}
+
+	public HexLocation(HexLocation hexLocation)
+	{
+		setX(hexLocation.getX());
+		setY(hexLocation.getY());
+	}
 	
 	public int getX()
 	{
