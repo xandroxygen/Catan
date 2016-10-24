@@ -265,7 +265,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		getTradeOverlay().closeModal();
 		
 		//TODO: if the player receiving the trade offer is an AI, don't show the wait modal
-		//getWaitOverlay().showModal();
+		getWaitOverlay().showModal();
 	}
 	
 	/**
