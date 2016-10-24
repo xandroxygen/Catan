@@ -29,7 +29,27 @@ public class MockServerProxy implements IServerProxy {
 
     }
 
-    /**
+	/**
+	 * Sets the host in the HTTP
+	 *
+	 * @param host
+	 */
+	@Override
+	public void setHost(String host) {
+
+	}
+
+	/**
+	 * Sets the port in the HTTP
+	 *
+	 * @param port
+	 */
+	@Override
+	public void setPort(String port) {
+
+	}
+
+	/**
      * Logs the caller into the server and sets their catan.user HTTP cookie.
      *
      * @param username Username of the player logging in.

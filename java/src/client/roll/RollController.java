@@ -61,6 +61,7 @@ public class RollController extends Controller implements IRollController, Obser
 	public void rollDice() {
 
 		try {
+			System.out.println("Rolling Dice");
 			hasRolled = true;
 			int roll = rollOneDie() + rollOneDie();
 			Model.getInstance().getServer().rollNumber(roll);
@@ -89,6 +90,7 @@ public class RollController extends Controller implements IRollController, Obser
 					if (!hasRolled) {
 
 						// if needed, implement countdown timer here
+						System.out.println("Timer finished");
 						rollDice();
 					}
 				}
