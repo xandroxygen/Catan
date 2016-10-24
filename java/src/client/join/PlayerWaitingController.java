@@ -58,8 +58,12 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	public void addAI() {
 		try {
 			GameAdministrator.getInstance().addAI(view.getSelectedAI());
-			getView().closeModal();
-			getView().showModal();
+			if(getView().isModalShowing()) {
+				getView().closeModal();
+			}
+			if(!getView().isModalShowing()) {
+				getView().showModal();
+			}
 		} catch (InvalidActionException e) {
 			e.printStackTrace();
 		}
@@ -77,9 +81,14 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 				GameInfo currentGame= (GameInfo) arg;
 				PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
 				currentGame.getPlayers().toArray(players);
-				view.setPlayers(players);
-				view.closeModal();
-				view.showModal();
+				getView().setPlayers(players);
+				if(getView().isModalShowing()) {
+					getView().closeModal();
+				}
+				if(!getView().isModalShowing()) {
+					getView().showModal();
+				}
+				
 			}
 		}	
 	}
