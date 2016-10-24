@@ -480,7 +480,22 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		
 		reInitValues();
 		
-		getTradeOverlay().setTradeEnabled(false);		
+		getTradeOverlay().setTradeEnabled(false);
+		if(Model.getInstance().getGame().getTradeOffer() != null){
+			int receiver = Model.getInstance().getGame().getTradeOffer().getReceiver();
+			int sender = Model.getInstance().getGame().getTradeOffer().getSender();
+			
+			if(receiver == Model.getInstance().getCurrentPlayer().getPlayerIndex()) {
+				setUpAcceptTrade();
+				getAcceptOverlay().showModal();
+			}
+			
+			if(sender == Model.getInstance().getCurrentPlayer().getPlayerIndex()) {
+				if(!getWaitOverlay().isModalShowing()) {
+					getWaitOverlay().closeModal();
+				}
+			}
+		}
 	}
 	
 	/**
@@ -519,6 +534,68 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		oreStatus = false;
 
 		tradingPartner = -1;
+	}
+	
+	private void setUpAcceptTrade() {
+		int receiverIndex = Model.getInstance().getGame().getTradeOffer().getReceiver();
+		Player receiver = Model.getInstance().getGame().getPlayerList().get(receiverIndex);
+		
+		HashMap<ResourceType, Integer> offer = Model.getInstance().getGame().getTradeOffer().getOffer();
+		int brickOffer = offer.get(ResourceType.BRICK);
+		int woodOffer = offer.get(ResourceType.WOOD);
+		int sheepOffer = offer.get(ResourceType.SHEEP);
+		int oreOffer = offer.get(ResourceType.ORE);
+		int wheatOffer = offer.get(ResourceType.WHEAT);
+
+		if (brickOffer > 0) {
+			getAcceptOverlay().addGetResource(ResourceType.BRICK, brickOffer);
+		} else if (brickOffer < 0) {
+			brickOffer  = brickOffer * -1; // make positive number for comparison
+			getAcceptOverlay().addGiveResource(ResourceType.BRICK, brickOffer);
+			if(receiver.getNumberOfResourceType(ResourceType.BRICK) < brickOffer) {
+				getAcceptOverlay().setAcceptEnabled(false);
+			}
+		}
+
+		if (woodOffer > 0) {
+			getAcceptOverlay().addGetResource(ResourceType.WOOD, woodOffer);
+		} else if (woodOffer < 0) {
+			woodOffer  = woodOffer * -1; 
+			getAcceptOverlay().addGiveResource(ResourceType.WOOD, woodOffer);
+			if(receiver.getNumberOfResourceType(ResourceType.WOOD) < woodOffer) {
+				getAcceptOverlay().setAcceptEnabled(false);
+			}
+		}
+
+		if (sheepOffer > 0) {
+			getAcceptOverlay().addGetResource(ResourceType.SHEEP, sheepOffer);
+		} else if (sheepOffer < 0) {
+			sheepOffer  = sheepOffer * -1; 
+			getAcceptOverlay().addGiveResource(ResourceType.SHEEP, sheepOffer);
+			if(receiver.getNumberOfResourceType(ResourceType.SHEEP) < sheepOffer) {
+				getAcceptOverlay().setAcceptEnabled(false);
+			}
+		}
+
+		if (wheatOffer > 0) {
+			getAcceptOverlay().addGetResource(ResourceType.WHEAT, wheatOffer);
+		} else if (wheatOffer < 0) {
+			wheatOffer  = wheatOffer * -1;
+			getAcceptOverlay().addGiveResource(ResourceType.WHEAT, wheatOffer);
+			if(receiver.getNumberOfResourceType(ResourceType.WHEAT) < wheatOffer) {
+				getAcceptOverlay().setAcceptEnabled(false);
+			}
+		}
+
+		if (oreOffer > 0) {
+			getAcceptOverlay().addGetResource(ResourceType.ORE, oreOffer);
+		} else if (oreOffer < 0) {
+			oreOffer  = oreOffer * -1;
+			getAcceptOverlay().addGiveResource(ResourceType.ORE, oreOffer);
+			if(receiver.getNumberOfResourceType(ResourceType.ORE) < oreOffer) {
+				getAcceptOverlay().setAcceptEnabled(false);
+			}
+		}
 	}
 
 }
