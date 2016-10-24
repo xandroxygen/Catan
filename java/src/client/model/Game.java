@@ -100,6 +100,12 @@ public class Game {
     		chat.add(new LogEntry(color,line.getAsJsonObject().get("message").getAsString()));
     	}
 
+    	// Create Trade offer, if any
+		if (modelJSON.has("tradeOffer")) {
+			tradeOffer = new TradeOffer(modelJSON.getAsJsonObject("tradeOffer"));
+		}
+
+
     	// Initialize remaining variables
     	winner = modelJSON.get("winner").getAsInt();
 		version = modelJSON.get("version").getAsInt();
