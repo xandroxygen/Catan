@@ -223,7 +223,10 @@ public class MapController extends Controller implements IMapController, Observe
 	
 	public void robPlayer(RobPlayerInfo victim) {
 		state.robPlayer(victim, this);
-		getRobView().closeModal();
+		if(getRobView().isModalShowing()){
+			getRobView().closeModal();
+		}
+		
 	}
 
 	@Override
