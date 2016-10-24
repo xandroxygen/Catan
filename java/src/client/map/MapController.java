@@ -200,8 +200,12 @@ public class MapController extends Controller implements IMapController, Observe
 	public void placeRobber(HexLocation hexLoc) {
 		state.placeRobber(hexLoc, this);
 		getRobView().setPlayers(Model.getInstance().getCandidateVictims(hexLoc));
-		getRobView().closeModal();
-		getRobView().showModal();
+		if(getRobView().isModalShowing()) {
+			getRobView().closeModal();
+		}
+		if(!getRobView().isModalShowing()) {
+			getRobView().showModal();
+		}
 		
 	}
 	
