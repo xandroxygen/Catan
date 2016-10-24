@@ -14,7 +14,6 @@ import shared.definitions.*;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
-import sun.rmi.runtime.Log;
 
 import java.util.Map;
 import java.util.Observable;
@@ -224,7 +223,10 @@ public class MapController extends Controller implements IMapController, Observe
 	
 	public void robPlayer(RobPlayerInfo victim) {
 		state.robPlayer(victim, this);
-		getRobView().closeModal();
+		if(getRobView().isModalShowing()){
+			getRobView().closeModal();
+		}
+		
 	}
 
 	@Override

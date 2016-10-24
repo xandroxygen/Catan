@@ -122,6 +122,9 @@ public class GameFinishedView extends OverlayView implements IGameFinishedView {
 		image.setIcon(new ImageIcon(b.getScaledInstance(newWidth, IMAGE_HEIGHT, BufferedImage.SCALE_FAST)));
 	}
 	
+	/**
+	 * Takes the user to the join game screen to let them join another game, if desired.
+	 */
 	private void startNewGame() {
 		
 		PlayerWaitingView playerWaitingView = new PlayerWaitingView();
