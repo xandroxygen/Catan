@@ -216,6 +216,8 @@ public class Game {
     				!theMap.edgeHasPlayerMunicipality(location, playerList.get(2)) &&
     				!theMap.edgeHasPlayerMunicipality(location, playerList.get(3)) &&
     				!theMap.edgeHasAdjacentPlayerRoad(location, player) &&
+    				(theMap.futureCanPlaceSettlement(location.getNormalizedVertices().get(0)) ||
+    				theMap.futureCanPlaceSettlement(location.getNormalizedVertices().get(1))) &&
     				!theMap.edgeIsOnWater(location));
     	}
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
