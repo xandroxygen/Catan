@@ -61,7 +61,7 @@ public class RollController extends Controller implements IRollController, Obser
 	public void rollDice() {
 
 		try {
-			System.out.println("Rolling Dice");
+			//System.out.println("Rolling Dice");
 			hasRolled = true;
 			int roll = rollOneDie() + rollOneDie();
 			Model.getInstance().getServer().rollNumber(roll);
@@ -73,7 +73,7 @@ public class RollController extends Controller implements IRollController, Obser
 			getResultView().showModal();
 		}
 		catch (InvalidActionException e) {
-			System.out.print(e.message);
+			//System.out.print(e.message);
 			getRollView().setMessage("The roll failed.");
 		}
 	}
@@ -90,7 +90,7 @@ public class RollController extends Controller implements IRollController, Obser
 					if (!hasRolled) {
 
 						// if needed, implement countdown timer here
-						System.out.println("Timer finished");
+						//System.out.println("Timer finished");
 						rollDice();
 					}
 				}

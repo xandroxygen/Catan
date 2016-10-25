@@ -34,7 +34,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	@Override
 	public void endTurn() {
 		try {
-			System.out.println("Ending turn");
+			//System.out.println("Ending turn");
 			Model.getInstance().getServer().finishTurn();
 		} catch (InvalidActionException e) {
 			JOptionPane.showMessageDialog((TurnTrackerView)getView(), "Something went wrong ending your turn!");
