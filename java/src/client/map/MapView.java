@@ -313,7 +313,7 @@ public class MapView extends PanelView implements IMapView
 				case CITY:
 					return "Place a City!";
 				case ROBBER:
-					return "Move the Robbing!";
+					return "Move the Robber!";
 				default:
 					assert false;
 					return "";
