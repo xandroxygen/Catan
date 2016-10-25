@@ -52,6 +52,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	private int tradingPartner = -1;
 	
 	private boolean playersSetUp;
+	private boolean isOfferMade;
 
 	/**
 	 * DomesticTradeController constructor
@@ -73,6 +74,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		Model.getInstance().addObserver(this);
 		
 		playersSetUp = false;
+		isOfferMade = false;
 	}
 	
 	public IDomesticTradeView getTradeView() {
@@ -481,21 +483,34 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		reInitValues();
 		
 		getTradeOverlay().setTradeEnabled(false);
-		
+
+		// trade offer is on the table
 		if(Model.getInstance().getGame().getTradeOffer() != null){
+
+			isOfferMade = true;
+
 			int receiver = Model.getInstance().getGame().getTradeOffer().getReceiver();
 			int sender = Model.getInstance().getGame().getTradeOffer().getSender();
 			
-			if(receiver == Model.getInstance().getCurrentPlayer().getPlayerIndex()) {
+			if(receiver == Model.getInstance().getGame().getCurrentPlayer().getPlayerIndex()) {
 				setUpAcceptTrade();
 				getAcceptOverlay().showModal();
 			}
 			
-			if(sender == Model.getInstance().getCurrentPlayer().getPlayerIndex()) {
+			if(sender == Model.getInstance().getGame().getCurrentPlayer().getPlayerIndex()) {
 				if(!getWaitOverlay().isModalShowing()) {
 					getWaitOverlay().closeModal();
 				}
 			}
+		}
+
+		// trade offer has been removed
+		// Docs say: either resources are exchanged, or they're not
+		// We could add a modal with the status, or just not
+		if (isOfferMade && Model.getInstance().getGame().getTradeOffer() == null) {
+
+			isOfferMade = false;
+			getWaitOverlay().closeModal();
 		}
 	}
 	
