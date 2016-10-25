@@ -244,9 +244,11 @@ public class MapController extends Controller implements IMapController, Observe
 			switch (modelStatus) {
 				case FirstRound:
 					this.setState(FirstRound.instance());
+					state.initiateSetup(this);
 					break;
 				case SecondRound:
 					this.setState(SecondRound.instance());
+					state.initiateSetup(this);
 					break;
 				case Discarding:
 					this.setState(Discarding.instance());
@@ -264,7 +266,6 @@ public class MapController extends Controller implements IMapController, Observe
 				default:
 					this.setState(Playing.instance());
 			}
-			state.initiateSetup(this);
 			initFromModel();
 		}
 	}
