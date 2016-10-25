@@ -10,6 +10,7 @@ import shared.locations.VertexLocation;
 public class SecondRound extends MapState {
 	
 	private boolean roadPlaced = false;
+	private boolean settlementPlaced = false;
 	private static SecondRound inst = new SecondRound();
 	private SecondRound() { }
 
@@ -32,6 +33,7 @@ public class SecondRound extends MapState {
 	
 	public void placeSettlement(VertexLocation vertexLocation, MapController controller) {
 		Model.getInstance().placeSettlement(true, vertexLocation);
+		settlementPlaced = true;
 		// TODO: This isn't always true if you aren't first...right? Or maybe you wait in this state..
 		controller.setState(Rolling.instance());
 		Model.getInstance().finishTurn();
@@ -41,7 +43,7 @@ public class SecondRound extends MapState {
 		if (!roadPlaced) {
 			controller.getView().startDrop(PieceType.ROAD, Model.getInstance().getCurrentPlayer().getColor(),false);
 		}
-		else {
+		else if (!settlementPlaced) {
 			controller.getView().startDrop(PieceType.SETTLEMENT, Model.getInstance().getCurrentPlayer().getColor(),false);
 		}
 	}

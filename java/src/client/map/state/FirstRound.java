@@ -10,6 +10,7 @@ import shared.locations.VertexLocation;
 public class FirstRound extends MapState {
 	private static FirstRound inst = new FirstRound();
 	private boolean roadPlaced = false;
+	private boolean settlementPlaced = false;
 	private FirstRound() { }
 
 	public static MapState instance() { return inst; }
@@ -32,6 +33,7 @@ public class FirstRound extends MapState {
 	public void placeSettlement(VertexLocation vertexLocation, MapController controller) {
 		Model.getInstance().placeSettlement(true, vertexLocation);
 		controller.setState(SecondRound.instance());
+		settlementPlaced = true;
 		Model.getInstance().finishTurn();
 	}
 	
@@ -43,7 +45,7 @@ public class FirstRound extends MapState {
 		if (!roadPlaced) {
 			controller.getView().startDrop(PieceType.ROAD, Model.getInstance().getCurrentPlayer().getColor(),false);
 		}
-		else {
+		else if (!settlementPlaced){
 			controller.getView().startDrop(PieceType.SETTLEMENT, Model.getInstance().getCurrentPlayer().getColor(),false);
 		}
 	}
