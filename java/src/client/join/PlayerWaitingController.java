@@ -1,6 +1,5 @@
 package client.join;
 
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -9,7 +8,6 @@ import client.base.*;
 import client.data.GameInfo;
 import client.data.PlayerInfo;
 import client.model.InvalidActionException;
-import client.model.Model;
 
 
 /**
@@ -40,6 +38,8 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	public void start() {
 		
 		GameInfo currentGame = GameAdministrator.getInstance().getCurrentGame();
+		PlayerInfo currentUser = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer();
+		
 		
 		if (currentGame.getPlayers().size() == 4) {
 			startGame();
@@ -47,6 +47,11 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		else {
 			PlayerInfo[] players = new PlayerInfo[currentGame.getPlayers().size()];
 			currentGame.getPlayers().toArray(players);
+			for (PlayerInfo p : players) {
+				if (p.getId() == currentUser.getId()) {
+					p.setColor(currentUser.getColor());
+				}
+			}
 			view.setPlayers(players);
 			
 			view.setAIChoices(GameAdministrator.getInstance().getAIList());
