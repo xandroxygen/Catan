@@ -264,6 +264,10 @@ public class MapController extends Controller implements IMapController, Observe
 			}
 			
 		}
+		else if (game != null && game.getTheMap() != null && 
+				game.getTheMap().getHexes() != null) {
+			initFromModel();
+		}
 	}
 }
 
