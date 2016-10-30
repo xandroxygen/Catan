@@ -102,8 +102,8 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	public void update(Observable arg0, Object arg1) {
 		initFromModel();
 		
-		if(game.getWinner() != -1) {
-			String stateMessage = game.getPlayerList().get(game.getWinner()).getName() + " won the game!";
+		if(Model.getInstance().getWinner() != -1) {
+			String stateMessage = Model.getInstance().getPlayerList().get(Model.getInstance().getWinner()).getName() + " won the game!";
 			this.getView().updateGameState(stateMessage, false);
 			
 		}

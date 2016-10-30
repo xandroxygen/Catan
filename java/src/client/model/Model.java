@@ -12,6 +12,7 @@ import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
@@ -676,6 +677,56 @@ public class Model extends Observable {
 
 	public RobPlayerInfo[] getCandidateVictims(HexLocation hexLoc) {
 		return game.getCandidateVictims(hexLoc);
-		
+	}
+	
+	/**
+	 * Returns the index of the player who won the game
+	 * 
+	 * @return the index of the player who won the game
+	 */
+	public int getWinner() {
+		return game.getPlayerIndex(game.getWinner());
+	}
+	
+	/**
+	 * Returns the index of a player given the player's ID 
+	 * 
+	 * @param playerID the ID of the player
+	 * @return the index of the player with the given ID
+	 */
+	public int getPlayerIndex(int playerID) {
+		return game.getPlayerIndex(playerID);
+	}
+	
+	public List<Player> getPlayerList() {
+		return game.getPlayerList();
+	}
+	
+	/**
+	 * Returns the player in the game at the given index
+	 * 
+	 * @param index The index of the player to retrieve
+	 * @return The player at the given index
+	 */
+	public Player getPlayer(int index) {
+		return game.getPlayerList().get(index);
+	}
+	
+	/**
+	 * Checks whether a player is the local player
+	 * 
+	 * @param p the player to check
+	 * @return true if Player p is the local player, false if not
+	 */
+	public boolean isLocalPlayer(Player p) {
+		return p.getPlayerID() == game.getCurrentPlayer().getPlayerID();	
+	}
+	
+	/**
+	 * Returns the current game state
+	 * @return the current game state
+	 */
+	public GameStatus getStatus() {
+		return game.getTurnTracker().getStatus();
 	}
 }
