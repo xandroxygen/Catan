@@ -71,7 +71,7 @@ public class Game {
 		this.server = server;
     	
     	// Init the current player
-    	for (Player player : players) {
+		for (Player player : players) {
     		if (player.getPlayerID() == GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId()) {
     			this.currentPlayer = player;
     			server.setPlayerIndex(player.getPlayerIndex());
