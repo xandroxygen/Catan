@@ -721,4 +721,12 @@ public class Model extends Observable {
 	public boolean isLocalPlayer(Player p) {
 		return p.getPlayerID() == game.getCurrentPlayer().getPlayerID();	
 	}
+	
+	/**
+	 * Returns the current game state
+	 * @return the current game state
+	 */
+	public GameStatus getStatus() {
+		return game.getTurnTracker().getStatus();
+	}
 }
