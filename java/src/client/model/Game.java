@@ -409,7 +409,7 @@ public class Game {
 		
 		// Create array of Robbing Info
 		for (int i = 0; i < victimIndicies.length; i++) {
-			if (victimIndicies[i] == 1) {
+			if (victimIndicies[i] == 1 && playerList.get(i).hasResources()) {
 				infoList.add(new RobPlayerInfo(playerList.get(i)));
 			}
 		}

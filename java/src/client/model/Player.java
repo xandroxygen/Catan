@@ -509,4 +509,13 @@ public class Player {
 		return total;
 	}
 
+	public boolean hasResources() {
+		if (resources.get(ResourceType.BRICK) > 0 || resources.get(ResourceType.ORE) > 0 || 
+				resources.get(ResourceType.SHEEP) > 0 || resources.get(ResourceType.WHEAT) > 0 ||
+				resources.get(ResourceType.WOOD) > 0) {
+			return true;
+		}
+		return false;
+	}
+
 }
