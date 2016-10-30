@@ -202,7 +202,7 @@ public class DiscardController extends Controller implements IDiscardController,
         
         numToDiscard = totalRemaining / 2;
         
-        if(!p.isDiscarded()) {
+        if(!p.isDiscarded() && totalRemaining > 7) {
         	if(!getDiscardView().isModalShowing()) {
         		getDiscardView().setStateMessage("Discard: " + totalDiscarded + "/" + numToDiscard);
         		

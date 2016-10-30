@@ -64,23 +64,27 @@ public class GameAdministrator extends Observable{
      * Checks whether user can login with given username and password.
      * @param username String of name user wishes to register.
      * @param password Desired password.
-     * @pre Username and password are not null
+     * @pre Username and password are not null or blank
      * @return true if user can login
      */
     public boolean canLogin(String username, String password) {
-        return (username != null && password != null);
+        return (username != null && password != null
+				&& !username.equals("") && !password.equals(""));
     }
 
     /**
      * Checks whether user can register a given username.
      * @param username String of name user wishes to register.
      * @param password Desired password.
-     * @pre Username and password are not null; Username is not registered already
+     * @pre Username and password are not null; Username is not registered already; Username and password are not blank
      * @return true if user can register
      * @throws InvalidActionException if fetching game list fails
      */
     public boolean canRegister(String username, String password) throws InvalidActionException {
-        if (username != null && password != null) {
+
+        if (username != null && password != null &&
+				!username.equals("") && !password.equals("")) {
+
             boolean nameIsNotTaken = true;
             fetchGameList();
             for (GameInfo game : allCurrentGames) {
@@ -97,7 +101,7 @@ public class GameAdministrator extends Observable{
 
     /**
      * Checks whether logged-in user can create game.
-     * @pre User is logged in; game name is not null; random options are valid boolean
+     * @pre User is logged in; game name is not null or blank; random options are valid boolean
      * @param gameName name of the game
      * @param rTiles true if tiles should be randomized
      * @param rNumbers true if numbers should be randomized
@@ -107,7 +111,7 @@ public class GameAdministrator extends Observable{
     public boolean canCreateGame(String gameName, boolean rTiles, boolean rNumbers, boolean rPorts) {
         boolean canCreateGame = true;
         canCreateGame = currentUser.isLoggedIn;
-        canCreateGame = (gameName != null) && canCreateGame;
+        canCreateGame = (gameName != null) && (!gameName.equals("")) && canCreateGame;
         // booleans are valid booleans by default?
         return canCreateGame;
     }

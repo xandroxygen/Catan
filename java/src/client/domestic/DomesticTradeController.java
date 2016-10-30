@@ -257,16 +257,17 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			int senderID = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId();
 			int receiverID = Model.getInstance().getGame().getPlayerList().get(tradingPartner).getPlayerID();
 			
-			if(Model.getInstance().canTradeWithPlayer(senderID, receiverID, offer))
+			if(Model.getInstance().canTradeWithPlayer(senderID, receiverID, offer)) {
 				Model.getInstance().getServer().offerTrade(offer, tradingPartner);
+				isOfferMade = true;
+			}
 		} catch (InvalidActionException e) {
 			e.printStackTrace();
 		}
 		reInitValues();
 		
 		getTradeOverlay().closeModal();
-		
-		//TODO: if the player receiving the trade offer is an AI, don't show the wait modal
+
 		getWaitOverlay().showModal();
 	}
 	
@@ -487,8 +488,6 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		// trade offer is on the table
 		if(Model.getInstance().getGame().getTradeOffer() != null){
 
-			isOfferMade = true;
-
 			int receiver = Model.getInstance().getGame().getTradeOffer().getReceiver();
 			int sender = Model.getInstance().getGame().getTradeOffer().getSender();
 			
@@ -498,9 +497,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			}
 			
 			if(sender == Model.getInstance().getGame().getCurrentPlayer().getPlayerIndex()) {
-				if(!getWaitOverlay().isModalShowing()) {
-					getWaitOverlay().closeModal();
-				}
+				getWaitOverlay().showModal();
 			}
 		}
 

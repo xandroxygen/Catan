@@ -190,7 +190,7 @@ public class Game {
     				theMap.vertexIsOnPlayerRoad(location, player));
     	}
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && !theMap.hasAdjacentSettlement(location) &&
-				!theMap.hasSettlementAtLocation(location) && theMap.vertexIsOnPlayerRoad(location, player) && 
+				!theMap.hasSettlementAtLocation(location) && !theMap.hasCityAtLocation(location) && theMap.vertexIsOnPlayerRoad(location, player) && 
 				(player.getResources().get(ResourceType.WOOD) >= 1) && (player.getResources().get(ResourceType.BRICK) >= 1) && 
 				(player.getResources().get(ResourceType.WHEAT) >= 1) && (player.getResources().get(ResourceType.SHEEP) >= 1) && 
 				(player.getSettlements() >= 1));

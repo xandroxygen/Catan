@@ -199,13 +199,12 @@ public class MapController extends Controller implements IMapController, Observe
 
 	public void placeRobber(HexLocation hexLoc) {
 		state.placeRobber(hexLoc, this);
-		getRobView().setPlayers(Model.getInstance().getCandidateVictims(hexLoc));
-		if(getRobView().isModalShowing()) {
-			getRobView().closeModal();
-		}
-		if(!getRobView().isModalShowing()) {
-			getRobView().showModal();
-		}
+		RobPlayerInfo[] victims = Model.getInstance().getCandidateVictims(hexLoc);
+		getRobView().setPlayers(victims);
+
+		getRobView().closeModal();
+		getRobView().showModal();
+
 		
 	}
 	
@@ -227,10 +226,7 @@ public class MapController extends Controller implements IMapController, Observe
 	
 	public void robPlayer(RobPlayerInfo victim) {
 		state.robPlayer(victim, this);
-		if(getRobView().isModalShowing()){
-			getRobView().closeModal();
-		}
-		
+		getRobView().closeModal();
 	}
 
 	@Override
@@ -240,13 +236,15 @@ public class MapController extends Controller implements IMapController, Observe
 				game.getTheMap().getHexes() != null && game.isMyTurn()) {
 
 			GameStatus modelStatus = game.getTurnTracker().getStatus();
-			
+			initFromModel();
 			switch (modelStatus) {
 				case FirstRound:
 					this.setState(FirstRound.instance());
+					state.initiateSetup(this);
 					break;
 				case SecondRound:
 					this.setState(SecondRound.instance());
+					state.initiateSetup(this);
 					break;
 				case Discarding:
 					this.setState(Discarding.instance());
@@ -264,7 +262,10 @@ public class MapController extends Controller implements IMapController, Observe
 				default:
 					this.setState(Playing.instance());
 			}
-			state.initiateSetup(this);
+			
+		}
+		else if (game != null && game.getTheMap() != null && 
+				game.getTheMap().getHexes() != null) {
 			initFromModel();
 		}
 	}

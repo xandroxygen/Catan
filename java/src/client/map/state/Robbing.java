@@ -34,6 +34,7 @@ public class Robbing extends MapState {
 		if (newLocation != null && victim != null) {
 			try {
 				Model.getInstance().getGame().getServer().robPlayer(newLocation, victim.getPlayerIndex());
+				newLocation = null;
 			} catch (InvalidActionException e) {
 				e.printStackTrace();
 			}
@@ -41,6 +42,7 @@ public class Robbing extends MapState {
 		else if (newLocation != null) {
 			try {
 				Model.getInstance().getGame().getServer().robPlayer(newLocation, -1);
+				newLocation = null;
 			} catch (InvalidActionException e) {
 				e.printStackTrace();
 			}

@@ -219,16 +219,9 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	 * Closes all open modals that shouldn't be open
 	 */
 	private void closeOpenModals() {
-		if(getSelectColorView().isModalShowing()) {
 			getSelectColorView().closeModal();
-		}
-		if(getJoinGameView().isModalShowing()) {
 			getJoinGameView().closeModal();
-		}
-		
-		if(getNewGameView().isModalShowing()) {
 			getNewGameView().closeModal();
-		}
 	}
 
 }

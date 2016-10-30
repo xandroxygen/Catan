@@ -81,10 +81,14 @@ public class LoginController extends Controller implements ILoginController, Obs
 
             if (GameAdministrator.getInstance().canLogin(username, password)) {
                 GameAdministrator.getInstance().login(username, password);
+				getLoginView().closeModal();
+				loginAction.execute();
             }
-            getLoginView().closeModal();
-            
-            loginAction.execute();
+            else {
+				getMessageView().showModal();
+				getMessageView().setTitle("Invalid login");
+			}
+
 		}
 		catch (InvalidActionException e) {
 			getMessageView().showModal();
@@ -106,6 +110,11 @@ public class LoginController extends Controller implements ILoginController, Obs
 				getLoginView().closeModal();
 				loginAction.execute();
             }
+            else {
+				getMessageView().showModal();
+				getMessageView().setTitle("Invalid");
+				getMessageView().setMessage("Username/password");
+			}
         }
         catch (Exception e) {
             getMessageView().showModal();
