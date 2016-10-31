@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import shared.definitions.ResourceType;
 import shared.locations.*;
 
 import java.util.ArrayList;
@@ -550,8 +548,11 @@ public class Map {
 	public boolean futureCanPlaceSettlement(VertexLocation location){
     	return !hasSettlementAtLocation(location) && !hasAdjacentSettlement(location);
     }
-	
-	
+
+	public boolean roadIsNextToSettlement(){
+//		edgeHasPlayerMunicipality()
+		return false;
+	}
 	
 	
 
