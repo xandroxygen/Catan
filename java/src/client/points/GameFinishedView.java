@@ -127,6 +127,8 @@ public class GameFinishedView extends OverlayView implements IGameFinishedView {
 	 */
 	private void startNewGame() {
 		
+		GameAdministrator.getInstance().setSettingUp(true);
+		
 		PlayerWaitingView playerWaitingView = new PlayerWaitingView();
 		final PlayerWaitingController playerWaitingController = new PlayerWaitingController(
 																							playerWaitingView);
@@ -165,9 +167,7 @@ public class GameFinishedView extends OverlayView implements IGameFinishedView {
 				joinController.start();
 			}
 		});
-		loginView.setController(loginController);
-		loginView.setController(loginController);
-		
+		loginView.setController(loginController);		
 		
 		loginController.getLoginAction().execute();
 	}
