@@ -111,7 +111,8 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	 */
 	private void setPlayers() {
 		PlayerInfo[] players = new PlayerInfo[3];
-		int playerID = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId();
+		//int playerID = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId();
+		int playerID = Model.getInstance().getPlayer(Model.getInstance().getGame().getCurrentTurnIndex()).getPlayerID();
 		
 		int count = 0;
 		for(PlayerInfo p : GameAdministrator.getInstance().getCurrentGame().getPlayers()) {
