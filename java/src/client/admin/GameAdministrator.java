@@ -320,6 +320,9 @@ public class GameAdministrator extends Observable{
 				setChanged();
 				notifyObservers(currentGame);
             }
+            else if (currentGame != null) {
+            	currentGame = allCurrentGames.get(currentGame.getId());
+            }
             else if (currentGame == null) {
             	setChanged();
             	notifyObservers(allCurrentGames);

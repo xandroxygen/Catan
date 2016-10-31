@@ -88,16 +88,17 @@ public class ServerPoller {
 	 */
 	public void pollServer() {	
 		try {			
-			if(GameAdministrator.getInstance().isSettingUp()) {
+			//if(GameAdministrator.getInstance().isSettingUp()) {
 				GameAdministrator.getInstance().fetchGameList();
-			}
-			else {
+			//}
+			if (!GameAdministrator.getInstance().isSettingUp()) {
 				String response = server.gameGetModel(Model.getInstance().getVersion());
 				
 				boolean hasChanged = checkForUpdates(response);
 				if (hasChanged) {
 					JsonObject newModel = new JsonParser().parse(response).getAsJsonObject();
 					Model.getInstance().updateModel(newModel);
+					//GameAdministrator.getInstance().fetchGameList();
 				}
 			}
 		} catch (InvalidActionException e) {
