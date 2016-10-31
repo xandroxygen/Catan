@@ -8,7 +8,6 @@ import client.join.*;
 import client.misc.*;
 import client.admin.GameAdministrator;
 import client.base.*;
-import client.model.Game;
 
 /**
  * Main entry point for the Catan program
