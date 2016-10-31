@@ -1,11 +1,15 @@
 package client.resources;
 
-import java.util.*;
-
-import client.base.*;
+import client.base.Controller;
+import client.base.IAction;
 import client.model.Game;
 import client.model.Model;
 import shared.definitions.ResourceType;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 
 /**
@@ -121,7 +125,8 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 									&& hand.get(ResourceType.ORE) >= 3;
 			getView().setElementEnabled(ResourceBarElement.CITY, canPlayCity);
 
-			boolean canBuyDevCard = hand.get(ResourceType.WHEAT) >= 1
+			boolean canBuyDevCard = Model.getInstance().getGame().getBank().canBuyDevelopmentCard()
+									&& hand.get(ResourceType.WHEAT) >= 1
 									&& hand.get(ResourceType.SHEEP) >= 1
 									&& hand.get(ResourceType.ORE) >= 1;
 			getView().setElementEnabled(ResourceBarElement.BUY_CARD, canBuyDevCard);
