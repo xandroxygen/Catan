@@ -127,7 +127,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	@Override
 	public void startTrade() {
 		getTradeOverlay().reset();
-		update(null, null);
+		//update(null, null);
 		getTradeOverlay().setPlayerSelectionEnabled(true);
 		getTradeOverlay().setResourceSelectionEnabled(true);
 		getTradeOverlay().showModal();
@@ -473,11 +473,12 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		// enable/ disable the button that lets the player open the trade modal
 		getTradeView().enableDomesticTrade(Model.getInstance().canTrade());
 		
+		setPlayers();
 		// set the players that the player can trade with
-		if(!playersSetUp) {
-			setPlayers();
-			playersSetUp = true;
-		}	
+		//if(!playersSetUp) {
+			
+			//playersSetUp = true;
+		//}	
 		
 		updateResourceCounts();
 		
