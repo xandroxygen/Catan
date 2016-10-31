@@ -111,17 +111,20 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 			// enable buyables, cards - disable if not enough resources
 			Map<ResourceType, Integer> hand = game.getCurrentPlayer().getResources();
 
-			boolean canPlayRoad = hand.get(ResourceType.WOOD) >= 1
+			boolean canPlayRoad = Model.getInstance().getCurrentPlayer().getRoads() > 0
+								&& hand.get(ResourceType.WOOD) >= 1
 								&& hand.get(ResourceType.BRICK) >= 1;
 			getView().setElementEnabled(ResourceBarElement.ROAD, canPlayRoad);
 
-			boolean canPlaySettlement = hand.get(ResourceType.WOOD) >= 1
+			boolean canPlaySettlement = Model.getInstance().getCurrentPlayer().getSettlements() > 0
+										&& hand.get(ResourceType.WOOD) >= 1
 										&& hand.get(ResourceType.BRICK) >= 1
 										&& hand.get(ResourceType.WHEAT) >= 1
 										&& hand.get(ResourceType.SHEEP) >= 1;
 			getView().setElementEnabled(ResourceBarElement.SETTLEMENT, canPlaySettlement);
 
-			boolean canPlayCity = hand.get(ResourceType.WHEAT) >= 2
+			boolean canPlayCity = Model.getInstance().getCurrentPlayer().getCities() > 0
+									&& hand.get(ResourceType.WHEAT) >= 2
 									&& hand.get(ResourceType.ORE) >= 3;
 			getView().setElementEnabled(ResourceBarElement.CITY, canPlayCity);
 
