@@ -4,38 +4,52 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import client.admin.GameAdministrator;
+import client.communication.LogEntry;
+import client.data.RobPlayerInfo;
+import client.server.IServerProxy;
+import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Game class.
  */
 public class Game {
 
-    public ArrayList<Player> playerList;
-    public client.model.Map theMap;
-    public Bank bank;
-    public int currentTurnIndex;
-    public TurnTracker turnTracker;
-    public ArrayList<Line> log;
-    public ArrayList<Line> chat;
-    public int winner;
-    public int version;
-    public TradeOffer tradeOffer;
+    private ArrayList<Player> playerList;
+    private client.model.Map theMap;
+    private Bank bank;
+    private int currentTurnIndex;
+    private TurnTracker turnTracker;
+    private List<LogEntry> log;
+    private List<LogEntry> chat;
+    private int winner;
+    private int version;
+    private TradeOffer tradeOffer;
+    private Player currentPlayer;
+	private IServerProxy server;
 
     public boolean isTurn(int playerId){
         //look for implementation
         return getPlayerIndex(playerId) == turnTracker.getCurrentTurn();
     }
+    
+    public boolean isMyTurn() {
+    	return currentPlayer.getPlayerIndex() == turnTracker.getCurrentTurn();
+    }
 
     public int getPlayerIndex(int playerId){
         int i = 0;
         for (Player tempPlayer  : playerList) {
-            if(tempPlayer.getPlayerId() == playerId){
+            if(tempPlayer.getPlayerID() == playerId){
                 return i;
             }
             i++;
@@ -43,13 +57,26 @@ public class Game {
         //throw invalidExceptionError();
         return -1;
     }
+    
+    public Game() {
+    	this.version = -1;
+    }
 
-    public Game(ArrayList<Player> players, Map theMap, Bank bank, JsonObject modelJSON) {
+    public Game(ArrayList<Player> players, Map theMap, Bank bank, JsonObject modelJSON, IServerProxy server) {
 
     	// Initialize players, map and bank
     	playerList = players;
     	this.bank = bank;
-    	this.theMap= theMap;
+    	this.theMap = theMap;
+		this.server = server;
+    	
+    	// Init the current player
+		for (Player player : players) {
+    		if (player.getPlayerID() == GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId()) {
+    			this.currentPlayer = player;
+    			server.setPlayerIndex(player.getPlayerIndex());
+    		}
+    	}
 
     	// Create Turn Tracker
     	turnTracker = new Gson().fromJson(modelJSON.getAsJsonObject("turnTracker"), TurnTracker.class);
@@ -60,8 +87,8 @@ public class Game {
     	JsonObject logJSON = modelJSON.getAsJsonObject("log");
     	JsonArray logLines = logJSON.getAsJsonArray("lines");
     	for (JsonElement line : logLines) {
-    		log.add(new Line(line.getAsJsonObject().get("message").getAsString(),
-    				line.getAsJsonObject().get("source").getAsString()));
+    		CatanColor color = getPlayerColorByName(line.getAsJsonObject().get("source").getAsString());
+    		log.add(new LogEntry(color,line.getAsJsonObject().get("message").getAsString()));
     	}
 
     	// Create Chat
@@ -69,9 +96,15 @@ public class Game {
     	JsonObject chatJSON = modelJSON.getAsJsonObject("chat");
     	JsonArray chatLines = chatJSON.getAsJsonArray("lines");
     	for (JsonElement line : chatLines) {
-    		chat.add(new Line(line.getAsJsonObject().get("message").getAsString(),
-    				line.getAsJsonObject().get("source").getAsString()));
+    		CatanColor color = getPlayerColorByName(line.getAsJsonObject().get("source").getAsString());
+    		chat.add(new LogEntry(color,line.getAsJsonObject().get("message").getAsString()));
     	}
+
+    	// Create Trade offer, if any
+		if (modelJSON.has("tradeOffer")) {
+			tradeOffer = new TradeOffer(modelJSON.getAsJsonObject("tradeOffer"));
+		}
+
 
     	// Initialize remaining variables
     	winner = modelJSON.get("winner").getAsInt();
@@ -79,7 +112,11 @@ public class Game {
 
     }
 
-    /**
+	public IServerProxy getServer() {
+		return server;
+	}
+
+	/**
      * checks to see if the game can create a new user
      *
      * @pre <pre>
@@ -125,8 +162,8 @@ public class Game {
     boolean canPlaceCity(int playerId, VertexLocation location){
     	Player player = this.getPlayerById(playerId);
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
-				theMap.playerHasSettlementAtLocation(location, player) && (player.getResourceHand().get(ResourceType.WHEAT) >= 2) &&
-				(player.getResourceHand().get(ResourceType.ORE) >= 3) && (player.getCities() >= 1));
+				theMap.playerHasSettlementAtLocation(location, player) && (player.getResources().get(ResourceType.WHEAT) >= 2) &&
+				(player.getResources().get(ResourceType.ORE) >= 3) && (player.getCities() >= 1));
     }
 
     /**
@@ -149,12 +186,13 @@ public class Game {
     	Player player = this.getPlayerById(playerId);
     	if (free) {
     		return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
-    				!theMap.hasSettlementAtLocation(location) && !theMap.hasAdjacentSettlement(location));
+    				!theMap.hasSettlementAtLocation(location) && !theMap.hasAdjacentSettlement(location) && 
+    				theMap.vertexIsOnPlayerRoad(location, player));
     	}
-    	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
-				!theMap.hasSettlementAtLocation(location) && theMap.vertexIsOnPlayerRoad(location, player) && 
-				(player.getResourceHand().get(ResourceType.WOOD) >= 1) && (player.getResourceHand().get(ResourceType.BRICK) >= 1) && 
-				(player.getResourceHand().get(ResourceType.WHEAT) >= 1) && (player.getResourceHand().get(ResourceType.SHEEP) >= 1) && 
+    	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && !theMap.hasAdjacentSettlement(location) &&
+				!theMap.hasSettlementAtLocation(location) && !theMap.hasCityAtLocation(location) && theMap.vertexIsOnPlayerRoad(location, player) && 
+				(player.getResources().get(ResourceType.WOOD) >= 1) && (player.getResources().get(ResourceType.BRICK) >= 1) && 
+				(player.getResources().get(ResourceType.WHEAT) >= 1) && (player.getResources().get(ResourceType.SHEEP) >= 1) && 
 				(player.getSettlements() >= 1));
     }
 
@@ -178,16 +216,43 @@ public class Game {
     	Player player = this.getPlayerById(playerId);
     	if (free) {
     		return (turnTracker.getCurrentTurn() == player.getPlayerIndex() &&
-    				!theMap.hasRoadAtLocation(location) &&
-    				(theMap.edgeHasPlayerMunicipality(location, player)));
+    				!theMap.hasRoadAtLocation(location) && 
+    				!theMap.edgeHasPlayerMunicipality(location, playerList.get(0)) &&
+    				!theMap.edgeHasPlayerMunicipality(location, playerList.get(1)) && 
+    				!theMap.edgeHasPlayerMunicipality(location, playerList.get(2)) &&
+    				!theMap.edgeHasPlayerMunicipality(location, playerList.get(3)) &&
+//    				!theMap.edgeHasAdjacentPlayerRoad(location, player) &&
+    				(theMap.futureCanPlaceSettlement(location.getNormalizedVertices().get(0)) ||
+    				theMap.futureCanPlaceSettlement(location.getNormalizedVertices().get(1))) &&
+    				!theMap.edgeIsOnWater(location));
     	}
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
+    			!theMap.edgeIsOnWater(location) &&
 				!theMap.hasRoadAtLocation(location) &&
 				(theMap.edgeHasPlayerMunicipality(location, player) || theMap.edgeHasAdjacentPlayerRoad(location, player)) &&
-				(player.getResourceHand().get(ResourceType.WOOD) >= 1) && 
-				(player.getResourceHand().get(ResourceType.BRICK) >= 1) && (player.getRoads() >= 1));
+				(player.getResources().get(ResourceType.WOOD) >= 1) && 
+				(player.getResources().get(ResourceType.BRICK) >= 1) && (player.getRoads() >= 1));
     }
-    
+
+	boolean canPlaceRoad(int playerId, EdgeLocation firstLocation, EdgeLocation location) {
+		Player player = this.getPlayerById(playerId);
+		if (firstLocation == null) {
+			return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
+					!theMap.edgeIsOnWater(location) &&
+					!theMap.hasRoadAtLocation(location) &&
+					(theMap.edgeHasPlayerMunicipality(location, player) || theMap.edgeHasAdjacentPlayerRoad(location, player)) &&
+					(player.getRoads() >= 1));
+		}
+		else{
+			return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
+					!theMap.edgeIsOnWater(location) &&
+					!theMap.hasRoadAtLocation(location) && firstLocation != location &&
+					(theMap.edgeHasPlayerMunicipality(location, player) || theMap.edgeHasAdjacentPlayerRoad(location, player) ||
+					theMap.roadsAreNextToEachOther(firstLocation, location)) &&
+					(player.getRoads() >= 1));
+		}
+	}
+
     /**
      * Checks whether the player can trade with another player
      * @pre It's your turn, You have the resources you are offering.
@@ -206,15 +271,44 @@ public class Game {
     	Player player = this.getPlayerById(playerId);
     	return turnTracker.getCurrentTurn() == player.getPlayerIndex();
     }
+    
+    public void  placeRoad(boolean isFree, EdgeLocation roadLocation) {
+    	try {
+			server.buildRoad(isFree, roadLocation);
+		} catch (InvalidActionException e) {
+			e.printStackTrace();
+		}
+    }
 
+    public void placeSettlement(boolean isFree, VertexLocation vertexLocation) {
+    	try {
+			server.buildSettlement(isFree, vertexLocation);
+		} catch (InvalidActionException e) {
+			e.printStackTrace();
+		}
+    }
+
+	public void placeCity(VertexLocation vertexLocation) {
+		try {
+			server.buildCity(vertexLocation);
+		} catch (InvalidActionException e) {
+			e.printStackTrace();
+		}
+	}
+    
+    
     /**
-     * Checks whether the player can send a message.
+     * Sends a message from the logged in user.
      * @post  The chat contains your message at the end.
      * @param message the message the player wishes to send.
      * @return
      */
-    boolean sendMessage(int playerId, String message){
-        return false; //ME
+    void sendMessage(String message){
+    	try {
+			server.sendChat(message);
+		} catch (InvalidActionException e) {
+			e.printStackTrace();
+		}
     }
 
     /**
@@ -238,8 +332,17 @@ public class Game {
     // MARK: HELPER METHODS
     private Player getPlayerById(int playerId) {
     	for (Player player : playerList) {
-    		if (player.getPlayerId() == playerId) {
+    		if (player.getPlayerID() == playerId) {
     			return player;
+    		}
+    	}
+    	return null;
+    }
+    
+    private CatanColor getPlayerColorByName(String name) {
+    	for (Player player : playerList) {
+    		if (player.getName().equals(name)) {
+    			return player.getColor();
     		}
     	}
     	return null;
@@ -266,14 +369,6 @@ public class Game {
 		return turnTracker;
 	}
 
-	public ArrayList<Line> getLog() {
-		return log;
-	}
-
-	public ArrayList<Line> getChat() {
-		return chat;
-	}
-
 	public int getWinner() {
 		return winner;
 	}
@@ -284,6 +379,49 @@ public class Game {
 
 	public TradeOffer getTradeOffer() {
 		return tradeOffer;
+	}
+	
+	public List<LogEntry> getChat() {
+		return chat;
+	}
+	
+	public List<LogEntry> getLog() {
+		return log;
+	}
+
+	public Player getCurrentPlayer() {
+		return currentPlayer;
+	}
+
+	public void setVersion(int i) {
+		this.version = i;
+		
+	}
+
+	public boolean canPlaceRobber(HexLocation hexLoc) {
+		return !hexLoc.equals(theMap.getRobber().getLocation()) &&
+				(theMap.getHexes().get(hexLoc) != null);
+	}
+
+	public RobPlayerInfo[] getCandidateVictims(HexLocation hexLoc) {
+		List<RobPlayerInfo> infoList = new ArrayList<>();
+		int[] victimIndicies = theMap.getPlayersWithMunicipalityOn(hexLoc);
+		
+		// Create array of Robbing Info
+		for (int i = 0; i < victimIndicies.length; i++) {
+			if (victimIndicies[i] == 1 && playerList.get(i).hasResources()) {
+				infoList.add(new RobPlayerInfo(playerList.get(i)));
+			}
+		}
+		
+		if (infoList.size() != 0) {
+			RobPlayerInfo[] result = new RobPlayerInfo[infoList.size()];
+			infoList.toArray(result);
+			return result;
+		}
+		else {
+			return null;
+		}
 	}
     
 }

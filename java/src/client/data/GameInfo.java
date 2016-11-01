@@ -2,6 +2,10 @@ package client.data;
 
 import java.util.*;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 /**
  * Used to pass game information into views<br>
  * <br>
@@ -18,12 +22,39 @@ public class GameInfo
 	private int id;
 	private String title;
 	private List<PlayerInfo> players;
+	private String cookie;
 	
 	public GameInfo()
 	{
 		setId(-1);
 		setTitle("");
 		players = new ArrayList<PlayerInfo>();
+	}
+	
+	public GameInfo(String title, int id) {
+		this.title = title;
+		this.id = id;
+		players = new ArrayList<PlayerInfo>();
+	}
+	
+	//[{"title":"Default Game","id":0,"players":[{"color":"orange","name":"Sam","id":0}
+	
+	public GameInfo(JsonObject json) {
+		players = new ArrayList<PlayerInfo>();
+		this.id = json.get("id").getAsInt();
+		this.title = json.get("title").getAsString();
+		JsonArray playerArray = json.getAsJsonArray("players");
+		
+		int index = 0;
+		for (JsonElement player : playerArray) {
+			// TODO: Make this more efficient. The JSON gives an empty object {}, not sure how to check for that.
+			PlayerInfo playerInfo = new PlayerInfo(player.getAsJsonObject());
+			if (playerInfo.getId() != -1) {
+				playerInfo.setPlayerIndex(index);
+				players.add(playerInfo);
+				index++;
+			}
+		}
 	}
 	
 	public int getId()
@@ -41,6 +72,14 @@ public class GameInfo
 		return title;
 	}
 	
+	public String getCookie() {
+		return cookie;
+	}
+	
+	public void setCookie(String cookie) {
+		this.cookie = cookie;
+	}
+	
 	public void setTitle(String title)
 	{
 		this.title = title;
@@ -54,6 +93,11 @@ public class GameInfo
 	public List<PlayerInfo> getPlayers()
 	{
 		return Collections.unmodifiableList(players);
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return ((GameInfo) o).getId() == this.id && this.players.equals(((GameInfo)o).getPlayers());
 	}
 }
 

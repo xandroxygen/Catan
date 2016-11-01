@@ -20,5 +20,24 @@ public enum VertexDirection
 	{
 		return opposite;
 	}
+	
+	public static VertexDirection getEnumFromAbbrev(String abbrev) {
+		switch (abbrev) {
+		case "NW":
+			return NorthWest;
+		case "W":
+			return West;
+		case "NE":
+			return NorthEast;
+		case "E":
+			return East;
+		case "SW":
+			return SouthWest;
+		case "SE":
+			return SouthEast;
+		default:
+			return NorthWest;
+		}
+	}
 }
 

@@ -23,6 +23,14 @@ public class Map {
 
     private Robber robber;
 
+	public HashMap<HexLocation, Hex> getHexes() {
+		return hexes;
+	}
+
+	public int getRadius() {
+		return radius;
+	}
+
 	public HashMap<VertexLocation, City> getCities() {
 		return cities;
 	}
@@ -61,18 +69,18 @@ public class Map {
 			}
 			JsonArray roadsJSON = mapJSON.getAsJsonArray("roads");
 			for (JsonElement roadElement : roadsJSON) {
-				Road road = new Gson().fromJson(roadElement, Road.class);
-				roads.put(road.getLocation(), road);
+				Road road = new Road(roadElement.getAsJsonObject());
+				roads.put(road.getLocation().getNormalizedLocation(), road);
 			}
 			JsonArray settlementsJSON = mapJSON.getAsJsonArray("settlements");
 			for (JsonElement settlementElement : settlementsJSON) {
-				Settlement settlement = new Gson().fromJson(settlementElement, Settlement.class);
-				settlements.put(settlement.getLocation(), settlement);
+				Settlement settlement = new Settlement(settlementElement.getAsJsonObject());
+				settlements.put(settlement.getLocation().getNormalizedLocation(), settlement);
 			}
 			JsonArray citiesJSON = mapJSON.getAsJsonArray("cities");
 			for (JsonElement cityElement : citiesJSON) {
-				City city = new Gson().fromJson(cityElement, City.class);
-				cities.put(city.getLocation(), city);
+				City city = new City(cityElement.getAsJsonObject());
+				cities.put(city.getLocation().getNormalizedLocation(), city);
 			}
 			JsonArray portsJSON = mapJSON.getAsJsonArray("ports");
 			for (JsonElement portElement : portsJSON) {
@@ -109,14 +117,14 @@ public class Map {
 			int newY = location.getHexLoc().getY() - 1;
 			int newX = location.getHexLoc().getX() - 1;
 			// If a hex exists above it, get the vertex from that hex
-			if (newY >= radius) {
+			if (Math.abs(newY) <= Math.abs(radius)) {
 				HexLocation aboveHex = new HexLocation(location.getHexLoc().getX(), newY);
 				VertexLocation vertexH = new VertexLocation(aboveHex,VertexDirection.West);
 				return hasSettlementAtLocation(vertexH.getNormalizedLocation()) || hasSettlementAtLocation(vertexNE.getNormalizedLocation()) ||
 						hasSettlementAtLocation(vertexW.getNormalizedLocation());
 			}
 			// Otherwise, if a hex exists to the left of it, get the vertex from that hex
-			else if (newX >= radius) {
+			else if (Math.abs(newX) <= Math.abs(radius)) {
 				HexLocation sideHex = new HexLocation(newX,location.getHexLoc().getY());
 				VertexLocation vertexH = new VertexLocation(sideHex,VertexDirection.NorthEast);
 				return hasSettlementAtLocation(vertexH.getNormalizedLocation()) || hasSettlementAtLocation(vertexNE.getNormalizedLocation()) ||
@@ -133,7 +141,7 @@ public class Map {
 			// Create a vertex location for each of the 2 points around the point
 			VertexLocation vertexNW = new VertexLocation(location.getHexLoc(),VertexDirection.NorthWest);
 			VertexLocation vertexE = new VertexLocation(location.getHexLoc(),VertexDirection.East);
-			int newY = location.getHexLoc().getY() + 1;
+			int newY = location.getHexLoc().getY() - 1;
 			int newX = location.getHexLoc().getX() + 1;
 			// If a hex exists above it, get the vertex from that hex
 			if (newY <= radius) {
@@ -194,7 +202,7 @@ public class Map {
 			// Create edges for that share the same hex as the vertex
 			EdgeLocation edgeN = new EdgeLocation(location.getHexLoc(),EdgeDirection.North);
 			EdgeLocation edgeNE = new EdgeLocation(location.getHexLoc(),EdgeDirection.NorthEast);
-			int newY = location.getHexLoc().getY() + 1;
+			int newY = location.getHexLoc().getY() - 1;
 			int newX = location.getHexLoc().getX() + 1;
 			// If a hex exists above it, get the edge from that hex
 			if (newY <= radius) {
@@ -349,11 +357,11 @@ public class Map {
 
 			// Possible hexes around this hex with adjacent edges
 			HexLocation aboveHex = new HexLocation(location.getHexLoc().getX(),location.getHexLoc().getY() - 1);
-			HexLocation rightHex = new HexLocation(location.getHexLoc().getX() + 1,location.getHexLoc().getY() + 1);
+			HexLocation rightHex = new HexLocation(location.getHexLoc().getX() + 1,location.getHexLoc().getY() - 1);
 			if (hexes.get(rightHex) != null) {
 				// Create Edges for this hex to the right to check for player roads
-				EdgeLocation edgeNW = new EdgeLocation(aboveHex,EdgeDirection.NorthWest);
-				EdgeLocation edgeS = new EdgeLocation(aboveHex,EdgeDirection.South);
+				EdgeLocation edgeNW = new EdgeLocation(rightHex,EdgeDirection.NorthWest);
+				EdgeLocation edgeS = new EdgeLocation(rightHex,EdgeDirection.South);
 				return playerHasRoadAtLocation(edgeN.getNormalizedLocation(), player) ||
 						playerHasRoadAtLocation(edgeSE.getNormalizedLocation(), player) ||
 						playerHasRoadAtLocation(edgeNW.getNormalizedLocation(), player) ||
@@ -365,7 +373,6 @@ public class Map {
 				return playerHasRoadAtLocation(edgeN.getNormalizedLocation(), player) ||
 						playerHasRoadAtLocation(edgeSE.getNormalizedLocation(), player) ||
 						playerHasRoadAtLocation(edgeHSE.getNormalizedLocation(), player);
-
 			}
 			else {
 				// No hexes above this hex.  Only need to check it's own sides
@@ -374,6 +381,96 @@ public class Map {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * checks if two roads are next to each other
+	 * @return
+	 */
+	public boolean roadsAreNextToEachOther(EdgeLocation firstLocation, EdgeLocation location) {
+		firstLocation = firstLocation.getNormalizedLocation();
+		location = location.getNormalizedLocation();
+		if(firstLocation == location){
+			return false;
+		}
+		if (firstLocation.getDir() == EdgeDirection.NorthWest) {
+			EdgeLocation edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setDir(EdgeDirection.North);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setHexLoc(new HexLocation(firstLocation.getHexLoc().getX() - 1, firstLocation.getHexLoc().getY()));
+			edgeLocation.setDir(EdgeDirection.NorthEast);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setHexLoc(new HexLocation(firstLocation.getHexLoc().getX() - 1, firstLocation.getHexLoc().getY() + 1));
+			edgeLocation.setDir(EdgeDirection.North);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation.setDir(EdgeDirection.NorthEast);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+		}
+		else if (firstLocation.getDir() == EdgeDirection.North) {
+			EdgeLocation edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setDir(EdgeDirection.NorthEast);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation.setDir(EdgeDirection.NorthWest);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setHexLoc(new HexLocation(firstLocation.getHexLoc().getX() - 1, firstLocation.getHexLoc().getY()));
+			edgeLocation.setDir(EdgeDirection.NorthEast);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setHexLoc(new HexLocation(firstLocation.getHexLoc().getX() + 1, firstLocation.getHexLoc().getY() + 1));
+			edgeLocation.setDir(EdgeDirection.NorthWest);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+		}
+		else if (firstLocation.getDir() == EdgeDirection.NorthEast) {
+			EdgeLocation edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setDir(EdgeDirection.North);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setHexLoc(new HexLocation(firstLocation.getHexLoc().getX() + 1, firstLocation.getHexLoc().getY()));
+			edgeLocation.setDir(EdgeDirection.NorthWest);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation.setDir(EdgeDirection.North);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+			edgeLocation = new EdgeLocation(firstLocation);
+			edgeLocation.setHexLoc(new HexLocation(firstLocation.getHexLoc().getX() + 1, firstLocation.getHexLoc().getY() - 1));
+			edgeLocation.setDir(EdgeDirection.NorthWest);
+			if(location.equals(edgeLocation)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean edgeIsOnWater(EdgeLocation edge) {
+		EdgeLocation location = edge.getNormalizedLocation();
+		HexLocation hex1 = location.getHexLoc();
+		HexLocation hex2 = new HexLocation(location.getHexLoc().getNeighborLoc(location.getDir()).getX(),
+				location.getHexLoc().getNeighborLoc(location.getDir()).getY());
+		return !hexes.containsKey(hex1) && !hexes.containsKey(hex2);
 	}
 
 
@@ -386,6 +483,77 @@ public class Map {
 	public boolean canGetRolledResourses(int diceRoll, int playerId ) {
 		return false;
 	}
+
+	public int[] getPlayersWithMunicipalityOn(HexLocation hexLoc) {
+		// Check add the owner of each municipality if it does not already exist in the array
+		int[] indicies = new int[4];
+		
+		// Create vertices and check in city and settlement arrays
+		VertexLocation vertexW = new VertexLocation(hexLoc,VertexDirection.West);
+		
+		// If municipality exists, set the array at the player index to 1;
+		if (cities.get(vertexW.getNormalizedLocation()) != null) {
+			indicies[cities.get(vertexW.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		else if (settlements.get(vertexW.getNormalizedLocation()) != null) {
+			indicies[settlements.get(vertexW.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		
+		VertexLocation vertexE = new VertexLocation(hexLoc,VertexDirection.East);
+		if (cities.get(vertexE.getNormalizedLocation()) != null) {
+			indicies[cities.get(vertexE.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		else if (settlements.get(vertexE.getNormalizedLocation()) != null) {
+			indicies[settlements.get(vertexE.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		
+		VertexLocation vertexNE = new VertexLocation(hexLoc,VertexDirection.NorthEast);
+		if (cities.get(vertexNE.getNormalizedLocation()) != null) {
+			indicies[cities.get(vertexNE.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		else if (settlements.get(vertexNE.getNormalizedLocation()) != null) {
+			indicies[settlements.get(vertexNE.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		
+		VertexLocation vertexNW = new VertexLocation(hexLoc,VertexDirection.NorthWest);
+		if (cities.get(vertexNW.getNormalizedLocation()) != null) {
+			indicies[cities.get(vertexNW.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		else if (settlements.get(vertexNW.getNormalizedLocation()) != null) {
+			indicies[settlements.get(vertexNW.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		
+		VertexLocation vertexSE = new VertexLocation(hexLoc,VertexDirection.SouthEast);
+		if (cities.get(vertexSE.getNormalizedLocation()) != null) {
+			indicies[cities.get(vertexSE.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		else if (settlements.get(vertexSE.getNormalizedLocation()) != null) {
+			indicies[settlements.get(vertexSE.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		
+		VertexLocation vertexSW = new VertexLocation(hexLoc,VertexDirection.SouthWest);
+		if (cities.get(vertexSW.getNormalizedLocation()) != null) {
+			indicies[cities.get(vertexSW.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		else if (settlements.get(vertexSW.getNormalizedLocation()) != null) {
+			indicies[settlements.get(vertexSW.getNormalizedLocation()).getOwnerIndex()] = 1;
+		}
+		
+		// ensure that current player can't rob himself
+		indicies[Model.getInstance().getCurrentPlayer().getPlayerIndex()] = 0;
+		return indicies;
+		
+	}
+	
+	public boolean futureCanPlaceSettlement(VertexLocation location){
+    	return !hasSettlementAtLocation(location) && !hasAdjacentSettlement(location);
+    }
+
+	public boolean roadIsNextToSettlement(){
+//		edgeHasPlayerMunicipality()
+		return false;
+	}
+	
 	
 
 }

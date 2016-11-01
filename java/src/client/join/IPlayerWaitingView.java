@@ -1,7 +1,9 @@
 package client.join;
 
+
+
 import client.base.*;
-import client.data.*;
+import client.data.PlayerInfo;
 
 /**
  * Interface for the player waiting view, which is displayed when the user is
@@ -32,5 +34,6 @@ public interface IPlayerWaitingView extends IOverlayView
 	 * @return The type of AI selected by the user
 	 */
 	String getSelectedAI();
+
 }
 

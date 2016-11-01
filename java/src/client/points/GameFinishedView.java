@@ -6,7 +6,18 @@ import java.awt.image.*;
 
 import javax.swing.*;
 
+import client.admin.GameAdministrator;
 import client.base.*;
+import client.join.JoinGameController;
+import client.join.JoinGameView;
+import client.join.NewGameView;
+import client.join.PlayerWaitingController;
+import client.join.PlayerWaitingView;
+import client.join.SelectColorView;
+import client.login.LoginController;
+import client.login.LoginView;
+import client.main.Catan;
+import client.misc.MessageView;
 import client.utils.*;
 
 
@@ -78,6 +89,8 @@ public class GameFinishedView extends OverlayView implements IGameFinishedView {
 			
 			if (e.getSource() == okButton) {
 				closeModal();
+				
+				startNewGame();
 			}
 		}	
 	};
@@ -107,6 +120,56 @@ public class GameFinishedView extends OverlayView implements IGameFinishedView {
 		BufferedImage b = ImageUtils.loadImage(imagePath);
 		int newWidth = b.getWidth() * IMAGE_HEIGHT / b.getHeight();
 		image.setIcon(new ImageIcon(b.getScaledInstance(newWidth, IMAGE_HEIGHT, BufferedImage.SCALE_FAST)));
+	}
+	
+	/**
+	 * Takes the user to the join game screen to let them join another game, if desired.
+	 */
+	private void startNewGame() {
+		
+		GameAdministrator.getInstance().setSettingUp(true);
+		
+		PlayerWaitingView playerWaitingView = new PlayerWaitingView();
+		final PlayerWaitingController playerWaitingController = new PlayerWaitingController(
+																							playerWaitingView);
+		playerWaitingView.setController(playerWaitingController);
+		
+		JoinGameView joinView = new JoinGameView();
+		NewGameView newGameView = new NewGameView();
+		SelectColorView selectColorView = new SelectColorView();
+		MessageView joinMessageView = new MessageView();
+		final JoinGameController joinController = new JoinGameController(
+																		 joinView,
+																		 newGameView,
+																		 selectColorView,
+																		 joinMessageView);
+		joinController.setJoinAction(new IAction() {
+			@Override
+			public void execute()
+			{
+				playerWaitingController.start();
+			}
+		});
+		joinView.setController(joinController);
+		newGameView.setController(joinController);
+		selectColorView.setController(joinController);
+		joinMessageView.setController(joinController);
+		
+		LoginView loginView = new LoginView();
+		MessageView loginMessageView = new MessageView();
+		LoginController loginController = new LoginController(
+															  loginView,
+															  loginMessageView);
+		loginController.setLoginAction(new IAction() {
+			@Override
+			public void execute()
+			{
+				joinController.start();
+			}
+		});
+		loginView.setController(loginController);		
+		
+		loginController.getLoginAction().execute();
 	}
 
 }

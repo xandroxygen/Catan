@@ -32,7 +32,6 @@ public class RobView extends OverlayView implements IRobView {
 	private ArrayList<JButton> victimButtons;
 
 	public RobView() {
-		
 		this.setOpaque(true);
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createLineBorder(Color.black, BORDER_WIDTH));
@@ -69,16 +68,21 @@ public class RobView extends OverlayView implements IRobView {
 	private ActionListener actionListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
 			if (e.getSource() == defaultButton) {
 				closeModal();
+				getController().robPlayer(null);
 			}
 			else{
 				
 				for(int i = 0; i < victimButtons.size(); i++){
 					if(e.getSource() == victimButtons.get(i)){
 						closeModal();
-						getController().robPlayer(victims[i]);
+						try {
+							getController().robPlayer(victims[i]);
+						}
+						catch (Exception e2) {
+							System.out.println("WHOA THERE BROSKIE");
+						}
 					}
 				}
 				
@@ -97,9 +101,9 @@ public class RobView extends OverlayView implements IRobView {
 		victims = candidateVictims;
 		
 		int numberOfPlayers = 0;
-		if(candidateVictims != null)
+		if(candidateVictims != null) {
 			numberOfPlayers = candidateVictims.length;
-		
+		}
 		if(numberOfPlayers != 0){
 			this.remove(buttonPanel);
 			buttonPanel = new JPanel();
@@ -128,6 +132,47 @@ public class RobView extends OverlayView implements IRobView {
 				revalidate();
 			}
 		}
+		else {
+			reconstruct();
+		}
+	}
+	
+	private void reconstruct() {
+		this.removeAll();
+		victimButtons = null;
+		this.setOpaque(true);
+		this.setLayout(new BorderLayout());
+		this.setBorder(BorderFactory.createLineBorder(Color.black, BORDER_WIDTH));
+		this.setPreferredSize(new Dimension(400, 250));
+		
+		label = new JLabel("Choose who to Rob");
+		Font labelFont = label.getFont();
+		labelFont = labelFont.deriveFont(labelFont.getStyle(), LABEL_TEXT_SIZE);
+		label.setFont(labelFont);
+		this.add(label, BorderLayout.NORTH);
+		
+		buttonPanel = new JPanel();
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(25,0,25,0));
+		
+		defaultButton = new JButton("<html>"
+				+ "<body style=\"text-align:center\">"
+				+ "<p style=\"font-size:" + TOP_SIZE + "%\">None</p>"
+				+ "<p></p>"
+				+ "<p style=\"font-size:" + BOTTOM_SIZE + "%\">OK</p>"
+				+ "</body>"
+				+ "</html>");
+		defaultButton.addActionListener(actionListener);
+		defaultButton.setPreferredSize(ITEM_SIZE);
+		defaultButton.setContentAreaFilled(false);
+		defaultButton.setOpaque(true);
+		defaultButton.setAlignmentY(0);
+		defaultButton.setBackground(Color.LIGHT_GRAY);
+		
+		buttonPanel.add(defaultButton);
+		
+		this.add(buttonPanel, BorderLayout.CENTER);
+		revalidate();
+		repaint();
 	}
 
 }

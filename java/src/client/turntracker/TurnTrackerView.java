@@ -108,13 +108,13 @@ public class TurnTrackerView extends PanelView implements ITurnTrackerView {
 		playerPanel[playerIndex].add(playerPoints[playerIndex], BorderLayout.EAST);
 		
 		playerPanel[playerIndex].setBackground(playerColor.getJavaColor());
-		playerPanel[playerIndex].setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
-		
+		playerPanel[playerIndex].setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));		
 	}
 
 	@Override
 	public void updatePlayer(int playerIndex, int points, boolean highlight,
 			boolean largestArmy, boolean longestRoad) {
+		
 		playerArmy[playerIndex].setVisible(largestArmy);
 		playerRoad[playerIndex].setVisible(longestRoad);
 		playerPoints[playerIndex].setText(String.format("%d", points));
@@ -131,6 +131,17 @@ public class TurnTrackerView extends PanelView implements ITurnTrackerView {
 	public void updateGameState(String stateMessage, boolean enable) {
 
 		gameStatePanel.updateGameState(stateMessage, enable);
+	}
+	
+	public void reset() {
+		this.removeAll();
+		playerPanel = new JPanel[NUM_PLAYERS];
+		for (int i = 0; i < NUM_PLAYERS; i++) {
+			playerPanel[i] = new JPanel();
+			this.add(playerPanel[i]);
+		}
+		this.revalidate();
+		this.repaint();
 	}
 	
 }

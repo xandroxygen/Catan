@@ -1,5 +1,7 @@
 package client.data;
 
+import com.google.gson.JsonObject;
+
 import shared.definitions.*;
 
 /**
@@ -28,6 +30,25 @@ public class PlayerInfo
 		setPlayerIndex(-1);
 		setName("");
 		setColor(CatanColor.WHITE);
+	}
+
+	public PlayerInfo(JsonObject json) {
+		try {
+			this.id = json.get("id").getAsInt();
+			this.playerIndex = -1;
+			this.name = json.get("name").getAsString();
+			this.color = CatanColor.valueOf(json.get("color").getAsString().toUpperCase());
+		}
+		catch (Exception e) {
+			this.id = -1;
+		}
+	}
+	
+	public PlayerInfo(int id, int playerIndex, String name, CatanColor color) {
+		this.id = id;
+		this.playerIndex = playerIndex;
+		this.name = name;
+		this.color = color;
 	}
 	
 	public int getId()

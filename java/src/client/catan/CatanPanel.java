@@ -57,7 +57,8 @@ public class CatanPanel extends JPanel
 		rollController = new RollController(rollView, rollResultView);
 		rollView.setController(rollController);
 		rollResultView.setController(rollController);
-		
+
+		/*
 		JButton testButton = new JButton("Test");
 		testButton.addActionListener(new ActionListener() {
 			
@@ -67,11 +68,11 @@ public class CatanPanel extends JPanel
 //			 new client.points.GameFinishedView().showModal();
 //			 }
 //			
-//			 @Override
-//			 public void actionPerformed(ActionEvent e) {
-//			
-//			 rollView.showModal();
-//			 }
+			 @Override
+			 public void actionPerformed(ActionEvent e) {
+
+			 rollView.showModal();
+			 }
 //			
 //			 @Override
 //			 public void actionPerformed(java.awt.event.ActionEvent
@@ -81,27 +82,27 @@ public class CatanPanel extends JPanel
 //			 false, false);
 //			 }
 			
-			int state = 0;
-			
+/*			int state = 0;
+
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 //				rollView.showModal();
-				
+
 				discardView.setResourceMaxAmount(ResourceType.WOOD, 1);
 				discardView.setResourceMaxAmount(ResourceType.BRICK, 0);
 				discardView.setResourceMaxAmount(ResourceType.SHEEP, 11);
 				discardView.setResourceMaxAmount(ResourceType.WHEAT, 1);
 				discardView.setResourceMaxAmount(ResourceType.ORE, 0);
-				
+
 				discardView.setResourceAmountChangeEnabled(ResourceType.WOOD, true, false);
 				discardView.setResourceAmountChangeEnabled(ResourceType.SHEEP, true, false);
 				discardView.setResourceAmountChangeEnabled(ResourceType.WHEAT, true, false);
-				
+
 				discardView.setStateMessage("0/6");
-				
+
 				discardView.setDiscardButtonEnabled(true);
-				
+
 				if(state == 0)
 				{
 					discardView.showModal();
@@ -115,6 +116,7 @@ public class CatanPanel extends JPanel
 			}
 		});
 		this.add(testButton, BorderLayout.SOUTH);
+		*/
 	}
 	
 }

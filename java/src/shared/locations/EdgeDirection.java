@@ -28,6 +28,16 @@ public enum EdgeDirection
 		switch (abbrev) {
 		case "NW":
 			return NorthWest;
+		case "N":
+			return North;
+		case "NE":
+			return NorthEast;
+		case "S":
+			return South;
+		case "SW":
+			return SouthWest;
+		case "SE":
+			return SouthEast;
 		default:
 			return NorthWest;
 		}

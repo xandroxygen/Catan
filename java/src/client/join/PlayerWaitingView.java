@@ -7,7 +7,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import client.base.*;
-import client.data.*;
+import client.data.PlayerInfo;
+import client.model.Player;
 import client.utils.*;
 
 
@@ -147,6 +148,8 @@ public class PlayerWaitingView extends OverlayView implements IPlayerWaitingView
 			Dimension maxSize = new Dimension(Short.MAX_VALUE, 10);
 			center.add(new Box.Filler(minSize, prefSize, maxSize));			
 		}
+		this.revalidate();
+		center.revalidate();
 	}
 
 	@Override

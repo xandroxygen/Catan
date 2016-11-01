@@ -1,28 +1,49 @@
 package client.admin;
 
+import client.data.GameInfo;
+import client.data.PlayerInfo;
 import client.model.InvalidActionException;
+import client.model.Model;
 import client.server.IServerProxy;
-import client.server.ServerProxy;
+import client.server.ServerPoller;
+
 import com.google.gson.*;
 import shared.definitions.CatanColor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * Superintendent, in charge of current user and all games.
  * Users may login and register here, and games can be created and joined.
  */
-public class GameAdministrator {
+public class GameAdministrator extends Observable{
     private User currentUser;
-    private List<GameDetails> allCurrentGames;
+    private GameInfo currentGame;
+	private List<GameInfo> allCurrentGames;
     private IServerProxy server;
+    private static GameAdministrator gameAdministrator;
+    private ServerPoller poller;
+    private boolean isSettingUp = true;
 
-    public GameAdministrator() throws InvalidActionException {
-        currentUser = null;
+    private GameAdministrator() throws InvalidActionException {
+        currentUser = new User();
         allCurrentGames = new ArrayList<>();
-        server = new ServerProxy(); // TODO this will need to change and serverProxy instance needs to be in the model
+       	server = Model.getInstance().getServer();
         fetchGameList(); 
+    }
+
+    public static GameAdministrator getInstance() {
+    	try {
+	        if (gameAdministrator == null) {
+	            gameAdministrator = new GameAdministrator();
+	        }
+	        return gameAdministrator;
+    	}
+    	catch (InvalidActionException e) {
+    		return null;
+    	}
     }
     
     /**
@@ -34,7 +55,8 @@ public class GameAdministrator {
     public GameAdministrator(User user, IServerProxy server) throws InvalidActionException {
         currentUser = user;
         allCurrentGames = new ArrayList<>();
-       	this.server = server; // TODO this will need to change and serverProxy instance needs to be in the model
+       	this.server = server;
+       	
         fetchGameList(); 
     }
 
@@ -42,27 +64,31 @@ public class GameAdministrator {
      * Checks whether user can login with given username and password.
      * @param username String of name user wishes to register.
      * @param password Desired password.
-     * @pre Username and password are not null
+     * @pre Username and password are not null or blank
      * @return true if user can login
      */
     public boolean canLogin(String username, String password) {
-        return (username != null && password != null);
+        return (username != null && password != null
+				&& !username.equals("") && !password.equals(""));
     }
 
     /**
      * Checks whether user can register a given username.
      * @param username String of name user wishes to register.
      * @param password Desired password.
-     * @pre Username and password are not null; Username is not registered already
+     * @pre Username and password are not null; Username is not registered already; Username and password are not blank
      * @return true if user can register
      * @throws InvalidActionException if fetching game list fails
      */
     public boolean canRegister(String username, String password) throws InvalidActionException {
-        if (username != null && password != null) {
+
+        if (username != null && password != null &&
+				!username.equals("") && !password.equals("")) {
+
             boolean nameIsNotTaken = true;
             fetchGameList();
-            for (GameDetails game : allCurrentGames) {
-                for (PlayerDetails player : game.getPlayers()) {
+            for (GameInfo game : allCurrentGames) {
+                for (PlayerInfo player : game.getPlayers()) {
                     if (player.getName().equals(username)) {
                         nameIsNotTaken = false;
                     }
@@ -75,7 +101,7 @@ public class GameAdministrator {
 
     /**
      * Checks whether logged-in user can create game.
-     * @pre User is logged in; game name is not null; random options are valid boolean
+     * @pre User is logged in; game name is not null or blank; random options are valid boolean
      * @param gameName name of the game
      * @param rTiles true if tiles should be randomized
      * @param rNumbers true if numbers should be randomized
@@ -85,7 +111,7 @@ public class GameAdministrator {
     public boolean canCreateGame(String gameName, boolean rTiles, boolean rNumbers, boolean rPorts) {
         boolean canCreateGame = true;
         canCreateGame = currentUser.isLoggedIn;
-        canCreateGame = (gameName != null) && canCreateGame;
+        canCreateGame = (gameName != null) && (!gameName.equals("")) && canCreateGame;
         // booleans are valid booleans by default?
         return canCreateGame;
     }
@@ -111,22 +137,36 @@ public class GameAdministrator {
         }
         else {
 
-            GameDetails currentGame = allCurrentGames.get(gameID);
-            if (currentGame.getPlayers().size() > 3) {
+        	GameInfo currentGame = allCurrentGames.get(gameID);
+        	
+            if (currentGame.getPlayers().size() > 3 && !alreadyInGame()) {
 
                 // game is full
                 canJoinGame = false;
             }
 
-            for (PlayerDetails player : currentGame.getPlayers()) {
-                if (player.getName().equals(currentUser.getUsername()) ||
-                        player.getColor().equals(userColor.toString().toLowerCase())) {
+            for (PlayerInfo player : currentGame.getPlayers()) {
+                if (player.getColor().equals(userColor) && !isUser(player)) {
                     // player or color is already in game
                     canJoinGame = false;
                 }
             }
         }
         return canJoinGame;
+    }
+    
+    /**
+     * Ensures that the current game has room for an AI to be added to it
+     */
+    public boolean canAddAI() {
+    	try {
+			fetchGameList();
+			return currentGame != null && currentGame.getPlayers().size() < 4;
+		} catch (InvalidActionException e) {
+			e.printStackTrace();
+		}
+    	return false;
+    	
     }
 
     /**
@@ -138,9 +178,15 @@ public class GameAdministrator {
      */
     public void login(String username, String password) throws InvalidActionException {
         try {
+
             String cookie = server.userLogin(username, password);
+            currentUser.setUsername(username);
+            currentUser.setPassword(password);
             currentUser.isLoggedIn = true;
             currentUser.setCookie(cookie);
+            currentUser.createLocalPlayer();
+            poller = new ServerPoller(server);
+           	poller.start();
         }
         catch (InvalidActionException e) {
             e.message = "Login failed.";
@@ -159,8 +205,14 @@ public class GameAdministrator {
     public void register(String username, String password) throws InvalidActionException {
         try {
             String cookie = server.userRegister(username, password);
+            currentUser.setUsername(username);
+            currentUser.setPassword(password);
             currentUser.isLoggedIn = true;
             currentUser.setCookie(cookie);
+            currentUser.createLocalPlayer();
+            
+            poller = new ServerPoller(server);
+           	poller.start();
         }
         catch (InvalidActionException e) {
             e.message = "Register failed";
@@ -177,9 +229,15 @@ public class GameAdministrator {
      * @param rPorts true if ports should be randomized
      * @throws InvalidActionException
      */
-    public void createGame(String gameName, boolean rTiles, boolean rNumbers, boolean rPorts) throws InvalidActionException {
+    public GameInfo createGame(String gameName, boolean rTiles, boolean rNumbers, boolean rPorts) throws InvalidActionException {
         try {
-            server.gamesCreate(gameName, rTiles, rNumbers, rPorts);
+            String gameInfo = server.gamesCreate(gameName, rTiles, rNumbers, rPorts);
+            JsonObject newModel = new JsonParser().parse(gameInfo).getAsJsonObject();
+            
+            int id  = newModel.get("id").getAsInt();
+            String title = newModel.get("title").getAsString();
+            GameInfo g = new GameInfo(title, id);
+            return g;
         }
         catch (InvalidActionException e) {
             e.message = "Game creation failed.";
@@ -198,7 +256,7 @@ public class GameAdministrator {
     public void joinGame(int gameID, CatanColor userColor) throws InvalidActionException {
         try {
             String cookie = server.gamesJoin(gameID, userColor);
-            for (GameDetails game : allCurrentGames) {
+            for (GameInfo game : allCurrentGames) {
                 if (gameID == game.getId()) {
                     game.setCookie(cookie);
                 }
@@ -210,6 +268,39 @@ public class GameAdministrator {
         }
     }
 
+    /**
+     * Gets the list of possible AI Types from the server
+     * @pre Player is logged in, has the right cookie, and has joined a game
+     */
+    public String[] getAIList() {
+    	try {
+    		// Get type list from the server
+			String response = server.gameListAI();
+			JsonArray listAIArray = new JsonParser().parse(response).getAsJsonArray();
+			
+			// Convert response json into an array
+			ArrayList<String> types = new ArrayList<>();
+			for (JsonElement aIType : listAIArray) {
+				types.add(aIType.getAsString());
+			}
+			String[] values = new String[types.size()];
+			return types.toArray(values);
+		} catch (InvalidActionException e) {
+			e.printStackTrace();
+		}
+    	return null;
+    }
+    
+    /**
+     * Adds an AI to the current game
+     * @throws InvalidActionException 
+     * @param aIType the type of AI to add
+     */
+    public void addAI(String aIType) throws InvalidActionException {
+    	if (canAddAI()) {
+    		server.gameAddAI(aIType);
+    	}
+    }
 
     // --- HELPER FUNCTIONS ----
 
@@ -218,14 +309,31 @@ public class GameAdministrator {
      * Called before canDo methods to make sure list of games is up to date
      * @throws InvalidActionException with updated message
      */
-    private void fetchGameList() throws InvalidActionException {
+    public void fetchGameList() throws InvalidActionException {
         try {
             String jsonGames = server.gamesList();
             allCurrentGames = deserializeGameList(jsonGames);
+            
+            // If currently in a game, ensure the variable is updated
+            if (currentGame != null && !currentGame.equals(allCurrentGames.get(currentGame.getId()))) {
+				currentGame = allCurrentGames.get(currentGame.getId());
+				setChanged();
+				notifyObservers(currentGame);
+            }
+            else if (currentGame != null) {
+            	currentGame = allCurrentGames.get(currentGame.getId());
+            }
+            else if (currentGame == null) {
+            	setChanged();
+            	notifyObservers(allCurrentGames);
+            }
         }
         catch (InvalidActionException e) {
             e.message = "Fetch of games list failed.";
             throw e;
+        }
+        catch (Exception e) {
+        	e.printStackTrace();
         }
     }
 
@@ -234,17 +342,66 @@ public class GameAdministrator {
      * @param jsonList JSON string of list of games
      * @return list of GameDetail objects
      */
-    private List<GameDetails> deserializeGameList(String jsonList) {
-        List<GameDetails> games = new ArrayList<>();
+    private List<GameInfo> deserializeGameList(String jsonList) {
+        List<GameInfo> games = new ArrayList<>();
         JsonArray jsonGames = new JsonParser().parse(jsonList).getAsJsonArray();
         for (JsonElement gameElement : jsonGames) {
-            GameDetails gameDetails = new Gson().fromJson(gameElement, GameDetails.class);
-            games.add(gameDetails);
+            games.add(new GameInfo(gameElement.getAsJsonObject()));
         }
         return games;
     }
     
-    public List<GameDetails> getAllCurrentGames() {
+    /**
+     * Checks if the current user is already in the game he is trying to join
+     * @return true if already a member of the game, false if not
+     */
+    private boolean alreadyInGame() {
+    	for(PlayerInfo p : currentGame.getPlayers()) {
+    		if(currentUser.getUsername().equals(p.getName())) {
+    			return true;
+    		}
+    	}
+    	
+    	return false;
+    }
+    
+    private boolean isUser(PlayerInfo player) {
+    	return currentUser.getLocalPlayer().getName().equals(player.getName());
+    }
+    
+    public List<GameInfo> getAllCurrentGames() {
     	return allCurrentGames;
     }
+    
+    public GameInfo getCurrentGame() {
+		return currentGame;
+	}
+
+	public void setCurrentGame(GameInfo currentGame) {
+		this.currentGame = currentGame;
+	}
+
+	public User getCurrentUser() {
+		return currentUser;
+	}
+
+	public void setCurrentUser(User currentUser) {
+		this.currentUser = currentUser;
+	}
+
+	public boolean isSettingUp() {
+		return isSettingUp && currentUser != null;
+	}
+
+	public void setSettingUp(boolean isSettingUp) {
+		this.isSettingUp = isSettingUp;
+	}
+
+	public void setHost(String host) {
+		this.server.setHost(host);
+	}
+
+	public void setPort(String port) {
+		this.server.setPort(port);
+	}
 }

@@ -341,9 +341,9 @@ public class Player {
 	 * @return result
 	 */
 	public boolean canBuyDevelopmentCard() {
-		return resources.containsKey(ResourceType.ORE) &&
-				resources.containsKey(ResourceType.WHEAT) &&
-				resources.containsKey(ResourceType.SHEEP);
+		return resources.get(ResourceType.ORE) >= 1 &&
+				resources.get(ResourceType.WHEAT) >= 1 &&
+				resources.get(ResourceType.SHEEP) >= 1 ;
 	}
 	
 	/**
@@ -446,22 +446,29 @@ public class Player {
 	}*/
 	
 	protected boolean hasOfferResources(Map<ResourceType, Integer> offer) {
-		if ((offer.get(ResourceType.WOOD) > 0) && (resources.get(ResourceType.WOOD) <= offer.get(ResourceType.WOOD))) {
+		if (offer.get(ResourceType.WOOD) > 0 && !(resources.get(ResourceType.WOOD) >= offer.get(ResourceType.WOOD))) {
 			return false;
 		}
-		if ((offer.get(ResourceType.BRICK) > 0) && (resources.get(ResourceType.BRICK) <= offer.get(ResourceType.BRICK))) {
-			return false;
+		
+		if (offer.get(ResourceType.BRICK) > 0 && !(resources.get(ResourceType.BRICK) >= offer.get(ResourceType.BRICK))) {
+				return false;
 		}
-		if ((offer.get(ResourceType.SHEEP) > 0) && (resources.get(ResourceType.SHEEP) <= offer.get(ResourceType.SHEEP))) {
-			return false;
+		
+		if (offer.get(ResourceType.SHEEP) > 0 && !(resources.get(ResourceType.SHEEP) >= offer.get(ResourceType.SHEEP))) {
+				return false;
 		}
-		if ((offer.get(ResourceType.WHEAT) > 0) && (resources.get(ResourceType.WHEAT) <= offer.get(ResourceType.WHEAT))) {
-			return false;
+		
+		if (offer.get(ResourceType.WHEAT) > 0 && !(resources.get(ResourceType.WHEAT) >= offer.get(ResourceType.WHEAT))) {
+				return false;
 		}
-		if ((offer.get(ResourceType.ORE) > 0) && (resources.get(ResourceType.ORE) <= offer.get(ResourceType.ORE))) {
-			return false;
+		if (offer.get(ResourceType.ORE) > 0 && !(resources.get(ResourceType.ORE) >= offer.get(ResourceType.ORE))) {
+				return false;
 		}
 		return true;
+	}
+	
+	public int getNumberOfResourceType(ResourceType type) {
+		return resources.get(type);
 	}
 
 	// GETTERS AND SETTERS
@@ -478,10 +485,6 @@ public class Player {
 		return playerIndex;
 	}
 
-	public int getPlayerId() {
-		return playerID;
-	}
-
 	public boolean isDevelopmentCardPlayed() {
 		return playedDevCard;
 	}
@@ -490,16 +493,29 @@ public class Player {
 		return victoryPoints;
 	}
 
-	public Map<ResourceType,Integer> getResourceHand() {
-		return resources;
-	}
-
 	public int getRoads() {
 		return roads;
 	}
 
 	public void setResources(HashMap<ResourceType, Integer> resources) {
 		this.resources = resources;
+	}
+
+	public int getTotalOfResources() {
+		int total = 0;
+		for (ResourceType key : resources.keySet()) {
+			total += resources.get(key);
+		}
+		return total;
+	}
+
+	public boolean hasResources() {
+		if (resources.get(ResourceType.BRICK) > 0 || resources.get(ResourceType.ORE) > 0 || 
+				resources.get(ResourceType.SHEEP) > 0 || resources.get(ResourceType.WHEAT) > 0 ||
+				resources.get(ResourceType.WOOD) > 0) {
+			return true;
+		}
+		return false;
 	}
 
 }

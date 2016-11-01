@@ -2,316 +2,272 @@ package client.map;
 
 import client.base.Controller;
 import client.data.RobPlayerInfo;
-import client.model.GameStatus;
-import shared.definitions.CatanColor;
-import shared.definitions.HexType;
-import shared.definitions.PieceType;
-import shared.definitions.PortType;
-import shared.locations.*;
+import client.map.state.Discarding;
+import client.map.state.FirstRound;
+import client.map.state.MapState;
+import client.map.state.Playing;
+import client.map.state.Robbing;
+import client.map.state.Rolling;
+import client.map.state.SecondRound;
+import client.model.*;
+import shared.definitions.*;
+import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
+import shared.locations.VertexLocation;
 
-import java.util.Random;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 
 /**
  * Implementation for the map controller
  */
-public class MapController extends Controller implements IMapController {
+public class MapController extends Controller implements IMapController, Observer {
 	
 	private IRobView robView;
 
-	private GameStatus state;
-	
+	private MapState state;
+
 	public MapController(IMapView view, IRobView robView) {
-		
 		super(view);
-		
 		setRobView(robView);
-		
-		initFromModel();
+		Model.getInstance().addObserver(this);
 	}
-	
+
 	public IMapView getView() {
 		
 		return (IMapView)super.getView();
 	}
 	
-	private IRobView getRobView() {
+	public IRobView getRobView() {
 		return robView;
 	}
 	private void setRobView(IRobView robView) {
 		this.robView = robView;
 	}
 	
+	public void setState(MapState state) {
+		this.state = state;
+	}
+	
 	protected void initFromModel() {
-		
-		//<temp>
-		
-		Random rand = new Random();
+		//add Hexes and their numbers
+		addHexes();
+		//add Ports
+		addPorts();
+		//place robber
+		placeRobber();
+		//add roads
+		addRoads();
+		//add cities
+		addCities();
+		//add settlements
+		addSettlements();
+	}
 
-		for (int x = 0; x <= 3; ++x) {
-			
-			int maxY = 3 - x;			
-			for (int y = -3; y <= maxY; ++y) {				
-				int r = rand.nextInt(HexType.values().length);
-				HexType hexType = HexType.values()[r];
-				HexLocation hexLoc = new HexLocation(x, y);
+	private void addHexes(){
+		//add hex's and their numbers
+		for (Map.Entry<HexLocation, Hex> entry : Model.getInstance().getGame().getTheMap().getHexes().entrySet()) {
+			HexLocation hexLoc = entry.getValue().getLocation();
+			HexType hexType = entry.getValue().getResource();
+			if (hexType == null) {
+				hexType = HexType.DESERT;
 				getView().addHex(hexLoc, hexType);
-				getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.NorthWest),
-						CatanColor.RED);
-				getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.SouthWest),
-						CatanColor.BLUE);
-				getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.South),
-						CatanColor.ORANGE);
-				getView().placeSettlement(new VertexLocation(hexLoc,  VertexDirection.NorthWest), CatanColor.GREEN);
-				getView().placeCity(new VertexLocation(hexLoc,  VertexDirection.NorthEast), CatanColor.PURPLE);
 			}
-			
-			if (x != 0) {
-				int minY = x - 3;
-				for (int y = minY; y <= 3; ++y) {
-					int r = rand.nextInt(HexType.values().length);
-					HexType hexType = HexType.values()[r];
-					HexLocation hexLoc = new HexLocation(-x, y);
-					getView().addHex(hexLoc, hexType);
-					getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.NorthWest),
-							CatanColor.RED);
-					getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.SouthWest),
-							CatanColor.BLUE);
-					getView().placeRoad(new EdgeLocation(hexLoc, EdgeDirection.South),
-							CatanColor.ORANGE);
-					getView().placeSettlement(new VertexLocation(hexLoc,  VertexDirection.NorthWest), CatanColor.GREEN);
-					getView().placeCity(new VertexLocation(hexLoc,  VertexDirection.NorthEast), CatanColor.PURPLE);
-				}
+			else {
+				int hexNumber =	entry.getValue().getNumber();
+				getView().addHex(hexLoc, hexType);
+				getView().addNumber(hexLoc, hexNumber);
 			}
 		}
-		
-		PortType portType = PortType.BRICK;
-		getView().addPort(new EdgeLocation(new HexLocation(0, 3), EdgeDirection.North), portType);
-		getView().addPort(new EdgeLocation(new HexLocation(0, -3), EdgeDirection.South), portType);
-		getView().addPort(new EdgeLocation(new HexLocation(-3, 3), EdgeDirection.NorthEast), portType);
-		getView().addPort(new EdgeLocation(new HexLocation(-3, 0), EdgeDirection.SouthEast), portType);
-		getView().addPort(new EdgeLocation(new HexLocation(3, -3), EdgeDirection.SouthWest), portType);
-		getView().addPort(new EdgeLocation(new HexLocation(3, 0), EdgeDirection.NorthWest), portType);
-		
-		getView().placeRobber(new HexLocation(0, 0));
-		
-		getView().addNumber(new HexLocation(-2, 0), 2);
-		getView().addNumber(new HexLocation(-2, 1), 3);
-		getView().addNumber(new HexLocation(-2, 2), 4);
-		getView().addNumber(new HexLocation(-1, 0), 5);
-		getView().addNumber(new HexLocation(-1, 1), 6);
-		getView().addNumber(new HexLocation(1, -1), 8);
-		getView().addNumber(new HexLocation(1, 0), 9);
-		getView().addNumber(new HexLocation(2, -2), 10);
-		getView().addNumber(new HexLocation(2, -1), 11);
-		getView().addNumber(new HexLocation(2, 0), 12);
-		
-		//</temp>
+		//add the water boarder
+		getView().addHex(new HexLocation(0, -3), HexType.WATER);
+		getView().addHex(new HexLocation(1, -3), HexType.WATER);
+		getView().addHex(new HexLocation(2, -3), HexType.WATER);
+		getView().addHex(new HexLocation(3, -3), HexType.WATER);
+		getView().addHex(new HexLocation(3, -2), HexType.WATER);
+		getView().addHex(new HexLocation(3, -1), HexType.WATER);
+		getView().addHex(new HexLocation(3, 0), HexType.WATER);
+		getView().addHex(new HexLocation(2, 1), HexType.WATER);
+		getView().addHex(new HexLocation(1, 2), HexType.WATER);
+		getView().addHex(new HexLocation(0, 3), HexType.WATER);
+		getView().addHex(new HexLocation(-1, 3), HexType.WATER);
+		getView().addHex(new HexLocation(-2, 3), HexType.WATER);
+		getView().addHex(new HexLocation(-3, 3), HexType.WATER);
+		getView().addHex(new HexLocation(-3, 2), HexType.WATER);
+		getView().addHex(new HexLocation(-3, 1), HexType.WATER);
+		getView().addHex(new HexLocation(-3, 0), HexType.WATER);
+		getView().addHex(new HexLocation(-2, -1), HexType.WATER);
+		getView().addHex(new HexLocation(-1, -2), HexType.WATER);
+	}
+
+
+	private void addPorts(){
+		for (Map.Entry<EdgeLocation, Port> entry : Model.getInstance().getGame().getTheMap().getPorts().entrySet()) {
+			entry.getValue().getRatio();
+			EdgeLocation edgeLocation = entry.getValue().getLocation();
+			ResourceType resourceType = entry.getValue().getResource();
+			if(resourceType == null){
+				getView().addPort(new EdgeLocation(edgeLocation.getHexLoc(), edgeLocation.getDir()), PortType.THREE);
+			}
+			else{
+				PortType portType = convertFromResourceToPortType(resourceType);
+				getView().addPort(new EdgeLocation(edgeLocation.getHexLoc(), edgeLocation.getDir()), portType);
+			}
+		}
+	}
+
+	private void placeRobber(){
+		Robber robber = Model.getInstance().getGame().getTheMap().getRobber();
+		getView().placeRobber(robber.getLocation());
+	}
+
+	private void addRoads(){
+		for (Map.Entry<EdgeLocation, Road> entry : Model.getInstance().getGame().getTheMap().getRoads().entrySet()) {
+			EdgeLocation edgeLocation = entry.getValue().getLocation().getNormalizedLocation();
+			CatanColor catanColor = getCatanColorFromPlayerIndex(entry.getValue().getOwnerIndex());
+			getView().placeRoad(edgeLocation, catanColor);
+		}
+	}
+
+	private void addCities(){
+		for (Map.Entry<VertexLocation, City> entry : Model.getInstance().getGame().getTheMap().getCities().entrySet()) {
+			VertexLocation vertexLocation = entry.getValue().getLocation().getNormalizedLocation();
+			CatanColor catanColor = getCatanColorFromPlayerIndex(entry.getValue().getOwnerIndex());
+			getView().placeCity(vertexLocation, catanColor);
+		}
+	}
+
+	private void addSettlements(){
+		for (Map.Entry<VertexLocation, Settlement> entry : Model.getInstance().getGame().getTheMap().getSettlements().entrySet()) {
+			VertexLocation vertexLocation = entry.getValue().getLocation().getNormalizedLocation();
+			CatanColor catanColor = getCatanColorFromPlayerIndex(entry.getValue().getOwnerIndex());
+			getView().placeSettlement(vertexLocation, catanColor);
+		}
+	}
+
+	private CatanColor getCatanColorFromPlayerIndex(int playerIndex){
+		Player player = Model.getInstance().getGame().getPlayerList().get(playerIndex);
+		return player.getColor();
+	}
+
+	private PortType convertFromResourceToPortType(ResourceType resourceType){
+		switch(resourceType){
+			case WOOD :
+				return PortType.WOOD;
+			case BRICK:
+				return PortType.BRICK;
+			case ORE :
+				return PortType.ORE;
+			case SHEEP:
+				return PortType.SHEEP;
+			case WHEAT:
+				return PortType.WHEAT;
+			default:
+				return PortType.THREE;
+		}
 	}
 
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) {
-		//TODO im not sure we did the model right for this function
-		switch (state){
-			case Rolling:
-			case Trading:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
-			break;
-			case Building:
-//				return Model.getInstance().canPlaceRoad(edgeLoc);
-		}
-		return false;
+		return state.canPlaceRoad(edgeLoc,this);
 	}
 
 	public boolean canPlaceSettlement(VertexLocation vertLoc) {
-		//TODO im not sure we did the model right for this function
-		switch (state){
-			case Rolling:
-			case Trading:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
-				break;
-			case Building:
-//				return Model.getInstance().canPlaceSettlement(vertLoc);
-		}
-		return true;
+		return state.canPlaceSettlement(vertLoc, this);
 	}
 
 	public boolean canPlaceCity(VertexLocation vertLoc) {
-		//TODO im not sure we did the model right for this function
-		switch (state){
-			case Rolling:
-			case Trading:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
-				break;
-			case Building:
-//				return Model.getInstance().canPlaceCity(vertLoc);
-		}
-		return false;
+		return state.canPlaceCity(vertLoc, this);
 	}
 
 	public boolean canPlaceRobber(HexLocation hexLoc) {
-		//TODO im not sure we did the model right for this function
-		switch (state){
-			case Rolling:
-			case Trading:
-			case Building:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-				break;
-			case Robber:
-//				return Model.getInstance().canPlaceRobber(hexLoc);
-		}
-		return false;
+		return state.canPlaceRobber(hexLoc, this);
 	}
 
 	public void placeRoad(EdgeLocation edgeLoc) {
-		switch (state){
-			case Building:
-				getView().placeRoad(edgeLoc, CatanColor.ORANGE);
-			case Rolling:
-			case Trading:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
-				break;
-		}
+		state.placeRoad(edgeLoc, this);
 	}
 
 	public void placeSettlement(VertexLocation vertLoc) {
-		switch (state){
-			case Building:
-				getView().placeSettlement(vertLoc, CatanColor.ORANGE);
-			case Rolling:
-			case Trading:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
-				break;
-		}
+		state.placeSettlement(vertLoc, this);
 	}
 
 	public void placeCity(VertexLocation vertLoc) {
-		switch (state){
-			case Building:
-				getView().placeCity(vertLoc, CatanColor.ORANGE);
-			case Rolling:
-			case Trading:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
-				break;
-		}
+		state.placeCity(vertLoc, this);
 	}
 
 	public void placeRobber(HexLocation hexLoc) {
-		switch (state){
-			case Robber:
-				getView().placeRobber(hexLoc);
-				getRobView().showModal();
-			case Rolling:
-			case Trading:
-			case Building:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-				break;
-		}
+		state.placeRobber(hexLoc, this);
+		RobPlayerInfo[] victims = Model.getInstance().getCandidateVictims(hexLoc);
+		getRobView().setPlayers(victims);
 
+		getRobView().closeModal();
+		getRobView().showModal();
+
+		
 	}
 	
 	public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) {
-		switch (state){
-			case Rolling:
-				getView().startDrop(pieceType, CatanColor.ORANGE, true);
-			case Trading:
-			case Building:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
-				break;
-		}
+		state.startMove(pieceType, isFree, allowDisconnected, this);
 	}
 	
 	public void cancelMove() {
-		//TODO not sure what this is used for.
-		switch (state){
-			case Rolling:
-//				getView().cancelMove(pieceType, CatanColor.ORANGE, true);
-			case Trading:
-			case Building:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
-		}
+		state.cancelMove(this);
 	}
 	
 	public void playSoldierCard() {
-		switch (state){
-			case Trading:
-			case Building:
-//				Model.getInstance().playSoldierCard();
-			case Rolling:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
-				break;
-		}
+		state.playSoldierCard(this);
 	}
 	
 	public void playRoadBuildingCard() {
-		switch (state){
-			case Trading:
-			case Building:
-//				Model.getInstance().playRoadBuildingCard();
-			case Rolling:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-			case Robber:
-				break;
-		}
+		state.playRoadBuildingCard(this);
 	}
 	
 	public void robPlayer(RobPlayerInfo victim) {
-		switch (state){
-			case Rolling:
-			case Trading:
-			case Building:
-			case WaitingForResponse:
-			case WaitingForTurn:
-			case RespondToTrade:
-				break;
-			case Robber:
-//				Model.getInstance().robPlayer();
-		}
+		state.robPlayer(victim, this);
+		getRobView().closeModal();
 	}
 
-	public void canMakeTradeOffer() {}
+	@Override
+	public void update(Observable o, Object arg) {
+		Game game = Model.getInstance().getGame();
+		if(game != null && game.getTheMap() != null && 
+				game.getTheMap().getHexes() != null && game.isMyTurn()) {
 
-	public void makeTradeOffer() {}
-	public void canAcceptTradeOffer() {}
-	public void AcceptTradeOffer() {}
-	public void canEndTurnPhase() {}
-	public void endTurnPhase() {}
-	public void sendMessage() {}
-	public void canRollDice() {}
-	public void rollDice() {}
-
-
+			GameStatus modelStatus = game.getTurnTracker().getStatus();
+			initFromModel();
+			switch (modelStatus) {
+				case FirstRound:
+					this.setState(FirstRound.instance());
+					state.initiateSetup(this);
+					break;
+				case SecondRound:
+					this.setState(SecondRound.instance());
+					state.initiateSetup(this);
+					break;
+				case Discarding:
+					this.setState(Discarding.instance());
+					break;
+				case Playing:
+					this.setState(Playing.instance());
+					break;
+				case Robbing:
+					this.setState(Robbing.instance());
+					state.startMove(PieceType.ROBBER, true, false, this);
+					break;
+				case Rolling:
+					this.setState(Rolling.instance());
+					break;
+				default:
+					this.setState(Playing.instance());
+			}
+			
+		}
+		else if (game != null && game.getTheMap() != null && 
+				game.getTheMap().getHexes() != null) {
+			initFromModel();
+		}
+	}
 }
 

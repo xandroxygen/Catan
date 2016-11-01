@@ -281,9 +281,7 @@ public class DiscardView extends OverlayView implements IDiscardView
 	 *            decreased
 	 */
 	@Override
-	public void setResourceAmountChangeEnabled(ResourceType resource,
-											   boolean increase,
-											   boolean decrease)
+	public void setResourceAmountChangeEnabled(ResourceType resource, boolean increase, boolean decrease)
 	{   
 		resources.get(resource).setIncrease(increase);
 		resources.get(resource).setDecrease(decrease);
@@ -612,14 +610,14 @@ public class DiscardView extends OverlayView implements IDiscardView
 				switch(e.getActionCommand())
 				{
 					case "UP":
-						System.out.printf("Increase amount of %s\n",
-						                  Resource.this.getType());
+						//System.out.printf("Increase amount of %s\n",
+						                  //Resource.this.getType());
 						DiscardView.this.getController()
 										.increaseAmount(Resource.this.getType());
 						break;
 					case "DOWN":
-						System.out.printf("Decrease amount of %s\n",
-						                  Resource.this.getType());
+						//System.out.printf("Decrease amount of %s\n",
+						                  //Resource.this.getType());
 						DiscardView.this.getController()
 										.decreaseAmount(Resource.this.getType());
 						break;
