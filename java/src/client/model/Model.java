@@ -722,11 +722,34 @@ public class Model extends Observable {
 		return p.getPlayerID() == game.getCurrentPlayer().getPlayerID();	
 	}
 	
+	public int getCurrentTurnIndex() {
+		return game.getCurrentTurnIndex();
+	}
+	
 	/**
-	 * Returns the current game state
 	 * @return the current game state
 	 */
-	public GameStatus getStatus() {
+	public GameStatus getGameStatus() {
 		return game.getTurnTracker().getStatus();
+	}
+	
+	public TradeOffer getTradeOffer() {
+		return game.getTradeOffer();
+	}
+	
+	/**
+	 * 
+	 * @return the ID the the player receiving the trade offer
+	 */
+	public int getTradeReceiver() {
+		return game.getTradeOffer().getReceiver();
+	}
+	
+	/**
+	 * the ID of the player sending the trade offer
+	 * @return
+	 */
+	public int getTradeSender() {
+		return game.getTradeOffer().getSender();
 	}
 }

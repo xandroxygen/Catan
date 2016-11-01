@@ -63,8 +63,6 @@ public class PointsController extends Controller implements IPointsController, O
 			Player p = Model.getInstance().getPlayer(winnerIndex);
 			this.getFinishedView().setWinner(p.getName(), Model.getInstance().isLocalPlayer(p));
 			this.getFinishedView().showModal();
-			
-			//Model.getInstance().getGame().getTurnTracker().setStatus(GameStatus.Playing);
 		}
 		
 		if(Model.getInstance().getGame() != null) {

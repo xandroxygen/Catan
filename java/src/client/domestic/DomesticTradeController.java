@@ -42,7 +42,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	private int receiveWheat = 0;
 	private int receiveOre = 0;
 
-	//False === sending, true === receiving
+	/// false === sending, true === receiving ///
 	private boolean woodStatus = false;
 	private boolean brickStatus = false;
 	private boolean sheepStatus = false;
@@ -51,7 +51,6 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 
 	private int tradingPartner = -1;
 	
-	private boolean playersSetUp;
 	private boolean isOfferMade;
 
 	/**
@@ -73,7 +72,6 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		
 		Model.getInstance().addObserver(this);
 		
-		playersSetUp = false;
 		isOfferMade = false;
 	}
 	
@@ -104,25 +102,6 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 
 	public void setAcceptOverlay(IAcceptTradeOverlay acceptOverlay) {
 		this.acceptOverlay = acceptOverlay;
-	}
-	
-	/**
-	 * Retrieves all players that are not the current player and sets them in the trade overlay
-	 */
-	private void setPlayers() {
-		PlayerInfo[] players = new PlayerInfo[3];
-		//int playerID = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId();
-		int playerID = Model.getInstance().getPlayer(Model.getInstance().getGame().getCurrentTurnIndex()).getPlayerID();
-		
-		int count = 0;
-		for(PlayerInfo p : GameAdministrator.getInstance().getCurrentGame().getPlayers()) {
-			if(p.getId() != playerID) {
-				players[count] = p;
-				count++;
-			}
-		}
-		
-		getTradeOverlay().setPlayers(players);
 	}
 
 	@Override
@@ -256,7 +235,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 
 		try {
 			int senderID = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getId();
-			int receiverID = Model.getInstance().getGame().getPlayerList().get(tradingPartner).getPlayerID();
+			int receiverID = Model.getInstance().getPlayer(tradingPartner).getPlayerID();
 			
 			if(Model.getInstance().canTradeWithPlayer(senderID, receiverID, offer)) {
 				Model.getInstance().getServer().offerTrade(offer, tradingPartner);
@@ -475,11 +454,6 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		getTradeView().enableDomesticTrade(Model.getInstance().canTrade());
 		
 		setPlayers();
-		// set the players that the player can trade with
-		//if(!playersSetUp) {
-			
-			//playersSetUp = true;
-		//}	
 		
 		updateResourceCounts();
 		
@@ -490,15 +464,15 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		// trade offer is on the table
 		if(Model.getInstance().getGame().getTradeOffer() != null){
 
-			int receiver = Model.getInstance().getGame().getTradeOffer().getReceiver();
-			int sender = Model.getInstance().getGame().getTradeOffer().getSender();
+			int receiver = Model.getInstance().getTradeReceiver();
+			int sender = Model.getInstance().getTradeSender();
 			
-			if(receiver == Model.getInstance().getGame().getCurrentPlayer().getPlayerIndex()) {
+			if(receiver == Model.getInstance().getPlayerIndex(receiver)) {
 				setUpAcceptTrade();
 				getAcceptOverlay().showModal();
 			}
 			
-			if(sender == Model.getInstance().getGame().getCurrentPlayer().getPlayerIndex()) {
+			if(sender == Model.getInstance().getPlayerIndex(sender)) {
 				getWaitOverlay().showModal();
 			}
 		}
@@ -511,6 +485,26 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			isOfferMade = false;
 			getWaitOverlay().closeModal();
 		}
+	}
+	
+
+	/**
+	 * Retrieves all players that are not the current player and sets them in the trade overlay
+	 */
+	private void setPlayers() {
+		PlayerInfo[] players = new PlayerInfo[3];
+		int index = Model.getInstance().getGame().getCurrentTurnIndex();
+		int playerID = Model.getInstance().getPlayer(index).getPlayerID();
+		
+		int count = 0;
+		for(PlayerInfo p : GameAdministrator.getInstance().getCurrentGame().getPlayers()) {
+			if(p.getId() != playerID) {
+				players[count] = p;
+				count++;
+			}
+		} 
+		
+		getTradeOverlay().setPlayers(players);
 	}
 	
 	/**

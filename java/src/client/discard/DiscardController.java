@@ -175,7 +175,7 @@ public class DiscardController extends Controller implements IDiscardController,
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		if(Model.getInstance().getGame().getTurnTracker().getStatus() == GameStatus.Discarding) {
+		if(Model.getInstance().getGameStatus() == GameStatus.Discarding) {
 			initFromModel();
 		}
 		else if(getWaitView().isModalShowing()) {
