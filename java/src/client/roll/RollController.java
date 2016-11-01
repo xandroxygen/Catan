@@ -67,8 +67,7 @@ public class RollController extends Controller implements IRollController, Obser
 			Model.getInstance().getServer().rollNumber(roll);
 			getResultView().setRollValue(roll);
 			
-			if(getRollView().isModalShowing())
-				getRollView().closeModal();
+			getRollView().closeModal();
 			
 			getResultView().showModal();
 		}
