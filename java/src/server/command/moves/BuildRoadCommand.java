@@ -1,8 +1,14 @@
 package server.command.moves;
 
 import server.command.ICommand;
+import server.facade.IServerFacade;
 
-public class BuildRoadCommand implements ICommand{
+public class BuildRoadCommand extends ICommand{
+
+	public BuildRoadCommand(IServerFacade facade) {
+		super(facade);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public void execute() {

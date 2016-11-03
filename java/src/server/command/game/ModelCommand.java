@@ -1,8 +1,14 @@
 package server.command.game;
 
 import server.command.ICommand;
+import server.facade.IServerFacade;
 
-public class ModelCommand implements ICommand{
+public class ModelCommand extends ICommand{
+
+	public ModelCommand(IServerFacade facade) {
+		super(facade);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public void execute() {

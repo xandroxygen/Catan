@@ -1,8 +1,14 @@
 package server.command.moves;
 
 import server.command.ICommand;
+import server.facade.IServerFacade;
 
-public class FinishTurnCommand implements ICommand{
+public class FinishTurnCommand extends ICommand{
+
+	public FinishTurnCommand(IServerFacade facade) {
+		super(facade);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public void execute() {

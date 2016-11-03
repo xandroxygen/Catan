@@ -1,8 +1,14 @@
 package server.command.moves;
 
 import server.command.ICommand;
+import server.facade.IServerFacade;
 
-public class DiscardCardsCommand implements ICommand{
+public class DiscardCardsCommand extends ICommand{
+
+	public DiscardCardsCommand(IServerFacade facade) {
+		super(facade);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public void execute() {

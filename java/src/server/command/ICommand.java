@@ -1,8 +1,16 @@
 package server.command;
 
-public interface ICommand {
+import server.facade.IServerFacade;
 
-	public void execute();
+public abstract class ICommand {
+	
+	private IServerFacade facade;
+	
+	public ICommand(IServerFacade facade) {
+		this.facade = facade;
+	}
+
+	public abstract void execute();
 	
 	
 }
