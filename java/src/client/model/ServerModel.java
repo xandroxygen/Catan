@@ -233,6 +233,85 @@ public class ServerModel {
     public void addComputerPlayer(int gameID){}
 
     /**
+     * Ends the current players turn
+     * * * @pre <pre>
+     *     is called by the player whose turn it is
+     *     the player is in the playing state
+     * 		</pre>
+     * * @post <pre>
+     *     the current players turn is over and the next players is starting the game
+     * 		</pre>
+     * @param gameID the ID of the game from which the request was made.
+     */
+    public void finishTurn(int gameID){}
+
+    /**
+     * Robs a player
+     * * * @pre <pre>
+     *
+     * 		</pre>
+     * * @post <pre>
+     *      Robs 1 resource from the victim player
+     * 		</pre>
+     * @param gameID the ID of the game from which the request was made.
+     * @param playerID the ID of the player who is requesting the move
+     * @param victimIndex .
+     */
+    public void robPlayer(int gameID, int playerID, int victimIndex){}
+
+    /**
+     * Discards the given resources from the given player
+     * * * @pre <pre>
+     *      The player has sufficient resources to be able to discard
+     * 		</pre>
+     * * @post <pre>
+     *      the given resources are discarded
+     * 		</pre>
+     * @param gameID the ID of the game from which the request was made.
+     * @param playerID the ID of the player who is requesting the move
+     */
+    public void discardCards(int gameID, int playerID, HashMap<ResourceType, Integer> discardCards){
+
+    }
+
+    //TODO I am not quite sure what listAIPlayers() should do I just added it because there is a server call associated with it
+    /**
+     * Lists out all AI Players for a particular game
+     * * * @pre <pre>
+     *
+     * 		</pre>
+     * * @post <pre>
+     *
+     * 		</pre>
+     * @param gameID the ID of the game from which the request was made.
+     */
+    public void listAIPlayers(int gameID){}
+
+    /**
+     * Creates a new Game
+     * * * @pre <pre>
+     *
+     * 		</pre>
+     * * @post <pre>
+     *      adds a new game to the list of games
+     * 		</pre>
+     */
+    public void createGame(){}
+
+    //TODO I am not quite sure what listGames() should do I just added it because there is a server call associated with it
+    /**
+     *
+     * * * @pre <pre>
+     *
+     * 		</pre>
+     * * @post <pre>
+     *
+     * 		</pre>
+     */
+    public void listGames(){}
+
+
+    /**
      * Adds a new user to the game.
      * * @pre <pre>
      * 		The username does not already exist
