@@ -264,24 +264,24 @@ public class ServerGame extends Game {
     }
 
     /**
-     * Gives the longestRoad Card to the appropriate player.
-     * * * @pre <pre>
-     * 		There are less then four players in the current game
-     * 		</pre>
-     * * @post <pre>
-     *      there is a new computer player added to the game given by the gameID
-     * 		</pre>
-     */
-    public void longestRoad(){}
+	 * Calculates and sets the player with the longest road.
+	 * @pre <pre>
+	 * 		There are four players in the current game
+	 * 		There is at least one road place
+	 * @post <pre>
+	 *      The player with the longest road is determined, and set within the model.
+	 * 		</pre>
+	 */
+	public void longestRoad() {}
 
-    /**
-     * Gives the longestRoad Card to the appropriate player.
-     * * * @pre <pre>
-     * 		There are less then four players in the current game
-     * 		</pre>
-     * * @post <pre>
-     *      there is a new computer player added to the game given by the gameID
-     * 		</pre>
-     */
-    public void largestArmy(){}
+	/**
+	 * Calculates and sets the player with the largest army.
+	 * @pre <pre>
+	 * 		There are four players in the current game
+	 * 		</pre>
+	 * * @post <pre>
+	 *      The player with the largest army is determined, and set within the model.
+	 * 		</pre>
+	 */
+	public void largestArmy() {}
 }
