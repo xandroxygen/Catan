@@ -1,7 +1,8 @@
 package server.http;
 
 import com.sun.net.httpserver.HttpServer;
-import server.http.handlers.*;
+import server.http.handlers.ExampleHandler;
+
 import java.net.InetSocketAddress;
 
 /**

@@ -1,4 +1,4 @@
-package server.http.model;
+package server.model;
 
 import client.admin.User;
 import shared.definitions.ResourceType;

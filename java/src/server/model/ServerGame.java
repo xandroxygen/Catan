@@ -1,4 +1,4 @@
-package server.http.model;
+package server.model;
 
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
