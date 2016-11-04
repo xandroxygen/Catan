@@ -2,7 +2,7 @@ package client.admin;
 
 import client.data.GameInfo;
 import client.data.PlayerInfo;
-import client.model.InvalidActionException;
+import shared.model.InvalidActionException;
 import client.model.Model;
 import client.server.IServerProxy;
 import client.server.ServerPoller;

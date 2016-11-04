@@ -1,9 +1,9 @@
 package client.roll;
 
 import client.base.*;
-import client.model.Game;
-import client.model.GameStatus;
-import client.model.InvalidActionException;
+import shared.model.Game;
+import shared.model.GameStatus;
+import shared.model.InvalidActionException;
 import client.model.Model;
 import java.util.Observer;
 import java.util.Timer;

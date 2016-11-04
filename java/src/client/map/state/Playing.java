@@ -5,7 +5,7 @@ import client.admin.GameAdministrator;
 import client.data.RobPlayerInfo;
 import client.map.MapController;
 import client.map.MapView;
-import client.model.InvalidActionException;
+import shared.model.InvalidActionException;
 import client.model.Model;
 import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;

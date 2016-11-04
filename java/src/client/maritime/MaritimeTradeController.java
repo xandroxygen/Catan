@@ -2,23 +2,18 @@ package client.maritime;
 
 import shared.definitions.*;
 import shared.locations.EdgeLocation;
-import shared.locations.VertexLocation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Set;
 
 import client.base.*;
-import client.model.City;
-import client.model.Game;
-import client.model.InvalidActionException;
+import shared.model.Game;
 import client.model.Model;
-import client.model.Player;
-import client.model.Port;
-import client.model.Settlement;
+import shared.model.Player;
+import shared.model.Port;
 
 
 /**
@@ -138,7 +133,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	
 	// HELPER METHODS
 	private ResourceType[] getGiveResources(Player player) {
-		client.model.Map map = Model.getInstance().getGame().getTheMap();
+		shared.model.Map map = Model.getInstance().getGame().getTheMap();
 		
 		Map<EdgeLocation, Port> portList = Model.getInstance().getGame().getTheMap().getPorts();
 		ArrayList<ResourceType> enabledTypes = new ArrayList<>();

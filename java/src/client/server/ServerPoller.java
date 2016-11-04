@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import client.admin.GameAdministrator;
-import client.model.InvalidActionException;
+import shared.model.InvalidActionException;
 import client.model.Model;
 
 import java.util.Timer;
@@ -44,7 +44,6 @@ public class ServerPoller {
 	
 	/**
 	 * 
-	 * @param seconds The interval at which to poll the server for updates
 	 * @param server The proxy to use when polling the server.
 	 */
 	public ServerPoller(IServerProxy server) {
@@ -117,7 +116,6 @@ public class ServerPoller {
      * Otherwise, the model will be sent the new data to update itself.
 	 * </pre>
 	 *
-	 * @param data The JSON string to check for new data
 	 * @return true if the JSON contains new data, otherwise false
 	 */
 	public boolean checkForUpdates(String response) { 

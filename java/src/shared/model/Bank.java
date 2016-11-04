@@ -1,4 +1,4 @@
-package client.model;
+package shared.model;
 
 import com.google.gson.JsonObject;
 import shared.definitions.DevCardType;

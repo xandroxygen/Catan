@@ -3,9 +3,8 @@ package client.communication;
 import java.util.*;
 
 import client.base.*;
-import client.model.Game;
+import shared.model.Game;
 import client.model.Model;
-import shared.definitions.*;
 
 
 /**

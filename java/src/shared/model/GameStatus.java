@@ -1,4 +1,4 @@
-package client.model;
+package shared.model;
 
 public enum GameStatus
 {

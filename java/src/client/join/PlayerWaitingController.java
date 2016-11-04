@@ -7,7 +7,7 @@ import client.admin.GameAdministrator;
 import client.base.*;
 import client.data.GameInfo;
 import client.data.PlayerInfo;
-import client.model.InvalidActionException;
+import shared.model.InvalidActionException;
 
 
 /**

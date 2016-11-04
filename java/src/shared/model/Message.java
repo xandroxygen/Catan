@@ -1,4 +1,4 @@
-package client.model;
+package shared.model;
 
 /**
  * Message that will show in the chat box.
