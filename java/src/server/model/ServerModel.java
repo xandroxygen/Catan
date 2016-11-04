@@ -5,6 +5,7 @@ import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.model.Game;
 
 import java.util.HashMap;
 
@@ -274,18 +275,16 @@ public class ServerModel {
 
     }
 
-    //TODO I am not quite sure what listAIPlayers() should do I just added it because there is a server call associated with it
     /**
-     * Lists out all AI Players for a particular game
-     * * * @pre <pre>
-     *
-     * 		</pre>
+     * Lists out all types of AI Players for a particular game
      * * @post <pre>
-     *
+     *      If there are AI players it will return an array of their corresponding types
      * 		</pre>
      * @param gameID the ID of the game from which the request was made.
      */
-    public void listAIPlayers(int gameID){}
+    public String[] listAIPlayers(int gameID){
+        return null;
+    }
 
     /**
      * Creates a new Game
@@ -296,19 +295,17 @@ public class ServerModel {
      *      adds a new game to the list of games
      * 		</pre>
      */
-    public void createGame(){}
+    public void createGame(String GameName){}
 
-    //TODO I am not quite sure what listGames() should do I just added it because there is a server call associated with it
     /**
-     *
-     * * * @pre <pre>
-     *
-     * 		</pre>
+     * Returns an array of all of the games
      * * @post <pre>
-     *
+     *      Returns an array of all of the games
      * 		</pre>
      */
-    public void listGames(){}
+    public Game[] listGames(){
+        return null;
+    }
 
 
     /**
@@ -337,7 +334,4 @@ public class ServerModel {
     public boolean login(String username, String password){
         return false;
     }
-
-    //TODO I am not sure what to do here
-    public void getSerializedGame(int gameID){}
 }
