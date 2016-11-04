@@ -253,18 +253,16 @@ public class ServerGame extends Game {
 
     }
 
-    //TODO I am not quite sure what listAIPlayers() should do I just added it because there is a server call associated with it
     /**
-     * Lists out all AI Players for a particular game
-     * * * @pre <pre>
-     *
-     * 		</pre>
+     * Lists out all types of AI Players for a particular game
      * * @post <pre>
-     *
+     *      If there are AI players it will return an array of their corresponding types
      * 		</pre>
      */
-    public void listAIPlayers(){}
-    
+    public String[] listAIPlayers(int gameID){
+        return null;
+    }
+
     /**
 	 * Calculates and sets the player with the longest road.
 	 * @pre <pre>
