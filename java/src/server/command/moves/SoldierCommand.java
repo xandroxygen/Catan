@@ -2,17 +2,22 @@ package server.command.moves;
 
 import server.command.Command;
 import server.facade.IServerFacade;
+import shared.locations.HexLocation;
 
-public class SoldierCommand extends Command{
+public class SoldierCommand extends Command {
 
-	public SoldierCommand(IServerFacade facade) {
+	private HexLocation location;
+	private int victimIndex;
+	
+	public SoldierCommand(IServerFacade facade, HexLocation location, int victimIndex) {
 		super(facade);
-		// TODO Auto-generated constructor stub
+		this.location = location;
+		this.victimIndex = victimIndex;
 	}
 
 	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
+	public Object execute() {
+		return this.getFacade().playSoldier(location, victimIndex);
 		
 	}
 

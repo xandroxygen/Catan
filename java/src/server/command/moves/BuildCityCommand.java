@@ -6,17 +6,17 @@ import shared.locations.EdgeLocation;
 
 public class BuildCityCommand extends Command {
 	boolean isFree;
-	EdgeLocation roadLocation;
+	EdgeLocation roadLoc;
 
 	public BuildCityCommand(IServerFacade facade, EdgeLocation roadLocation, boolean isFree) {
 		super(facade);
-		this.roadLocation = roadLocation;
+		this.roadLoc = roadLocation;
 		this.isFree = isFree;
 	}
 
 	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
+	public Object execute() {
+		return this.getFacade().buildCity(roadLoc);
 		
 	}
 

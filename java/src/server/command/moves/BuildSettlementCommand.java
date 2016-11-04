@@ -1,19 +1,24 @@
 package server.command.moves;
 
+import client.model.InvalidActionException;
 import server.command.Command;
 import server.facade.IServerFacade;
+import shared.locations.VertexLocation;
 
-public class BuildSettlementCommand extends Command{
+public class BuildSettlementCommand extends Command {
 
-	public BuildSettlementCommand(IServerFacade facade) {
+	private boolean isFree;
+	private VertexLocation vertexLoc;
+	
+	public BuildSettlementCommand(IServerFacade facade, VertexLocation vertexLoc, boolean isFree) {
 		super(facade);
-		// TODO Auto-generated constructor stub
+		this.vertexLoc = vertexLoc;
+		this.isFree = isFree;
 	}
 
 	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
-		
+	public Object execute(){
+		return this.getFacade().buildSettlement(isFree, vertexLoc);
 	}
 
 }

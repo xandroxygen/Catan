@@ -1,5 +1,6 @@
 package server.command;
 
+import client.model.InvalidActionException;
 import server.facade.IServerFacade;
 
 public abstract class Command {
@@ -10,7 +11,7 @@ public abstract class Command {
 		this.facade = facade;
 	}
 
-	public abstract void execute();
+	public abstract Object execute();
 	
 	public IServerFacade getFacade() {
 		return this.facade;

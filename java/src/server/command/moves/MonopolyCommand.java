@@ -2,17 +2,20 @@ package server.command.moves;
 
 import server.command.Command;
 import server.facade.IServerFacade;
+import shared.definitions.ResourceType;
 
 public class MonopolyCommand extends Command{
-
-	public MonopolyCommand(IServerFacade facade) {
+	
+	private ResourceType resource;
+	
+	public MonopolyCommand(IServerFacade facade, ResourceType resource) {
 		super(facade);
-		// TODO Auto-generated constructor stub
+		this.resource = resource;
 	}
 
 	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
+	public Object execute() {
+		return this.getFacade().playMonopoly(resource);
 		
 	}
 

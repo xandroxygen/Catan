@@ -8,25 +8,15 @@ public class SendChatCommand extends Command{
 	
 	private String message;
 
-	public SendChatCommand(IServerFacade facade) {
-		super(facade);
-		// TODO Auto-generated constructor stub
-	}
-	
 	public SendChatCommand(IServerFacade facade, String message) {
 		super(facade);
 		this.message = message;
 	}
 
 	@Override
-	public void execute() {
-		IMovesServerFacade facade = (IMovesServerFacade)getFacade();
-		facade.sendChat(message);
+	public Object execute() {
+		return this.getFacade().sendChat(message);
 		
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
 	}
 
 }

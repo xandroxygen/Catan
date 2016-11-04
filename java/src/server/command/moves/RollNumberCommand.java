@@ -3,16 +3,18 @@ package server.command.moves;
 import server.command.Command;
 import server.facade.IServerFacade;
 
-public class RollNumberCommand extends Command{
+public class RollNumberCommand extends Command {
+	
+	private int number;
 
-	public RollNumberCommand(IServerFacade facade) {
+	public RollNumberCommand(IServerFacade facade, int number) {
 		super(facade);
-		// TODO Auto-generated constructor stub
+		this.number = number;
 	}
 
 	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
+	public Object execute() {
+		return this.getFacade().rollNumber(number);
 		
 	}
 

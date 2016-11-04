@@ -1,18 +1,25 @@
 package server.command.moves;
 
+import java.util.Map;
+
 import server.command.Command;
 import server.facade.IServerFacade;
+import shared.definitions.ResourceType;
 
 public class OfferTradeCommand extends Command{
-
-	public OfferTradeCommand(IServerFacade facade) {
+	
+	private Map<ResourceType, Integer> offer;
+	private int receiverIndex;
+	
+	public OfferTradeCommand(IServerFacade facade, Map<ResourceType, Integer> offer, int receiverIndex) {
 		super(facade);
-		// TODO Auto-generated constructor stub
+		this.offer = offer;
+		this.receiverIndex = receiverIndex;
 	}
 
 	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
+	public Object execute() {
+		return this.getFacade().offerTrade(offer, receiverIndex);
 		
 	}
 

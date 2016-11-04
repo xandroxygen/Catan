@@ -2,17 +2,22 @@ package server.command.moves;
 
 import server.command.Command;
 import server.facade.IServerFacade;
+import shared.definitions.ResourceType;
 
-public class YearOfPlentyCommand extends Command{
+public class YearOfPlentyCommand extends Command {
 
-	public YearOfPlentyCommand(IServerFacade facade) {
+	private ResourceType resource1;
+	private ResourceType resource2;
+	
+	public YearOfPlentyCommand(IServerFacade facade, ResourceType resource1, ResourceType resource2) {
 		super(facade);
-		// TODO Auto-generated constructor stub
+		this.resource1 = resource1;
+		this.resource2 = resource2;
 	}
 
 	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
+	public Object execute() {
+		return this.getFacade().playYearOfPlenty(resource1, resource2);
 		
 	}
 

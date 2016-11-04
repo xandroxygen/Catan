@@ -1,19 +1,24 @@
 package server.command.moves;
 
+import client.model.InvalidActionException;
 import server.command.Command;
 import server.facade.IServerFacade;
+import shared.locations.EdgeLocation;
 
-public class BuildRoadCommand extends Command{
+public class BuildRoadCommand extends Command {
+	
+	private boolean isFree;
+	private EdgeLocation roadLocation;
 
-	public BuildRoadCommand(IServerFacade facade) {
+	public BuildRoadCommand(IServerFacade facade, EdgeLocation roadLocation, boolean isFree) {
 		super(facade);
-		// TODO Auto-generated constructor stub
+		this.roadLocation = roadLocation;
+		this.isFree = isFree;
 	}
 
 	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
-		
+	public Object execute() {
+		return this.getFacade().buildRoad(isFree, roadLocation);
 	}
 
 	
