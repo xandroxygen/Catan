@@ -1,7 +1,6 @@
 package client.data;
 
-import client.model.Player;
-import shared.definitions.CatanColor;
+import shared.model.Player;
 
 /**
  * Used to pass player information into the rob view<br>

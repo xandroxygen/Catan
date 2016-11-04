@@ -1,10 +1,11 @@
-package client.model;
+package server.http.model;
 
 import client.admin.User;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.model.Game;
 
 import java.util.HashMap;
 
@@ -13,7 +14,7 @@ import java.util.HashMap;
  */
 public class ServerModel {
     private HashMap<String, User> mapOfUsers;
-    private HashMap<String, Game> listOfGames;
+    private HashMap<String, Game> mapOfGames;
 
     /**
      * Places a City in the Game from the given gameID for the player specified in the given playerID, at the given location.

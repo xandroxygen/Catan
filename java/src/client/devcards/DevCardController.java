@@ -2,7 +2,7 @@ package client.devcards;
 
 import client.base.Controller;
 import client.base.IAction;
-import client.model.InvalidActionException;
+import shared.model.InvalidActionException;
 import client.model.Model;
 import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;

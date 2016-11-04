@@ -2,7 +2,7 @@ package client.resources;
 
 import client.base.Controller;
 import client.base.IAction;
-import client.model.Game;
+import shared.model.Game;
 import client.model.Model;
 import shared.definitions.ResourceType;
 

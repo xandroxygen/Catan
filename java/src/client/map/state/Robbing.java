@@ -2,7 +2,7 @@ package client.map.state;
 
 import client.data.RobPlayerInfo;
 import client.map.MapController;
-import client.model.InvalidActionException;
+import shared.model.InvalidActionException;
 import client.model.Model;
 import shared.definitions.PieceType;
 import shared.locations.HexLocation;

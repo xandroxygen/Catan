@@ -1,4 +1,4 @@
-package client.model;
+package shared.model;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -25,7 +25,7 @@ import java.util.List;
 public class Game {
 
     private ArrayList<Player> playerList;
-    private client.model.Map theMap;
+    private Map theMap;
     private Bank bank;
     private int currentTurnIndex;
     private TurnTracker turnTracker;
@@ -159,7 +159,7 @@ public class Game {
      * @param location The location of the city.
      * @return result
      */
-    boolean canPlaceCity(int playerId, VertexLocation location){
+	public boolean canPlaceCity(int playerId, VertexLocation location){
     	Player player = this.getPlayerById(playerId);
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
 				theMap.playerHasSettlementAtLocation(location, player) && (player.getResources().get(ResourceType.WHEAT) >= 2) &&
@@ -182,7 +182,7 @@ public class Game {
      * @param location The location of the settlement.
      * @return result
      */
-    boolean canPlaceSettlement(int playerId, boolean free, VertexLocation location){
+	public boolean canPlaceSettlement(int playerId, boolean free, VertexLocation location){
     	Player player = this.getPlayerById(playerId);
     	if (free) {
     		return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
@@ -212,7 +212,7 @@ public class Game {
      * @param location The location of the road.
      * @return result
      */
-    boolean canPlaceRoad(int playerId, boolean free, EdgeLocation location) {
+	public boolean canPlaceRoad(int playerId, boolean free, EdgeLocation location) {
     	Player player = this.getPlayerById(playerId);
     	if (free) {
     		return (turnTracker.getCurrentTurn() == player.getPlayerIndex() &&
@@ -234,7 +234,7 @@ public class Game {
 				(player.getResources().get(ResourceType.BRICK) >= 1) && (player.getRoads() >= 1));
     }
 
-	boolean canPlaceRoad(int playerId, EdgeLocation firstLocation, EdgeLocation location) {
+	public boolean canPlaceRoad(int playerId, EdgeLocation firstLocation, EdgeLocation location) {
 		Player player = this.getPlayerById(playerId);
 		if (firstLocation == null) {
 			return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
@@ -261,13 +261,13 @@ public class Game {
      * @param recieverPlayerId the playerIndex of the offer recipient.
      * @return result
      */
-    boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, HashMap<ResourceType, Integer> offer){
+	public boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, HashMap<ResourceType, Integer> offer){
     	Player player = this.getPlayerById(senderPlayerId);
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
 				player.hasOfferResources(offer));
     }
-    
-    boolean canRollDice(int playerId){
+
+	public boolean canRollDice(int playerId){
     	Player player = this.getPlayerById(playerId);
     	return turnTracker.getCurrentTurn() == player.getPlayerIndex();
     }
@@ -303,7 +303,7 @@ public class Game {
      * @param message the message the player wishes to send.
      * @return
      */
-    void sendMessage(String message){
+	public void sendMessage(String message){
     	try {
 			server.sendChat(message);
 		} catch (InvalidActionException e) {
@@ -316,7 +316,7 @@ public class Game {
      * @post  The cards in your new dev card hand have been transferred to your old dev card hand, It is the next player’s turn
      * @return result
      */
-    boolean endTurn(int playerId){
+	public boolean endTurn(int playerId){
         return false; //ME
     }
     
@@ -325,7 +325,7 @@ public class Game {
      * @param diceRoll the number that was rolled
      * @return true if there are resources to receiver
      */
-    boolean canGetRolledResources(int diceRoll){
+	public boolean canGetRolledResources(int diceRoll){
         return diceRoll <= 12 && diceRoll >= 2;
     }
     
@@ -353,7 +353,7 @@ public class Game {
 		return playerList;
 	}
 
-	public client.model.Map getTheMap() {
+	public Map getTheMap() {
 		return theMap;
 	}
 

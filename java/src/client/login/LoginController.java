@@ -4,17 +4,9 @@ import client.admin.GameAdministrator;
 import client.base.*;
 import client.misc.*;
 
-import java.net.*;
-import java.io.*;
 import java.util.*;
-import java.lang.reflect.*;
 
-import client.model.InvalidActionException;
-import client.model.Model;
-import client.server.ServerPoller;
-
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
+import shared.model.InvalidActionException;
 
 
 /**

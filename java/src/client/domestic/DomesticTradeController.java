@@ -10,9 +10,9 @@ import client.admin.GameAdministrator;
 import client.base.*;
 import client.data.PlayerInfo;
 import client.misc.*;
-import client.model.InvalidActionException;
+import shared.model.InvalidActionException;
 import client.model.Model;
-import client.model.Player;
+import shared.model.Player;
 
 
 /**

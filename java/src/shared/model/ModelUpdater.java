@@ -1,4 +1,4 @@
-package client.model;
+package shared.model;
 
 import client.server.IServerProxy;
 import com.google.gson.JsonArray;

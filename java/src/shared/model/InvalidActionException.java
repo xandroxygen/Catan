@@ -1,4 +1,4 @@
-package client.model;
+package shared.model;
 
 public class InvalidActionException extends Exception {
     public String message;
