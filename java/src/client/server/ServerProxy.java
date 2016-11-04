@@ -1,8 +1,6 @@
 package client.server;
 
-import client.admin.GameAdministrator;
-import client.model.Game;
-import client.model.InvalidActionException;
+import shared.model.InvalidActionException;
 import com.google.gson.JsonObject;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;

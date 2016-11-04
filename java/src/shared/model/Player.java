@@ -1,4 +1,4 @@
-package client.model;
+package shared.model;
 
 import com.google.gson.JsonObject;
 import shared.definitions.CatanColor;
@@ -367,7 +367,7 @@ public class Player {
 	 * @param inputResource Type of resource you are giving.
 	 * @return result
 	 */
-	boolean canTradeWithBank(int ratio, ResourceType inputResource){
+	public boolean canTradeWithBank(int ratio, ResourceType inputResource){
 		return resources.get(inputResource) >= ratio;
 	}
 

@@ -4,9 +4,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import client.base.*;
-import client.model.GameStatus;
 import client.model.Model;
-import client.model.Player;
+import shared.model.Player;
 
 
 /**

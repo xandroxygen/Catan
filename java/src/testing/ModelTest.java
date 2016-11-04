@@ -10,6 +10,10 @@ import org.junit.Test;
 import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
 import shared.locations.*;
+import shared.model.GameStatus;
+import shared.model.Player;
+import shared.model.Road;
+import shared.model.Settlement;
 
 import java.util.HashMap;
 
