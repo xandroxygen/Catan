@@ -618,10 +618,10 @@ public class Game {
 
 	/**
 	 * Adds an computer player to the game.
-	 * * * @pre <pre>
+	 * @pre <pre>
 	 * 		There are less then four players in the current game
 	 * 		</pre>
-	 * * @post <pre>
+	 * @post <pre>
 	 *      there is a new computer player added to the game given by the gameID
 	 * 		</pre>
 	 */
@@ -630,25 +630,26 @@ public class Game {
 	}
 
 	/**
-	 * Gives the longestRoad Card to the appropriate player.
-	 * * * @pre <pre>
-	 * 		There are less then four players in the current game
+	 * Calculates and sets the player with the longest road.
+	 * @pre <pre>
+	 * 		There are four players in the current game
+	 * 		There is at least one road placed
 	 * 		</pre>
-	 * * @post <pre>
-	 *      there is a new computer player added to the game given by the gameID
+	 * @post <pre>
+	 *      The player with the longest road is determined, and set within the model.
 	 * 		</pre>
 	 */
-	public void longestRoad(){}
+	public void longestRoad() {}
 
 	/**
-	 * Gives the longestRoad Card to the appropriate player.
-	 * * * @pre <pre>
-	 * 		There are less then four players in the current game
+	 * Calculates and sets the player with the largest army.
+	 * @pre <pre>
+	 * 		There are four players in the current game
 	 * 		</pre>
 	 * * @post <pre>
-	 *      there is a new computer player added to the game given by the gameID
+	 *      The player with the largest army is determined, and set within the model.
 	 * 		</pre>
 	 */
-	public void largestArmy(){}
+	public void largestArmy() {}
 
 }
