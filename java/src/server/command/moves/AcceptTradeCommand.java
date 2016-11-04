@@ -1,19 +1,31 @@
 package server.command.moves;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
+import server.facade.moves.IMovesServerFacade;
 
-public class AcceptTradeCommand extends ICommand{
+public class AcceptTradeCommand extends Command {
+	
+	private boolean willAccept;
 
 	public AcceptTradeCommand(IServerFacade facade) {
 		super(facade);
-		// TODO Auto-generated constructor stub
+	}
+	
+	public AcceptTradeCommand(IServerFacade facade, boolean willAccept) {
+		super(facade);
+		this.willAccept = willAccept;
 	}
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
+		IMovesServerFacade facade = (IMovesServerFacade)getFacade();
+		facade.acceptTrade(willAccept);
 		
+	}
+
+	public void setWillAccept(boolean willAccept) {
+		this.willAccept = willAccept;
 	}
 
 }

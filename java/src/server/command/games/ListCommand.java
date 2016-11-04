@@ -1,9 +1,9 @@
 package server.command.games;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
 
-public class ListCommand extends ICommand{
+public class ListCommand extends Command{
 
 	public ListCommand(IServerFacade facade) {
 		super(facade);

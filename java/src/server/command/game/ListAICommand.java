@@ -1,9 +1,9 @@
 package server.command.game;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
 
-public class ListAICommand extends ICommand{
+public class ListAICommand extends Command{
 
 	public ListAICommand(IServerFacade facade) {
 		super(facade);

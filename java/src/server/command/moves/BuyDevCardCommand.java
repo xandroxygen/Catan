@@ -1,9 +1,9 @@
 package server.command.moves;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
 
-public class BuyDevCardCommand extends ICommand{
+public class BuyDevCardCommand extends Command{
 
 	public BuyDevCardCommand(IServerFacade facade) {
 		super(facade);

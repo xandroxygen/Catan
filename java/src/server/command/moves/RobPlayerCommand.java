@@ -1,9 +1,9 @@
 package server.command.moves;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
 
-public class RobPlayerCommand extends ICommand{
+public class RobPlayerCommand extends Command{
 
 	public RobPlayerCommand(IServerFacade facade) {
 		super(facade);

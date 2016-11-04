@@ -1,9 +1,9 @@
 package server.command.moves;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
 
-public class RoadBuildingCommand extends ICommand{
+public class RoadBuildingCommand extends Command{
 
 	public RoadBuildingCommand(IServerFacade facade) {
 		super(facade);

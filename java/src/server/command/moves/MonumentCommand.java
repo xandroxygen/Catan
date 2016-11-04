@@ -1,9 +1,9 @@
 package server.command.moves;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
 
-public class MonumentCommand extends ICommand{
+public class MonumentCommand extends Command{
 
 	public MonumentCommand(IServerFacade facade) {
 		super(facade);

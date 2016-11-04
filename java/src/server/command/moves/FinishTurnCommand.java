@@ -1,9 +1,9 @@
 package server.command.moves;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
 
-public class FinishTurnCommand extends ICommand{
+public class FinishTurnCommand extends Command{
 
 	public FinishTurnCommand(IServerFacade facade) {
 		super(facade);

@@ -1,9 +1,9 @@
 package server.command.moves;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
 
-public class MonopolyCommand extends ICommand{
+public class MonopolyCommand extends Command{
 
 	public MonopolyCommand(IServerFacade facade) {
 		super(facade);

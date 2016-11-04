@@ -1,13 +1,17 @@
 package server.command.moves;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
+import shared.locations.EdgeLocation;
 
-public class BuildCityCommand extends ICommand{
+public class BuildCityCommand extends Command {
+	boolean isFree;
+	EdgeLocation roadLocation;
 
-	public BuildCityCommand(IServerFacade facade) {
+	public BuildCityCommand(IServerFacade facade, EdgeLocation roadLocation, boolean isFree) {
 		super(facade);
-		// TODO Auto-generated constructor stub
+		this.roadLocation = roadLocation;
+		this.isFree = isFree;
 	}
 
 	@Override

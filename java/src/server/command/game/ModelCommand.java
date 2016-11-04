@@ -1,9 +1,9 @@
 package server.command.game;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
 
-public class ModelCommand extends ICommand{
+public class ModelCommand extends Command{
 
 	public ModelCommand(IServerFacade facade) {
 		super(facade);

@@ -1,9 +1,9 @@
 package server.command.games;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
 
-public class JoinCommand extends ICommand{
+public class JoinCommand extends Command{
 
 	public JoinCommand(IServerFacade facade) {
 		super(facade);

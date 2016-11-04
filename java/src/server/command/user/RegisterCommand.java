@@ -1,9 +1,9 @@
 package server.command.user;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
 
-public class RegisterCommand extends ICommand{
+public class RegisterCommand extends Command{
 
 	public RegisterCommand(IServerFacade facade) {
 		super(facade);

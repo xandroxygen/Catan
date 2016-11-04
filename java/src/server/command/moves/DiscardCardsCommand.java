@@ -1,9 +1,9 @@
 package server.command.moves;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
 
-public class DiscardCardsCommand extends ICommand{
+public class DiscardCardsCommand extends Command{
 
 	public DiscardCardsCommand(IServerFacade facade) {
 		super(facade);

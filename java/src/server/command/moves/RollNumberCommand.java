@@ -1,9 +1,9 @@
 package server.command.moves;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
 
-public class RollNumberCommand extends ICommand{
+public class RollNumberCommand extends Command{
 
 	public RollNumberCommand(IServerFacade facade) {
 		super(facade);

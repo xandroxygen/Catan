@@ -1,9 +1,9 @@
 package server.command.moves;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
 
-public class SoldierCommand extends ICommand{
+public class SoldierCommand extends Command{
 
 	public SoldierCommand(IServerFacade facade) {
 		super(facade);

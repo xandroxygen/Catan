@@ -1,9 +1,9 @@
 package server.command.moves;
 
-import server.command.ICommand;
+import server.command.Command;
 import server.facade.IServerFacade;
 
-public class OfferTradeCommand extends ICommand{
+public class OfferTradeCommand extends Command{
 
 	public OfferTradeCommand(IServerFacade facade) {
 		super(facade);

@@ -1,5 +1,5 @@
 package server.facade;
 
-public class MockServerFacade {
+public class MockServerFacade implements IServerFacade{
 
 }
