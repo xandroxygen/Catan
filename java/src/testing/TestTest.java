@@ -1,6 +1,6 @@
 package testing;
 
-import client.model.Hex;
+import shared.model.Hex;
 import org.junit.Test;
 
 

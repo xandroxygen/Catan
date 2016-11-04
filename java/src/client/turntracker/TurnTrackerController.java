@@ -3,6 +3,10 @@ package client.turntracker;
 import client.admin.GameAdministrator;
 import client.base.Controller;
 import client.model.*;
+import shared.model.Game;
+import shared.model.GameStatus;
+import shared.model.InvalidActionException;
+import shared.model.Player;
 
 import javax.swing.*;
 import java.util.List;

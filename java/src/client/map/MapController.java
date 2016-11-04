@@ -14,6 +14,7 @@ import shared.definitions.*;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.model.*;
 
 import java.util.Map;
 import java.util.Observable;

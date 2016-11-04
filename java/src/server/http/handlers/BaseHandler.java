@@ -1,0 +1,84 @@
+package server.http.handlers;
+
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+
+import java.io.IOException;
+
+/**
+ * Base handler helps to deserialize request.
+ * Also reads and sets cookies.
+ * Takes care of most HTTP details,
+ * and leaves one method for subclasses to worry about
+ */
+public abstract class BaseHandler implements HttpHandler {
+
+	private Object body;
+	private String playerCookie;
+	private String gameCookie;
+	private int responseCode;
+	// needs to have DI of Server Facade here
+
+
+
+	private static final int RESPONSE_OK = 200;
+	private static final int RESPONSE_FAIL = 400;
+	private static final int RESPONSE_NOT_FOUND = 404;
+	private static final int RESPONSE_SERVER_FAIL = 500;
+
+	/**
+	 * The Base Handler takes care of all the HTTP stuff in the handle function.
+	 * It calls all the helper functions, and sets all the needed attributes.
+	 * It then calls respondToRequest, which all subclasses need to implement.
+	 * After a response is readied, the response is passed back.
+	 * @param httpExchange
+	 * @throws IOException
+	 */
+	@Override
+	public void handle(HttpExchange httpExchange) throws IOException {
+
+	}
+
+	/**
+	 * If there is a request body, this deserializes the JSON
+	 * into a vanilla Java object.
+	 * Sets the body attribute on the handler object.
+	 * @param input the request body
+	 */
+	public void deserializeBody(String input) {
+
+	}
+
+	/**
+	 * Reads the player and game cookies, if set in the request.
+	 * Sets the cookies attributes on the handler object.
+	 */
+	public void readCookies() {
+
+	}
+
+	/**
+	 * Takes the current game cookie attribute and adds it to the
+	 * headers on the response.
+	 */
+	public void writeGameCookie() {
+
+	}
+
+	/**
+	 * Takes the current game cookie attribute and adds it to the
+	 * headers on the response.
+	 */
+	public void writePlayerCookie() {
+
+	}
+
+	/**
+	 * Overridden by child handlers. This specifies what each request should do.
+	 * eg. for buildRoad, this would construct a command to build a road and execute it.
+	 * This method must also set a response code, and can set the cookies attributes.
+	 * This method is in charge of writing needed cookies.
+	 * @return the response from the Model, serialized as a String.
+	 */
+	public abstract String respondToRequest(HttpExchange exchange);
+}

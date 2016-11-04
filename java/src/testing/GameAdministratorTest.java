@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import client.admin.GameAdministrator;
 import client.admin.User;
-import client.model.InvalidActionException;
+import shared.model.InvalidActionException;
 import client.model.Model;
 import client.server.MockServerProxy;
 import client.server.ServerPoller;

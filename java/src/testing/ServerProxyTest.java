@@ -1,17 +1,15 @@
 package testing;
 
-import client.model.InvalidActionException;
+import shared.model.InvalidActionException;
 import client.server.HTTPOperations;
 import client.server.RequestResponse;
 import client.server.ServerProxy;
-import org.junit.Before;
 import org.junit.Test;
 import shared.definitions.CatanColor;
 import shared.locations.EdgeDirection;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;

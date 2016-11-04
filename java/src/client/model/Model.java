@@ -10,6 +10,7 @@ import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.model.*;
 
 import java.util.HashMap;
 import java.util.List;

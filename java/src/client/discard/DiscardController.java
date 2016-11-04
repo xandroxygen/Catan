@@ -9,10 +9,10 @@ import java.util.Observer;
 
 import client.base.*;
 import client.misc.*;
-import client.model.GameStatus;
-import client.model.InvalidActionException;
+import shared.model.GameStatus;
+import shared.model.InvalidActionException;
 import client.model.Model;
-import client.model.Player;
+import shared.model.Player;
 
 
 /**
