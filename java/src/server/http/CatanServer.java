@@ -6,20 +6,21 @@ import java.net.InetSocketAddress;
 
 /**
  * This is the entry point for our server implementation.
- * Host needs to be changed at some point, probably.
  * All requests from the client route through the HttpServer contained in this class.
- * All endpoints must be registered, and handlers created.
- * Look into creating base handlers if possible, and passing in necessary data.
+ * All endpoint groups must be registered, and handlers created.
+ * Specific endpoints are laid out in the Handler classes.
+ *
  */
 public class CatanServer {
 
 	public static void main(String[] args) throws Exception {
 
-		HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8081), 0); // TODO change host
+		HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8081), 0);
 
 		// --- ENDPOINTS ---
 
 		server.createContext("/", new ExampleHandler("Catan is online"));
+
 
 		// -----------------
 		server.setExecutor(null); // uses default
