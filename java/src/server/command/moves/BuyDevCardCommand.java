@@ -1,17 +1,20 @@
 package server.command.moves;
 
-import client.model.InvalidActionException;
 import server.command.Command;
 import server.facade.IServerFacade;
+import shared.model.InvalidActionException;
 
-public class BuyDevCardCommand extends Command{
+public class BuyDevCardCommand extends Command {
 
-	public BuyDevCardCommand(IServerFacade facade) {
-		super(facade);
+	private int playerID;
+	
+	public BuyDevCardCommand(IServerFacade facade, int gameID, int playerID) {
+		super(gameID, facade);
+		this.playerID = playerID;
 	}
 
 	@Override
-	public Object execute() {
-		return this.getFacade().buyDevCard();		
+	public Object execute() throws InvalidActionException {
+		return this.getFacade().buyDevCard(this.getGameID(), playerID);		
 	}
 }

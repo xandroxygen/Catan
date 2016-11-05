@@ -9,16 +9,18 @@ import shared.definitions.ResourceType;
 
 public class DiscardCardsCommand extends Command {
 	
+	private int playerID;
 	private Map<ResourceType, Integer> hand;
 	
-	public DiscardCardsCommand(IServerFacade facade, Map<ResourceType, Integer> hand) {
-		super(facade);
+	public DiscardCardsCommand(IServerFacade facade, int gameID, int playerID, Map<ResourceType, Integer> hand) {
+		super(gameID, facade);
+		this.playerID = playerID;
 		this.hand = hand;
 	}
 
 	@Override
 	public Object execute() {
-		return this.getFacade().discardCards(hand);
+		return this.getFacade().discardCards(this.getGameID(), playerID, hand);
 	}
 
 }

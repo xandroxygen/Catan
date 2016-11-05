@@ -1,19 +1,18 @@
 package server.command.moves;
 
-import client.model.InvalidActionException;
 import server.command.Command;
 import server.facade.IServerFacade;
+import shared.model.InvalidActionException;
 
 public class FinishTurnCommand extends Command{
 
-	public FinishTurnCommand(IServerFacade facade) {
-		super(facade);
+	public FinishTurnCommand(int gameID, IServerFacade facade) {
+		super(gameID, facade);
 	}
 
 	@Override
-	public Object execute() {
-		return this.getFacade().finishTurn();
-		
+	public Object execute() throws InvalidActionException {
+		return this.getFacade().finishTurn(this.getGameID());
 	}
 
 }

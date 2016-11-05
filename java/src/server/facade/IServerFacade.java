@@ -1,6 +1,7 @@
 package server.facade;
 
-import client.model.InvalidActionException;
+import shared.model.Game;
+import shared.model.InvalidActionException;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -69,15 +70,14 @@ public interface IServerFacade{
 	 *
 	 * @post <pre>
 	 * 	If the operation succeeds:
-	 * 		1. Server returns an HTTP 200 reponse message
+	 * 		1. Server returns an HTTP 200 response message
 	 * 		2. The body contains a JSON array with a list of objects that contain info about the server's games.
 	 *
 	 * 	If the operation fails:
 	 * 		1. Server returns 400 error response and body contains an error message.
 	 * 	</pre>
 	 */
-	String gamesList() throws InvalidActionException;
-	
+	Game[] gamesList() throws InvalidActionException;
 	/**
 	 * Creates a new game on the server. 
 	 * 
@@ -180,7 +180,8 @@ public interface IServerFacade{
 	
 	/**
 	 * Returns a list of supported AI player types.
-	 * @return 
+	 * @param gameID The ID of the game from which the request was made
+	 * @return All AI player types for a particular game
 	 * @throws InvalidActionException 
 	 *
 	 * @pre <pre>
@@ -193,9 +194,7 @@ public interface IServerFacade{
 	 * 		 1. The server returns an HTTP 400 error message and the response body contains an error message
 	 * </pre>
 	 */
-	String gameListAI() throws InvalidActionException;
-	
-	
+	String[] gameListAI(int gameID) throws InvalidActionException;
 	/**
 	 * Adds an AI player to the current game.
 	 * 
@@ -215,10 +214,11 @@ public interface IServerFacade{
 	 * 		1. The server returns an HTTP 400 error response, and the body contains an error message.
 	 * </pre>
 	 *
+	 * @param gameID The ID of the game to add the AI player to
 	 * @param aiType The AI player to add to the game
 	 * @throws InvalidActionException 
 	 */
-	void gameAddAI(String aiType) throws InvalidActionException;
+	Object gameAddAI(int gameID, String aiType) throws InvalidActionException;
 
 	/* END Non-move API */
 	
@@ -240,7 +240,7 @@ public interface IServerFacade{
 	 * @param message The message to send
      * @post the chat box contains the sent message
 	 */
-	void sendChat(String message) throws InvalidActionException;
+	Object sendChat(int gameID, int playerID, String message) throws InvalidActionException;
 	
 	/**
 	 *  A domestic trade is being offered.
@@ -262,9 +262,11 @@ public interface IServerFacade{
      * 		The trade offer is removed
 	 * </pre>
 	 */
-	void acceptTrade(boolean willAccept) throws InvalidActionException;
+	Object acceptTrade(int gameID, boolean willAccept) throws InvalidActionException;
 
 	/**
+	 * @param gameID the ID of the game from which the request was made
+	 * @param playerID The ID of the player requesting the move
      * @param hand The cards being discarded
 	 *
 	 * @pre <pre>
@@ -275,7 +277,7 @@ public interface IServerFacade{
      * 		You have the resources you are discarding
 	 * </pre>
 	 */
-	void discardCards(Map<ResourceType, Integer> hand) throws InvalidActionException;
+	Object discardCards(int gameID, int playerID, Map<ResourceType, Integer> hand) throws InvalidActionException;
 
     /**
      * Tell the server that the dice were rolled.
@@ -288,7 +290,7 @@ public interface IServerFacade{
      * 		The status of the client model is 'Rolling'
      * </pre>
      */
-	void rollNumber(int number) throws InvalidActionException;
+	Object rollNumber(int gameID, int playerID,  int rollValue) throws InvalidActionException;
 
     /**
      * @param isFree during the setup phase, roads are free
@@ -312,7 +314,7 @@ public interface IServerFacade{
      * 		Longest road has been awarded, if applicable
 	 * </pre>
      */
-	void buildRoad(boolean isFree, EdgeLocation roadLocation ) throws InvalidActionException;
+	Object buildRoad(int gameID, int playerID, boolean isFree, EdgeLocation roadLocation) throws InvalidActionException;
 
     /**
      * @param isFree during the setup phase, settlements are free
@@ -334,7 +336,7 @@ public interface IServerFacade{
      * 		The settlement is at the location on the map
 	 * </pre>
      */
-	void buildSettlement(boolean isFree, VertexLocation vertexLocation) throws InvalidActionException;
+	Object buildSettlement(int gameID, int playerID, boolean isFree, VertexLocation vertexLocation) throws InvalidActionException;
 
     /**
      * @param vertexLocation the new city's location
@@ -354,7 +356,7 @@ public interface IServerFacade{
      * 		You regain 1 settlement
 	 * </pre>
      */
-	void buildCity(VertexLocation vertexLocation) throws InvalidActionException;
+	Object buildCity(int gameID, int playerID, VertexLocation vertexLocation) throws InvalidActionException;
 
 	/**
 	 * Contact another player and offer to trade cards back and forth.
@@ -364,8 +366,7 @@ public interface IServerFacade{
      * @pre You have the resources you are offering
      * @post The trade is offered to the other player
 	 */
-	void offerTrade(Map<ResourceType, Integer> offer, int receiverIndex) throws InvalidActionException;
-	
+	Object offerTrade(int gameID, int senderID, int receiverID, Map<ResourceType, Integer> offer) throws InvalidActionException;
 	/**
 	 * Used when built on a port, or when trading to the bank.
 	 * @param ratio 4 (to 1, when not on a port), 3 (to 1, when on a general port), 2 (to 1, when on a resource port)
@@ -384,10 +385,12 @@ public interface IServerFacade{
 	 * 		You have the requested resource.
 	 * </pre>
 	 */
-	void maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource) throws InvalidActionException;
+	Object maritimeTrade(int ratio, ResourceType inputResource, ResourceType outputResource) throws InvalidActionException;
 	
 	/**
 	 * Called when a 7 is rolled and the robber is being moved.
+	 * @param gameID The ID of the game in play
+	 * @param playerID The ID of the player requesting the move
 	 * @param location the new robber location
 	 * @param victimIndex the index of the player being robbed, or -1 if no one is being robbed
 	 *
@@ -403,16 +406,18 @@ public interface IServerFacade{
      * 		The player being robbed gave you a random resource card.
 	 * </pre>
 	 */
-	void robPlayer(HexLocation location, int victimIndex) throws InvalidActionException;
+	Object robPlayer(int gameID, int playerID, HexLocation location, int victimIndex) throws InvalidActionException;
 
     /**
      * Called at the end of a player's turn.
+     * @param gameID the ID of the game for which the turn is ending
+     * 
 	 * @post <pre>
      * 		The cards in your new dev card hand have been moved to your old dev card hand.
      * 		It is the next player's turn.
 	 * </pre>
      */
-    void finishTurn() throws InvalidActionException;
+    Object finishTurn(int gameID) throws InvalidActionException;
 
     /**
      * Purchase a development card for 1 wheat, 1 sheep, and 1 ore.
@@ -430,7 +435,7 @@ public interface IServerFacade{
      * 		You have spent the required resources
 	 * </pre>
      */
-	void buyDevCard() throws InvalidActionException;
+	Object buyDevCard(int gameID, int playerID) throws InvalidActionException;
 
     /**
      * Play a soldier/knight dev card. Analogous to moving the robber.
@@ -455,7 +460,7 @@ public interface IServerFacade{
      * 		You are not allowed to play non-monument dev cards
 	 * </pre>
      */
-	void playSoldier(HexLocation location, int victimIndex) throws InvalidActionException;
+	Object playSoldier(int gameID, int playerID, HexLocation location, int victimIndex) throws InvalidActionException;
 
 	/**
 	 * Play a Year of Plenty card, and receive 2 free resources.
@@ -474,7 +479,7 @@ public interface IServerFacade{
 	 *
      * @post You have the requested resources and the bank does not.
 	 */
-	void playYearOfPlenty(ResourceType resource1, ResourceType resource2) throws InvalidActionException;
+	Object playYearOfPlenty(int gameID, int playerID, ResourceType resource1, ResourceType resource2) throws InvalidActionException;
 	
 	/**
 	 * Play a Road Playing card, and build 2 roads.
@@ -500,7 +505,7 @@ public interface IServerFacade{
      * 		Longest road is awarded, if applicable.
 	 * </pre>
 	 */
-	void playRoadBuilding(EdgeLocation location1, EdgeLocation location2) throws InvalidActionException;
+	Object playRoadBuilding(int gameID, int playerID, EdgeLocation location1, EdgeLocation location2) throws InvalidActionException;
 	
 	/**
 	 * Play a Monopoly card, and collect a specific resource from all other players.
@@ -517,14 +522,14 @@ public interface IServerFacade{
 	 *
      * @post All the players have given you all of their resources of the specified type
 	 */
-	void playMonopoly(ResourceType resource) throws InvalidActionException;
+	Object playMonopoly(int gameID, int playerID, ResourceType resource) throws InvalidActionException;
 	
 	/**
 	 * Play a Monument card, and be awarded a victory point.
      * @pre You have enough monument cards to reach 10 pts and win the game.
      * @post You gained a victory point.
 	 */
-	void playVictoryPoint() throws InvalidActionException;
+	Object playMonument(int gameID, int playerID) throws InvalidActionException;
 
 	/* END Move API */
 }

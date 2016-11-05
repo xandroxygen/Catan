@@ -3,21 +3,25 @@ package server.command.moves;
 import server.command.Command;
 import server.facade.IServerFacade;
 import shared.locations.EdgeLocation;
+import shared.locations.VertexLocation;
+import shared.model.InvalidActionException;
 
 public class BuildCityCommand extends Command {
+	
+	private int playerID;
 	boolean isFree;
-	EdgeLocation roadLoc;
+	VertexLocation vertexLoc;
 
-	public BuildCityCommand(IServerFacade facade, EdgeLocation roadLocation, boolean isFree) {
-		super(facade);
-		this.roadLoc = roadLocation;
+	public BuildCityCommand(IServerFacade facade, int gameID, int playerID, VertexLocation vertexLoc, boolean isFree) {
+		super(gameID, facade);
+		this.playerID = playerID;
+		this.vertexLoc = vertexLoc;
 		this.isFree = isFree;
 	}
 
 	@Override
-	public Object execute() {
-		return this.getFacade().buildCity(roadLoc);
-		
+	public Object execute() throws InvalidActionException {
+		return this.getFacade().buildCity(this.getGameID(), playerID, vertexLoc);	
 	}
 
 }

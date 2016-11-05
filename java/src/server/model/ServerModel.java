@@ -326,7 +326,7 @@ public class ServerModel {
      * Accept the TradeOffer currently on the table.
      * @param gameID the ID of the game from which the request was made.
      */
-    public void acceptTradeOffer(int gameID){}
+    public void acceptTradeOffer(int gameID, boolean willAccept){}
 
     /**
      * Accept the TradeOffer currently on the table.
