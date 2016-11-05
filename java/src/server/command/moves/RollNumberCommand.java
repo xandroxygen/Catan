@@ -7,17 +7,17 @@ import shared.model.InvalidActionException;
 public class RollNumberCommand extends Command {
 	
 	private int playerID;
-	private int number;
+	private int rollValue;
 
 	public RollNumberCommand(IServerFacade facade, int gameID, int playerID, int rollValue) {
 		super(gameID, facade);
 		this.playerID = playerID;
-		this.number = rollValue;
+		this.rollValue = rollValue;
 	}
 
 	@Override
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().rollNumber(this.getGameID(), playerID, number);
+		return this.getFacade().rollNumber(this.getGameID(), playerID, rollValue);
 	}
 
 }
