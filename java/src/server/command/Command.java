@@ -11,7 +11,7 @@ public abstract class Command {
 	private int gameID;
 	
 	/**
-	 * the IServerFacade to interact with
+	 * the IServerFacade with which to interact
 	 */
 	private IServerFacade facade;
 	
