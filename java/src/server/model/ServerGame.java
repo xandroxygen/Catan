@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class ServerGame extends Game {
     /**
-     * Places a City in the Game from the given gameID for the player specified in the given playerID, at the given location.
+     * Places a City in the Game for the player specified in the given playerID, at the given location.
      * @pre It's your turn, The city location is where you currently have a settlement, You have the required resources (2 wheat, 3 ore; 1 city)
      * @post You lost the resources required to build a city (2 wheat, 3 ore, 1 city), The city is on the map at the specified location, You got a settlement back on the desired location
      * @param playerID the ID of the player who is requesting the move.
@@ -26,7 +26,7 @@ public class ServerGame extends Game {
     public void placeCity(int playerID, VertexLocation location){}
 
     /**
-     * Places a Settlement in the Game from the given gameID for the player specified in the given playerID, at the given location.
+     * Places a Settlement in the Game for the player specified in the given playerID, at the given location.
      * @pre It's your turn, The settlement location is open, The settlement location is not on water, The settlement location is connected to one of your roads except during setup, You have the required resources (1 wood, 1 brick, 1 wheat, 1 sheep; 1 settlement), The settlement cannot be placed adjacent to another settlement
      * @post You lost the resources required to build a settlement (1 wood, 1 brick, 1 wheat, 1 sheep; 1 settlement), The settlement is on the map at the specified location
      * @param playerID the ID of the player who is requesting the move
@@ -37,7 +37,7 @@ public class ServerGame extends Game {
     public void placeSettlement(int playerID, boolean free, VertexLocation location){}
 
     /**
-     * Places a Road in the Game from the given gameID for the player specified in the given playerID, at the given location.
+     * Places a Road in the Game for the player specified in the given playerID, at the given location.
      * @pre It's your turn, The road location is open, The road location is connected to another road owned by the player, The road location is not on water, You have the required resources (1 wood, 1 brick; 1 road), Setup round: Must be placed by settlement owned by the player with no adjacent road.
      * @post You lost the resources required to build a road (1 wood, 1 brick - 1 road), The road is on the map at the specified location, If applicable, longest road has been awarded to the player with the longest road
      * @param playerID the ID of the player who is requesting the move
@@ -232,7 +232,7 @@ public class ServerGame extends Game {
     /**
      * Accept the TradeOffer currently on the table.
      */
-    public void acceptTradeOffer(){}
+    public void acceptTradeOffer(boolean willAccept){}
 
     /**
      * Accept the TradeOffer currently on the table.
@@ -252,7 +252,7 @@ public class ServerGame extends Game {
      * 		There are less then four players in the current game
      * 		</pre>
      * * @post <pre>
-     *      there is a new computer player added to the game given by the gameID
+     *      there is a new computer player added to the game
      * 		</pre>
      */
     public void addComputerPlayer(){
@@ -306,7 +306,7 @@ public class ServerGame extends Game {
      *      If there are AI players it will return an array of their corresponding types
      * 		</pre>
      */
-    public String[] listAIPlayers(int gameID){
+    public String[] listAIPlayers(){
         return null;
     }
 
