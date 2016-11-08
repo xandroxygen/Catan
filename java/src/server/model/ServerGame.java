@@ -1,15 +1,18 @@
 package server.model;
 
+import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Game;
+import shared.model.Player;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by Jonathan Skaggs on 11/4/2016.
+ * ServerModelFacade
  */
 public class ServerGame extends Game {
     /**
@@ -51,7 +54,14 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      * @return result
      */
-    public void buyDevelopmentCard(int playerID){}
+    public void buyDevelopmentCard(int playerID){
+        int totalNumOfDevCards = 0;
+        for(Map.Entry<DevCardType, Integer> tempDevCard : getBank().getDevelopmentCards().entrySet()) {
+            totalNumOfDevCards += tempDevCard.getValue();
+        }
+        // TODO: 11/7/2016 finish method
+
+    }
 
     /**
      * Places a soldier development card and moves the robber into the given location and robs the victim player if there is one
@@ -76,7 +86,16 @@ public class ServerGame extends Game {
      * @param victimIndex The playerIndex of the player you wish to rob, or -1 to rob no one.
      * @return result
      */
-    public void playSoldierCard(int playerID, HexLocation location, int victimIndex){}
+    public void playSoldierCard(int playerID, HexLocation location, int victimIndex){
+        getPlayerList().get(playerID).setPlayedDevCard(true);
+        //add a soldier to player
+        getPlayerList().get(playerID).addSoldier();
+        //move the robber
+        getTheMap().getRobber().setLocation(location);
+        //rob the victim and add it to the player who played the card
+        robPlayer(playerID, victimIndex);
+        largestArmy();
+    }
 
     /**
      * Plays a year of plenty devCard.
@@ -96,7 +115,19 @@ public class ServerGame extends Game {
      * @param resource2 The type of the second resource you'd like to receive
      * @return result
      */
-    public void playYearOfPleanty(int playerID, ResourceType resource1, ResourceType resource2){}
+    public void playYearOfPleanty(int playerID, ResourceType resource1, ResourceType resource2){
+        getPlayerList().get(playerID).setPlayedDevCard(true);
+        if(getBank().getResourceDeck().get(resource1) > 0){
+            getBank().getResourceDeck().put(resource1, getBank().getResourceDeck().get(resource1) - 1);
+            getPlayerList().get(playerID).getResources().put(resource1,
+                    getPlayerList().get(playerID).getResources().get(resource1) + 1);
+        }
+        if(getBank().getResourceDeck().get(resource2) > 0){
+            getBank().getResourceDeck().put(resource2, getBank().getResourceDeck().get(resource2) - 1);
+            getPlayerList().get(playerID).getResources().put(resource2,
+                    getPlayerList().get(playerID).getResources().get(resource2) + 1);
+        }
+    }
 
     /**
      * Plays a road card.
@@ -121,7 +152,11 @@ public class ServerGame extends Game {
      * @param spot2 second edge location of road.
      * @return result
      */
-    public void playRoadCard(int playerID, EdgeLocation spot1, EdgeLocation spot2){}
+    public void playRoadCard(int playerID, EdgeLocation spot1, EdgeLocation spot2){
+        getPlayerList().get(playerID).setPlayedDevCard(true);
+        placeRoad(playerID, true, spot1);
+        placeRoad(playerID, true, spot2);
+    }
 
     /**
      * Plays a monopoly devCard.
@@ -139,7 +174,15 @@ public class ServerGame extends Game {
      * @param resource The type of resource desired from other players.
      * @return result
      */
-    public void playMonopolyCard(int playerID, ResourceType resource){}
+    public void playMonopolyCard(int playerID, ResourceType resource){
+        getPlayerList().get(playerID).setPlayedDevCard(true);
+        int totalCountOfResource = 0;
+        for (Player tempPlayer : getPlayerList()) {
+            totalCountOfResource += tempPlayer.getResources().get(resource);
+            tempPlayer.getResources().put(resource, 0);
+        }
+        getPlayerList().get(playerID).getResources().put(resource, totalCountOfResource);
+    }
 
     /**
      * Plays a monument devCard.
@@ -156,7 +199,9 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      * @return result
      */
-    public void playMonumentCard(int playerID){}
+    public void playMonumentCard(int playerID){
+        getPlayerList().get(playerID).setVictoryPoints(getPlayerList().get(playerID).getVictoryPoints() + 1);
+    }
 
     /**
      * Checks whether the player can roll the dice
@@ -224,7 +269,9 @@ public class ServerGame extends Game {
      *     the current players turn is over and the next players is starting the game
      * 		</pre>
      */
-    public void finishTurn(){}
+    public void finishTurn(){
+        // TODO: 11/7/2016 be sure to include resetting played dev card to false
+    }
 
     /**
      * Robs a player

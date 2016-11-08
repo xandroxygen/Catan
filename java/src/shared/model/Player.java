@@ -107,6 +107,10 @@ public class Player {
 		return soldiers;
 	}
 
+	public void addSoldier() {
+		soldiers += 1;
+	}
+
 	public void setSoldiers(int soldiers) {
 		this.soldiers = soldiers;
 	}
