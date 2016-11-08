@@ -11,18 +11,22 @@ import java.util.HashMap;
  */
 public class Bank {
 
-    private HashMap<ResourceType, Integer> resourseDeck;
+    private HashMap<ResourceType, Integer> resourceDeck;
     private HashMap<DevCardType, Integer> developmentCards;
 
-    public Bank(JsonObject modelJSON) {
+	public HashMap<DevCardType, Integer> getDevelopmentCards() {
+		return developmentCards;
+	}
+
+	public Bank(JsonObject modelJSON) {
     	// Parse resources
-    	resourseDeck = new HashMap<>();
+    	resourceDeck = new HashMap<>();
 		JsonObject resourcesJSON = modelJSON.getAsJsonObject("bank");
-		resourseDeck.put(ResourceType.BRICK, resourcesJSON.get("brick").getAsInt());
-		resourseDeck.put(ResourceType.ORE, resourcesJSON.get("ore").getAsInt());
-		resourseDeck.put(ResourceType.SHEEP, resourcesJSON.get("sheep").getAsInt());
-		resourseDeck.put(ResourceType.WHEAT, resourcesJSON.get("wheat").getAsInt());
-		resourseDeck.put(ResourceType.WOOD, resourcesJSON.get("wood").getAsInt());
+		resourceDeck.put(ResourceType.BRICK, resourcesJSON.get("brick").getAsInt());
+		resourceDeck.put(ResourceType.ORE, resourcesJSON.get("ore").getAsInt());
+		resourceDeck.put(ResourceType.SHEEP, resourcesJSON.get("sheep").getAsInt());
+		resourceDeck.put(ResourceType.WHEAT, resourcesJSON.get("wheat").getAsInt());
+		resourceDeck.put(ResourceType.WOOD, resourcesJSON.get("wood").getAsInt());
 
 
 		// Parse old dev cards
@@ -37,7 +41,7 @@ public class Bank {
     }
 
     public HashMap<ResourceType, Integer> getResourceDeck() {
-        return resourseDeck;
+        return resourceDeck;
     }
 
     /**
@@ -63,8 +67,8 @@ public class Bank {
 				developmentCards.get(DevCardType.MONUMENT) > 0;
     }
 
-	public void setResourseDeck(HashMap<ResourceType, Integer> resourseDeck) {
-		this.resourseDeck = resourseDeck;
+	public void setResourceDeck(HashMap<ResourceType, Integer> resourceDeck) {
+		this.resourceDeck = resourceDeck;
 	}
 
 	public void setDevelopmentCards(HashMap<DevCardType, Integer> developmentCards) {
