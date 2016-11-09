@@ -5,15 +5,16 @@ import server.facade.IServerFacade;
 
 public class JoinCommand extends Command{
 
-	public JoinCommand(IServerFacade facade) {
-		super(facade);
+	public JoinCommand(int gameID, IServerFacade facade) {
+		super(gameID, facade);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public void execute() {
+	public Object execute() {
 		// TODO Auto-generated method stub
-		
+
+		return null;
 	}
 
 }
