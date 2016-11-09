@@ -1,12 +1,18 @@
 package server.http.handlers.user;
 
 import com.sun.net.httpserver.HttpExchange;
+import server.facade.IServerFacade;
 import server.http.handlers.BaseHandler;
 
 /**
  * Handles requests to login.
  */
 public class LoginHandler extends BaseHandler {
+
+	public LoginHandler(IServerFacade server) {
+		super(server);
+	}
+
 	/**
 	 * Overridden by child handlers. This specifies what each request should do.
 	 * eg. for buildRoad, this would construct a command to build a road and execute it.

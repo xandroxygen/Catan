@@ -21,7 +21,6 @@ public class ServerGame extends Game {
      * @post You lost the resources required to build a city (2 wheat, 3 ore, 1 city), The city is on the map at the specified location, You got a settlement back on the desired location
      * @param playerID the ID of the player who is requesting the move.
      * @param location The location of the city.
-     * @return result
      */
     public void placeCity(int playerID, VertexLocation location){}
 
@@ -32,7 +31,6 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      * @param free Whether or not piece can be built for free.
      * @param location The location of the settlement.
-     * @return result
      */
     public void placeSettlement(int playerID, boolean free, VertexLocation location){}
 
@@ -43,7 +41,6 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      * @param free Whether or not piece can be built for free.
      * @param location The location of the road.
-     * @return result
      */
     public void placeRoad(int playerID, boolean free, EdgeLocation location){}
 
@@ -52,7 +49,6 @@ public class ServerGame extends Game {
      * @pre It's your turn, You have the required resources (1 ore, 1 wheat, 1 sheep), There are dev cards left in the deck.
      * @post You have a new card; If it is a monument card, it has been added to your old devCard hand, If it is a non­monument card, it has been added to your new devCard hand (unplayable this turn)
      * @param playerID the ID of the player who is requesting the move
-     * @return result
      */
     public void buyDevelopmentCard(int playerID){
         int totalNumOfDevCards = 0;
@@ -84,7 +80,6 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      * @param location the new robber location.
      * @param victimIndex The playerIndex of the player you wish to rob, or -1 to rob no one.
-     * @return result
      */
     public void playSoldierCard(int playerID, HexLocation location, int victimIndex){
         getPlayerList().get(playerID).setPlayedDevCard(true);
@@ -113,7 +108,6 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      * @param resource1 The type of the first resource you'd like to receive
      * @param resource2 The type of the second resource you'd like to receive
-     * @return result
      */
     public void playYearOfPleanty(int playerID, ResourceType resource1, ResourceType resource2){
         getPlayerList().get(playerID).setPlayedDevCard(true);
@@ -150,7 +144,6 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      * @param spot1 first edge location of road.
      * @param spot2 second edge location of road.
-     * @return result
      */
     public void playRoadCard(int playerID, EdgeLocation spot1, EdgeLocation spot2){
         getPlayerList().get(playerID).setPlayedDevCard(true);
@@ -172,7 +165,6 @@ public class ServerGame extends Game {
      * 		</pre>
      * @param playerID the ID of the player who is requesting the move
      * @param resource The type of resource desired from other players.
-     * @return result
      */
     public void playMonopolyCard(int playerID, ResourceType resource){
         getPlayerList().get(playerID).setPlayedDevCard(true);
@@ -197,7 +189,6 @@ public class ServerGame extends Game {
      * 		You gained a victory point
      * 		</pre>
      * @param playerID the ID of the player who is requesting the move
-     * @return result
      */
     public void playMonumentCard(int playerID){
         getPlayerList().get(playerID).setVictoryPoints(getPlayerList().get(playerID).getVictoryPoints() + 1);
@@ -209,8 +200,7 @@ public class ServerGame extends Game {
      * @post distributes the correct amount of resources corresponding to the roll for every player
      * @param playerID the ID of the player who is requesting the move
      * @param rollValue the value that was rolled
-     * @return
-     */
+	 */
     public void rollDice(int playerID,  int rollValue){}
 
     /**
@@ -315,6 +305,7 @@ public class ServerGame extends Game {
 	 * @pre <pre>
 	 * 		There are four players in the current game
 	 * 		There is at least one road place
+	 * 		</pre>
 	 * @post <pre>
 	 *      The player with the longest road is determined, and set within the model.
 	 * 		</pre>

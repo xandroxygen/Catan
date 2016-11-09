@@ -1,12 +1,17 @@
 package server.http.handlers.game;
 
 import com.sun.net.httpserver.HttpExchange;
+import server.facade.IServerFacade;
 import server.http.handlers.BaseHandler;
 
 /**
  * Handles requests to /game/model (GET)
  */
 public class ModelHandler extends BaseHandler {
+	public ModelHandler(IServerFacade server) {
+		super(server);
+	}
+
 	/**
 	 * Overridden by child handlers. This specifies what each request should do.
 	 * eg. for buildRoad, this would construct a command to build a road and execute it.

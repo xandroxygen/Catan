@@ -2,6 +2,7 @@ package server.http.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import server.facade.IServerFacade;
 
 import java.io.IOException;
 
@@ -17,7 +18,7 @@ public abstract class BaseHandler implements HttpHandler {
 	private String playerCookie;
 	private String gameCookie;
 	private int responseCode;
-	// needs to have DI of Server Facade here
+	private IServerFacade server;
 
 
 
@@ -25,6 +26,10 @@ public abstract class BaseHandler implements HttpHandler {
 	private static final int RESPONSE_FAIL = 400;
 	private static final int RESPONSE_NOT_FOUND = 404;
 	private static final int RESPONSE_SERVER_FAIL = 500;
+
+	public BaseHandler(IServerFacade server) {
+		this.server = server;
+	}
 
 	/**
 	 * The Base Handler takes care of all the HTTP stuff in the handle function.
@@ -71,6 +76,14 @@ public abstract class BaseHandler implements HttpHandler {
 	 */
 	public void writePlayerCookie() {
 
+	}
+
+	public IServerFacade getServer() {
+		return server;
+	}
+
+	public void setServer(IServerFacade server) {
+		this.server = server;
 	}
 
 	/**

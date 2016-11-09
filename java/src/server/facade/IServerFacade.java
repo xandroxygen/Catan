@@ -39,7 +39,7 @@ public interface IServerFacade{
 	String userLogin(String username, String password) throws InvalidActionException;
 	
 	/**
-	 * Creates a new user account & logs the caller into the server as the new user and sets
+	 * Creates a new user account and logs the caller into the server as the new user and sets
 	 * their catan.user HTTP cookie.
 	 *
 	 * @pre <pre>
@@ -282,7 +282,7 @@ public interface IServerFacade{
 
     /**
      * Tell the server that the dice were rolled.
-     * @param number the number that was rolled, in the range 2-12
+     * @param rollValue the number that was rolled, in the range 2-12
 	 *
 	 * @pre <pre>
 	 *      Player is logged in
@@ -362,7 +362,7 @@ public interface IServerFacade{
 	/**
 	 * Contact another player and offer to trade cards back and forth.
 	 * @param offer Cards you are offering - negative numbers means you receive those cards, positive means you give
-	 * @param receiverIndex The index of the recipient of the trade offer
+	 * @param receiverID The index of the recipient of the trade offer
 	 *
      * @pre You have the resources you are offering
      * @post The trade is offered to the other player
