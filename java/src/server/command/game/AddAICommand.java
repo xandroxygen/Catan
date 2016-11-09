@@ -5,14 +5,15 @@ import server.facade.IServerFacade;
 
 public class AddAICommand extends Command {
 
-	public AddAICommand(IServerFacade facade) {
-		super(facade);
+	public AddAICommand(int gameID, IServerFacade facade) {
+		super(gameID, facade);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public void execute() {
-		
+	public Object execute() {
+
+		return null;
 	}
 
 }

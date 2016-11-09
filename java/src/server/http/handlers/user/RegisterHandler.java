@@ -1,7 +1,9 @@
 package server.http.handlers.user;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import server.facade.IServerFacade;
+import server.http.RegisterRequest;
 import server.http.handlers.BaseHandler;
 
 /**
@@ -24,6 +26,7 @@ public class RegisterHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
+		RegisterRequest request = new Gson().fromJson(this.body, RegisterRequest.class);
 		return null;
 	}
 }

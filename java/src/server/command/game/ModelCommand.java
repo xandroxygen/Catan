@@ -5,15 +5,16 @@ import server.facade.IServerFacade;
 
 public class ModelCommand extends Command{
 
-	public ModelCommand(IServerFacade facade) {
-		super(facade);
+	public ModelCommand(int gameID, IServerFacade facade) {
+		super(gameID, facade);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public void execute() {
+	public Object execute() {
 		// TODO Auto-generated method stub
-		
+
+		return null;
 	}
 
 }
