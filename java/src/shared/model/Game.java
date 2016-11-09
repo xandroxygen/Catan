@@ -301,7 +301,6 @@ public class Game {
      * Sends a message from the logged in user.
      * @post  The chat contains your message at the end.
      * @param message the message the player wishes to send.
-     * @return
      */
 	public void sendMessage(String message){
     	try {
