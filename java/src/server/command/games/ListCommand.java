@@ -5,15 +5,16 @@ import server.facade.IServerFacade;
 
 public class ListCommand extends Command{
 
-	public ListCommand(IServerFacade facade) {
-		super(facade);
+	public ListCommand(int gameID, IServerFacade facade) {
+		super(gameID, facade);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public void execute() {
+	public Object execute() {
 		// TODO Auto-generated method stub
-		
+
+		return null;
 	}
 
 }
