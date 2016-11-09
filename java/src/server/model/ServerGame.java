@@ -1,19 +1,22 @@
 package server.model;
 
+import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Game;
+import shared.model.Player;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Created by Jonathan Skaggs on 11/4/2016.
+ * ServerModelFacade
  */
 public class ServerGame extends Game {
     /**
-     * Places a City in the Game from the given gameID for the player specified in the given playerID, at the given location.
+     * Places a City in the Game for the player specified in the given playerID, at the given location.
      * @pre It's your turn, The city location is where you currently have a settlement, You have the required resources (2 wheat, 3 ore; 1 city)
      * @post You lost the resources required to build a city (2 wheat, 3 ore, 1 city), The city is on the map at the specified location, You got a settlement back on the desired location
      * @param playerID the ID of the player who is requesting the move.
@@ -22,7 +25,7 @@ public class ServerGame extends Game {
     public void placeCity(int playerID, VertexLocation location){}
 
     /**
-     * Places a Settlement in the Game from the given gameID for the player specified in the given playerID, at the given location.
+     * Places a Settlement in the Game for the player specified in the given playerID, at the given location.
      * @pre It's your turn, The settlement location is open, The settlement location is not on water, The settlement location is connected to one of your roads except during setup, You have the required resources (1 wood, 1 brick, 1 wheat, 1 sheep; 1 settlement), The settlement cannot be placed adjacent to another settlement
      * @post You lost the resources required to build a settlement (1 wood, 1 brick, 1 wheat, 1 sheep; 1 settlement), The settlement is on the map at the specified location
      * @param playerID the ID of the player who is requesting the move
@@ -32,7 +35,7 @@ public class ServerGame extends Game {
     public void placeSettlement(int playerID, boolean free, VertexLocation location){}
 
     /**
-     * Places a Road in the Game from the given gameID for the player specified in the given playerID, at the given location.
+     * Places a Road in the Game for the player specified in the given playerID, at the given location.
      * @pre It's your turn, The road location is open, The road location is connected to another road owned by the player, The road location is not on water, You have the required resources (1 wood, 1 brick; 1 road), Setup round: Must be placed by settlement owned by the player with no adjacent road.
      * @post You lost the resources required to build a road (1 wood, 1 brick - 1 road), The road is on the map at the specified location, If applicable, longest road has been awarded to the player with the longest road
      * @param playerID the ID of the player who is requesting the move
@@ -47,7 +50,14 @@ public class ServerGame extends Game {
      * @post You have a new card; If it is a monument card, it has been added to your old devCard hand, If it is a non­monument card, it has been added to your new devCard hand (unplayable this turn)
      * @param playerID the ID of the player who is requesting the move
      */
-    public void buyDevelopmentCard(int playerID){}
+    public void buyDevelopmentCard(int playerID){
+        int totalNumOfDevCards = 0;
+        for(Map.Entry<DevCardType, Integer> tempDevCard : getBank().getDevelopmentCards().entrySet()) {
+            totalNumOfDevCards += tempDevCard.getValue();
+        }
+        // TODO: 11/7/2016 finish method
+
+    }
 
     /**
      * Places a soldier development card and moves the robber into the given location and robs the victim player if there is one
@@ -71,7 +81,16 @@ public class ServerGame extends Game {
      * @param location the new robber location.
      * @param victimIndex The playerIndex of the player you wish to rob, or -1 to rob no one.
      */
-    public void playSoldierCard(int playerID, HexLocation location, int victimIndex){}
+    public void playSoldierCard(int playerID, HexLocation location, int victimIndex){
+        getPlayerList().get(playerID).setPlayedDevCard(true);
+        //add a soldier to player
+        getPlayerList().get(playerID).addSoldier();
+        //move the robber
+        getTheMap().getRobber().setLocation(location);
+        //rob the victim and add it to the player who played the card
+        robPlayer(playerID, victimIndex);
+        largestArmy();
+    }
 
     /**
      * Plays a year of plenty devCard.
@@ -90,7 +109,19 @@ public class ServerGame extends Game {
      * @param resource1 The type of the first resource you'd like to receive
      * @param resource2 The type of the second resource you'd like to receive
      */
-    public void playYearOfPleanty(int playerID, ResourceType resource1, ResourceType resource2){}
+    public void playYearOfPleanty(int playerID, ResourceType resource1, ResourceType resource2){
+        getPlayerList().get(playerID).setPlayedDevCard(true);
+        if(getBank().getResourceDeck().get(resource1) > 0){
+            getBank().getResourceDeck().put(resource1, getBank().getResourceDeck().get(resource1) - 1);
+            getPlayerList().get(playerID).getResources().put(resource1,
+                    getPlayerList().get(playerID).getResources().get(resource1) + 1);
+        }
+        if(getBank().getResourceDeck().get(resource2) > 0){
+            getBank().getResourceDeck().put(resource2, getBank().getResourceDeck().get(resource2) - 1);
+            getPlayerList().get(playerID).getResources().put(resource2,
+                    getPlayerList().get(playerID).getResources().get(resource2) + 1);
+        }
+    }
 
     /**
      * Plays a road card.
@@ -114,7 +145,11 @@ public class ServerGame extends Game {
      * @param spot1 first edge location of road.
      * @param spot2 second edge location of road.
      */
-    public void playRoadCard(int playerID, EdgeLocation spot1, EdgeLocation spot2){}
+    public void playRoadCard(int playerID, EdgeLocation spot1, EdgeLocation spot2){
+        getPlayerList().get(playerID).setPlayedDevCard(true);
+        placeRoad(playerID, true, spot1);
+        placeRoad(playerID, true, spot2);
+    }
 
     /**
      * Plays a monopoly devCard.
@@ -131,7 +166,15 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      * @param resource The type of resource desired from other players.
      */
-    public void playMonopolyCard(int playerID, ResourceType resource){}
+    public void playMonopolyCard(int playerID, ResourceType resource){
+        getPlayerList().get(playerID).setPlayedDevCard(true);
+        int totalCountOfResource = 0;
+        for (Player tempPlayer : getPlayerList()) {
+            totalCountOfResource += tempPlayer.getResources().get(resource);
+            tempPlayer.getResources().put(resource, 0);
+        }
+        getPlayerList().get(playerID).getResources().put(resource, totalCountOfResource);
+    }
 
     /**
      * Plays a monument devCard.
@@ -147,7 +190,9 @@ public class ServerGame extends Game {
      * 		</pre>
      * @param playerID the ID of the player who is requesting the move
      */
-    public void playMonumentCard(int playerID){}
+    public void playMonumentCard(int playerID){
+        getPlayerList().get(playerID).setVictoryPoints(getPlayerList().get(playerID).getVictoryPoints() + 1);
+    }
 
     /**
      * Checks whether the player can roll the dice
@@ -177,7 +222,7 @@ public class ServerGame extends Game {
     /**
      * Accept the TradeOffer currently on the table.
      */
-    public void acceptTradeOffer(){}
+    public void acceptTradeOffer(boolean willAccept){}
 
     /**
      * Accept the TradeOffer currently on the table.
@@ -197,7 +242,7 @@ public class ServerGame extends Game {
      * 		There are less then four players in the current game
      * 		</pre>
      * * @post <pre>
-     *      there is a new computer player added to the game given by the gameID
+     *      there is a new computer player added to the game
      * 		</pre>
      */
     public void addComputerPlayer(){
@@ -214,7 +259,9 @@ public class ServerGame extends Game {
      *     the current players turn is over and the next players is starting the game
      * 		</pre>
      */
-    public void finishTurn(){}
+    public void finishTurn(){
+        // TODO: 11/7/2016 be sure to include resetting played dev card to false
+    }
 
     /**
      * Robs a player
@@ -249,7 +296,7 @@ public class ServerGame extends Game {
      *      If there are AI players it will return an array of their corresponding types
      * 		</pre>
      */
-    public String[] listAIPlayers(int gameID){
+    public String[] listAIPlayers(){
         return null;
     }
 
