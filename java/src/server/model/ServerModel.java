@@ -144,7 +144,6 @@ public class ServerModel {
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move.
      * @param location The location of the city.
-     * @return result
      */
     public void placeCity(int gameID, int playerID, VertexLocation location){}
 
@@ -156,7 +155,6 @@ public class ServerModel {
      * @param playerID the ID of the player who is requesting the move
      * @param free Whether or not piece can be built for free.
      * @param location The location of the settlement.
-     * @return result
      */
     public void placeSettlement(int gameID, int playerID, boolean free, VertexLocation location){}
 
@@ -168,7 +166,6 @@ public class ServerModel {
      * @param playerID the ID of the player who is requesting the move
      * @param free Whether or not piece can be built for free.
      * @param location The location of the road.
-     * @return result
      */
     public void placeRoad(int gameID, int playerID, boolean free, EdgeLocation location){}
 
@@ -178,7 +175,6 @@ public class ServerModel {
      * @post You have a new card; If it is a monument card, it has been added to your old devCard hand, If it is a non­monument card, it has been added to your new devCard hand (unplayable this turn)
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move
-     * @return result
      */
     public void buyDevelopmentCard(int gameID, int playerID){}
 
@@ -204,7 +200,6 @@ public class ServerModel {
      * @param playerID the ID of the player who is requesting the move
      * @param location the new robber location.
      * @param victimIndex The playerIndex of the player you wish to rob, or -1 to rob no one.
-     * @return result
      */
     public void playSoldierCard(int gameID, int playerID, HexLocation location, int victimIndex){}
 
@@ -225,7 +220,6 @@ public class ServerModel {
      * @param playerID the ID of the player who is requesting the move
      * @param resource1 The type of the first resource you'd like to receive
      * @param resource2 The type of the second resource you'd like to receive
-     * @return result
      */
     public void playYearOfPleanty(int gameID, int playerID, ResourceType resource1, ResourceType resource2){}
 
@@ -251,7 +245,6 @@ public class ServerModel {
      * @param playerID the ID of the player who is requesting the move
      * @param spot1 first edge location of road.
      * @param spot2 second edge location of road.
-     * @return result
      */
     public void playRoadCard(int gameID, int playerID, EdgeLocation spot1, EdgeLocation spot2){}
 
@@ -270,7 +263,6 @@ public class ServerModel {
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move
      * @param resource The type of resource desired from other players.
-     * @return result
      */
     public void playMonopolyCard(int gameID, int playerID, ResourceType resource){}
 
@@ -288,7 +280,6 @@ public class ServerModel {
      * 		</pre>
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move
-     * @return result
      */
     public void playMonumentCard(int gameID, int playerID){}
 
@@ -299,7 +290,6 @@ public class ServerModel {
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move
      * @param rollValue the value that was rolled
-     * @return
      */
     public void rollDice(int gameID, int playerID,  int rollValue){}
 
@@ -309,7 +299,6 @@ public class ServerModel {
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move
      * @param message the message the player wishes to send.
-     * @return
      */
     public void sendMessage(int gameID, int playerID, String message){}
 
