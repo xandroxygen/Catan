@@ -1,9 +1,9 @@
-package server.http;
+package server.http.requests.user;
 
 /**
  * Helper object for the register request.
  */
-public class RegisterRequest {
+public class UserRequest {
 	private String username;
 	private String password;
 
