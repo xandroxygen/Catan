@@ -1,13 +1,13 @@
 package server.http.handlers;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import server.facade.IServerFacade;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -46,6 +46,10 @@ public abstract class BaseHandler implements HttpHandler {
 	@Override
 	public void handle(HttpExchange httpExchange) throws IOException {
 
+		Headers headers = httpExchange.getRequestHeaders();
+		playerCookie = headers.getFirst("catan.user");
+		gameCookie = headers.getFirst("catan.game");
+
 		// deserialize requestBody to this.body
 		InputStream is = httpExchange.getRequestBody();
 		Scanner s = new Scanner(is).useDelimiter("\\A");
@@ -54,38 +58,23 @@ public abstract class BaseHandler implements HttpHandler {
 	}
 
 	/**
-	 * If there is a request body, this deserializes the JSON
-	 * into a vanilla Java object.
-	 * Sets the body attribute on the handler object.
-	 * @param input the request body
+	 * Takes the current game cookie attribute and adds it to the
+	 * headers on the response.
+	 * @param e the HTTPExchange passed into handle
 	 */
-	public void deserializeBody(String input) {
-		JsonObject jo = (JsonObject) new JsonParser().parse(input);
-
-	}
-
-	/**
-	 * Reads the player and game cookies, if set in the request.
-	 * Sets the cookies attributes on the handler object.
-	 */
-	public void readCookies() {
-
+	public void writeGameCookie(HttpExchange e) {
+		e.getResponseHeaders().put("catan.game", new ArrayList<>());
+		e.getResponseHeaders().get("catan.game").add(gameCookie);
 	}
 
 	/**
 	 * Takes the current game cookie attribute and adds it to the
 	 * headers on the response.
+	 * @param e the HTTPExchange passed into handle
 	 */
-	public void writeGameCookie() {
-
-	}
-
-	/**
-	 * Takes the current game cookie attribute and adds it to the
-	 * headers on the response.
-	 */
-	public void writePlayerCookie() {
-
+	public void writePlayerCookie(HttpExchange e) {
+		e.getResponseHeaders().put("catan.user", new ArrayList<>());
+		e.getResponseHeaders().get("catan.user").add(playerCookie);
 	}
 
 	public IServerFacade getServer() {
@@ -98,6 +87,7 @@ public abstract class BaseHandler implements HttpHandler {
 
 	/**
 	 * Overridden by child handlers. This specifies what each request should do.
+	 * This must also construct a request object of the proper type using gson.
 	 * eg. for buildRoad, this would construct a command to build a road and execute it.
 	 * This method must also set a response code, and can set the cookies attributes.
 	 * This method is in charge of writing needed cookies.
