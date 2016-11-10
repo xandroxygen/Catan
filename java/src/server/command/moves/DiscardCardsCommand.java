@@ -2,10 +2,10 @@ package server.command.moves;
 
 import java.util.Map;
 
-import client.model.InvalidActionException;
 import server.command.Command;
 import server.facade.IServerFacade;
 import shared.definitions.ResourceType;
+import shared.model.InvalidActionException;
 
 public class DiscardCardsCommand extends Command {
 	
@@ -32,7 +32,7 @@ public class DiscardCardsCommand extends Command {
 	 * 	The command was executed and the result of the command is returned.
 	 * </pre>
 	 */
-	public Object execute() {
+	public Object execute() throws InvalidActionException {
 		return this.getFacade().discardCards(this.getGameID(), playerID, hand);
 	}
 

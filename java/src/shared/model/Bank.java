@@ -11,18 +11,22 @@ import java.util.HashMap;
  */
 public class Bank {
 
-    private HashMap<ResourceType, Integer> resourseDeck;
+    private HashMap<ResourceType, Integer> resourceDeck;
     private HashMap<DevCardType, Integer> developmentCards;
 
-    public Bank(JsonObject modelJSON) {
+	public HashMap<DevCardType, Integer> getDevelopmentCards() {
+		return developmentCards;
+	}
+
+	public Bank(JsonObject modelJSON) {
     	// Parse resources
-    	resourseDeck = new HashMap<>();
+    	resourceDeck = new HashMap<>();
 		JsonObject resourcesJSON = modelJSON.getAsJsonObject("bank");
-		resourseDeck.put(ResourceType.BRICK, resourcesJSON.get("brick").getAsInt());
-		resourseDeck.put(ResourceType.ORE, resourcesJSON.get("ore").getAsInt());
-		resourseDeck.put(ResourceType.SHEEP, resourcesJSON.get("sheep").getAsInt());
-		resourseDeck.put(ResourceType.WHEAT, resourcesJSON.get("wheat").getAsInt());
-		resourseDeck.put(ResourceType.WOOD, resourcesJSON.get("wood").getAsInt());
+		resourceDeck.put(ResourceType.BRICK, resourcesJSON.get("brick").getAsInt());
+		resourceDeck.put(ResourceType.ORE, resourcesJSON.get("ore").getAsInt());
+		resourceDeck.put(ResourceType.SHEEP, resourcesJSON.get("sheep").getAsInt());
+		resourceDeck.put(ResourceType.WHEAT, resourcesJSON.get("wheat").getAsInt());
+		resourceDeck.put(ResourceType.WOOD, resourcesJSON.get("wood").getAsInt());
 
 
 		// Parse old dev cards
@@ -37,7 +41,7 @@ public class Bank {
     }
 
     public HashMap<ResourceType, Integer> getResourceDeck() {
-        return resourseDeck;
+        return resourceDeck;
     }
 
     /**
@@ -63,8 +67,8 @@ public class Bank {
 				developmentCards.get(DevCardType.MONUMENT) > 0;
     }
 
-	public void setResourseDeck(HashMap<ResourceType, Integer> resourseDeck) {
-		this.resourseDeck = resourseDeck;
+	public void setResourceDeck(HashMap<ResourceType, Integer> resourceDeck) {
+		this.resourceDeck = resourceDeck;
 	}
 
 	public void setDevelopmentCards(HashMap<DevCardType, Integer> developmentCards) {
@@ -74,42 +78,42 @@ public class Bank {
 	public void purchaseCity(Player player) {
 		// Subtract from player and add to bank resources
 		player.addToResourceHand(ResourceType.WHEAT, -2);
-		int count = resourseDeck.containsKey(ResourceType.WHEAT) ? resourseDeck.get(ResourceType.WHEAT) : 0;
-		resourseDeck.put(ResourceType.WHEAT, count + 2);
+		int count = resourceDeck.containsKey(ResourceType.WHEAT) ? resourceDeck.get(ResourceType.WHEAT) : 0;
+		resourceDeck.put(ResourceType.WHEAT, count + 2);
 		
 		player.addToResourceHand(ResourceType.ORE, -3);
-		int count2 = resourseDeck.containsKey(ResourceType.ORE) ? resourseDeck.get(ResourceType.ORE) : 0;
-		resourseDeck.put(ResourceType.ORE, count2 + 3);
+		int count2 = resourceDeck.containsKey(ResourceType.ORE) ? resourceDeck.get(ResourceType.ORE) : 0;
+		resourceDeck.put(ResourceType.ORE, count2 + 3);
 	}
 	
 	public void purchaseRoad(Player player) {
 		// Subtract from player and add to bank resources
 		player.addToResourceHand(ResourceType.WOOD, -1);
-		int count = resourseDeck.containsKey(ResourceType.WOOD) ? resourseDeck.get(ResourceType.WOOD) : 0;
-		resourseDeck.put(ResourceType.WOOD, count + 1);
+		int count = resourceDeck.containsKey(ResourceType.WOOD) ? resourceDeck.get(ResourceType.WOOD) : 0;
+		resourceDeck.put(ResourceType.WOOD, count + 1);
 		
 		player.addToResourceHand(ResourceType.BRICK, -1);
-		int count2 = resourseDeck.containsKey(ResourceType.BRICK) ? resourseDeck.get(ResourceType.BRICK) : 0;
-		resourseDeck.put(ResourceType.BRICK, count2 + 1);
+		int count2 = resourceDeck.containsKey(ResourceType.BRICK) ? resourceDeck.get(ResourceType.BRICK) : 0;
+		resourceDeck.put(ResourceType.BRICK, count2 + 1);
 	}
 	
 	public void purchaseSettlement(Player player) {
 		//(1 wood, 1 brick, 1 wheat, 1 sheep; 1 settlement)
 		// Subtract from player and add to bank resources
 		player.addToResourceHand(ResourceType.WOOD, -1);
-		int count = resourseDeck.containsKey(ResourceType.WOOD) ? resourseDeck.get(ResourceType.WOOD) : 0;
-		resourseDeck.put(ResourceType.WOOD, count + 1);
+		int count = resourceDeck.containsKey(ResourceType.WOOD) ? resourceDeck.get(ResourceType.WOOD) : 0;
+		resourceDeck.put(ResourceType.WOOD, count + 1);
 		
 		player.addToResourceHand(ResourceType.BRICK, -1);
-		int count2 = resourseDeck.containsKey(ResourceType.BRICK) ? resourseDeck.get(ResourceType.BRICK) : 0;
-		resourseDeck.put(ResourceType.BRICK, count2 + 1);
+		int count2 = resourceDeck.containsKey(ResourceType.BRICK) ? resourceDeck.get(ResourceType.BRICK) : 0;
+		resourceDeck.put(ResourceType.BRICK, count2 + 1);
 		
 		player.addToResourceHand(ResourceType.WHEAT, -1);
-		int count3 = resourseDeck.containsKey(ResourceType.WHEAT) ? resourseDeck.get(ResourceType.WHEAT) : 0;
-		resourseDeck.put(ResourceType.WHEAT, count3 + 1);
+		int count3 = resourceDeck.containsKey(ResourceType.WHEAT) ? resourceDeck.get(ResourceType.WHEAT) : 0;
+		resourceDeck.put(ResourceType.WHEAT, count3 + 1);
 		
 		player.addToResourceHand(ResourceType.SHEEP, -1);
-		int count4 = resourseDeck.containsKey(ResourceType.SHEEP) ? resourseDeck.get(ResourceType.SHEEP) : 0;
-		resourseDeck.put(ResourceType.SHEEP, count4 + 1);
+		int count4 = resourceDeck.containsKey(ResourceType.SHEEP) ? resourceDeck.get(ResourceType.SHEEP) : 0;
+		resourceDeck.put(ResourceType.SHEEP, count4 + 1);
 	}
 }

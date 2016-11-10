@@ -22,9 +22,10 @@ public class ServerModel {
      * @param location The location of the city.
      * @return result
      */
+
     public boolean canPlaceCity(int gameId,int playerId, VertexLocation location){
     	return games.get(gameId).canPlaceCity(playerId, location);
-    }
+	}
 
     /**
      * Checks whether the player can place a settlement.
@@ -44,6 +45,7 @@ public class ServerModel {
      * @param location The location of the road.
      * @return result
      */
+
     public boolean canPlaceRoad(int gameId, int playerId, boolean free, EdgeLocation location) {
     	return games.get(gameId).canPlaceRoad(playerId, free, location);
     }
@@ -57,7 +59,7 @@ public class ServerModel {
      * Checks whether the player can buy a development card.
      * @return result
      */
-    public boolean canBuyDevelopmentCard(int playerId){
+    public boolean canBuyDevelopmentCard(int gameID, int playerId){
         return false;
     }
     
@@ -65,7 +67,7 @@ public class ServerModel {
      * Checks whether a player can trade at all
      * @return
      */
-    public boolean canTrade() {
+    public boolean canTrade(int gameID) {
     	return false;
     }
 
@@ -75,8 +77,8 @@ public class ServerModel {
      * @param recieverPlayerId the playerIndex of the offer recipient.
      * @return result
      */
-    public boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, HashMap<ResourceType, Integer> offer){
-        return false;
+    public boolean canTradeWithPlayer(int gameID, int senderPlayerId, int recieverPlayerId, HashMap<ResourceType, Integer> offer){
+        return games.get(gameID).canTradeWithPlayer(senderPlayerId, recieverPlayerId, offer);
     }
 
     /**
@@ -86,7 +88,7 @@ public class ServerModel {
      * @param outputResource Type of resource you are receiving.
      * @return result
      */
-    public boolean canTradeWithBank(int playerId, int ratio, ResourceType inputResource, ResourceType outputResource){
+    public boolean canTradeWithBank(int gameID, int playerId, int ratio, ResourceType inputResource, ResourceType outputResource){
         return false;
     }
 
@@ -96,7 +98,7 @@ public class ServerModel {
      * @param victimIndex The playerIndex of the player you wish to rob, or -1 to rob no one.
      * @return result
      */
-    public boolean canPlaySoldier(int playerId, HexLocation location, int victimIndex) {
+    public boolean canPlaySoldier(int gameID, int playerId, HexLocation location, int victimIndex) {
         return false;
     }
 
@@ -106,7 +108,7 @@ public class ServerModel {
      * @param resource2 The type of the second resource you'd like to receive
      * @return result
      */
-    public boolean canPlayYearOfPlenty(int playerId, ResourceType resource1, ResourceType resource2) {
+    public boolean canPlayYearOfPlenty(int gameID, int playerId, ResourceType resource1, ResourceType resource2) {
         return false;
     }
 
@@ -116,7 +118,7 @@ public class ServerModel {
      * @param spot2 second edge location of road.
      * @return result
      */
-    public boolean canPlayRoadCard(int playerId, EdgeLocation spot1, EdgeLocation spot2) {
+    public boolean canPlayRoadCard(int gameID, int playerId, EdgeLocation spot1, EdgeLocation spot2) {
         return false;
     }
 
@@ -125,7 +127,7 @@ public class ServerModel {
      * @param resource The type of resource desired from other players.
      * @return result
      */
-    public boolean canPlayMonopolyCard(int playerId, ResourceType resource) {
+    public boolean canPlayMonopolyCard(int gameID, int playerId, ResourceType resource) {
         return false;
     }
 
@@ -133,7 +135,7 @@ public class ServerModel {
      * Checks whether a Monument card can be played.
      * @return result
      */
-    public boolean canPlayMonumentCard(int playerId) {
+    public boolean canPlayMonumentCard(int gameID, int playerId) {
         return false;
     }
 
@@ -144,10 +146,9 @@ public class ServerModel {
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move.
      * @param location The location of the city.
-     * @return result
      */
-    public void placeCity(int gameID, int playerID, VertexLocation location) {
-    	games.get(gameID).placeCity(playerID, location);
+    public void placeCity(int gameID, int playerID, VertexLocation location){
+        games.get(gameID).placeCity(playerID, location);
     }
 
     /**
@@ -158,7 +159,6 @@ public class ServerModel {
      * @param playerID the ID of the player who is requesting the move
      * @param free Whether or not piece can be built for free.
      * @param location The location of the settlement.
-     * @return result
      */
     public void placeSettlement(int gameID, int playerID, boolean free, VertexLocation location) {
     	games.get(gameID).placeSettlement(playerID,free,location);
@@ -172,7 +172,6 @@ public class ServerModel {
      * @param playerID the ID of the player who is requesting the move
      * @param free Whether or not piece can be built for free.
      * @param location The location of the road.
-     * @return result
      */
     public void placeRoad(int gameID, int playerID, boolean free, EdgeLocation location) {
     	games.get(gameID).placeRoad(playerID,free,location);
@@ -184,9 +183,10 @@ public class ServerModel {
      * @post You have a new card; If it is a monument card, it has been added to your old devCard hand, If it is a non­monument card, it has been added to your new devCard hand (unplayable this turn)
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move
-     * @return result
      */
-    public void buyDevelopmentCard(int gameID, int playerID){}
+    public void buyDevelopmentCard(int gameID, int playerID){
+        games.get(gameID).buyDevelopmentCard(playerID);
+    }
 
     /**
      * Places a soldier development card and moves the robber into the given location and robs the victim player if there is one
@@ -210,9 +210,10 @@ public class ServerModel {
      * @param playerID the ID of the player who is requesting the move
      * @param location the new robber location.
      * @param victimIndex The playerIndex of the player you wish to rob, or -1 to rob no one.
-     * @return result
      */
-    public void playSoldierCard(int gameID, int playerID, HexLocation location, int victimIndex){}
+    public void playSoldierCard(int gameID, int playerID, HexLocation location, int victimIndex){
+        games.get(gameID).playSoldierCard(playerID, location, victimIndex);
+    }
 
     /**
      * Plays a year of plenty devCard.
@@ -231,9 +232,10 @@ public class ServerModel {
      * @param playerID the ID of the player who is requesting the move
      * @param resource1 The type of the first resource you'd like to receive
      * @param resource2 The type of the second resource you'd like to receive
-     * @return result
      */
-    public void playYearOfPleanty(int gameID, int playerID, ResourceType resource1, ResourceType resource2){}
+    public void playYearOfPleanty(int gameID, int playerID, ResourceType resource1, ResourceType resource2){
+        games.get(gameID).playYearOfPleanty(playerID, resource1, resource2);
+    }
 
     /**
      * Plays a road card.
@@ -257,9 +259,10 @@ public class ServerModel {
      * @param playerID the ID of the player who is requesting the move
      * @param spot1 first edge location of road.
      * @param spot2 second edge location of road.
-     * @return result
      */
-    public void playRoadCard(int gameID, int playerID, EdgeLocation spot1, EdgeLocation spot2){}
+    public void playRoadCard(int gameID, int playerID, EdgeLocation spot1, EdgeLocation spot2){
+        games.get(gameID).playRoadCard(playerID, spot1, spot2);
+    }
 
     /**
      * Plays a monopoly devCard.
@@ -276,9 +279,10 @@ public class ServerModel {
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move
      * @param resource The type of resource desired from other players.
-     * @return result
      */
-    public void playMonopolyCard(int gameID, int playerID, ResourceType resource){}
+    public void playMonopolyCard(int gameID, int playerID, ResourceType resource){
+        games.get(gameID).playMonopolyCard(playerID, resource);
+    }
 
     /**
      * Plays a monument devCard.
@@ -294,9 +298,10 @@ public class ServerModel {
      * 		</pre>
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move
-     * @return result
      */
-    public void playMonumentCard(int gameID, int playerID){}
+    public void playMonumentCard(int gameID, int playerID){
+        games.get(gameID).playMonumentCard(playerID);
+    }
 
     /**
      * Checks whether the player can roll the dice
@@ -305,9 +310,10 @@ public class ServerModel {
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move
      * @param rollValue the value that was rolled
-     * @return
      */
-    public void rollDice(int gameID, int playerID,  int rollValue){}
+    public void rollDice(int gameID, int playerID,  int rollValue){
+        games.get(gameID).rollDice(playerID, rollValue);
+    }
 
     /**
      * Sends a chat message.
@@ -315,9 +321,10 @@ public class ServerModel {
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move
      * @param message the message the player wishes to send.
-     * @return
      */
-    public void sendMessage(int gameID, int playerID, String message){}
+    public void sendMessage(int gameID, int playerID, String message){
+        games.get(gameID).sendMessage(playerID, message);
+    }
 
     /**
      * Make a trade offer to another player.
@@ -326,27 +333,35 @@ public class ServerModel {
      * @param receiverPlayerID Player being offered the trade
      * @param offer hand of cards to trade
      */
-    public void makeTradeOffer(int gameID, int senderPlayerID, int receiverPlayerID, HashMap<ResourceType, Integer> offer){}
+    public void makeTradeOffer(int gameID, int senderPlayerID, int receiverPlayerID, HashMap<ResourceType, Integer> offer){
+        games.get(gameID).makeTradeOffer(senderPlayerID, receiverPlayerID, offer);
+    }
 
     /**
      * Accept the TradeOffer currently on the table.
      * @param gameID the ID of the game from which the request was made.
      */
-    public void acceptTradeOffer(int gameID, boolean willAccept){}
+    public void acceptTradeOffer(int gameID, boolean willAccept){
+        games.get(gameID).acceptTradeOffer(willAccept);
+    }
 
     /**
      * Accept the TradeOffer currently on the table.
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move
      */
-    public void makeMaritimeTrade(int gameID, int playerID){}
+    public void makeMaritimeTrade(int gameID, int playerID){
+        games.get(gameID).makeMaritimeTrade(playerID);
+    }
 
     /**
      * Adds a player to the game.
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move
      */
-    public void addPlayer(int gameID, int playerID){}
+    public void addPlayer(int gameID, int playerID){
+        games.get(gameID).addPlayer(playerID);
+    }
 
     /**
      * Adds an computer player to the game.
@@ -358,7 +373,9 @@ public class ServerModel {
      * 		</pre>
      * @param gameID the ID of the game from which the request was made.
      */
-    public void addComputerPlayer(int gameID){}
+    public void addComputerPlayer(int gameID){
+        games.get(gameID).addComputerPlayer();
+    }
 
     /**
      * Ends the current players turn
@@ -371,7 +388,9 @@ public class ServerModel {
      * 		</pre>
      * @param gameID the ID of the game from which the request was made.
      */
-    public void finishTurn(int gameID){}
+    public void finishTurn(int gameID){
+        games.get(gameID).finishTurn();
+    }
 
     /**
      * Robs a player
@@ -385,7 +404,9 @@ public class ServerModel {
      * @param playerID the ID of the player who is requesting the move
      * @param victimIndex .
      */
-    public void robPlayer(int gameID, int playerID, int victimIndex){}
+    public void robPlayer(int gameID, int playerID, int victimIndex){
+        games.get(gameID).robPlayer(playerID, victimIndex);
+    }
 
     /**
      * Discards the given resources from the given player
@@ -399,7 +420,7 @@ public class ServerModel {
      * @param playerID the ID of the player who is requesting the move
      */
     public void discardCards(int gameID, int playerID, HashMap<ResourceType, Integer> discardCards){
-
+        games.get(gameID).discardCards(playerID, discardCards);
     }
 
     /**
@@ -410,7 +431,7 @@ public class ServerModel {
      * @param gameID the ID of the game from which the request was made.
      */
     public String[] listAIPlayers(int gameID){
-        return null;
+        return games.get(gameID).listAIPlayers();
     }
 
     /**

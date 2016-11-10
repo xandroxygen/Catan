@@ -1,9 +1,14 @@
 package server.http.handlers;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import server.facade.IServerFacade;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Scanner;
 
 /**
  * Base handler helps to deserialize request.
@@ -13,11 +18,11 @@ import java.io.IOException;
  */
 public abstract class BaseHandler implements HttpHandler {
 
-	private Object body;
+	protected String body;
 	private String playerCookie;
 	private String gameCookie;
 	private int responseCode;
-	// needs to have DI of Server Facade here
+	private IServerFacade server;
 
 
 
@@ -25,6 +30,10 @@ public abstract class BaseHandler implements HttpHandler {
 	private static final int RESPONSE_FAIL = 400;
 	private static final int RESPONSE_NOT_FOUND = 404;
 	private static final int RESPONSE_SERVER_FAIL = 500;
+
+	public BaseHandler(IServerFacade server) {
+		this.server = server;
+	}
 
 	/**
 	 * The Base Handler takes care of all the HTTP stuff in the handle function.
@@ -37,6 +46,11 @@ public abstract class BaseHandler implements HttpHandler {
 	@Override
 	public void handle(HttpExchange httpExchange) throws IOException {
 
+		// deserialize requestBody to this.body
+		InputStream is = httpExchange.getRequestBody();
+		Scanner s = new Scanner(is).useDelimiter("\\A");
+		body = s.hasNext() ? s.next() : "";
+		respondToRequest(httpExchange);
 	}
 
 	/**
@@ -46,6 +60,7 @@ public abstract class BaseHandler implements HttpHandler {
 	 * @param input the request body
 	 */
 	public void deserializeBody(String input) {
+		JsonObject jo = (JsonObject) new JsonParser().parse(input);
 
 	}
 
@@ -71,6 +86,14 @@ public abstract class BaseHandler implements HttpHandler {
 	 */
 	public void writePlayerCookie() {
 
+	}
+
+	public IServerFacade getServer() {
+		return server;
+	}
+
+	public void setServer(IServerFacade server) {
+		this.server = server;
 	}
 
 	/**

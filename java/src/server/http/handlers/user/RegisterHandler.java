@@ -1,12 +1,20 @@
 package server.http.handlers.user;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import server.facade.IServerFacade;
+import server.http.RegisterRequest;
 import server.http.handlers.BaseHandler;
 
 /**
  * Handles register requests.
  */
 public class RegisterHandler extends BaseHandler {
+
+	public RegisterHandler(IServerFacade server) {
+		super(server);
+	}
+
 	/**
 	 * Overridden by child handlers. This specifies what each request should do.
 	 * eg. for buildRoad, this would construct a command to build a road and execute it.
@@ -18,6 +26,7 @@ public class RegisterHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
+		RegisterRequest request = new Gson().fromJson(this.body, RegisterRequest.class);
 		return null;
 	}
 }
