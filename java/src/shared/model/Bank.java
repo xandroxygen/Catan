@@ -70,4 +70,46 @@ public class Bank {
 	public void setDevelopmentCards(HashMap<DevCardType, Integer> developmentCards) {
 		this.developmentCards = developmentCards;
 	}
+
+	public void purchaseCity(Player player) {
+		// Subtract from player and add to bank resources
+		player.addToResourceHand(ResourceType.WHEAT, -2);
+		int count = resourseDeck.containsKey(ResourceType.WHEAT) ? resourseDeck.get(ResourceType.WHEAT) : 0;
+		resourseDeck.put(ResourceType.WHEAT, count + 2);
+		
+		player.addToResourceHand(ResourceType.ORE, -3);
+		int count2 = resourseDeck.containsKey(ResourceType.ORE) ? resourseDeck.get(ResourceType.ORE) : 0;
+		resourseDeck.put(ResourceType.ORE, count2 + 3);
+	}
+	
+	public void purchaseRoad(Player player) {
+		// Subtract from player and add to bank resources
+		player.addToResourceHand(ResourceType.WOOD, -1);
+		int count = resourseDeck.containsKey(ResourceType.WOOD) ? resourseDeck.get(ResourceType.WOOD) : 0;
+		resourseDeck.put(ResourceType.WOOD, count + 1);
+		
+		player.addToResourceHand(ResourceType.BRICK, -1);
+		int count2 = resourseDeck.containsKey(ResourceType.BRICK) ? resourseDeck.get(ResourceType.BRICK) : 0;
+		resourseDeck.put(ResourceType.BRICK, count2 + 1);
+	}
+	
+	public void purchaseSettlement(Player player) {
+		//(1 wood, 1 brick, 1 wheat, 1 sheep; 1 settlement)
+		// Subtract from player and add to bank resources
+		player.addToResourceHand(ResourceType.WOOD, -1);
+		int count = resourseDeck.containsKey(ResourceType.WOOD) ? resourseDeck.get(ResourceType.WOOD) : 0;
+		resourseDeck.put(ResourceType.WOOD, count + 1);
+		
+		player.addToResourceHand(ResourceType.BRICK, -1);
+		int count2 = resourseDeck.containsKey(ResourceType.BRICK) ? resourseDeck.get(ResourceType.BRICK) : 0;
+		resourseDeck.put(ResourceType.BRICK, count2 + 1);
+		
+		player.addToResourceHand(ResourceType.WHEAT, -1);
+		int count3 = resourseDeck.containsKey(ResourceType.WHEAT) ? resourseDeck.get(ResourceType.WHEAT) : 0;
+		resourseDeck.put(ResourceType.WHEAT, count3 + 1);
+		
+		player.addToResourceHand(ResourceType.SHEEP, -1);
+		int count4 = resourseDeck.containsKey(ResourceType.SHEEP) ? resourseDeck.get(ResourceType.SHEEP) : 0;
+		resourseDeck.put(ResourceType.SHEEP, count4 + 1);
+	}
 }

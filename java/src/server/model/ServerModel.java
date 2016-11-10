@@ -14,7 +14,7 @@ import java.util.HashMap;
  */
 public class ServerModel {
     private HashMap<String, User> users;
-    private HashMap<String, ServerGame> games;
+    private HashMap<Integer, ServerGame> games;
     
     /**
      * Checks whether the player can place a city.
@@ -22,8 +22,8 @@ public class ServerModel {
      * @param location The location of the city.
      * @return result
      */
-    public boolean canPlaceCity(int playerId, VertexLocation location){
-        return false;
+    public boolean canPlaceCity(int gameId,int playerId, VertexLocation location){
+    	return games.get(gameId).canPlaceCity(playerId, location);
     }
 
     /**
@@ -33,8 +33,8 @@ public class ServerModel {
      * @param location The location of the settlement.
      * @return result
      */
-    public boolean canPlaceSettlement(int playerId, boolean free, VertexLocation location){
-        return false;
+    public boolean canPlaceSettlement(int gameId, int playerId, boolean free, VertexLocation location){
+    	return games.get(gameId).canPlaceSettlement(playerId, free, location);
     }
 
     /**
@@ -44,13 +44,13 @@ public class ServerModel {
      * @param location The location of the road.
      * @return result
      */
-    public boolean canPlaceRoad(int playerId, boolean free, EdgeLocation location) {
-        return false;
+    public boolean canPlaceRoad(int gameId, int playerId, boolean free, EdgeLocation location) {
+    	return games.get(gameId).canPlaceRoad(playerId, free, location);
     }
 
     //used for Build Roads DevCard
-    public boolean canPlaceRoad(int playerId, EdgeLocation firstLocation, EdgeLocation location){
-        return false;
+    public boolean canPlaceRoad(int gameId, int playerId, EdgeLocation firstLocation, EdgeLocation location){
+    	return games.get(gameId).canPlaceRoad(playerId, firstLocation, location);
     }
 
     /**
@@ -146,7 +146,9 @@ public class ServerModel {
      * @param location The location of the city.
      * @return result
      */
-    public void placeCity(int gameID, int playerID, VertexLocation location){}
+    public void placeCity(int gameID, int playerID, VertexLocation location) {
+    	games.get(gameID).placeCity(playerID, location);
+    }
 
     /**
      * Places a Settlement in the Game from the given gameID for the player specified in the given playerID, at the given location.
@@ -158,7 +160,9 @@ public class ServerModel {
      * @param location The location of the settlement.
      * @return result
      */
-    public void placeSettlement(int gameID, int playerID, boolean free, VertexLocation location){}
+    public void placeSettlement(int gameID, int playerID, boolean free, VertexLocation location) {
+    	games.get(gameID).placeSettlement(playerID,free,location);
+    }
 
     /**
      * Places a Road in the Game from the given gameID for the player specified in the given playerID, at the given location.
@@ -170,7 +174,9 @@ public class ServerModel {
      * @param location The location of the road.
      * @return result
      */
-    public void placeRoad(int gameID, int playerID, boolean free, EdgeLocation location){}
+    public void placeRoad(int gameID, int playerID, boolean free, EdgeLocation location) {
+    	games.get(gameID).placeRoad(playerID,free,location);
+    }
 
     /**
      * Buys a development card if the given player.
@@ -416,7 +422,11 @@ public class ServerModel {
      *      adds a new game to the list of games
      * 		</pre>
      */
-    public void createGame(String GameName){}
+    public void createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName) {
+    	ServerGame game = new ServerGame(randomTiles,randomNumbers,randomPorts,gameName);
+    	int id = games.size()+1;
+    	games.put(id,game);
+    }
 
     /**
      * Returns an array of all of the games

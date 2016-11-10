@@ -1,5 +1,6 @@
 package server.model;
 
+import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
@@ -12,7 +13,38 @@ import java.util.HashMap;
  * Created by Jonathan Skaggs on 11/4/2016.
  */
 public class ServerGame extends Game {
-    /**
+    public ServerGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName) {
+		// Create a new game
+    	
+    	if (randomTiles) {
+    		
+    	}
+    	// DEFAULT TILES
+    	else {
+    		
+    	}
+    	
+    	if (randomNumbers) {
+    		
+    	}
+    	// DEFAULT Numbers
+    	else {
+    		
+    	}
+    	
+    	if (randomPorts) {
+    		
+    	}
+    	// DEFAULT Numbers
+    	else {
+    		
+    	}
+    	
+    	
+    	
+	}
+
+	/**
      * Places a City in the Game from the given gameID for the player specified in the given playerID, at the given location.
      * @pre It's your turn, The city location is where you currently have a settlement, You have the required resources (2 wheat, 3 ore; 1 city)
      * @post You lost the resources required to build a city (2 wheat, 3 ore, 1 city), The city is on the map at the specified location, You got a settlement back on the desired location
@@ -20,7 +52,16 @@ public class ServerGame extends Game {
      * @param location The location of the city.
      * @return result
      */
-    public void placeCity(int playerID, VertexLocation location){}
+    public void placeCity(int playerID, VertexLocation location) {
+    	int index = getPlayerIndex(playerID);
+    	// Add to the Map
+    	getTheMap().addCity(index,location);
+    	// Adjust the player and bank resources
+    	getBank().purchaseCity(getPlayerList().get(index));
+    	// Adjust player piece inventory
+    	getPlayerList().get(index).addToPlayerPieces(PieceType.CITY, -1);
+    	getPlayerList().get(index).addToPlayerPieces(PieceType.SETTLEMENT, 1);
+    }
 
     /**
      * Places a Settlement in the Game from the given gameID for the player specified in the given playerID, at the given location.
@@ -31,7 +72,15 @@ public class ServerGame extends Game {
      * @param location The location of the settlement.
      * @return result
      */
-    public void placeSettlement(int playerID, boolean free, VertexLocation location){}
+    public void placeSettlement(int playerID, boolean free, VertexLocation location) {
+    	int index = getPlayerIndex(playerID);
+    	// Add to the Map
+    	getTheMap().addSettlement(playerID,location);
+    	// Adjust the player and bank resources
+    	getBank().purchaseRoad(getPlayerList().get(index));
+    	// Adjust player piece inventory
+    	getPlayerList().get(index).addToPlayerPieces(PieceType.SETTLEMENT, -1);
+    }
 
     /**
      * Places a Road in the Game from the given gameID for the player specified in the given playerID, at the given location.
@@ -42,7 +91,15 @@ public class ServerGame extends Game {
      * @param location The location of the road.
      * @return result
      */
-    public void placeRoad(int playerID, boolean free, EdgeLocation location){}
+    public void placeRoad(int playerID, boolean free, EdgeLocation location) {
+    	int index = getPlayerIndex(playerID);
+    	// Add to the Map
+    	getTheMap().addRoad(playerID,location);
+    	// Adjust the player and bank resources
+    	getBank().purchaseRoad(getPlayerList().get(index));
+    	// Adjust player piece inventory
+    	getPlayerList().get(index).addToPlayerPieces(PieceType.ROAD, -1);
+    }
 
     /**
      * Buys a development card if the given player.
