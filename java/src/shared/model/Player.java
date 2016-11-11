@@ -3,6 +3,7 @@ package shared.model;
 import com.google.gson.JsonObject;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
+import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
@@ -520,6 +521,28 @@ public class Player {
 			return true;
 		}
 		return false;
+	}
+	
+	public void addToResourceHand(ResourceType type, int value) {
+		int count = resources.containsKey(type) ? resources.get(type) : 0;
+		resources.put(type, count + value);
+	}
+	
+	public void addToPlayerPieces(PieceType type, int value) {
+		switch(type) {
+		case ROAD:
+			roads += value;
+			break;
+		case CITY:
+			cities += value;
+			break;
+		case SETTLEMENT:
+			settlements += value;
+			break;
+		default:
+			break;
+		}
+		
 	}
 
 }
