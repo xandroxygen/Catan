@@ -3,6 +3,7 @@ package server.http.handlers.user;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import server.facade.IServerFacade;
+import server.http.UserInfo;
 import server.http.requests.user.UserRequest;
 import server.http.handlers.BaseHandler;
 
@@ -18,15 +19,27 @@ public class RegisterHandler extends BaseHandler {
 	/**
 	 * Overridden by child handlers. This specifies what each request should do.
 	 * eg. for buildRoad, this would construct a command to build a road and execute it.
-	 * This method must also set a response code, and can set the cookies attributes.
-	 * This method is in charge of writing needed cookies.
+	 * <p>
+	 * This method must:
+	 * - construct the proper request object from the body using gson
+	 * - set this.gameID, if it wants catan.game cookie returned
+	 * - set this.user, if it wants catan.user cookie returned
+	 * - set this.response code, if not 200
+	 * - return the serialized response
 	 *
 	 * @param exchange
 	 * @return the response from the Model, serialized as a String.
 	 */
 	@Override
-	public String respondToRequest(HttpExchange exchange) {
+	public String respondToRequest(HttpExchange exchange) throws Exception {
 		UserRequest request = new Gson().fromJson(this.body, UserRequest.class);
-		return null;
+
+		this.user = new UserInfo();
+		user.setUsername(request.getUsername());
+		user.setPassword(request.getPassword());
+		user.setPlayerID(0);
+
+		return "Your request was accepted but nothing was done about it. This was your username: " + request.getUsername();
 	}
+
 }

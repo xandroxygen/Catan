@@ -1,13 +1,24 @@
 package server.http.handlers;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import server.facade.IServerFacade;
+import server.http.UserInfo;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -19,17 +30,23 @@ import java.util.Scanner;
 public abstract class BaseHandler implements HttpHandler {
 
 	protected String body;
-	private String playerCookie;
-	private String gameCookie;
-	private int responseCode;
-	private IServerFacade server;
+	protected int responseCode;
+	protected IServerFacade server;
+
+	protected String playerCookie;
+	protected String gameCookie;
+
+	protected UserInfo user;
+	protected int gameID;
 
 
 
-	private static final int RESPONSE_OK = 200;
-	private static final int RESPONSE_FAIL = 400;
-	private static final int RESPONSE_NOT_FOUND = 404;
-	private static final int RESPONSE_SERVER_FAIL = 500;
+
+	protected static final int RESPONSE_OK = 200;
+	protected static final int RESPONSE_FAIL = 400;
+	protected static final int RESPONSE_NOT_FOUND = 404;
+	protected static final int RESPONSE_SERVER_FAIL = 500;
+	protected static final int NOT_SET = -1;
 
 	public BaseHandler(IServerFacade server) {
 		this.server = server;
@@ -46,35 +63,132 @@ public abstract class BaseHandler implements HttpHandler {
 	@Override
 	public void handle(HttpExchange httpExchange) throws IOException {
 
+		try {
+
+			// reset variables - there is only one instance of each Handler class
+			playerCookie = null;
+			gameCookie = null;
+			body = null;
+			user = null;
+			gameID = NOT_SET;
+			responseCode = NOT_SET;
+
+			readHeaders(httpExchange);
+
+			decodeCookies();
+
+			// deserialize requestBody to this.body
+			InputStream is = httpExchange.getRequestBody();
+			Scanner s = new Scanner(is).useDelimiter("\\A");
+			body = s.hasNext() ? s.next() : "";
+
+			// delegated to child classes
+			String response = respondToRequest(httpExchange);
+
+			// set cookies - only sets if gameID or user is set
+			generateGameCookie();
+			generatePlayerCookie();
+			writeCookies(httpExchange);
+
+			// send response with code
+			responseCode = (responseCode == NOT_SET) ? 200 : responseCode;
+			httpExchange.sendResponseHeaders(responseCode, response.length());
+			OutputStream os = httpExchange.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
+			httpExchange.close();
+		}
+		catch (Exception e) {
+			httpExchange.sendResponseHeaders(RESPONSE_FAIL,e.getMessage().length());
+			OutputStream os = httpExchange.getResponseBody();
+			os.write(e.getMessage().getBytes());
+			os.close();
+			httpExchange.close();
+		}
+	}
+
+	/**
+	 * Creates UserInfo object and sets gameID using the cookies that were sent with the request.
+	 * @throws UnsupportedEncodingException
+	 */
+	private void decodeCookies() throws UnsupportedEncodingException {
+		if (playerCookie != null) {
+			String decodedCookie = URLDecoder.decode(playerCookie, "UTF-8");
+			decodedCookie = decodedCookie.substring(12);
+			JsonObject jsonCookie = new JsonParser().parse(decodedCookie).getAsJsonObject();
+
+			String u = jsonCookie.get("name").getAsString();
+			String p = jsonCookie.get("password").getAsString();
+			int id = jsonCookie.get("playerID").getAsInt();
+
+			user = new UserInfo();
+			user.setUsername(u);
+			user.setPassword(p);
+			user.setPlayerID(id);
+		}
+		if (gameCookie != null) {
+			gameID = Integer.parseInt(gameCookie.substring(11));
+		}
+	}
+
+	/**
+	 * Sets player and game cookie attributes if those cookies are sent in the request.
+	 * @param httpExchange
+	 */
+	private void readHeaders(HttpExchange httpExchange) {
+
 		Headers headers = httpExchange.getRequestHeaders();
-		playerCookie = headers.getFirst("catan.user");
-		gameCookie = headers.getFirst("catan.game");
-
-		// deserialize requestBody to this.body
-		InputStream is = httpExchange.getRequestBody();
-		Scanner s = new Scanner(is).useDelimiter("\\A");
-		body = s.hasNext() ? s.next() : "";
-		respondToRequest(httpExchange);
+		String cookies = headers.getFirst("Cookie");
+		if (cookies != null) {
+			for (String c : cookies.split(";")) {
+				if (c.contains("catan.user")) {
+					playerCookie = c;
+				} else if (c.contains("catan.game")) {
+					gameCookie = c;
+				}
+			}
+		}
 	}
 
 	/**
-	 * Takes the current game cookie attribute and adds it to the
+	 * Takes the current game and player cookies and adds them to the
 	 * headers on the response.
+	 * URL-encodes JSON representation of UserInfo.
 	 * @param e the HTTPExchange passed into handle
 	 */
-	public void writeGameCookie(HttpExchange e) {
-		e.getResponseHeaders().put("catan.game", new ArrayList<>());
-		e.getResponseHeaders().get("catan.game").add(gameCookie);
+	private void writeCookies(HttpExchange e) {
+
+		String cookies = "";
+
+		if (gameCookie != null) {
+			cookies += gameCookie + " ";
+		}
+		if (playerCookie != null) {
+			cookies += playerCookie;
+		}
+		e.getResponseHeaders().add("Set-cookie", gameCookie);
+		e.getResponseHeaders().add("Set-cookie", playerCookie);
 	}
 
 	/**
-	 * Takes the current game cookie attribute and adds it to the
-	 * headers on the response.
-	 * @param e the HTTPExchange passed into handle
+	 * Transforms this.gameID into this.gameCookie.
+	 * Only sets gameCookie if gameID is not -1
 	 */
-	public void writePlayerCookie(HttpExchange e) {
-		e.getResponseHeaders().put("catan.user", new ArrayList<>());
-		e.getResponseHeaders().get("catan.user").add(playerCookie);
+	protected void generateGameCookie() {
+		if (gameID != -1) {
+			gameCookie = "catan.game=" + Integer.toString(gameID);
+		}
+	}
+
+	/**
+	 * Transforms this.user into this.playerCookie.
+	 * Only sets cookies if user is not null
+	 * @throws UnsupportedEncodingException
+	 */
+	protected void generatePlayerCookie() throws UnsupportedEncodingException {
+		if (user != null) {
+			playerCookie = "catan.user=" + URLEncoder.encode(new Gson().toJson(user), "UTF-8");
+		}
 	}
 
 	public IServerFacade getServer() {
@@ -87,11 +201,15 @@ public abstract class BaseHandler implements HttpHandler {
 
 	/**
 	 * Overridden by child handlers. This specifies what each request should do.
-	 * This must also construct a request object of the proper type using gson.
 	 * eg. for buildRoad, this would construct a command to build a road and execute it.
-	 * This method must also set a response code, and can set the cookies attributes.
-	 * This method is in charge of writing needed cookies.
+	 *
+	 * This method must:
+	 * - construct the proper request object from the body using gson
+	 * - set this.gameID, if it wants catan.game cookie returned
+	 * - set this.user, if it wants catan.user cookie returned
+	 * - set this.response code, if not 200
+	 * - return the serialized response
 	 * @return the response from the Model, serialized as a String.
 	 */
-	public abstract String respondToRequest(HttpExchange exchange);
+	public abstract String respondToRequest(HttpExchange exchange) throws Exception;
 }
