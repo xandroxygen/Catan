@@ -1,9 +1,6 @@
 package server.model;
 
-<<<<<<< HEAD
-=======
 import shared.definitions.PieceType;
->>>>>>> phase3-dev
 import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;

@@ -278,7 +278,7 @@ public interface IServerFacade{
      * 		You have the resources you are discarding
 	 * </pre>
 	 */
-	Object discardCards(int gameID, int playerID, Map<ResourceType, Integer> hand) throws InvalidActionException;
+	Object discardCards(int gameID, int playerID, HashMap<ResourceType, Integer> hand) throws InvalidActionException;
 
     /**
      * Tell the server that the dice were rolled.
