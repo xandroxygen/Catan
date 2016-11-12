@@ -556,5 +556,22 @@ public class Map {
 	}
 	
 	
+	// SETTER METHODS
+	
+	public void addRoad(int playerIndex, EdgeLocation location) {
+		Road road = new Road(location,playerIndex);
+		roads.put(road.getLocation().getNormalizedLocation(), road);
+	}
+	
+	public void addCity(int playerIndex, VertexLocation location) {
+		City city = new City(location,playerIndex);
+		cities.put(city.getLocation().getNormalizedLocation(), city);
+	}
+	
+	public void addSettlement(int playerIndex, VertexLocation location) {
+		Settlement settlement = new Settlement(location,playerIndex);
+		settlements.put(settlement.getLocation().getNormalizedLocation(), settlement);
+	}
+	
 
 }

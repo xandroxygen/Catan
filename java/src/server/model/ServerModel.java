@@ -22,9 +22,9 @@ public class ServerModel {
      * @param location The location of the city.
      * @return result
      */
-    public boolean canPlaceCity(int gameID, int playerId, VertexLocation location){
-        return games.get(gameID).canPlaceCity(playerId, location);
-    }
+    public boolean canPlaceCity(int gameId,int playerId, VertexLocation location){
+    	return games.get(gameId).canPlaceCity(playerId, location);
+	}
 
     /**
      * Checks whether the player can place a settlement.
@@ -33,8 +33,8 @@ public class ServerModel {
      * @param location The location of the settlement.
      * @return result
      */
-    public boolean canPlaceSettlement(int gameID, int playerId, boolean free, VertexLocation location){
-        return games.get(gameID).canPlaceSettlement(playerId, free, location);
+    public boolean canPlaceSettlement(int gameId, int playerId, boolean free, VertexLocation location){
+    	return games.get(gameId).canPlaceSettlement(playerId, free, location);
     }
 
     /**
@@ -44,8 +44,13 @@ public class ServerModel {
      * @param location The location of the road.
      * @return result
      */
-    public boolean canPlaceRoad(int gameID, int playerId, boolean free, EdgeLocation location) {
-        return games.get(gameID).canPlaceRoad(playerId, free, location);
+    public boolean canPlaceRoad(int gameId, int playerId, boolean free, EdgeLocation location) {
+    	return games.get(gameId).canPlaceRoad(playerId, free, location);
+    }
+
+    //used for Build Roads DevCard
+    public boolean canPlaceRoad(int gameId, int playerId, EdgeLocation firstLocation, EdgeLocation location){
+    	return games.get(gameId).canPlaceRoad(playerId, firstLocation, location);
     }
 
     /**
@@ -153,8 +158,8 @@ public class ServerModel {
      * @param free Whether or not piece can be built for free.
      * @param location The location of the settlement.
      */
-    public void placeSettlement(int gameID, int playerID, boolean free, VertexLocation location){
-        games.get(gameID).placeSettlement(playerID, free, location);
+    public void placeSettlement(int gameID, int playerID, boolean free, VertexLocation location) {
+    	games.get(gameID).placeSettlement(playerID,free,location);
     }
 
     /**
@@ -166,8 +171,9 @@ public class ServerModel {
      * @param free Whether or not piece can be built for free.
      * @param location The location of the road.
      */
-    public void placeRoad(int gameID, int playerID, boolean free, EdgeLocation location){
-        games.get(gameID).placeRoad(playerID, free, location);
+
+    public void placeRoad(int gameID, int playerID, boolean free, EdgeLocation location) {
+    	games.get(gameID).placeRoad(playerID,free,location);
     }
 
     /**
@@ -436,7 +442,11 @@ public class ServerModel {
      *      adds a new game to the list of games
      * 		</pre>
      */
-    public void createGame(String nameOfGame){}
+    public void createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName) {
+    	ServerGame game = new ServerGame(randomTiles,randomNumbers,randomPorts,gameName);
+    	int id = games.size()+1;
+    	games.put(id,game);
+    }
 
     /**
      * Returns an array of all of the games
