@@ -22,7 +22,6 @@ public class ServerModel {
      * @param location The location of the city.
      * @return result
      */
-
     public boolean canPlaceCity(int gameId,int playerId, VertexLocation location){
     	return games.get(gameId).canPlaceCity(playerId, location);
 	}
@@ -45,7 +44,6 @@ public class ServerModel {
      * @param location The location of the road.
      * @return result
      */
-
     public boolean canPlaceRoad(int gameId, int playerId, boolean free, EdgeLocation location) {
     	return games.get(gameId).canPlaceRoad(playerId, free, location);
     }
@@ -173,6 +171,7 @@ public class ServerModel {
      * @param free Whether or not piece can be built for free.
      * @param location The location of the road.
      */
+
     public void placeRoad(int gameID, int playerID, boolean free, EdgeLocation location) {
     	games.get(gameID).placeRoad(playerID,free,location);
     }
