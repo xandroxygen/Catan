@@ -42,10 +42,7 @@ public class Bank {
 	
 	// Create new default Bank for new game
 	public Bank() {
-		//95 Resource Cards (bearing the symbols for the ore,
-		//grain, lumber, wool, and brick resources)
-	//• 25 Development Cards (14 Knight/Soldier Cards,
-	//6 Progress Cards, 5 Victory Point Cards)
+
 		// Initialize the resource deck
 		resourceDeck = new HashMap<>();
 		resourceDeck.put(ResourceType.BRICK,19);
@@ -59,7 +56,7 @@ public class Bank {
 		developmentCards = new HashMap<>();
 		developmentCards.put(DevCardType.MONOPOLY, 2);
 		developmentCards.put(DevCardType.SOLDIER, 14);
-		developmentCards.put(DevCardType.MONUMENT, 6);
+		developmentCards.put(DevCardType.MONUMENT, 5);
 		developmentCards.put(DevCardType.ROAD_BUILD, 2);
 		developmentCards.put(DevCardType.YEAR_OF_PLENTY, 2);
 	}
