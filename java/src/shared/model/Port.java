@@ -15,6 +15,16 @@ public class Port {
     private ResourceType resource;
     private EdgeLocation location;
     
+    public Port(int ratio, ResourceType type) {
+    	this.ratio = ratio;
+    	this.resource = type;
+    	location = null;
+    }
+    
+    public void setLocation(EdgeLocation location) {
+    	this.location = location;
+    }
+    
     public Port(JsonObject portJson) {
     	try {
 	    	ratio = portJson.get("ratio").getAsInt();

@@ -11,6 +11,13 @@ public class Hex {
 	private HexLocation location;
 	private int number;
 
+	public Hex(HexType resource, HexLocation location, int number) {
+		super();
+		this.resource = resource;
+		this.location = location;
+		this.number = number;
+	}
+
 	public HexType getResource() {
 		return resource;
 	}
