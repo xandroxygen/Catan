@@ -367,6 +367,18 @@ public class Game {
 	public void setBank(Bank bank) {
 		this.bank = bank;
 	}
+	
+	public void setTurnTracker(TurnTracker t) {
+		this.turnTracker = t;
+	}
+	
+	public void initPlayerList() {
+		playerList = new ArrayList<>();
+	}
+	
+	public void addPlayer(Player p) {
+		playerList.add(p);
+	}
 
 	public Bank getBank() {
 		return bank;

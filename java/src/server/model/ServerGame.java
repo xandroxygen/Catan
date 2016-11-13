@@ -19,6 +19,7 @@ import shared.model.Hex;
 import shared.model.Map;
 import shared.model.Player;
 import shared.model.Port;
+import shared.model.TurnTracker;
 
 /**
  * ServerModelFacade
@@ -28,19 +29,23 @@ public class ServerGame extends Game {
 	private String gameName;
 	private int gameId;
 
-    public ServerGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName) {
+    public ServerGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName, int id) {
     	
     	// Create a new Map
     	this.setMap(this.createMap(randomTiles,randomNumbers,randomPorts));
     	
-    	// Set name
+    	// Set name and id
     	this.gameName = gameName;
+    	this.gameId = id;
     	
     	// Create a Bank
     	this.setBank(new Bank());
     	
     	// Create a Turn Tracker
+    	this.setTurnTracker(new TurnTracker());
     	
+    	// Set player list to initially be empty
+    	this.initPlayerList();
     	
     	// Set winner and version
     	// TODO: Should the version start at 0 or 1?

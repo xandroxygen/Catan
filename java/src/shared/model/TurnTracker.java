@@ -6,6 +6,14 @@ public class TurnTracker {
 	private int longestRoad;
 	private int largestArmy;
 	
+	// Create a TurnTracker for a new game
+	public TurnTracker() {
+		this.status= GameStatus.FirstRound;
+		this.currentTurn = 0;
+		this.longestRoad = -1;
+		this.largestArmy = -1;
+	}
+	
 	public GameStatus getStatus() {
 		return status;
 	}
