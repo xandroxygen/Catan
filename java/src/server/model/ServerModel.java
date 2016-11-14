@@ -501,10 +501,14 @@ public class ServerModel {
      * @return int playerId of new user
      */
     public int registerUser(String username, String password) {
-//        if(users.get(username) == null){
-//
-//        }
-    	return -1;
+        for (User tempUser : users) {
+            if(tempUser.getUsername().equals(username)){
+                return -1;
+            }
+        }
+        //todo possibly needs to add ID (I am not sure)
+        users.add(new User(username, password));
+        return users.size() - 1;
     }
 
     /**
@@ -517,6 +521,12 @@ public class ServerModel {
      * @return true if login succeeded false if incorrect username/password were given
      */
     public boolean login(String username, String password){
+        for (User tempUser : users) {
+            if(tempUser.getUsername().equals(username) && tempUser.getPassword().equals(password)){
+                tempUser.setLoggedIn(true);
+                return true;
+            }
+        }
         return false;
     }
 }
