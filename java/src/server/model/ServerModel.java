@@ -17,7 +17,13 @@ import java.util.HashMap;
 public class ServerModel {
     private HashMap<String, User> users;
     private ArrayList<ServerGame> games;
-    
+
+    public ServerModel() {
+        users = new HashMap<>();
+        games = new ArrayList<>();
+    }
+    private ArrayList<ServerGame> games;
+
     /**
      * Checks whether the player can place a city.
      * @param playerId the ID of the player who is requesting the move
@@ -446,10 +452,11 @@ public class ServerModel {
      *      adds a new game to the list of games
      * 		</pre>
      */
-    public void createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName) {
+    public ServerGame createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName) {
     	int id = games.size()+1;
     	ServerGame game = new ServerGame(randomTiles,randomNumbers,randomPorts,gameName,id);
     	games.set(id,game);
+        return game;
     }
     
     /**
@@ -494,8 +501,8 @@ public class ServerModel {
      * @param password The password of the new User
      * @return int playerId of new user
      */
-    public int registerUser(String username, String password) { 
-    	return -1; 
+    public int registerUser(String username, String password) {
+    	return -1;
     }
 
     /**

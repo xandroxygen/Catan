@@ -114,7 +114,8 @@ public abstract class BaseHandler implements HttpHandler {
 	private void decodeCookies() throws UnsupportedEncodingException {
 		if (playerCookie != null) {
 			String decodedCookie = URLDecoder.decode(playerCookie, "UTF-8");
-			decodedCookie = decodedCookie.substring(12);
+			String[] parts = decodedCookie.split("=");
+			decodedCookie = parts[1];
 			JsonObject jsonCookie = new JsonParser().parse(decodedCookie).getAsJsonObject();
 
 			String u = jsonCookie.get("name").getAsString();

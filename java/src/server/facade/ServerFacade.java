@@ -2,6 +2,7 @@ package server.facade;
 
 import java.util.HashMap;
 
+import server.model.ServerGame;
 import server.model.ServerModel;
 import shared.model.InvalidActionException;
 import shared.definitions.CatanColor;
@@ -41,9 +42,9 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public String gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
+	public ServerGame gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
 			throws InvalidActionException {
-		model.createGame(randomTiles, randomNumbers, randomPorts, name);
+		return model.createGame(randomTiles, randomNumbers, randomPorts, name);
 		
 		//TODO: what will be returned here?
 		/* 
@@ -59,7 +60,6 @@ public class ServerFacade implements IServerFacade {
 			 ]
 		  } 
 		 */
-		return null;
 	}
 
 	@Override

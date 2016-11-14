@@ -1,8 +1,8 @@
 package server.facade;
 
 import java.util.HashMap;
-import java.util.Map;
 
+import server.model.ServerGame;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -32,7 +32,7 @@ public class MockServerFacade implements IServerFacade{
 	}
 
 	@Override
-	public String gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
+	public ServerGame gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
 			throws InvalidActionException {
 		// TODO Auto-generated method stub
 		return null;
