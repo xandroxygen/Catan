@@ -16,6 +16,7 @@ import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Bank;
 import shared.model.Game;
+import shared.model.GameStatus;
 import shared.model.Hex;
 import shared.model.Map;
 import shared.model.Player;
@@ -272,7 +273,14 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      * @param rollValue the value that was rolled
 	 */
-    public void rollDice(int playerID,  int rollValue){}
+    public void rollDice(int playerID,  int rollValue) {
+    	if (rollValue == 7) {
+    		getTurnTracker().setStatus(GameStatus.Robbing);
+    	}
+    	else {
+    		getTurnTracker().setStatus(GameStatus.Playing);
+    	}
+    }
 
     /**
      * Sends a chat message.

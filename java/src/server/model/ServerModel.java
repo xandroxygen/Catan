@@ -449,7 +449,7 @@ public class ServerModel {
     public void createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName) {
     	int id = games.size()+1;
     	ServerGame game = new ServerGame(randomTiles,randomNumbers,randomPorts,gameName,id);
-    	games.put(id,game);
+    	games.set(id,game);
     }
     
     /**
