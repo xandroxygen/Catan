@@ -12,6 +12,10 @@ public class Robber {
 		location = new HexLocation(x,y);
 	}
 
+	public Robber() {
+		location = new HexLocation(0,-2);
+	}
+
 	public HexLocation getLocation() {
 		return location;
 	}

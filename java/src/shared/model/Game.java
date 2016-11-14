@@ -376,6 +376,11 @@ public class Game {
 		playerList = new ArrayList<>();
 	}
 	
+	public void initLogs() {
+		chat = new ArrayList<>();
+		log = new ArrayList<>();
+	}
+	
 	public void addPlayer(Player p) {
 		playerList.add(p);
 	}

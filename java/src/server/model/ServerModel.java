@@ -22,7 +22,6 @@ public class ServerModel {
         users = new HashMap<>();
         games = new ArrayList<>();
     }
-    private ArrayList<ServerGame> games;
 
     /**
      * Checks whether the player can place a city.
@@ -453,9 +452,9 @@ public class ServerModel {
      * 		</pre>
      */
     public ServerGame createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName) {
-    	int id = games.size()+1;
+    	int id = games.size();
     	ServerGame game = new ServerGame(randomTiles,randomNumbers,randomPorts,gameName,id);
-    	games.set(id,game);
+    	games.add(id,game);
         return game;
     }
     

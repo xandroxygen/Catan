@@ -21,6 +21,7 @@ import shared.model.Hex;
 import shared.model.Map;
 import shared.model.Player;
 import shared.model.Port;
+import shared.model.Robber;
 import shared.model.TurnTracker;
 
 /**
@@ -49,10 +50,16 @@ public class ServerGame extends Game {
     	// Set player list to initially be empty
     	this.initPlayerList();
     	
+    	// Set Robber
+    	this.getTheMap().setRobber(new Robber());
+    	
+    	// Initialize Logs
+    	this.initLogs();
+    	
     	// Set winner and version
-    	// TODO: Should the version start at 0 or 1?
     	this.setWinner(-1);
     	this.setVersion(0);
+    	
 	}
 
 	public String getGameName() {
