@@ -2,6 +2,7 @@ package server.http.handlers.user;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import server.command.user.RegisterCommand;
 import server.facade.IServerFacade;
 import server.http.UserInfo;
 import server.http.requests.user.UserRequest;
@@ -34,12 +35,14 @@ public class RegisterHandler extends BaseHandler {
 	public String respondToRequest(HttpExchange exchange) throws Exception {
 		UserRequest request = new Gson().fromJson(this.body, UserRequest.class);
 
+		// do command here with username, password
+
 		this.user = new UserInfo();
 		user.setUsername(request.getUsername());
 		user.setPassword(request.getPassword());
-		user.setPlayerID(0);
+		user.setPlayerID(0); // will be set with playerID from server.
 
-		return "Your request was accepted but nothing was done about it. This was your username: " + request.getUsername();
+		return "Success";
 	}
 
 }
