@@ -15,11 +15,11 @@ import java.util.HashMap;
  * ServerModel class
  */
 public class ServerModel {
-    private HashMap<String, User> users;
+    private ArrayList<User> users;
     private ArrayList<ServerGame> games;
 
     public ServerModel() {
-        users = new HashMap<>();
+        users = new ArrayList<>();
         games = new ArrayList<>();
     }
 
@@ -501,6 +501,9 @@ public class ServerModel {
      * @return int playerId of new user
      */
     public int registerUser(String username, String password) {
+//        if(users.get(username) == null){
+//
+//        }
     	return -1;
     }
 
