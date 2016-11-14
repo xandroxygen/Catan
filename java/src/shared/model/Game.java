@@ -355,6 +355,30 @@ public class Game {
 	public Map getTheMap() {
 		return theMap;
 	}
+	
+	public void setMap(Map map) {
+		this.theMap = map;
+	}
+	
+	public void setWinner(int i) {
+		this.winner = i;
+	}
+	
+	public void setBank(Bank bank) {
+		this.bank = bank;
+	}
+	
+	public void setTurnTracker(TurnTracker t) {
+		this.turnTracker = t;
+	}
+	
+	public void initPlayerList() {
+		playerList = new ArrayList<>();
+	}
+	
+	public void addPlayer(Player p) {
+		playerList.add(p);
+	}
 
 	public Bank getBank() {
 		return bank;

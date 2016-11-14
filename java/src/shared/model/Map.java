@@ -97,6 +97,16 @@ public class Map {
 		}
 	}
 
+	// Construct a new Map from scratch
+	public Map(java.util.Map<HexLocation, Hex> hexes, java.util.Map<EdgeLocation, Port> finalPorts) {
+		this.hexes = (HashMap<HexLocation, Hex>) hexes;
+		this.ports = (HashMap<EdgeLocation, Port>) finalPorts;
+		cities = new HashMap<>();
+		settlements = new HashMap<>();
+		roads = new HashMap<>();
+		radius = 3;
+	}
+
 	public boolean hasCityAtLocation(VertexLocation location) {
 		return cities.get(location) != null;
 	}

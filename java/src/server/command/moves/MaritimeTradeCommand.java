@@ -41,8 +41,7 @@ public class MaritimeTradeCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException{
-		//return this.getFacade().maritimeTrade(this.getGameID(), playerID, ratio, inputResource, outputResource);		
-		return null;
+		return this.getFacade().maritimeTrade(this.getGameID(), playerID, ratio, inputResource, outputResource);
 	}
 
 }

@@ -20,10 +20,10 @@ public class BuildSettlementCommand extends Command {
 	 */
 	private VertexLocation settlementLocation;
 	
-	public BuildSettlementCommand(IServerFacade facade, int gameID, int playerID, VertexLocation vertexLoc, boolean isFree) {
+	public BuildSettlementCommand(IServerFacade facade, int gameID, int playerID, VertexLocation settlementLoc, boolean isFree) {
 		super(gameID, facade);
 		this.playerID = playerID;
-		this.settlementLocation = vertexLoc;
+		this.settlementLocation = settlementLoc;
 		this.isFree = isFree;
 	}
 

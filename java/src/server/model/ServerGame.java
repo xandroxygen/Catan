@@ -1,54 +1,60 @@
 package server.model;
 
-import shared.definitions.PieceType;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.concurrent.ThreadLocalRandom;
+
+import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
+import shared.definitions.HexType;
+import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
+import shared.locations.EdgeDirection;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.model.Bank;
 import shared.model.Game;
+import shared.model.Hex;
+import shared.model.Map;
 import shared.model.Player;
-
-import java.util.HashMap;
-import java.util.Map;
+import shared.model.Port;
+import shared.model.TurnTracker;
 
 /**
  * ServerModelFacade
  */
 public class ServerGame extends Game {
+	
+	private String gameName;
+	private int gameId;
 
-    public ServerGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName) {
-		// Create a new game
+    public ServerGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName, int id) {
     	
-    	if (randomTiles) {
-    		
-    	}
-    	// DEFAULT TILES
-    	else {
-    		
-    	}
+    	// Create a new Map
+    	this.setMap(this.createMap(randomTiles,randomNumbers,randomPorts));
     	
-    	if (randomNumbers) {
-    		
-    	}
-    	// DEFAULT Numbers
-    	else {
-    		
-    	}
+    	// Set name and id
+    	this.gameName = gameName;
+    	this.gameId = id;
     	
-    	if (randomPorts) {
-    		
-    	}
-    	// DEFAULT Numbers
-    	else {
-    		
-    	}
+    	// Create a Bank
+    	this.setBank(new Bank());
     	
+    	// Create a Turn Tracker
+    	this.setTurnTracker(new TurnTracker());
     	
+    	// Set player list to initially be empty
+    	this.initPlayerList();
     	
+    	// Set winner and version
+    	// TODO: Should the version start at 0 or 1?
+    	this.setWinner(-1);
+    	this.setVersion(0);
 	}
 
-    /**
+	/**
      * Places a City in the Game for the player specified in the given playerID, at the given location.
      * @pre It's your turn, The city location is where you currently have a settlement, You have the required resources (2 wheat, 3 ore; 1 city)
      * @post You lost the resources required to build a city (2 wheat, 3 ore, 1 city), The city is on the map at the specified location, You got a settlement back on the desired location
@@ -78,10 +84,15 @@ public class ServerGame extends Game {
     	int index = getPlayerIndex(playerID);
     	// Add to the Map
     	getTheMap().addSettlement(playerID,location);
-    	// Adjust the player and bank resources
-    	getBank().purchaseRoad(getPlayerList().get(index));
-    	// Adjust player piece inventory
-    	getPlayerList().get(index).addToPlayerPieces(PieceType.SETTLEMENT, -1);
+    	if (!free) {
+	    	// Adjust the player and bank resources
+	    	getBank().purchaseRoad(getPlayerList().get(index));
+	    	// Adjust player piece inventory
+	    	getPlayerList().get(index).addToPlayerPieces(PieceType.SETTLEMENT, -1);
+    	}
+    	if (getTheMap().getSettlements().size() == 4 || getTheMap().getSettlements().size() == 8) {
+    		getTurnTracker().nextStatus();
+    	}
     }
 
     /**
@@ -96,10 +107,12 @@ public class ServerGame extends Game {
     	int index = getPlayerIndex(playerID);
     	// Add to the Map
     	getTheMap().addRoad(playerID,location);
-    	// Adjust the player and bank resources
-    	getBank().purchaseRoad(getPlayerList().get(index));
-    	// Adjust player piece inventory
-    	getPlayerList().get(index).addToPlayerPieces(PieceType.ROAD, -1);
+    	if (!free) {
+	    	// Adjust the player and bank resources
+	    	getBank().purchaseRoad(getPlayerList().get(index));
+	    	// Adjust player piece inventory
+	    	getPlayerList().get(index).addToPlayerPieces(PieceType.ROAD, -1);
+    	}
     }
 
     /**
@@ -110,7 +123,7 @@ public class ServerGame extends Game {
      */
     public void buyDevelopmentCard(int playerID){
         int totalNumOfDevCards = 0;
-        for(Map.Entry<DevCardType, Integer> tempDevCard : getBank().getDevelopmentCards().entrySet()) {
+        for(java.util.Map.Entry<DevCardType, Integer> tempDevCard : getBank().getDevelopmentCards().entrySet()) {
             totalNumOfDevCards += tempDevCard.getValue();
         }
         // TODO: 11/7/2016 finish method
@@ -286,13 +299,24 @@ public class ServerGame extends Game {
      * Accept the TradeOffer currently on the table.
      * @param playerID the ID of the player who is requesting the move
      */
-    public void makeMaritimeTrade(int playerID){}
+    public void makeMaritimeTrade(int playerID, int ratio, ResourceType inputResource, ResourceType outputResource) {
+    	int index = getPlayerIndex(playerID);
+    	// Adjust the player and bank resources
+    	getBank().addToResourceDeck(inputResource, ratio);
+    	// Adjust player piece inventory
+    	getPlayerList().get(index).addToResourceHand(outputResource, 1);
+    	getPlayerList().get(index).addToResourceHand(inputResource, -ratio);
+    }
 
     /**
      * Adds a player to the game.
      * @param playerID the ID of the player who is requesting the move
      */
-    public void addPlayer(int playerID){}
+    public void addPlayer(int playerID, String username, CatanColor color) {
+    	if (getPlayerIndex(playerID) != -1) {
+    		this.addPlayer(new Player(playerID,username,color,getPlayerList().size()));
+    	}
+    }
 
     /**
      * Adds an computer player to the game.
@@ -380,4 +404,88 @@ public class ServerGame extends Game {
 	 * 		</pre>
 	 */
 	public void largestArmy() {}
+	
+	private Map createMap(boolean randomTiles, boolean randomNumbers, boolean randomPorts) {
+		ArrayList<Integer> numbers = new ArrayList<Integer>(
+    		    Arrays.asList(null,4,11,8,3,9,12,5,10,11,5,6,2,9,4,10,6,3,8));
+    	// BRICK, WOOL, ORE, GRAIN, WOOD
+    	ArrayList<HexType> resources = new ArrayList<HexType>(
+    		    Arrays.asList(null,HexType.BRICK,HexType.WOOD,HexType.BRICK,HexType.WOOD,
+    		    		HexType.ORE,HexType.SHEEP,HexType.ORE,HexType.SHEEP,
+    		    		HexType.WHEAT,HexType.BRICK,HexType.WHEAT,HexType.WHEAT,
+    		    		HexType.SHEEP,HexType.WOOD,HexType.SHEEP,HexType.WOOD,
+    		    		HexType.ORE,HexType.WHEAT));
+    	
+    	ArrayList<HexLocation> locations = new ArrayList<HexLocation>(
+    		    Arrays.asList(new HexLocation(0,-2),new HexLocation(1,-2),new HexLocation(2,-2),new HexLocation(-1,-1),new HexLocation(0,-1),
+    		    		new HexLocation(1,-1),new HexLocation(2,-1),new HexLocation(-2,0),new HexLocation(-1,0),new HexLocation(0,0),
+    		    		new HexLocation(1,0),new HexLocation(2,0),new HexLocation(-2,1),new HexLocation(-1,1),new HexLocation(0,1),
+    		    		new HexLocation(1,1),new HexLocation(-2,2),new HexLocation(-1,2),new HexLocation(0,2)));
+    	
+    	ArrayList<EdgeLocation> portLocations = new ArrayList<EdgeLocation>(
+    			Arrays.asList(new EdgeLocation(new HexLocation(-2,3),EdgeDirection.NorthEast),
+    					new EdgeLocation(new HexLocation(-3,0),EdgeDirection.SouthEast),
+    					new EdgeLocation(new HexLocation(-3,2),EdgeDirection.NorthEast),
+    					new EdgeLocation(new HexLocation(3,-1),EdgeDirection.NorthWest),
+    					new EdgeLocation(new HexLocation(2,1),EdgeDirection.NorthWest),
+    					new EdgeLocation(new HexLocation(3,-3),EdgeDirection.SouthWest),
+    					new EdgeLocation(new HexLocation(1,-3),EdgeDirection.South),
+    					new EdgeLocation(new HexLocation(-1,-2),EdgeDirection.South),
+    					new EdgeLocation(new HexLocation(0,3),EdgeDirection.North)));
+    	
+    	ArrayList<Port> ports = new ArrayList<Port>(
+    			Arrays.asList(new Port(2,ResourceType.BRICK),new Port(3,null),new Port(2,ResourceType.WOOD),
+    					new Port(2,ResourceType.SHEEP),new Port(3,null),new Port(3,null),
+    					new Port(2,ResourceType.ORE),new Port(2,ResourceType.WHEAT),new Port(3,null)));
+    			
+
+		java.util.Map<HexLocation,Hex> hexes = new HashMap<>();
+		while (!locations.isEmpty()) {
+			Hex hex = null;
+			HexType type = resources.get(0);
+			HexLocation location = locations.get(0);
+			int number = numbers.get(0);
+			
+			// If random tiles, tke from list then remove it
+			if (randomTiles) {
+				int locIndex = ThreadLocalRandom.current().nextInt(0, locations.size() + 1);
+				location = locations.get(locIndex);
+			}
+			
+			// If random numbers, get number from a list then remove it
+			if (randomNumbers) {
+				int numIndex = ThreadLocalRandom.current().nextInt(0, numbers.size() + 1);
+				number = numbers.get(numIndex);
+				hex = new Hex(type,location,number);
+				numbers.remove(Integer.valueOf(number));
+			}
+			
+			// Else create hexes with default values
+			else {
+				hex = new Hex(type,location,number);
+				numbers.remove(Integer.valueOf(number));
+			}
+			hexes.put(hex.getLocation(),hex);
+			resources.remove(type);
+			locations.remove(location);
+    	}
+    	
+		java.util.Map<EdgeLocation,Port> finalPorts = new HashMap<>();
+    	for (Port port: ports) {
+    		EdgeLocation loc = portLocations.get(0);
+    		if (randomPorts) {
+    			int index = ThreadLocalRandom.current().nextInt(0, portLocations.size() + 1);
+    			loc = portLocations.get(index);
+    			port.setLocation(loc);
+    		}
+    		else {
+    			port.setLocation(loc);
+    		}
+    		finalPorts.put(loc.getNormalizedLocation(), port);
+    		portLocations.remove(loc);
+    	}
+    	
+    	return new Map(hexes,finalPorts);
+	}
+	
 }
