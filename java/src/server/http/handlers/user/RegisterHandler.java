@@ -7,6 +7,7 @@ import server.facade.IServerFacade;
 import server.http.UserInfo;
 import server.http.requests.user.UserRequest;
 import server.http.handlers.BaseHandler;
+import shared.model.InvalidActionException;
 
 /**
  * Handles register requests.
@@ -35,12 +36,20 @@ public class RegisterHandler extends BaseHandler {
 	public String respondToRequest(HttpExchange exchange) throws Exception {
 		UserRequest request = new Gson().fromJson(this.body, UserRequest.class);
 
-		// do command here with username, password
+		int playerID;
+		try {
+			playerID = server.userRegister(request.getUsername(), request.getPassword());
+		}
+		catch (Exception e) {
+			this.responseCode = RESPONSE_FAIL;
+			return "Error";
+		}
 
+		// return catan.user cookie
 		this.user = new UserInfo();
 		user.setUsername(request.getUsername());
 		user.setPassword(request.getPassword());
-		user.setPlayerID(0); // will be set with playerID from server.
+		user.setPlayerID(playerID); // will be set with playerID from server.
 
 		return "Success";
 	}

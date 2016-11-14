@@ -36,7 +36,7 @@ public interface IServerFacade{
 	 * @param password Password that corresponds to the username of player logging in.
 	 * @throws InvalidActionException
 	 */
-	String userLogin(String username, String password) throws InvalidActionException;
+	int userLogin(String username, String password) throws InvalidActionException;
 	
 	/**
 	 * Creates a new user account and logs the caller into the server as the new user and sets
@@ -62,7 +62,7 @@ public interface IServerFacade{
 	 * @param password Password that corresponds to the username of new player being registered.
 	 * @throws InvalidActionException
 	 */
-	String userRegister(String username, String password) throws InvalidActionException;
+	int userRegister(String username, String password) throws InvalidActionException;
 	
 	/**
 	 * Returns information about all of the current games on the server.

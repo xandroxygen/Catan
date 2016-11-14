@@ -1,8 +1,13 @@
 package server.http.handlers.user;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 import server.facade.IServerFacade;
+import server.http.UserInfo;
 import server.http.handlers.BaseHandler;
+import server.http.requests.user.UserRequest;
+import shared.model.InvalidActionException;
 
 /**
  * Handles requests to login.
@@ -24,6 +29,21 @@ public class LoginHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
+		UserRequest request = new Gson().fromJson(this.body, UserRequest.class);
+
+		int playerID;
+		try {
+			playerID = server.userLogin(request.getUsername(), request.getPassword());
+		}
+		catch (InvalidActionException e) {
+			responseCode = RESPONSE_FAIL;
+			return "Error";
+		}
+
+		user = new UserInfo();
+		user.setUsername(request.getUsername());
+		user.setPassword(request.getPassword());
+		user.setPlayerID(playerID);
 		return null;
 	}
 }

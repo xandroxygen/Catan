@@ -23,7 +23,7 @@ public class TestTest {
 
     @Test
     public void importsClassAndShouldPass() {
-        Hex hex = new Hex();
+
         assertTrue(true);
     }
 }

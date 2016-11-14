@@ -20,9 +20,9 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public String userLogin(String username, String password) throws InvalidActionException {
+	public int userLogin(String username, String password) throws InvalidActionException {
 		if(model.login(username, password)) {
-			return "Success";
+			return 0; // TODO return playerID
 		}
 		else {
 			throw new InvalidActionException("Error");
@@ -30,10 +30,9 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public String userRegister(String username, String password) throws InvalidActionException {
+	public int userRegister(String username, String password) throws InvalidActionException {
 		//TODO: need a canDo here?
-		model.registerUser(username, password);
-		return "Success";
+		return model.registerUser(username, password);
 	}
 
 	@Override
@@ -191,7 +190,7 @@ public class ServerFacade implements IServerFacade {
 	public Object maritimeTrade(int gameID, int playerID, int ratio, ResourceType inputResource, ResourceType outputResource)
 			throws InvalidActionException {
 		if(model.canTradeWithBank(gameID, playerID, ratio, inputResource, outputResource)) {
-			model.makeMaritimeTrade(gameID, playerID);
+			model.makeMaritimeTrade(gameID, playerID, ratio, inputResource, outputResource);
 			//return a model
 			return null;
 		}

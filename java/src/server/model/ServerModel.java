@@ -357,7 +357,8 @@ public class ServerModel {
     /**
      * Adds a player to the game.
      * @param gameID the ID of the game from which the request was made.
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerId the ID of the player who is requesting the move
+     * @param color
      */
     public void addPlayer(int gameID, int playerId, CatanColor color){
     	User user = users.get(playerId);
@@ -490,8 +491,9 @@ public class ServerModel {
      * 		</pre>
      * @param username The username of the new User.
      * @param password The password of the new User
+     * @return int playerId of new user
      */
-    public void registerUser(String username, String password){}
+    public int registerUser(String username, String password){ return -1; }
 
     /**
      * Adds a new user to the game.
