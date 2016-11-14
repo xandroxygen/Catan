@@ -31,6 +31,90 @@ public class Player {
 	private int soldiers;
 	private int monuments;
 	private boolean discarded;
+	
+	public Player(JsonObject playerJSON) {
+		// Parse resources
+		resources = new HashMap<>();
+		JsonObject resourcesJSON = playerJSON.getAsJsonObject("resources");
+		resources.put(ResourceType.BRICK, resourcesJSON.get("brick").getAsInt());
+		resources.put(ResourceType.ORE, resourcesJSON.get("ore").getAsInt());
+		resources.put(ResourceType.SHEEP, resourcesJSON.get("sheep").getAsInt());
+		resources.put(ResourceType.WHEAT, resourcesJSON.get("wheat").getAsInt());
+		resources.put(ResourceType.WOOD, resourcesJSON.get("wood").getAsInt());
+
+		// Parse old dev cards
+		oldDevCards = new HashMap<>();
+		JsonObject oldDevCardsJSON = playerJSON.getAsJsonObject("oldDevCards");
+		oldDevCards.put(DevCardType.MONOPOLY, oldDevCardsJSON.get("monopoly").getAsInt());
+		oldDevCards.put(DevCardType.MONUMENT, oldDevCardsJSON.get("monument").getAsInt());
+		oldDevCards.put(DevCardType.ROAD_BUILD, oldDevCardsJSON.get("roadBuilding").getAsInt());
+		oldDevCards.put(DevCardType.SOLDIER, oldDevCardsJSON.get("soldier").getAsInt());
+		oldDevCards.put(DevCardType.YEAR_OF_PLENTY, oldDevCardsJSON.get("yearOfPlenty").getAsInt());
+
+		// Parse new dev cards
+		newDevCards = new HashMap<>();
+		JsonObject newDevCardsJSON = playerJSON.getAsJsonObject("newDevCards");
+		newDevCards.put(DevCardType.MONOPOLY, newDevCardsJSON.get("monopoly").getAsInt());
+		newDevCards.put(DevCardType.MONUMENT, newDevCardsJSON.get("monument").getAsInt());
+		newDevCards.put(DevCardType.ROAD_BUILD, newDevCardsJSON.get("roadBuilding").getAsInt());
+		newDevCards.put(DevCardType.SOLDIER, newDevCardsJSON.get("soldier").getAsInt());
+		newDevCards.put(DevCardType.YEAR_OF_PLENTY, newDevCardsJSON.get("yearOfPlenty").getAsInt());
+
+		// Parse all other variables
+		roads = playerJSON.get("roads").getAsInt();
+		cities = playerJSON.get("cities").getAsInt();
+		settlements = playerJSON.get("settlements").getAsInt();
+		soldiers = playerJSON.get("soldiers").getAsInt();
+		victoryPoints = playerJSON.get("victoryPoints").getAsInt();
+		monuments = playerJSON.get("monuments").getAsInt();
+		playedDevCard = playerJSON.get("playedDevCard").getAsBoolean();
+		discarded = playerJSON.get("discarded").getAsBoolean();
+		playerID = playerJSON.get("playerID").getAsInt();
+		playerIndex = playerJSON.get("playerIndex").getAsInt();
+		name = playerJSON.get("name").getAsString();
+		color = CatanColor.valueOf(playerJSON.get("color").getAsString().toUpperCase());
+
+	}
+	
+	// Create a new player for the game
+	public Player(int playerID, String username, CatanColor color, int index) {
+		// Init resources
+		resources = new HashMap<>();
+		resources.put(ResourceType.BRICK, 0);
+		resources.put(ResourceType.ORE, 0);
+		resources.put(ResourceType.SHEEP, 0);
+		resources.put(ResourceType.WHEAT, 0);
+		resources.put(ResourceType.WOOD, 0);
+		
+		// Init old dev cards
+		oldDevCards = new HashMap<>();
+		oldDevCards.put(DevCardType.MONOPOLY, 0);
+		oldDevCards.put(DevCardType.MONUMENT,0);
+		oldDevCards.put(DevCardType.ROAD_BUILD, 0);
+		oldDevCards.put(DevCardType.SOLDIER, 0);
+		oldDevCards.put(DevCardType.YEAR_OF_PLENTY, 0);
+
+		// Parse new dev cards
+		newDevCards = new HashMap<>();
+		newDevCards.put(DevCardType.MONOPOLY, 0);
+		newDevCards.put(DevCardType.MONUMENT, 0);
+		newDevCards.put(DevCardType.ROAD_BUILD, 0);
+		newDevCards.put(DevCardType.SOLDIER, 0);
+		newDevCards.put(DevCardType.YEAR_OF_PLENTY, 0);
+		
+		roads = 15;
+		cities = 4;
+		settlements = 5;
+		soldiers = 0;
+		victoryPoints = 0;
+		monuments = 0;
+		playedDevCard = false;
+		discarded = false;
+		this.playerID = playerID;
+		this.playerIndex = index;
+		this.name = username;
+		this.color = color;
+	}
 
 	public void setName(String name) {
 		this.name = name;
@@ -132,50 +216,6 @@ public class Player {
 		this.discarded = discarded;
 	}
 
-	Player(JsonObject playerJSON) {
-		// Parse resources
-		resources = new HashMap<>();
-		JsonObject resourcesJSON = playerJSON.getAsJsonObject("resources");
-		resources.put(ResourceType.BRICK, resourcesJSON.get("brick").getAsInt());
-		resources.put(ResourceType.ORE, resourcesJSON.get("ore").getAsInt());
-		resources.put(ResourceType.SHEEP, resourcesJSON.get("sheep").getAsInt());
-		resources.put(ResourceType.WHEAT, resourcesJSON.get("wheat").getAsInt());
-		resources.put(ResourceType.WOOD, resourcesJSON.get("wood").getAsInt());
-
-		// Parse old dev cards
-		oldDevCards = new HashMap<>();
-		JsonObject oldDevCardsJSON = playerJSON.getAsJsonObject("oldDevCards");
-		oldDevCards.put(DevCardType.MONOPOLY, oldDevCardsJSON.get("monopoly").getAsInt());
-		oldDevCards.put(DevCardType.MONUMENT, oldDevCardsJSON.get("monument").getAsInt());
-		oldDevCards.put(DevCardType.ROAD_BUILD, oldDevCardsJSON.get("roadBuilding").getAsInt());
-		oldDevCards.put(DevCardType.SOLDIER, oldDevCardsJSON.get("soldier").getAsInt());
-		oldDevCards.put(DevCardType.YEAR_OF_PLENTY, oldDevCardsJSON.get("yearOfPlenty").getAsInt());
-
-		// Parse new dev cards
-		newDevCards = new HashMap<>();
-		JsonObject newDevCardsJSON = playerJSON.getAsJsonObject("newDevCards");
-		newDevCards.put(DevCardType.MONOPOLY, newDevCardsJSON.get("monopoly").getAsInt());
-		newDevCards.put(DevCardType.MONUMENT, newDevCardsJSON.get("monument").getAsInt());
-		newDevCards.put(DevCardType.ROAD_BUILD, newDevCardsJSON.get("roadBuilding").getAsInt());
-		newDevCards.put(DevCardType.SOLDIER, newDevCardsJSON.get("soldier").getAsInt());
-		newDevCards.put(DevCardType.YEAR_OF_PLENTY, newDevCardsJSON.get("yearOfPlenty").getAsInt());
-
-		// Parse all other variables
-		roads = playerJSON.get("roads").getAsInt();
-		cities = playerJSON.get("cities").getAsInt();
-		settlements = playerJSON.get("settlements").getAsInt();
-		soldiers = playerJSON.get("soldiers").getAsInt();
-		victoryPoints = playerJSON.get("victoryPoints").getAsInt();
-		monuments = playerJSON.get("monuments").getAsInt();
-		playedDevCard = playerJSON.get("playedDevCard").getAsBoolean();
-		discarded = playerJSON.get("discarded").getAsBoolean();
-		playerID = playerJSON.get("playerID").getAsInt();
-		playerIndex = playerJSON.get("playerIndex").getAsInt();
-		name = playerJSON.get("name").getAsString();
-		color = CatanColor.valueOf(playerJSON.get("color").getAsString().toUpperCase());
-
-	}
-	
 	/**
 	 * Checks whether the player can place a city.
 	 * @pre It's your turn, The city location is where you currently have a settlement, You have the required resources (2 wheat, 3 ore; 1 city)

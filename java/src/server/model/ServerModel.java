@@ -1,6 +1,7 @@
 package server.model;
 
 import client.admin.User;
+import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
@@ -349,8 +350,8 @@ public class ServerModel {
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move
      */
-    public void makeMaritimeTrade(int gameID, int playerID){
-        games.get(gameID).makeMaritimeTrade(playerID);
+    public void makeMaritimeTrade(int gameID, int playerID, int ratio, ResourceType inputResource, ResourceType outputResource) {
+        games.get(gameID).makeMaritimeTrade(playerID,ratio,inputResource,outputResource);
     }
 
     /**
@@ -358,8 +359,9 @@ public class ServerModel {
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move
      */
-    public void addPlayer(int gameID, int playerID){
-        games.get(gameID).addPlayer(playerID);
+    public void addPlayer(int gameID, int playerId, CatanColor color){
+    	User user = users.get(playerId);
+        games.get(gameID).addPlayer(playerId,user.getUsername(),color);
     }
 
     /**
@@ -446,6 +448,24 @@ public class ServerModel {
     	int id = games.size()+1;
     	ServerGame game = new ServerGame(randomTiles,randomNumbers,randomPorts,gameName,id);
     	games.put(id,game);
+    }
+    
+    /**
+     * Joins the user into specified game
+     * @pre <pre>
+     * 		Player is logged in
+     * 		Player is already in game or there is room left in the game
+     * 		The game id is valid
+     * 		The color is valid
+     * 		</pre>
+     * @post <pre>
+     * 		Returns 200
+     * 		Player is now in game
+     * 		Server responds with Set-cookie header
+     */
+    public void join(int playerId, int gameId, CatanColor color) {
+    	User user = users.get(playerId);
+        games.get(gameId).addPlayer(playerId,user.getUsername(),color);
     }
 
     /**

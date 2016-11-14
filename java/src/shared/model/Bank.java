@@ -99,42 +99,38 @@ public class Bank {
 	public void purchaseCity(Player player) {
 		// Subtract from player and add to bank resources
 		player.addToResourceHand(ResourceType.WHEAT, -2);
-		int count = resourceDeck.containsKey(ResourceType.WHEAT) ? resourceDeck.get(ResourceType.WHEAT) : 0;
-		resourceDeck.put(ResourceType.WHEAT, count + 2);
+		addToResourceDeck(ResourceType.WHEAT,2);
 		
 		player.addToResourceHand(ResourceType.ORE, -3);
-		int count2 = resourceDeck.containsKey(ResourceType.ORE) ? resourceDeck.get(ResourceType.ORE) : 0;
-		resourceDeck.put(ResourceType.ORE, count2 + 3);
+		addToResourceDeck(ResourceType.ORE, 3);
 	}
 	
 	public void purchaseRoad(Player player) {
 		// Subtract from player and add to bank resources
 		player.addToResourceHand(ResourceType.WOOD, -1);
-		int count = resourceDeck.containsKey(ResourceType.WOOD) ? resourceDeck.get(ResourceType.WOOD) : 0;
-		resourceDeck.put(ResourceType.WOOD, count + 1);
+		addToResourceDeck(ResourceType.WOOD, 1);
 		
 		player.addToResourceHand(ResourceType.BRICK, -1);
-		int count2 = resourceDeck.containsKey(ResourceType.BRICK) ? resourceDeck.get(ResourceType.BRICK) : 0;
-		resourceDeck.put(ResourceType.BRICK, count2 + 1);
+		addToResourceDeck(ResourceType.BRICK, 1);
 	}
 	
 	public void purchaseSettlement(Player player) {
-		//(1 wood, 1 brick, 1 wheat, 1 sheep; 1 settlement)
 		// Subtract from player and add to bank resources
 		player.addToResourceHand(ResourceType.WOOD, -1);
-		int count = resourceDeck.containsKey(ResourceType.WOOD) ? resourceDeck.get(ResourceType.WOOD) : 0;
-		resourceDeck.put(ResourceType.WOOD, count + 1);
+		addToResourceDeck(ResourceType.WOOD,1);
 		
 		player.addToResourceHand(ResourceType.BRICK, -1);
-		int count2 = resourceDeck.containsKey(ResourceType.BRICK) ? resourceDeck.get(ResourceType.BRICK) : 0;
-		resourceDeck.put(ResourceType.BRICK, count2 + 1);
+		addToResourceDeck(ResourceType.BRICK,1);
 		
 		player.addToResourceHand(ResourceType.WHEAT, -1);
-		int count3 = resourceDeck.containsKey(ResourceType.WHEAT) ? resourceDeck.get(ResourceType.WHEAT) : 0;
-		resourceDeck.put(ResourceType.WHEAT, count3 + 1);
+		addToResourceDeck(ResourceType.WHEAT,1);
 		
 		player.addToResourceHand(ResourceType.SHEEP, -1);
-		int count4 = resourceDeck.containsKey(ResourceType.SHEEP) ? resourceDeck.get(ResourceType.SHEEP) : 0;
-		resourceDeck.put(ResourceType.SHEEP, count4 + 1);
+		addToResourceDeck(ResourceType.SHEEP,1);
+	}
+	
+	public void addToResourceDeck(ResourceType type, int value) {
+		int count = resourceDeck.containsKey(type) ? resourceDeck.get(type) : 0;
+		resourceDeck.put(type, count + value);
 	}
 }

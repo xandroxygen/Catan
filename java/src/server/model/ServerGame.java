@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
+import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.HexType;
 import shared.definitions.PieceType;
@@ -291,13 +292,24 @@ public class ServerGame extends Game {
      * Accept the TradeOffer currently on the table.
      * @param playerID the ID of the player who is requesting the move
      */
-    public void makeMaritimeTrade(int playerID){}
+    public void makeMaritimeTrade(int playerID, int ratio, ResourceType inputResource, ResourceType outputResource) {
+    	int index = getPlayerIndex(playerID);
+    	// Adjust the player and bank resources
+    	getBank().addToResourceDeck(inputResource, ratio);
+    	// Adjust player piece inventory
+    	getPlayerList().get(index).addToResourceHand(outputResource, 1);
+    	getPlayerList().get(index).addToResourceHand(inputResource, -ratio);
+    }
 
     /**
      * Adds a player to the game.
      * @param playerID the ID of the player who is requesting the move
      */
-    public void addPlayer(int playerID){}
+    public void addPlayer(int playerID, String username, CatanColor color) {
+    	if (getPlayerIndex(playerID) != -1) {
+    		this.addPlayer(new Player(playerID,username,color,getPlayerList().size()));
+    	}
+    }
 
     /**
      * Adds an computer player to the game.
