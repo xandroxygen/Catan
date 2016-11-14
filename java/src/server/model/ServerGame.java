@@ -84,10 +84,15 @@ public class ServerGame extends Game {
     	int index = getPlayerIndex(playerID);
     	// Add to the Map
     	getTheMap().addSettlement(playerID,location);
-    	// Adjust the player and bank resources
-    	getBank().purchaseRoad(getPlayerList().get(index));
-    	// Adjust player piece inventory
-    	getPlayerList().get(index).addToPlayerPieces(PieceType.SETTLEMENT, -1);
+    	if (!free) {
+	    	// Adjust the player and bank resources
+	    	getBank().purchaseRoad(getPlayerList().get(index));
+	    	// Adjust player piece inventory
+	    	getPlayerList().get(index).addToPlayerPieces(PieceType.SETTLEMENT, -1);
+    	}
+    	if (getTheMap().getSettlements().size() == 4 || getTheMap().getSettlements().size() == 8) {
+    		getTurnTracker().nextStatus();
+    	}
     }
 
     /**
@@ -102,10 +107,12 @@ public class ServerGame extends Game {
     	int index = getPlayerIndex(playerID);
     	// Add to the Map
     	getTheMap().addRoad(playerID,location);
-    	// Adjust the player and bank resources
-    	getBank().purchaseRoad(getPlayerList().get(index));
-    	// Adjust player piece inventory
-    	getPlayerList().get(index).addToPlayerPieces(PieceType.ROAD, -1);
+    	if (!free) {
+	    	// Adjust the player and bank resources
+	    	getBank().purchaseRoad(getPlayerList().get(index));
+	    	// Adjust player piece inventory
+	    	getPlayerList().get(index).addToPlayerPieces(PieceType.ROAD, -1);
+    	}
     }
 
     /**

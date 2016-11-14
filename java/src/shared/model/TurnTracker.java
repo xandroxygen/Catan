@@ -42,4 +42,21 @@ public class TurnTracker {
 	public void setLargestArmy(int largestArmy) {
 		this.largestArmy = largestArmy;
 	}
+
+	public void nextStatus() {
+		switch (status) {
+		case FirstRound:
+			status = GameStatus.SecondRound;
+			break;
+		case SecondRound:
+			status = GameStatus.Rolling;
+			break;
+		case Rolling:
+			status = GameStatus.Rolling;
+			break;
+		default:
+			break;
+		}
+		
+	}
 }
