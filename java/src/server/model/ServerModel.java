@@ -16,6 +16,11 @@ import java.util.HashMap;
 public class ServerModel {
     private HashMap<String, User> users;
     private HashMap<Integer, ServerGame> games;
+
+    public ServerModel() {
+        users = new HashMap<>();
+        games = new HashMap<>();
+    }
     
     /**
      * Checks whether the player can place a city.
@@ -445,10 +450,11 @@ public class ServerModel {
      *      adds a new game to the list of games
      * 		</pre>
      */
-    public void createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName) {
+    public ServerGame createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName) {
     	int id = games.size()+1;
     	ServerGame game = new ServerGame(randomTiles,randomNumbers,randomPorts,gameName,id);
     	games.put(id,game);
+        return game;
     }
     
     /**

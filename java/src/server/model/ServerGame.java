@@ -54,6 +54,14 @@ public class ServerGame extends Game {
     	this.setVersion(0);
 	}
 
+	public String getGameName() {
+		return gameName;
+	}
+
+	public int getGameId() {
+		return gameId;
+	}
+
 	/**
      * Places a City in the Game for the player specified in the given playerID, at the given location.
      * @pre It's your turn, The city location is where you currently have a settlement, You have the required resources (2 wheat, 3 ore; 1 city)
@@ -407,7 +415,7 @@ public class ServerGame extends Game {
 	
 	private Map createMap(boolean randomTiles, boolean randomNumbers, boolean randomPorts) {
 		ArrayList<Integer> numbers = new ArrayList<Integer>(
-    		    Arrays.asList(null,4,11,8,3,9,12,5,10,11,5,6,2,9,4,10,6,3,8));
+    		    Arrays.asList(0,4,11,8,3,9,12,5,10,11,5,6,2,9,4,10,6,3,8));
     	// BRICK, WOOL, ORE, GRAIN, WOOD
     	ArrayList<HexType> resources = new ArrayList<HexType>(
     		    Arrays.asList(null,HexType.BRICK,HexType.WOOD,HexType.BRICK,HexType.WOOD,

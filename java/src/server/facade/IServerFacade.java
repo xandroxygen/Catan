@@ -1,5 +1,6 @@
 package server.facade;
 
+import server.model.ServerGame;
 import shared.model.Game;
 import shared.model.InvalidActionException;
 import shared.definitions.CatanColor;
@@ -9,7 +10,6 @@ import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public interface IServerFacade{
 
@@ -100,10 +100,10 @@ public interface IServerFacade{
      * @param randomTiles true if the tiles should be randomized, false if they should be preset
      * @param randomNumbers true if the numbers should be randomized, false if they should be preset
      * @param randomPorts true if the ports should be randomized, false if they should be preset
-	 * @return 
+	 * @return
 	 * @throws InvalidActionException 
 	 */
-	String gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws InvalidActionException;
+	ServerGame gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws InvalidActionException;
 	
 	/**
 	 * Adds the player to the specified game and sets their catan.game cookie.
