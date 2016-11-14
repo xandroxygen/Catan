@@ -5,6 +5,7 @@ import server.command.moves.BuyDevCardCommand;
 import server.facade.IServerFacade;
 import server.facade.ServerFacade;
 import server.http.handlers.ExampleHandler;
+import server.http.handlers.SwaggerHandler;
 import server.http.handlers.game.AddAIHandler;
 import server.http.handlers.game.ListAIHandler;
 import server.http.handlers.game.ModelHandler;
@@ -30,12 +31,15 @@ public class CatanServer {
 
 		IServerFacade facade = new ServerFacade();
 
-		HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8082), 0);
+		HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8081), 0);
 
 		// --- ENDPOINTS ---
 
 		// -- SWAGGER --
-		server.createContext("/", 						new ExampleHandler("Catan is online"));
+		//server.createContext("/", 						new ExampleHandler("Catan is online"));
+		server.createContext("/docs/api/data", 			new SwaggerHandler.JSONAppender(""));
+		server.createContext("/docs/api/view", 			new SwaggerHandler.BasicFile(""));
+
 
 		// -- NON-MOVE OPERATIONS
 		server.createContext("/user/login", 			new LoginHandler(facade));
