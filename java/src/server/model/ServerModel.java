@@ -8,6 +8,7 @@ import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -15,7 +16,7 @@ import java.util.HashMap;
  */
 public class ServerModel {
     private HashMap<String, User> users;
-    private HashMap<Integer, ServerGame> games;
+    private ArrayList<ServerGame> games;
     
     /**
      * Checks whether the player can place a city.
@@ -493,7 +494,9 @@ public class ServerModel {
      * @param password The password of the new User
      * @return int playerId of new user
      */
-    public int registerUser(String username, String password){ return -1; }
+    public int registerUser(String username, String password) { 
+    	return -1; 
+    }
 
     /**
      * Adds a new user to the game.
