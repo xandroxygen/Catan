@@ -415,7 +415,8 @@ public class ServerGame extends Game {
      * 		</pre>
      */
     public String[] listAIPlayers(){
-        return null;
+		String[] types = { "LONGEST_ARMY" };
+		return types;
     }
 
     /**

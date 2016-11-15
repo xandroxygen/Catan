@@ -22,7 +22,6 @@ public class ServerModel {
         users = new ArrayList<>();
         games = new ArrayList<>();
     }
-
     /**
      * Checks whether the player can place a city.
      * @param playerId the ID of the player who is requesting the move
@@ -436,10 +435,9 @@ public class ServerModel {
      * * @post <pre>
      *      If there are AI players it will return an array of their corresponding types
      * 		</pre>
-     * @param gameID the ID of the game from which the request was made.
      */
-    public String[] listAIPlayers(int gameID){
-        return games.get(gameID).listAIPlayers();
+    public String[] listAIPlayers(){
+        return new String[]{"LARGEST_ARMY"};
     }
 
     /**
@@ -482,8 +480,8 @@ public class ServerModel {
      *      Returns an array of all of the games
      * 		</pre>
      */
-    public Game[] listGames(){
-        return null;
+    public ArrayList<ServerGame> listGames(){
+        return games;
     }
 
 
