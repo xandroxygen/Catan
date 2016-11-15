@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
+import client.communication.LogEntry;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.HexType;
@@ -303,7 +304,15 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      * @param message the message the player wishes to send.
      */
-    public void sendMessage(int playerID, String message){}
+    public void sendMessage(int playerID, String message) {
+    	String name = "";
+    	for (Player p: getPlayerList()) {
+    		if (p.getPlayerID() == playerID) {
+    			name = p.getName();
+    		}
+    	}
+    	getChat().add(new LogEntry(name,message));
+    }
 
     /**
      * Make a trade offer to another player.
@@ -366,6 +375,10 @@ public class ServerGame extends Game {
      */
     public void finishTurn(){
         // TODO: 11/7/2016 be sure to include resetting played dev card to false
+    	getTurnTracker().nextTurn();
+    	for (Player p : getPlayerList()) {
+    		p.setPlayedDevCard(false);
+    	}
     }
 
     /**
