@@ -1,6 +1,7 @@
 package testing;
 
-import client.model.*;
+import client.model.Model;
+import shared.model.*;
 import client.server.MockServerProxy;
 import client.server.ServerPoller;
 import com.google.gson.JsonObject;
