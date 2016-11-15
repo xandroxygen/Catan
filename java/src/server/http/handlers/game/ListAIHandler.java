@@ -1,8 +1,10 @@
 package server.http.handlers.game;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import server.facade.IServerFacade;
 import server.http.handlers.BaseHandler;
+import shared.model.InvalidActionException;
 
 /**
  * Handles requests to /game/listAI
@@ -23,6 +25,14 @@ public class ListAIHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
-		return null;
+
+		try {
+			String[] types = server.gameListAI();
+			return (new Gson()).toJson(types);
+
+		} catch (InvalidActionException e) {
+			responseCode = RESPONSE_FAIL;
+			return "Invalid Request";
+		}
 	}
 }
