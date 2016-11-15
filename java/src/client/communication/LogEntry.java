@@ -17,11 +17,17 @@ public class LogEntry
 	 * Message text
 	 */
 	private String message;
+	private String username = "";
 	
 	public LogEntry(CatanColor color, String message)
 	{
 		this.color = color;
 		this.message = message;
+	}
+	
+	public LogEntry(String message, String user) {
+		this.message = message;
+		this.username = user;
 	}
 	
 	public CatanColor getColor()
@@ -42,6 +48,10 @@ public class LogEntry
 	public void setMessage(String message)
 	{
 		this.message = message;
+	}
+	
+	public String getUsername() {
+		return username;
 	}
 	
 }

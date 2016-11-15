@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
+import client.communication.LogEntry;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.HexType;
@@ -16,10 +17,12 @@ import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Bank;
 import shared.model.Game;
+import shared.model.GameStatus;
 import shared.model.Hex;
 import shared.model.Map;
 import shared.model.Player;
 import shared.model.Port;
+import shared.model.Robber;
 import shared.model.TurnTracker;
 
 /**
@@ -48,10 +51,16 @@ public class ServerGame extends Game {
     	// Set player list to initially be empty
     	this.initPlayerList();
     	
+    	// Set Robber
+    	this.getTheMap().setRobber(new Robber());
+    	
+    	// Initialize Logs
+    	this.initLogs();
+    	
     	// Set winner and version
-    	// TODO: Should the version start at 0 or 1?
     	this.setWinner(-1);
     	this.setVersion(0);
+    	
 	}
 
 	public String getGameName() {
@@ -280,7 +289,14 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      * @param rollValue the value that was rolled
 	 */
-    public void rollDice(int playerID,  int rollValue){}
+    public void rollDice(int playerID,  int rollValue) {
+    	if (rollValue == 7) {
+    		getTurnTracker().setStatus(GameStatus.Robbing);
+    	}
+    	else {
+    		getTurnTracker().setStatus(GameStatus.Playing);
+    	}
+    }
 
     /**
      * Sends a chat message.
@@ -288,7 +304,15 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      * @param message the message the player wishes to send.
      */
-    public void sendMessage(int playerID, String message){}
+    public void sendMessage(int playerID, String message) {
+    	String name = "";
+    	for (Player p: getPlayerList()) {
+    		if (p.getPlayerID() == playerID) {
+    			name = p.getName();
+    		}
+    	}
+    	getChat().add(new LogEntry(name,message));
+    }
 
     /**
      * Make a trade offer to another player.
@@ -351,6 +375,10 @@ public class ServerGame extends Game {
      */
     public void finishTurn(){
         // TODO: 11/7/2016 be sure to include resetting played dev card to false
+    	getTurnTracker().nextTurn();
+    	for (Player p : getPlayerList()) {
+    		p.setPlayedDevCard(false);
+    	}
     }
 
     /**

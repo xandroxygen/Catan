@@ -15,14 +15,13 @@ import java.util.HashMap;
  * ServerModel class
  */
 public class ServerModel {
-    private HashMap<String, User> users;
+    private ArrayList<User> users;
     private ArrayList<ServerGame> games;
 
     public ServerModel() {
-        users = new HashMap<>();
+        users = new ArrayList<>();
         games = new ArrayList<>();
     }
-    private ArrayList<ServerGame> games;
 
     /**
      * Checks whether the player can place a city.
@@ -453,9 +452,9 @@ public class ServerModel {
      * 		</pre>
      */
     public ServerGame createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName) {
-    	int id = games.size()+1;
+    	int id = games.size();
     	ServerGame game = new ServerGame(randomTiles,randomNumbers,randomPorts,gameName,id);
-    	games.put(id,game);
+    	games.add(id,game);
         return game;
     }
     
@@ -502,7 +501,14 @@ public class ServerModel {
      * @return int playerId of new user
      */
     public int registerUser(String username, String password) {
-    	return -1;
+        for (User tempUser : users) {
+            if(tempUser.getUsername().equals(username)){
+                return -1;
+            }
+        }
+        //todo possibly needs to add ID (I am not sure)
+        users.add(new User(username, password));
+        return users.size() - 1;
     }
 
     /**
@@ -515,6 +521,12 @@ public class ServerModel {
      * @return true if login succeeded false if incorrect username/password were given
      */
     public boolean login(String username, String password){
+        for (User tempUser : users) {
+            if(tempUser.getUsername().equals(username) && tempUser.getPassword().equals(password)){
+                tempUser.setLoggedIn(true);
+                return true;
+            }
+        }
         return false;
     }
 }
