@@ -1,5 +1,6 @@
 package server.facade;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import server.model.ServerGame;
@@ -10,7 +11,6 @@ import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
-import shared.model.Game;
 
 public class ServerFacade implements IServerFacade {
 	
@@ -37,7 +37,7 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public Game[] gamesList() throws InvalidActionException {
+	public ArrayList<ServerGame> gamesList() throws InvalidActionException {
 		return model.listGames();
 	}
 
@@ -77,21 +77,21 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public String gameGetModel() throws InvalidActionException {
+	public ServerGame gameGetModel(int gameID) throws InvalidActionException {
 		// TODO: return model
-		return null;
+		return model.listGames().get(gameID);
 	}
 
 	@Override
-	public String gameGetModel(int version) throws InvalidActionException {
+	public ServerGame gameGetModel(int gameID, int version) throws InvalidActionException {
 		// TODO return model
 		// TODO: do we need a version number in the model?
-		return null;
+		return model.listGames().get(gameID);
 	}
 
 	@Override
-	public String[] gameListAI(int gameID) throws InvalidActionException {
-		return model.listAIPlayers(gameID);
+	public String[] gameListAI() throws InvalidActionException {
+		return model.listAIPlayers();
 	}
 
 	@Override

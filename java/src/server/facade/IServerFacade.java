@@ -1,7 +1,7 @@
 package server.facade;
 
 import server.model.ServerGame;
-import shared.model.Game;
+import server.model.ServerModel;
 import shared.model.InvalidActionException;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
@@ -9,6 +9,7 @@ import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface IServerFacade{
@@ -78,7 +79,7 @@ public interface IServerFacade{
 	 * 		1. Server returns 400 error response and body contains an error message.
 	 * 	</pre>
 	 */
-	Game[] gamesList() throws InvalidActionException;
+	ArrayList<ServerGame> gamesList() throws InvalidActionException;
 	/**
 	 * Creates a new game on the server. 
 	 * 
@@ -151,7 +152,7 @@ public interface IServerFacade{
 	 * 		1. The server returns an HTTP 400 error message and the response body contains an error message
 	 * </pre>
 	 */
-	String gameGetModel() throws InvalidActionException;
+	ServerGame gameGetModel(int gameID) throws InvalidActionException;
 
 	/**
 	 * Returns the current state of the game in JSON format.
@@ -175,13 +176,12 @@ public interface IServerFacade{
 	 *  </pre>
 	 *
 	 * @param version The version number of the model. Used to compare and check if model has been updated.
-	 * @throws InvalidActionException 
+	 * @throws InvalidActionException
 	 */
-	String gameGetModel(int version) throws InvalidActionException;	
-	
+	ServerGame gameGetModel(int gameID, int version) throws InvalidActionException;
+
 	/**
 	 * Returns a list of supported AI player types.
-	 * @param gameID The ID of the game from which the request was made
 	 * @return All AI player types for a particular game
 	 * @throws InvalidActionException 
 	 *
@@ -195,7 +195,7 @@ public interface IServerFacade{
 	 * 		 1. The server returns an HTTP 400 error message and the response body contains an error message
 	 * </pre>
 	 */
-	String[] gameListAI(int gameID) throws InvalidActionException;
+	String[] gameListAI() throws InvalidActionException;
 	/**
 	 * Adds an AI player to the current game.
 	 * 
