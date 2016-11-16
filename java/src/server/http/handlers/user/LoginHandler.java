@@ -2,6 +2,7 @@ package server.http.handlers.user;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+
 import server.facade.IServerFacade;
 import server.http.UserInfo;
 import server.http.handlers.BaseHandler;
