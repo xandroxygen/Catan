@@ -9,6 +9,7 @@ import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public interface IServerFacade{
@@ -78,7 +79,7 @@ public interface IServerFacade{
 	 * 		1. Server returns 400 error response and body contains an error message.
 	 * 	</pre>
 	 */
-	ArrayList<ServerGame> gamesList() throws InvalidActionException;
+	List<ServerGame> gamesList() throws InvalidActionException;
 	/**
 	 * Creates a new game on the server. 
 	 * 
@@ -131,7 +132,7 @@ public interface IServerFacade{
 	 * @param color Player color
 	 * @throws InvalidActionException
 	 */
-	String gamesJoin(int gameID, CatanColor color) throws InvalidActionException;
+	String gamesJoin(int gameID, int playerID, CatanColor color) throws InvalidActionException;
 	
 	/**
 	 * Returns the current state of the game in JSON format.
