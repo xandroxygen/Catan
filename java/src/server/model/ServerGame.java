@@ -364,7 +364,9 @@ public class ServerGame extends Game {
     /**
      * Accept the TradeOffer currently on the table.
      */
-    public void acceptTradeOffer(boolean willAccept){}
+    public void acceptTradeOffer(boolean willAccept){
+
+    }
 
     /**
      * Accept the TradeOffer currently on the table.
@@ -413,11 +415,21 @@ public class ServerGame extends Game {
      * 		</pre>
      */
     public void finishTurn(){
-        // TODO: be sure to include resetting played dev card to false
     	getTurnTracker().nextTurn();
     	for (Player p : getPlayerList()) {
     		p.setPlayedDevCard(false);
     	}
+    	//move the newDevCards to oldDevCards
+        for (Player tempPlayer : getPlayerList()) {
+            tempPlayer.getOldDevCards().put(DevCardType.SOLDIER, tempPlayer.getOldDevCards().get(DevCardType.SOLDIER) +
+                    tempPlayer.getNewDevCards().get(DevCardType.SOLDIER));
+            tempPlayer.getOldDevCards().put(DevCardType.YEAR_OF_PLENTY, tempPlayer.getOldDevCards().get(DevCardType.SOLDIER) +
+                    tempPlayer.getNewDevCards().get(DevCardType.YEAR_OF_PLENTY));
+            tempPlayer.getOldDevCards().put(DevCardType.MONOPOLY, tempPlayer.getOldDevCards().get(DevCardType.SOLDIER) +
+                    tempPlayer.getNewDevCards().get(DevCardType.MONOPOLY));
+            tempPlayer.getOldDevCards().put(DevCardType.ROAD_BUILD, tempPlayer.getOldDevCards().get(DevCardType.SOLDIER) +
+                    tempPlayer.getNewDevCards().get(DevCardType.ROAD_BUILD));
+        }
     }
 
     /**
@@ -485,12 +497,22 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      */
     public void discardCards(int playerID, Map<ResourceType, Integer> discardCards){
+        getPlayerList().get(playerID).setDiscarded(true);
 		discardResource(playerID, discardCards, ResourceType.BRICK);
 		discardResource(playerID, discardCards, ResourceType.WOOD);
 		discardResource(playerID, discardCards, ResourceType.SHEEP);
 		discardResource(playerID, discardCards, ResourceType.ORE);
 		discardResource(playerID, discardCards, ResourceType.WHEAT);
-	}
+        for (Player tempPlayer : getPlayerList()) {
+            if(!tempPlayer.isDiscarded() && tempPlayer.getTotalOfResources() >= 7){
+                return;
+            }
+        }
+        for (Player tempPlayer : getPlayerList()) {
+            tempPlayer.setDiscarded(false);
+        }
+        getTurnTracker().setStatus(GameStatus.Robbing);
+    }
 
 	private void discardResource(int playerID, Map<ResourceType, Integer> discardCards, ResourceType resourceType){
 		Player current_player = getPlayerList().get(getPlayerIndex(playerID));
