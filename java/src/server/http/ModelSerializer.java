@@ -68,6 +68,14 @@ public class ModelSerializer {
 			chat.add("lines", serializeLogEntryList(game.getChat()));
 			object.add("chat", chat);
 
+			// turn tracker
+			JsonObject tracker = new JsonObject();
+			tracker.addProperty("status", game.getTurnTracker().getStatus().toString());
+			tracker.addProperty("currentTurn", game.getTurnTracker().getCurrentTurn());
+			tracker.addProperty("longestRoad", game.getTurnTracker().getLongestRoad());
+			tracker.addProperty("largestArmy", game.getTurnTracker().getLargestArmy());
+			object.add("turnTracker", tracker);
+
 			return object.toString();
 
 		}

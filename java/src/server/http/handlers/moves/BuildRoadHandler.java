@@ -1,12 +1,17 @@
 package server.http.handlers.moves;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
 import server.command.moves.BuildRoadCommand;
 import server.facade.IServerFacade;
 import server.http.ModelSerializer;
 import server.http.handlers.BaseHandler;
 import server.http.requests.moves.BuildRoadRequest;
+import shared.locations.EdgeDirection;
+import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
+
+import java.lang.reflect.Type;
 
 /**
  * Handles requests to /moves/buildRoad
@@ -27,7 +32,15 @@ public class BuildRoadHandler extends MoveHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
-		BuildRoadRequest request = (new Gson()).fromJson(body, BuildRoadRequest.class);
+		BuildRoadRequest request = new Gson().fromJson(body, BuildRoadRequest.class);
+
+		JsonObject json = new JsonParser().parse(body).getAsJsonObject();
+		request.setFree(json.get("free").getAsBoolean());
+		JsonObject locationJSON = json.getAsJsonObject("roadLocation");
+		EdgeDirection dir = EdgeDirection.getEnumFromAbbrev(locationJSON.get("direction").getAsString().toUpperCase());
+		HexLocation hex = new HexLocation(locationJSON.get("x").getAsInt(),locationJSON.get("y").getAsInt());
+		request.setRoadLocation(new EdgeLocation(hex,dir));
+
 
 		BuildRoadCommand command = new BuildRoadCommand(server, gameID,
 				request.getPlayerIndex(), request.getRoadLocation(), request.isFree());
