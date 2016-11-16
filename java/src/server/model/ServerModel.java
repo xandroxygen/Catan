@@ -512,7 +512,6 @@ public class ServerModel {
                 return -1;
             }
         }
-        //todo possibly needs to add ID (I am not sure)
         users.add(new User(username, password));
         return users.size() - 1;
     }
