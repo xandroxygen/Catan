@@ -22,6 +22,7 @@ import shared.model.GameStatus;
 import shared.model.Hex;
 import shared.model.Player;
 import shared.model.Port;
+import shared.model.Road;
 import shared.model.Robber;
 import shared.model.TurnTracker;
 
@@ -132,6 +133,7 @@ public class ServerGame extends Game {
 	    	// Adjust player piece inventory
 	    	getPlayerList().get(index).addToPlayerPieces(PieceType.ROAD, -1);
     	}
+    	this.longestRoad();
     }
 
     /**
@@ -524,7 +526,30 @@ public class ServerGame extends Game {
 	 *      The player with the longest road is determined, and set within the model.
 	 * 		</pre>
 	 */
-	public void longestRoad() {}
+	public void longestRoad() {
+		int[] playerRoads = new int[4];
+		// Populate array with number of roads built by each player
+		for (EdgeLocation key : getTheMap().getRoads().keySet()) {
+			playerRoads[getTheMap().getRoads().get(key).getOwnerIndex()]++;
+		}
+		// Get the current largest amount of roads
+		int max;
+		if (getTurnTracker().getLongestRoad() != -1) {
+			max = playerRoads[getTurnTracker().getLongestRoad()];
+		}
+		else {
+			max = 4;
+		}
+		int index = -1;
+		// If greater than current max, replace
+		for (int i = 0; i < playerRoads.length; i++) {
+			if (playerRoads[i] > max) {
+				max = playerRoads[i];
+				index = i;
+			}
+		}
+		getTurnTracker().setLongestRoad(index);
+	}
 
 	/**
 	 * Calculates and sets the player with the largest army.
@@ -578,7 +603,7 @@ public class ServerGame extends Game {
 			HexLocation location = locations.get(0);
 			int number = numbers.get(0);
 			
-			// If random tiles, tke from list then remove it
+			// If random tiles, take from list then remove it
 			if (randomTiles) {
 				int locIndex = ThreadLocalRandom.current().nextInt(0, locations.size() + 1);
 				location = locations.get(locIndex);
