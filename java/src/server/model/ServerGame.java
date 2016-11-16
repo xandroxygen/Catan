@@ -141,12 +141,53 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      */
     public void buyDevelopmentCard(int playerID){
-        int totalNumOfDevCards = 0;
-        for(Map.Entry<DevCardType, Integer> tempDevCard : getBank().getDevelopmentCards().entrySet()) {
-            totalNumOfDevCards += tempDevCard.getValue();
-        }
-        // TODO: 11/7/2016 finish method
+        Player current_player = getPlayerList().get(getPlayerIndex(playerID));
 
+        //THIS PART CALCULATES THE PROBABILITY THAT YOU WILL PICK UP EACH CARD
+        //THE REASON THAT THE NUMBER OF THE PREVIOUS CARD IS ADDED IS SO WHEN GENERATING A RANDOM NUMBER IT ALL WORKS OUT
+        int numOfSoldierCards, numOfYearOfPlentyCards, numOfMonopolyCards, numOfRoadBuildCards, numOfMonumentCards;
+        numOfSoldierCards = getBank().getDevelopmentCards().get(DevCardType.SOLDIER);
+        numOfYearOfPlentyCards = getBank().getDevelopmentCards().get(DevCardType.YEAR_OF_PLENTY) + numOfSoldierCards;
+        numOfMonopolyCards = getBank().getDevelopmentCards().get(DevCardType.MONOPOLY) + numOfYearOfPlentyCards;
+        numOfRoadBuildCards = getBank().getDevelopmentCards().get(DevCardType.ROAD_BUILD) + numOfMonopolyCards;
+        numOfMonumentCards = getBank().getDevelopmentCards().get(DevCardType.MONUMENT) + numOfRoadBuildCards;
+
+        if(numOfMonumentCards == 0){
+            return;
+        }
+
+        int randomNumber = (int )(Math. random() * numOfMonumentCards + 1);
+
+        if(randomNumber < numOfSoldierCards){
+            getBank().getDevelopmentCards().put(DevCardType.SOLDIER,
+                    getBank().getDevelopmentCards().get(DevCardType.SOLDIER) - 1);
+            current_player.getNewDevCards().put(DevCardType.SOLDIER,
+                    current_player.getNewDevCards().get(DevCardType.SOLDIER) + 1);
+        }
+        else if(randomNumber < numOfYearOfPlentyCards){
+            getBank().getDevelopmentCards().put(DevCardType.YEAR_OF_PLENTY,
+                    getBank().getDevelopmentCards().get(DevCardType.YEAR_OF_PLENTY) - 1);
+            current_player.getNewDevCards().put(DevCardType.YEAR_OF_PLENTY,
+                    current_player.getNewDevCards().get(DevCardType.YEAR_OF_PLENTY) + 1);
+        }
+        else if(randomNumber < numOfMonopolyCards){
+            getBank().getDevelopmentCards().put(DevCardType.MONOPOLY,
+                    getBank().getDevelopmentCards().get(DevCardType.MONOPOLY) - 1);
+            current_player.getNewDevCards().put(DevCardType.MONOPOLY,
+                    current_player.getNewDevCards().get(DevCardType.MONOPOLY) + 1);
+        }
+        else if(randomNumber < numOfRoadBuildCards){
+            getBank().getDevelopmentCards().put(DevCardType.ROAD_BUILD,
+                    getBank().getDevelopmentCards().get(DevCardType.ROAD_BUILD) - 1);
+            current_player.getNewDevCards().put(DevCardType.ROAD_BUILD,
+                    current_player.getNewDevCards().get(DevCardType.ROAD_BUILD) + 1);
+        }
+        else if(randomNumber < numOfMonumentCards){
+            getBank().getDevelopmentCards().put(DevCardType.MONUMENT,
+                    getBank().getDevelopmentCards().get(DevCardType.MONUMENT) - 1);
+            current_player.getOldDevCards().put(DevCardType.MONUMENT,
+                    current_player.getOldDevCards().get(DevCardType.MONUMENT) + 1);
+        }
     }
 
     /**
