@@ -499,7 +499,21 @@ public class ServerModel {
      * 		</pre>
      */
     public ArrayList<ServerGame> listGames(){
-        return games;
+    	return games;
+    }
+    
+    /**
+     * Returns the updated game
+     * 
+     * @param gameId the id of the updated game to retrieve
+     * @param version the version number for comparing if the game has been updated since the last call
+     * @return
+     */
+    public ServerGame getUpdatedGame(int gameId, int version) {
+    	if(games.get(gameId).getVersion() == version)
+    		return games.get(gameId);
+    	else
+    		return null;
     }
 
     /**

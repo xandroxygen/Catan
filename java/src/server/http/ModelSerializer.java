@@ -206,7 +206,7 @@ public class ModelSerializer {
 			JsonObject oldDevCards = new JsonObject();
 			for (DevCardType devCardType : player.getOldDevCards().keySet()) {
 
-				oldDevCards.addProperty(devCardType.toString().toLowerCase(), player.getOldDevCards().get(devCardType)); // TODO proper names
+				oldDevCards.addProperty(DevCardType.getCamelCase(devCardType), player.getOldDevCards().get(devCardType)); // TODO proper names
 			}
 			object.add("oldDevCards", oldDevCards);
 
@@ -214,7 +214,7 @@ public class ModelSerializer {
 			JsonObject newDevCards = new JsonObject();
 			for (DevCardType devCardType : player.getNewDevCards().keySet()) {
 
-				newDevCards.addProperty(devCardType.toString().toLowerCase(), player.getNewDevCards().get(devCardType)); // TODO proper names
+				newDevCards.addProperty(DevCardType.getCamelCase(devCardType), player.getNewDevCards().get(devCardType)); // TODO proper names
 			}
 			object.add("newDevCards", newDevCards);
 

@@ -34,7 +34,12 @@ public class ModelHandler extends BaseHandler {
 
 			try {
 				ServerGame model = server.gameGetModel(gameID);
-				return ModelSerializer.serializeGame(model);
+				if(model != null) {
+					return ModelSerializer.serializeGame(model);
+				}
+				else {
+					return "\"true\"";
+				}
 
 			} catch (Exception e) {
 				responseCode = RESPONSE_FAIL;

@@ -62,7 +62,7 @@ public class ServerFacade implements IServerFacade {
 
 	@Override
 	public ServerGame gameGetModel(int gameID, int version) throws InvalidActionException {
-		return model.listGames().get(gameID);
+		return model.getUpdatedGame(gameID, version);
 	}
 
 	@Override
