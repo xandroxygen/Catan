@@ -3,6 +3,7 @@ package client.domestic;
 import shared.definitions.*;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -549,7 +550,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		int receiverIndex = Model.getInstance().getGame().getTradeOffer().getReceiver();
 		Player receiver = Model.getInstance().getGame().getPlayerList().get(receiverIndex);
 		
-		HashMap<ResourceType, Integer> offer = Model.getInstance().getGame().getTradeOffer().getOffer();
+		Map<ResourceType, Integer> offer = Model.getInstance().getGame().getTradeOffer().getOffer();
 		int brickOffer = offer.get(ResourceType.BRICK);
 		int woodOffer = offer.get(ResourceType.WOOD);
 		int sheepOffer = offer.get(ResourceType.SHEEP);
