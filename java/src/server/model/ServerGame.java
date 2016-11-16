@@ -25,6 +25,8 @@ import shared.model.Port;
 import shared.model.Robber;
 import shared.model.TurnTracker;
 
+import static java.lang.Boolean.TRUE;
+
 /**
  * ServerModelFacade
  */
@@ -197,7 +199,7 @@ public class ServerGame extends Game {
      * @param resource1 The type of the first resource you'd like to receive
      * @param resource2 The type of the second resource you'd like to receive
      */
-    public void playYearOfPleanty(int playerID, ResourceType resource1, ResourceType resource2){
+    public void playYearOfPlenty(int playerID, ResourceType resource1, ResourceType resource2){
         getPlayerList().get(playerID).setPlayedDevCard(true);
         if(getBank().getResourceDeck().get(resource1) > 0){
             getBank().getResourceDeck().put(resource1, getBank().getResourceDeck().get(resource1) - 1);
@@ -374,7 +376,7 @@ public class ServerGame extends Game {
      * 		</pre>
      */
     public void finishTurn(){
-        // TODO: 11/7/2016 be sure to include resetting played dev card to false
+        // TODO: be sure to include resetting played dev card to false
     	getTurnTracker().nextTurn();
     	for (Player p : getPlayerList()) {
     		p.setPlayedDevCard(false);
@@ -392,7 +394,49 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      * @param victimIndex .
      */
-    public void robPlayer(int playerID, int victimIndex){}
+    public void robPlayer(int playerID, int victimIndex){
+		//TODO I am assuming that the VictimIndex is actually the VictimID
+		Player current_player = getPlayerList().get(getPlayerIndex(playerID));
+		Player victim_player = getPlayerList().get(getPlayerIndex(victimIndex));
+		if(victim_player.getResources().size() > 0){
+			Boolean hasRobbedPlayer = false;
+			while (!hasRobbedPlayer){
+				int randomNumber = (int )(Math. random() * 4 + 0);
+				if(randomNumber == 0
+						&& victim_player.getResources().get(ResourceType.BRICK) > 0){
+					giveUpAResource(current_player, victim_player, ResourceType.BRICK);
+					hasRobbedPlayer = TRUE;
+				}
+				else if(randomNumber == 1
+						&& victim_player.getResources().get(ResourceType.WOOD) > 0){
+					giveUpAResource(current_player, victim_player, ResourceType.WOOD);
+					hasRobbedPlayer = TRUE;
+				}
+				else if(randomNumber == 2
+						&& victim_player.getResources().get(ResourceType.WHEAT) > 0){
+					giveUpAResource(current_player, victim_player, ResourceType.WHEAT);
+					hasRobbedPlayer = TRUE;
+				}
+				else if(randomNumber == 3
+						&& victim_player.getResources().get(ResourceType.SHEEP) > 0){
+					giveUpAResource(current_player, victim_player, ResourceType.SHEEP);
+					hasRobbedPlayer = TRUE;
+				}
+				else if(randomNumber == 4
+						&& victim_player.getResources().get(ResourceType.ORE) > 0){
+					giveUpAResource(current_player, victim_player, ResourceType.ORE);
+					hasRobbedPlayer = TRUE;
+				}
+			}
+		}
+	}
+
+	private void giveUpAResource(Player current_player, Player victim_player, ResourceType resourceType){
+		victim_player.getResources().put(resourceType,
+				victim_player.getResources().get(resourceType) - 1);
+		current_player.getResources().put(resourceType,
+				victim_player.getResources().get(resourceType) + 1);
+	}
 
     /**
      * Discards the given resources from the given player
@@ -405,8 +449,18 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      */
     public void discardCards(int playerID, Map<ResourceType, Integer> discardCards){
+		discardResource(playerID, discardCards, ResourceType.BRICK);
+		discardResource(playerID, discardCards, ResourceType.WOOD);
+		discardResource(playerID, discardCards, ResourceType.SHEEP);
+		discardResource(playerID, discardCards, ResourceType.ORE);
+		discardResource(playerID, discardCards, ResourceType.WHEAT);
+	}
 
-    }
+	private void discardResource(int playerID, Map<ResourceType, Integer> discardCards, ResourceType resourceType){
+		Player current_player = getPlayerList().get(getPlayerIndex(playerID));
+		current_player.getResources().put(resourceType,
+				current_player.getResources().get(resourceType) - discardCards.get(resourceType));
+	}
 
     /**
      * Lists out all types of AI Players for a particular game
