@@ -3,6 +3,7 @@ package server.http.handlers.game;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import server.facade.IServerFacade;
+import server.http.ModelSerializer;
 import server.http.handlers.BaseHandler;
 import server.model.ServerGame;
 import server.model.ServerModel;
@@ -33,7 +34,7 @@ public class ModelHandler extends BaseHandler {
 
 			try {
 				ServerGame model = server.gameGetModel(gameID);
-				return (new Gson()).toJson(model);
+				return ModelSerializer.serializeGame(model);
 
 			} catch (InvalidActionException e) {
 				e.printStackTrace();
