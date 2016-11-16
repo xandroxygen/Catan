@@ -2,6 +2,7 @@ package server.facade;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import server.model.ServerGame;
 import server.model.ServerModel;
@@ -40,10 +41,11 @@ public class MockServerFacade implements IServerFacade{
 	}
 
 	@Override
-	public String gamesJoin(int gameID, CatanColor color) throws InvalidActionException {
+	public String gamesJoin(int gameID, int playerID, CatanColor color) throws InvalidActionException {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 	@Override
 	public ServerGame gameGetModel(int version) throws InvalidActionException {
@@ -129,7 +131,7 @@ public class MockServerFacade implements IServerFacade{
 	 * </pre>
 	 */
 	@Override
-	public Object discardCards(int gameID, int playerID, HashMap<ResourceType, Integer> hand) throws InvalidActionException {
+	public Object discardCards(int gameID, int playerID, Map<ResourceType, Integer> hand) throws InvalidActionException {
 		return null;
 	}
 
@@ -169,7 +171,7 @@ public class MockServerFacade implements IServerFacade{
 	 * @post The trade is offered to the other player
 	 */
 	@Override
-	public Object offerTrade(int gameID, int senderID, int receiverID, HashMap<ResourceType, Integer> offer) throws InvalidActionException {
+	public Object offerTrade(int gameID, int senderID, int receiverID, Map<ResourceType, Integer> offer) throws InvalidActionException {
 		return null;
 	}
 
