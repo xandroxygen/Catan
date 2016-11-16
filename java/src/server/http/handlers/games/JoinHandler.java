@@ -2,7 +2,6 @@ package server.http.handlers.games;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.org.apache.bcel.internal.generic.FADD;
 import server.facade.IServerFacade;
 import server.http.handlers.BaseHandler;
 import server.http.requests.games.JoinGameRequest;

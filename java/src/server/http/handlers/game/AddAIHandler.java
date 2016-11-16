@@ -2,7 +2,6 @@ package server.http.handlers.game;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.org.apache.regexp.internal.RE;
 import server.facade.IServerFacade;
 import server.http.handlers.BaseHandler;
 import server.http.requests.game.AddAIRequest;
