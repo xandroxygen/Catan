@@ -365,7 +365,18 @@ public class ServerGame extends Game {
      * Accept the TradeOffer currently on the table.
      */
     public void acceptTradeOffer(boolean willAccept){
-
+        if(willAccept){
+            int senderID = getTradeOffer().getSender();
+            int receiverID =  getTradeOffer().getReceiver();
+            Map<ResourceType, Integer> offer = getTradeOffer().getOffer();
+            for (Map.Entry<ResourceType, Integer> playerResource : getPlayerList().get(getPlayerIndex(senderID)).getResources().entrySet()) {
+                playerResource.setValue(playerResource.getValue() + offer.get(playerResource.getKey()));
+            }
+            for (Map.Entry<ResourceType, Integer> playerResource : getPlayerList().get(getPlayerIndex(receiverID)).getResources().entrySet()) {
+                playerResource.setValue(playerResource.getValue() - offer.get(playerResource.getKey()));
+            }
+        }
+        setTradeOffer(null);
     }
 
     /**
