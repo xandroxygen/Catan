@@ -438,9 +438,8 @@ public class ServerGame extends Game {
      * @param victimIndex .
      */
     public void robPlayer(int playerID, int victimIndex){
-		//TODO I am assuming that the VictimIndex is actually the VictimID
 		Player current_player = getPlayerList().get(getPlayerIndex(playerID));
-		Player victim_player = getPlayerList().get(getPlayerIndex(victimIndex));
+		Player victim_player = getPlayerList().get(victimIndex);
 		if(victim_player.getResources().size() > 0){
 			Boolean hasRobbedPlayer = false;
 			while (!hasRobbedPlayer){
@@ -566,7 +565,17 @@ public class ServerGame extends Game {
 	 *      The player with the largest army is determined, and set within the model.
 	 * 		</pre>
 	 */
-	public void largestArmy() {}
+	public void largestArmy() {
+		Player playerWithLargestArmy = null;
+		for (Player tempPlayer: getPlayerList()) {
+			if(tempPlayer.getSoldiers() > 2 && (playerWithLargestArmy == null || tempPlayer.getSoldiers() > playerWithLargestArmy.getSoldiers())){
+				playerWithLargestArmy = tempPlayer;
+			}
+		}
+		if(playerWithLargestArmy != null){
+			getTurnTracker().setLargestArmy(playerWithLargestArmy.getPlayerIndex());
+		}
+	}
 	
 	private shared.model.Map createMap(boolean randomTiles, boolean randomNumbers, boolean randomPorts) {
 		ArrayList<Integer> numbers = new ArrayList<Integer>(
