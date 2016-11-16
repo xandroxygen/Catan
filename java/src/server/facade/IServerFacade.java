@@ -1,7 +1,6 @@
 package server.facade;
 
 import server.model.ServerGame;
-import server.model.ServerModel;
 import shared.model.InvalidActionException;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
@@ -10,7 +9,8 @@ import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public interface IServerFacade{
 
@@ -79,7 +79,7 @@ public interface IServerFacade{
 	 * 		1. Server returns 400 error response and body contains an error message.
 	 * 	</pre>
 	 */
-	ArrayList<ServerGame> gamesList() throws InvalidActionException;
+	List<ServerGame> gamesList() throws InvalidActionException;
 	/**
 	 * Creates a new game on the server. 
 	 * 
@@ -132,7 +132,7 @@ public interface IServerFacade{
 	 * @param color Player color
 	 * @throws InvalidActionException
 	 */
-	String gamesJoin(int gameID, CatanColor color) throws InvalidActionException;
+	String gamesJoin(int gameID, int playerID, CatanColor color) throws InvalidActionException;
 	
 	/**
 	 * Returns the current state of the game in JSON format.
@@ -278,7 +278,7 @@ public interface IServerFacade{
      * 		You have the resources you are discarding
 	 * </pre>
 	 */
-	Object discardCards(int gameID, int playerID, HashMap<ResourceType, Integer> hand) throws InvalidActionException;
+	Object discardCards(int gameID, int playerID, Map<ResourceType, Integer> hand) throws InvalidActionException;
 
     /**
      * Tell the server that the dice were rolled.
@@ -367,7 +367,7 @@ public interface IServerFacade{
      * @pre You have the resources you are offering
      * @post The trade is offered to the other player
 	 */
-	Object offerTrade(int gameID, int senderID, int receiverID, HashMap<ResourceType, Integer> offer) throws InvalidActionException;
+	Object offerTrade(int gameID, int senderID, int receiverID, Map<ResourceType, Integer> offer) throws InvalidActionException;
 	/**
 	 * Used when built on a port, or when trading to the bank.
 	 * @param ratio 4 (to 1, when not on a port), 3 (to 1, when on a general port), 2 (to 1, when on a resource port)

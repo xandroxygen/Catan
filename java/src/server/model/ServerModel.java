@@ -6,22 +6,31 @@ import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
-import shared.model.Game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ServerModel class
  */
 public class ServerModel {
+	private static ServerModel model;
     private ArrayList<User> users;
     private ArrayList<ServerGame> games;
-
+    
     public ServerModel() {
         users = new ArrayList<>();
         games = new ArrayList<>();
     }
+    
+    public static ServerModel getInstance() {
+		if (model == null) {
+			model = new ServerModel();
+		}
+		return model;
+	}
+    
     /**
      * Checks whether the player can place a city.
      * @param playerId the ID of the player who is requesting the move
@@ -81,7 +90,7 @@ public class ServerModel {
      * @param recieverPlayerId the playerIndex of the offer recipient.
      * @return result
      */
-    public boolean canTradeWithPlayer(int gameID, int senderPlayerId, int recieverPlayerId, HashMap<ResourceType, Integer> offer){
+    public boolean canTradeWithPlayer(int gameID, int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){
         return games.get(gameID).canTradeWithPlayer(senderPlayerId, recieverPlayerId, offer);
     }
 
@@ -239,7 +248,7 @@ public class ServerModel {
      * @param resource2 The type of the second resource you'd like to receive
      */
     public void playYearOfPleanty(int gameID, int playerID, ResourceType resource1, ResourceType resource2){
-        games.get(gameID).playYearOfPleanty(playerID, resource1, resource2);
+        games.get(gameID).playYearOfPlenty(playerID, resource1, resource2);
     }
 
     /**
@@ -338,7 +347,7 @@ public class ServerModel {
      * @param receiverPlayerID Player being offered the trade
      * @param offer hand of cards to trade
      */
-    public void makeTradeOffer(int gameID, int senderPlayerID, int receiverPlayerID, HashMap<ResourceType, Integer> offer){
+    public void makeTradeOffer(int gameID, int senderPlayerID, int receiverPlayerID, Map<ResourceType, Integer> offer){
         games.get(gameID).makeTradeOffer(senderPlayerID, receiverPlayerID, offer);
     }
 
@@ -426,7 +435,7 @@ public class ServerModel {
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move
      */
-    public void discardCards(int gameID, int playerID, HashMap<ResourceType, Integer> discardCards){
+    public void discardCards(int gameID, int playerID, Map<ResourceType, Integer> discardCards){
         games.get(gameID).discardCards(playerID, discardCards);
     }
 
@@ -483,7 +492,6 @@ public class ServerModel {
     public ArrayList<ServerGame> listGames(){
         return games;
     }
-
 
     /**
      * Adds a new user to the game.
