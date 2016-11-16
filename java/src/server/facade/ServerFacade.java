@@ -1,6 +1,6 @@
 package server.facade;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import server.model.ServerGame;
@@ -32,12 +32,11 @@ public class ServerFacade implements IServerFacade {
 
 	@Override
 	public int userRegister(String username, String password) throws InvalidActionException {
-		//TODO: need a canDo here?
 		return model.registerUser(username, password);
 	}
 
 	@Override
-	public ArrayList<ServerGame> gamesList() throws InvalidActionException {
+	public List<ServerGame> gamesList() throws InvalidActionException {
 		return model.listGames();
 	}
 
@@ -45,35 +44,12 @@ public class ServerFacade implements IServerFacade {
 	public ServerGame gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
 			throws InvalidActionException {
 		return model.createGame(randomTiles, randomNumbers, randomPorts, name);
-		
-		//TODO: what will be returned here?
-		/* 
-		 * Swagger page return type
-		 *{
-			 "title": "asdfs",
-			 "id": 3,
-			 "players": [
-			    {},
-			    {},
-			    {},
-			    {}
-			 ]
-		  } 
-		 */
 	}
 
 	@Override
-	public String gamesJoin(int gameID, CatanColor color) throws InvalidActionException {
-		//TODO: need a canDo here?
-		
-		//if(model.joinGame()) {
-		//	return "Success";
-		//}
-		//else {
-		//	return "The player could not be added to the specified game.";	
-		//}
-		
-		return null;
+	public String gamesJoin(int gameID, int playerID, CatanColor color) throws InvalidActionException {
+		model.join(playerID, gameID, color);
+		return "Success";
 	}
 
 	@Override
@@ -95,7 +71,7 @@ public class ServerFacade implements IServerFacade {
 	public Object gameAddAI(int gameID, String aiType) throws InvalidActionException {
 		model.addComputerPlayer(gameID);
 		
-		return ServerModel.getInstance();
+		return model.listGames().get(gameID);
 	}
 
 	@Override
@@ -109,13 +85,13 @@ public class ServerFacade implements IServerFacade {
 	public Object acceptTrade(int gameID, boolean willAccept) throws InvalidActionException {
 		model.acceptTradeOffer(gameID, willAccept);
 		
-		//TODO: need another return type?
 		return model.listGames().get(gameID);
 	}
 
 	@Override
 	public Object discardCards(int gameID, int playerID, Map<ResourceType, Integer> hand)
 			throws InvalidActionException {
+		
 		model.discardCards(gameID, playerID, hand);
 	
 		return model.listGames().get(gameID);
@@ -195,7 +171,6 @@ public class ServerFacade implements IServerFacade {
 	@Override
 	public Object robPlayer(int gameID, int playerID, HexLocation location, int victimIndex)
 			throws InvalidActionException {
-		//TODO: does there need to be a canDo here?
 		model.robPlayer(gameID, playerID, victimIndex);
 		
 		return model.listGames().get(gameID);

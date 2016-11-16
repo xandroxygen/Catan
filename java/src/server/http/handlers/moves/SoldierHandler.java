@@ -1,13 +1,16 @@
 package server.http.handlers.moves;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import server.command.moves.SoldierCommand;
 import server.facade.IServerFacade;
 import server.http.handlers.BaseHandler;
+import server.http.requests.moves.SoldierRequest;
 
 /**
  * Handles requests for /moves/Soldier
  */
-public class SoldierHandler extends BaseHandler {
+public class SoldierHandler extends MoveHandler {
 	public SoldierHandler(IServerFacade server) {
 		super(server);
 	}
@@ -23,6 +26,10 @@ public class SoldierHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
-		return null;
+		SoldierRequest request = new Gson().fromJson(body, SoldierRequest.class);
+
+		SoldierCommand command = new SoldierCommand(server, gameID, request.getPlayerIndex(),
+				request.getLocation(), request.getVictimIndex());
+		return executeCommand(command);
 	}
 }

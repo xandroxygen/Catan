@@ -36,14 +36,14 @@ public class ModelHandler extends BaseHandler {
 				ServerGame model = server.gameGetModel(gameID);
 				return ModelSerializer.serializeGame(model);
 
-			} catch (InvalidActionException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				responseCode = RESPONSE_FAIL;
+				return e.getMessage();
 			}
 		}
 		else {
 			responseCode = RESPONSE_FAIL;
 			return "The catan.game cookie must be set before calling this.";
 		}
-		return null;
 	}
 }

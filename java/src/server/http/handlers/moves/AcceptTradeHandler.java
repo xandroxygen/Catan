@@ -1,13 +1,18 @@
 package server.http.handlers.moves;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import server.command.moves.AcceptTradeCommand;
 import server.facade.IServerFacade;
+import server.http.ModelSerializer;
 import server.http.handlers.BaseHandler;
+import server.http.requests.moves.AcceptTradeRequest;
+import shared.model.InvalidActionException;
 
 /**
  * Handles requests to /moves/acceptTrade
  */
-public class AcceptTradeHandler extends BaseHandler {
+public class AcceptTradeHandler extends MoveHandler {
 	public AcceptTradeHandler(IServerFacade server) {
 		super(server);
 	}
@@ -23,6 +28,10 @@ public class AcceptTradeHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
-		return null;
+		AcceptTradeRequest request = (new Gson()).fromJson(body, AcceptTradeRequest.class);
+
+		AcceptTradeCommand command = new AcceptTradeCommand(server, gameID, request.isWillAccept());
+
+		return executeCommand(command);
 	}
 }

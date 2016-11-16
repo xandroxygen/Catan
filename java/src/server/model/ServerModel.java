@@ -248,7 +248,7 @@ public class ServerModel {
      * @param resource2 The type of the second resource you'd like to receive
      */
     public void playYearOfPleanty(int gameID, int playerID, ResourceType resource1, ResourceType resource2){
-        games.get(gameID).playYearOfPleanty(playerID, resource1, resource2);
+        games.get(gameID).playYearOfPlenty(playerID, resource1, resource2);
     }
 
     /**
@@ -492,7 +492,6 @@ public class ServerModel {
     public ArrayList<ServerGame> listGames(){
         return games;
     }
-
 
     /**
      * Adds a new user to the game.

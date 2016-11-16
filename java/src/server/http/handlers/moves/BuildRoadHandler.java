@@ -1,13 +1,17 @@
 package server.http.handlers.moves;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import server.command.moves.BuildRoadCommand;
 import server.facade.IServerFacade;
+import server.http.ModelSerializer;
 import server.http.handlers.BaseHandler;
+import server.http.requests.moves.BuildRoadRequest;
 
 /**
  * Handles requests to /moves/buildRoad
  */
-public class BuildRoadHandler extends BaseHandler {
+public class BuildRoadHandler extends MoveHandler {
 	public BuildRoadHandler(IServerFacade server) {
 		super(server);
 	}
@@ -23,6 +27,11 @@ public class BuildRoadHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
-		return null;
+		BuildRoadRequest request = (new Gson()).fromJson(body, BuildRoadRequest.class);
+
+		BuildRoadCommand command = new BuildRoadCommand(server, gameID,
+				request.getPlayerIndex(), request.getRoadLocation(), request.isFree());
+
+		return executeCommand(command);
 	}
 }

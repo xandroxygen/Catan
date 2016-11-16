@@ -1,13 +1,17 @@
 package server.http.handlers.moves;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import server.command.moves.MaritimeTradeCommand;
 import server.facade.IServerFacade;
 import server.http.handlers.BaseHandler;
+import server.http.requests.moves.MaritimeTradeRequest;
+import shared.model.InvalidActionException;
 
 /**
  * Handles requests to /moves/maritimeTrade
  */
-public class MaritimeTradeHandler extends BaseHandler {
+public class MaritimeTradeHandler extends MoveHandler {
 	public MaritimeTradeHandler(IServerFacade server) {
 		super(server);
 	}
@@ -23,6 +27,17 @@ public class MaritimeTradeHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
-		return null;
+		MaritimeTradeRequest request = (new Gson()).fromJson(body, MaritimeTradeRequest.class);
+
+		try {
+			MaritimeTradeCommand command = new MaritimeTradeCommand(server, gameID, request.getPlayerIndex(), request.getRatio(),
+					request.findResource(request.getInputResource()), request.findResource(request.getOutputResource()));
+			return executeCommand(command);
+		}
+		catch (InvalidActionException e) {
+			responseCode = RESPONSE_FAIL;
+			return e.message;
+		}
+
 	}
 }

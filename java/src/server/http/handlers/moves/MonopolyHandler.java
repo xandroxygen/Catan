@@ -1,13 +1,17 @@
 package server.http.handlers.moves;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import server.command.moves.MonopolyCommand;
 import server.facade.IServerFacade;
 import server.http.handlers.BaseHandler;
+import server.http.requests.moves.MonopolyRequest;
+import shared.model.InvalidActionException;
 
 /**
  * Handles requests to /moves/Monopoly
  */
-public class MonopolyHandler extends BaseHandler {
+public class MonopolyHandler extends MoveHandler {
 	public MonopolyHandler(IServerFacade server) {
 		super(server);
 	}
@@ -23,6 +27,16 @@ public class MonopolyHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
-		return null;
+		MonopolyRequest request = (new Gson()).fromJson(body, MonopolyRequest.class);
+
+		try {
+			MonopolyCommand command = new MonopolyCommand(server, gameID, request.getPlayerIndex(),
+					request.findResource(request.getResource()));
+			return executeCommand(command);
+		}
+		catch (InvalidActionException e) {
+			responseCode = RESPONSE_FAIL;
+			return e.message;
+		}
 	}
 }
