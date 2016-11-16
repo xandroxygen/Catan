@@ -93,6 +93,7 @@ public abstract class BaseHandler implements HttpHandler {
 			writeCookies(httpExchange);
 
 			// send response with code
+			httpExchange.getResponseHeaders().set("Content-Type", "application/json");
 			responseCode = (responseCode == NOT_SET) ? 200 : responseCode;
 			httpExchange.sendResponseHeaders(responseCode, response.length());
 			OutputStream os = httpExchange.getResponseBody();
@@ -163,13 +164,10 @@ public abstract class BaseHandler implements HttpHandler {
 		String cookies = "";
 
 		if (gameCookie != null) {
-			cookies += gameCookie;
-			if (playerCookie != null) {
-				cookies += "; ";
-			}
+			cookies += gameCookie + "; Path=/";
 		}
 		if (playerCookie != null) {
-			cookies += playerCookie;
+			cookies += playerCookie + "; Path=/";
 		}
 		e.getResponseHeaders().add("Set-cookie", cookies);
 	}

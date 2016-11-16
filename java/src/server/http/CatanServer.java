@@ -31,7 +31,7 @@ public class CatanServer {
 
 		IServerFacade facade = new ServerFacade();
 
-		HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8081), 0);
+		HttpServer server = HttpServer.create(new InetSocketAddress("localhost", 8082), 0);
 
 		// --- ENDPOINTS ---
 

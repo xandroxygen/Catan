@@ -100,7 +100,9 @@ public class ModelSerializer {
 				JsonObject location = Serializer.serializeEdgeLocation(port.getLocation());
 
 				jPort.addProperty("ratio", port.getRatio());
-				jPort.addProperty("resource", port.getResource().toString().toLowerCase());
+				if (port.getResource() != null) {
+					jPort.addProperty("resource", port.getResource().toString().toLowerCase());
+				}
 				jPort.add("direction", location.get("direction"));
 				location.remove("direction");
 				jPort.add("location", location);

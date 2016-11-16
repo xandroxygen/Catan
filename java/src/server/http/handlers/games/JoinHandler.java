@@ -32,7 +32,7 @@ public class JoinHandler extends BaseHandler {
 		// verify player cookie is set
 		if (this.user != null) {
 			try {
-				server.gamesJoin(request.getId(), CatanColor.valueOf(request.getColor().toUpperCase()));
+				server.gamesJoin(request.getId(), user.getPlayerID(), CatanColor.valueOf(request.getColor().toUpperCase()));
 
 				// set game cookie
 				this.gameID = request.getId();

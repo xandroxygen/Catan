@@ -354,7 +354,7 @@ public class ServerGame extends Game {
     			name = p.getName();
     		}
     	}
-    	getChat().add(new LogEntry(name,message));
+    	getChat().add(new LogEntry(message,name));
     }
 
     /**

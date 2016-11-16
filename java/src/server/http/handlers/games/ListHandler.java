@@ -10,6 +10,7 @@ import server.model.ServerGame;
 import shared.model.Player;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *Handles requests to /games/list (GET)
@@ -32,7 +33,7 @@ public class ListHandler extends BaseHandler {
 	public String respondToRequest(HttpExchange exchange) {
 
 		try {
-			ArrayList<ServerGame> games = server.gamesList();
+			List<ServerGame> games = server.gamesList();
 
 			// serialize parts for response
 			JsonArray jsonArray = new JsonArray();
