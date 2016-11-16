@@ -149,7 +149,7 @@
 	<target name="our-server" depends="package" description="compiles, packages, and runs the student server">
 		<java jar="${java.dist}/catan-server.jar" dir="${java.dist}" fork="yes">
 			<sysproperty key="com.sun.management.jmxremote" value=""/>
-			
+						
 			<classpath>
 				<fileset dir="java/lib">
 				<include name="**/*.jar"/>
@@ -160,6 +160,11 @@
 			</assertions>
 		</java>
 	</target>
+	
+	<mkdir dir="${java.dist}/docs"/>
+	<copy todir="${java.dist}">
+		<fileset dir="docs"/>
+	</copy>
 
 	<path id="junit.classpath">
 		<fileset dir="${java.lib.dir}"/>
