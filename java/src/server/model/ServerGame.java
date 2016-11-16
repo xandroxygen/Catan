@@ -667,13 +667,13 @@ public class ServerGame extends Game {
 			
 			// If random tiles, take from list then remove it
 			if (randomTiles) {
-				int locIndex = ThreadLocalRandom.current().nextInt(0, locations.size() + 1);
+				int locIndex = ThreadLocalRandom.current().nextInt(0, locations.size());
 				location = locations.get(locIndex);
 			}
 			
 			// If random numbers, get number from a list then remove it
 			if (randomNumbers) {
-				int numIndex = ThreadLocalRandom.current().nextInt(0, numbers.size() + 1);
+				int numIndex = ThreadLocalRandom.current().nextInt(0, numbers.size());
 				number = numbers.get(numIndex);
 				hex = new Hex(type,location,number);
 				numbers.remove(Integer.valueOf(number));
@@ -693,7 +693,7 @@ public class ServerGame extends Game {
     	for (Port port: ports) {
     		EdgeLocation loc = portLocations.get(0);
     		if (randomPorts) {
-    			int index = ThreadLocalRandom.current().nextInt(0, portLocations.size() + 1);
+    			int index = ThreadLocalRandom.current().nextInt(0, portLocations.size());
     			loc = portLocations.get(index);
     			port.setLocation(loc);
     		}
