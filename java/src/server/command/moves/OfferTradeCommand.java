@@ -1,6 +1,5 @@
 package server.command.moves;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import server.command.Command;
@@ -21,13 +20,13 @@ public class OfferTradeCommand extends Command{
 	 *  positive means the cards will be sent by the sender
 	 * </pre>
 	 */
-	private HashMap<ResourceType, Integer> offer;
+	private Map<ResourceType, Integer> offer;
 	/**
 	 * the ID of the player receiving the offer
 	 */
 	private int receiverID;
 	
-	public OfferTradeCommand(IServerFacade facade, int gameID, int senderID, int receiverID, HashMap<ResourceType, Integer> offer) {
+	public OfferTradeCommand(IServerFacade facade, int gameID, int senderID, int receiverID, Map<ResourceType, Integer> offer) {
 		super(gameID, facade);
 		this.senderID = senderID;
 		this.receiverID = receiverID;

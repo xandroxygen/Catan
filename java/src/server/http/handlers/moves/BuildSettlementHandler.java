@@ -1,13 +1,18 @@
 package server.http.handlers.moves;
 
+import com.google.gson.Gson;
+import com.sun.javafx.scene.layout.region.BackgroundSizeConverter;
 import com.sun.net.httpserver.HttpExchange;
+import server.command.moves.BuildSettlementCommand;
 import server.facade.IServerFacade;
+import server.http.ModelSerializer;
 import server.http.handlers.BaseHandler;
+import server.http.requests.moves.BuildSettlementRequest;
 
 /**
  * Handles requests to /moves/buildSettlement
  */
-public class BuildSettlementHandler extends BaseHandler {
+public class BuildSettlementHandler extends MoveHandler {
 	public BuildSettlementHandler(IServerFacade server) {
 		super(server);
 	}
@@ -23,6 +28,12 @@ public class BuildSettlementHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
-		return null;
+		BuildSettlementRequest request = (new Gson()).fromJson(body, BuildSettlementRequest.class);
+
+		BuildSettlementCommand command = new BuildSettlementCommand(server, gameID,
+				request.getPlayerIndex(), request.getVertexLocation(), request.isFree());
+
+		return executeCommand(command);
+
 	}
 }

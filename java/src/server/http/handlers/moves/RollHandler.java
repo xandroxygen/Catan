@@ -1,13 +1,16 @@
 package server.http.handlers.moves;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import server.command.moves.RollNumberCommand;
 import server.facade.IServerFacade;
 import server.http.handlers.BaseHandler;
+import server.http.requests.moves.RollRequest;
 
 /**
  * Handles requests to /moves/rollNumber
  */
-public class RollHandler extends BaseHandler {
+public class RollHandler extends MoveHandler {
 	public RollHandler(IServerFacade server) {
 		super(server);
 	}
@@ -23,6 +26,9 @@ public class RollHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
-		return null;
+		RollRequest request = new Gson().fromJson(body, RollRequest.class);
+
+		RollNumberCommand command = new RollNumberCommand(server, gameID, request.getPlayerIndex(), request.getNumber());
+		return executeCommand(command);
 	}
 }

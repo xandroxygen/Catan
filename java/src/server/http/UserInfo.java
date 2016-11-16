@@ -5,12 +5,12 @@ package server.http;
  */
 public class UserInfo {
 
-	private String username;
+	private String name;
 	private String password;
 	private int playerID;
 
 	public String getUsername() {
-		return username;
+		return name;
 	}
 
 	public String getPassword() {
@@ -22,7 +22,7 @@ public class UserInfo {
 	}
 
 	public void setUsername(String username) {
-		this.username = username;
+		this.name = username;
 	}
 
 	public void setPassword(String password) {

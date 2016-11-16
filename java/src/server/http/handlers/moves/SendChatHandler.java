@@ -1,13 +1,17 @@
 package server.http.handlers.moves;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import server.command.moves.SendChatCommand;
 import server.facade.IServerFacade;
 import server.http.handlers.BaseHandler;
+import server.http.requests.moves.ChatRequest;
+import server.http.requests.moves.MoveRequest;
 
 /**
  * Handles requests to /moves/sendChat
  */
-public class SendChatHandler extends BaseHandler {
+public class SendChatHandler extends MoveHandler {
 	public SendChatHandler(IServerFacade server) {
 		super(server);
 	}
@@ -23,6 +27,9 @@ public class SendChatHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
-		return null;
+		ChatRequest request = new Gson().fromJson(body, ChatRequest.class);
+
+		SendChatCommand command = new SendChatCommand(server, gameID, request.getPlayerIndex(), request.getContent());
+		return executeCommand(command);
 	}
 }

@@ -2,7 +2,7 @@ package server.http.handlers.user;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-//import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
+
 import server.facade.IServerFacade;
 import server.http.UserInfo;
 import server.http.handlers.BaseHandler;
@@ -37,13 +37,13 @@ public class LoginHandler extends BaseHandler {
 		}
 		catch (InvalidActionException e) {
 			responseCode = RESPONSE_FAIL;
-			return "Error";
+				return "Error";
 		}
 
 		user = new UserInfo();
 		user.setUsername(request.getUsername());
 		user.setPassword(request.getPassword());
 		user.setPlayerID(playerID);
-		return null;
+		return "Success";
 	}
 }

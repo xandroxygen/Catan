@@ -16,7 +16,7 @@ import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 /**
@@ -25,7 +25,7 @@ import java.util.List;
 public class Game {
 
     private ArrayList<Player> playerList;
-    private Map theMap;
+    private shared.model.Map theMap;
     private Bank bank;
     private int currentTurnIndex;
     private TurnTracker turnTracker;
@@ -62,12 +62,12 @@ public class Game {
     	this.version = -1;
     }
 
-    public Game(ArrayList<Player> players, Map theMap, Bank bank, JsonObject modelJSON, IServerProxy server) {
+    public Game(ArrayList<Player> players, shared.model.Map theMap, Bank bank, JsonObject modelJSON, IServerProxy server) {
 
     	// Initialize players, map and bank
     	playerList = players;
     	this.bank = bank;
-    	this.theMap = theMap;
+    	this.theMap = (shared.model.Map) theMap;
 		this.server = server;
     	
     	// Init the current player
@@ -261,7 +261,7 @@ public class Game {
      * @param recieverPlayerId the playerIndex of the offer recipient.
      * @return result
      */
-	public boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, HashMap<ResourceType, Integer> offer){
+	public boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){
     	Player player = this.getPlayerById(senderPlayerId);
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
 				player.hasOfferResources(offer));
@@ -352,12 +352,12 @@ public class Game {
 		return playerList;
 	}
 
-	public Map getTheMap() {
+	public shared.model.Map getTheMap() {
 		return theMap;
 	}
 	
-	public void setMap(Map map) {
-		this.theMap = map;
+	public void setMap(shared.model.Map map) {
+		this.theMap = (shared.model.Map) map;
 	}
 	
 	public void setWinner(int i) {

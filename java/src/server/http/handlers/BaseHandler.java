@@ -39,6 +39,8 @@ public abstract class BaseHandler implements HttpHandler {
 	protected UserInfo user;
 	protected int gameID;
 
+	private String response;
+
 
 
 
@@ -83,7 +85,7 @@ public abstract class BaseHandler implements HttpHandler {
 			body = s.hasNext() ? s.next() : "";
 
 			// delegated to child classes
-			String response = respondToRequest(httpExchange);
+			response = respondToRequest(httpExchange);
 
 			// set cookies - only sets if gameID or user is set
 			generateGameCookie();
@@ -96,14 +98,12 @@ public abstract class BaseHandler implements HttpHandler {
 			OutputStream os = httpExchange.getResponseBody();
 			os.write(response.getBytes());
 			os.close();
-			httpExchange.close();
 		}
 		catch (Exception e) {
 			httpExchange.sendResponseHeaders(RESPONSE_FAIL,e.getMessage().length());
 			OutputStream os = httpExchange.getResponseBody();
 			os.write(e.getMessage().getBytes());
 			os.close();
-			httpExchange.close();
 		}
 	}
 
@@ -128,7 +128,8 @@ public abstract class BaseHandler implements HttpHandler {
 			user.setPlayerID(id);
 		}
 		if (gameCookie != null) {
-			gameID = Integer.parseInt(gameCookie.substring(11));
+			String[] parts = gameCookie.split("=");
+			gameID = Integer.parseInt(parts[1]);
 		}
 	}
 
@@ -162,13 +163,15 @@ public abstract class BaseHandler implements HttpHandler {
 		String cookies = "";
 
 		if (gameCookie != null) {
-			cookies += gameCookie + " ";
+			cookies += gameCookie;
+			if (playerCookie != null) {
+				cookies += "; ";
+			}
 		}
 		if (playerCookie != null) {
 			cookies += playerCookie;
 		}
-		e.getResponseHeaders().add("Set-cookie", gameCookie);
-		e.getResponseHeaders().add("Set-cookie", playerCookie);
+		e.getResponseHeaders().add("Set-cookie", cookies);
 	}
 
 	/**

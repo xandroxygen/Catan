@@ -1,14 +1,16 @@
 package server.facade;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import server.model.ServerGame;
+import server.model.ServerModel;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
-import shared.model.Game;
 import shared.model.InvalidActionException;
 
 public class MockServerFacade implements IServerFacade{
@@ -26,7 +28,7 @@ public class MockServerFacade implements IServerFacade{
 	}
 
 	@Override
-	public Game[] gamesList() throws InvalidActionException {
+	public ArrayList<ServerGame> gamesList() throws InvalidActionException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -39,27 +41,63 @@ public class MockServerFacade implements IServerFacade{
 	}
 
 	@Override
-	public String gamesJoin(int gameID, CatanColor color) throws InvalidActionException {
+	public String gamesJoin(int gameID, int playerID, CatanColor color) throws InvalidActionException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+
 	@Override
-	public String gameGetModel() throws InvalidActionException {
+	public ServerGame gameGetModel(int version) throws InvalidActionException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Returns the current state of the game in JSON format.
+	 *
+	 * @param gameID
+	 * @param version The version number of the model. Used to compare and check if model has been updated.  @throws InvalidActionException
+	 * @pre <pre>
+	 * 	1. The caller has previously logged into the server and joined a game (they have valid catan.game and catan.user HTTP cookies)
+	 * 	2. If specified, the version number is included as the "version" query parameter in the request URL,
+	 * 		and its value is a valid integer.
+	 *  </pre>
+	 * @post <pre>
+	 * 	If the operation succeeds:
+	 * 		 1. Server returns HTTP 200 response message
+	 * 		 2. The response body contains JSON data
+	 * 			a. The full client model JSON is returned if the client does not provide a client number,
+	 * 				or the provided version number does not match the version on the server
+	 * 			b. "true" is returned if the caller provided a version number and it matched the version number on the server
+	 * <p>
+	 *  If the operation fails:
+	 *  	 1. The server returns an HTTP 400 error message and the response body contains an error message
+	 *  </pre>
+	 */
 	@Override
-	public String gameGetModel(int version) throws InvalidActionException {
-		// TODO Auto-generated method stub
+	public ServerGame gameGetModel(int gameID, int version) throws InvalidActionException {
 		return null;
 	}
 
+	/**
+	 * Returns a list of supported AI player types.
+	 *
+	 * @return All AI player types for a particular game
+	 * @throws InvalidActionException
+	 * @pre <pre>
+	 * If the operation succeeds
+	 * 		 1. The server returns an HTTP 200 response message
+	 * 		 2. The body contains a JSON string array enumerating the different types of AI players.
+	 * 		   These are values that may be passed to the gameAddAI method
+	 * <p>
+	 *  If the operation fails:
+	 * 		 1. The server returns an HTTP 400 error message and the response body contains an error message
+	 * </pre>
+	 */
 	@Override
-	public String[] gameListAI(int gameID) throws InvalidActionException {
-		// TODO Auto-generated method stub
-		return null;
+	public String[] gameListAI() throws InvalidActionException {
+		return new String[0];
 	}
 
 	@Override
@@ -93,7 +131,7 @@ public class MockServerFacade implements IServerFacade{
 	 * </pre>
 	 */
 	@Override
-	public Object discardCards(int gameID, int playerID, HashMap<ResourceType, Integer> hand) throws InvalidActionException {
+	public Object discardCards(int gameID, int playerID, Map<ResourceType, Integer> hand) throws InvalidActionException {
 		return null;
 	}
 
@@ -133,7 +171,7 @@ public class MockServerFacade implements IServerFacade{
 	 * @post The trade is offered to the other player
 	 */
 	@Override
-	public Object offerTrade(int gameID, int senderID, int receiverID, HashMap<ResourceType, Integer> offer) throws InvalidActionException {
+	public Object offerTrade(int gameID, int senderID, int receiverID, Map<ResourceType, Integer> offer) throws InvalidActionException {
 		return null;
 	}
 

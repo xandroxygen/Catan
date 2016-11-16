@@ -1,6 +1,7 @@
 package server.facade;
 
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import server.model.ServerGame;
 import server.model.ServerModel;
@@ -10,14 +11,13 @@ import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
-import shared.model.Game;
 
 public class ServerFacade implements IServerFacade {
 	
 	ServerModel model;
 	
 	public ServerFacade() {
-		model = new ServerModel();
+		model = ServerModel.getInstance();
 	}
 
 	@Override
@@ -26,18 +26,17 @@ public class ServerFacade implements IServerFacade {
 			return 0; // TODO return playerID
 		}
 		else {
-			throw new InvalidActionException("Error");
+			throw new InvalidActionException("Cannot log in");
 		}
 	}
 
 	@Override
 	public int userRegister(String username, String password) throws InvalidActionException {
-		//TODO: need a canDo here?
 		return model.registerUser(username, password);
 	}
 
 	@Override
-	public Game[] gamesList() throws InvalidActionException {
+	public List<ServerGame> gamesList() throws InvalidActionException {
 		return model.listGames();
 	}
 
@@ -45,94 +44,64 @@ public class ServerFacade implements IServerFacade {
 	public ServerGame gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
 			throws InvalidActionException {
 		return model.createGame(randomTiles, randomNumbers, randomPorts, name);
-		
-		//TODO: what will be returned here?
-		/* 
-		 * Swagger page return type
-		 *{
-			 "title": "asdfs",
-			 "id": 3,
-			 "players": [
-			    {},
-			    {},
-			    {},
-			    {}
-			 ]
-		  } 
-		 */
 	}
 
 	@Override
-	public String gamesJoin(int gameID, CatanColor color) throws InvalidActionException {
-		//TODO: need a canDo here?
-		
-		//if(model.joinGame()) {
-		//	return "Success";
-		//}
-		//else {
-		//	return "The player could not be added to the specified game.";	
-		//}
-		
-		return null;
+	public String gamesJoin(int gameID, int playerID, CatanColor color) throws InvalidActionException {
+		model.join(playerID, gameID, color);
+		return "Success";
 	}
 
 	@Override
-	public String gameGetModel() throws InvalidActionException {
-		// TODO: return model
-		return null;
+	public ServerGame gameGetModel(int gameID) throws InvalidActionException {
+		return model.listGames().get(gameID);
 	}
 
 	@Override
-	public String gameGetModel(int version) throws InvalidActionException {
-		// TODO return model
-		// TODO: do we need a version number in the model?
-		return null;
+	public ServerGame gameGetModel(int gameID, int version) throws InvalidActionException {
+		return model.listGames().get(gameID);
 	}
 
 	@Override
-	public String[] gameListAI(int gameID) throws InvalidActionException {
-		return model.listAIPlayers(gameID);
+	public String[] gameListAI() throws InvalidActionException {
+		return model.listAIPlayers();
 	}
 
 	@Override
 	public Object gameAddAI(int gameID, String aiType) throws InvalidActionException {
 		model.addComputerPlayer(gameID);
 		
-		//TODO: return model
-		return null;
+		return model.listGames().get(gameID);
 	}
 
 	@Override
 	public Object sendChat(int gameID, int playerID, String message) throws InvalidActionException {
 		model.sendMessage(gameID, playerID, message);
 		
-		//TODO: return model
-		return null;
+		return model.listGames().get(gameID);
 	}
 
 	@Override
 	public Object acceptTrade(int gameID, boolean willAccept) throws InvalidActionException {
 		model.acceptTradeOffer(gameID, willAccept);
 		
-		//TODO: return model
-		
-		//TODO: need another return type?
-		return null;
+		return model.listGames().get(gameID);
 	}
 
 	@Override
-	public Object discardCards(int gameID, int playerID, HashMap<ResourceType, Integer> hand)
+	public Object discardCards(int gameID, int playerID, Map<ResourceType, Integer> hand)
 			throws InvalidActionException {
+		
 		model.discardCards(gameID, playerID, hand);
-		//TODO: return the model
-		return null;
+	
+		return model.listGames().get(gameID);
 	}
 
 	@Override
 	public Object rollNumber(int gameID, int playerID, int rollValue) throws InvalidActionException {
 		model.rollDice(gameID, playerID, rollValue);
-		//TODO: return the model
-		return null;
+		
+		return model.listGames().get(gameID);
 	}
 
 	@Override
@@ -140,11 +109,11 @@ public class ServerFacade implements IServerFacade {
 			throws InvalidActionException {
 		if(model.canPlaceRoad(gameID, playerID, isFree, roadLocation)) {
 			model.placeRoad(gameID, playerID, isFree, roadLocation);
-			//TODO: return model
-			return null;
+			
+			return model.listGames().get(gameID);
 		}
 		else {
-			throw new InvalidActionException("");
+			throw new InvalidActionException("Error building a road");
 		}
 	}
 
@@ -153,11 +122,11 @@ public class ServerFacade implements IServerFacade {
 			throws InvalidActionException {
 		if(model.canPlaceSettlement(gameID, playerID, isFree, vertexLocation)) {
 			model.placeSettlement(gameID, playerID, isFree, vertexLocation);
-			//TODO return model
-			return null;
+			
+			return model.listGames().get(gameID);
 		}
 		else {
-			throw new InvalidActionException("");
+			throw new InvalidActionException("Error building a settlement");
 		}
 	}
 
@@ -165,24 +134,24 @@ public class ServerFacade implements IServerFacade {
 	public Object buildCity(int gameID, int playerID, VertexLocation location) throws InvalidActionException {
 		if(model.canPlaceCity(gameID, playerID, location)) {
 			model.placeCity(gameID, playerID, location);
-			//TODO: return a model
-			return null;
+			
+			return model.listGames().get(gameID);
 		}
 		else {
-			throw new InvalidActionException("");
+			throw new InvalidActionException("Cannot build a city");
 		}
 	}
 
 	@Override
-	public Object offerTrade(int gameID, int senderID, int receiverID, HashMap<ResourceType, Integer> offer)
+	public Object offerTrade(int gameID, int senderID, int receiverID, Map<ResourceType, Integer> offer)
 			throws InvalidActionException {
 		if(model.canTrade(gameID) && model.canTradeWithPlayer(gameID, senderID, receiverID, offer)) {
 			model.makeTradeOffer(gameID, senderID, receiverID, offer);
-			//return a model
-			return  null;
+			
+			return model.listGames().get(gameID);
 		}
 		else {
-			throw new InvalidActionException("");
+			throw new InvalidActionException("Cannot make a trade offer");
 		}
 	}
 
@@ -191,38 +160,38 @@ public class ServerFacade implements IServerFacade {
 			throws InvalidActionException {
 		if(model.canTradeWithBank(gameID, playerID, ratio, inputResource, outputResource)) {
 			model.makeMaritimeTrade(gameID, playerID, ratio, inputResource, outputResource);
-			//return a model
-			return null;
+			
+			return model.listGames().get(gameID);
 		}
 		else {
-			throw new InvalidActionException("");
+			throw new InvalidActionException("Cannot do maritime trade");
 		}
 	}
 
 	@Override
 	public Object robPlayer(int gameID, int playerID, HexLocation location, int victimIndex)
 			throws InvalidActionException {
-		//TODO: does there need to be a canDo here?
 		model.robPlayer(gameID, playerID, victimIndex);
-		return null;
+		
+		return model.listGames().get(gameID);
 	}
 
 	@Override
 	public Object finishTurn(int gameID) throws InvalidActionException {
 		model.finishTurn(gameID);
-		//TODO: return the model		
-		return null;
+		
+		return model.listGames().get(gameID);
 	}
 
 	@Override
 	public Object buyDevCard(int gameID, int playerID) throws InvalidActionException {
 		if(model.canBuyDevelopmentCard(gameID, playerID)) {
 			model.buyDevelopmentCard(gameID, playerID);
-			//return the model
-			return null;
+			
+			return model.listGames().get(gameID);
 		}
 		else {
-			throw new InvalidActionException("");
+			throw new InvalidActionException("Cannot buy a dev card");
 		}
 	}
 
@@ -231,11 +200,11 @@ public class ServerFacade implements IServerFacade {
 			throws InvalidActionException {
 		if(model.canPlaySoldier(gameID, playerID, location, victimIndex)) {
 			model.playSoldierCard(gameID, playerID, location, victimIndex);
-			//return model
-			return null;
+			
+			return model.listGames().get(gameID);
 		}
 		else {
-			throw new InvalidActionException("");
+			throw new InvalidActionException("Cannot play soldier card");
 		}
 	}
 
@@ -244,11 +213,11 @@ public class ServerFacade implements IServerFacade {
 			throws InvalidActionException {
 		if(model.canPlayYearOfPlenty(gameID, playerID, resource1, resource2)) {
 			model.playYearOfPleanty(gameID, playerID, resource1, resource2);
-			//TODO: return model
-			return null;
+			
+			return model.listGames().get(gameID);
 		}
 		else {
-			throw new InvalidActionException("");
+			throw new InvalidActionException("Cannot play year of plenty card");
 		}
 	}
 
@@ -257,11 +226,11 @@ public class ServerFacade implements IServerFacade {
 			throws InvalidActionException {
 		if(model.canPlayRoadCard(gameID, playerID, location1, location2)) {
 			model.playRoadCard(gameID, playerID, location1, location2);
-			//TODO return model
-			return null;
+			
+			return model.listGames().get(gameID);
 		}
 		else {
-			throw new InvalidActionException("");
+			throw new InvalidActionException("Cannot play road building card");
 		}
 	}
 
@@ -269,11 +238,11 @@ public class ServerFacade implements IServerFacade {
 	public Object playMonopoly(int gameID, int playerID, ResourceType resource) throws InvalidActionException {
 		if(model.canPlayMonopolyCard(gameID, playerID, resource)) {
 			model.playMonopolyCard(gameID, playerID, resource);
-			//TODO return model
-			return null;
+			
+			return model.listGames().get(gameID);
 		}
 		else {
-			throw new InvalidActionException("");
+			throw new InvalidActionException("Cannot play monopoly card");
 		}
 	}
 
@@ -281,11 +250,11 @@ public class ServerFacade implements IServerFacade {
 	public Object playMonument(int gameID, int playerID) throws InvalidActionException {
 		if(model.canPlayMonumentCard(gameID, playerID)) {
 			model.playMonumentCard(gameID, playerID);
-			//TODO: return model
-			return null;
+			
+			return model.listGames().get(gameID);
 		}
 		else {
-			throw new InvalidActionException("");
+			throw new InvalidActionException("Cannot play monument card");
 		}
 	}
 
