@@ -408,7 +408,11 @@ public class Game {
 	public TradeOffer getTradeOffer() {
 		return tradeOffer;
 	}
-	
+
+	public void setTradeOffer(TradeOffer tradeOffer) {
+		this.tradeOffer = tradeOffer;
+	}
+
 	public List<LogEntry> getChat() {
 		return chat;
 	}

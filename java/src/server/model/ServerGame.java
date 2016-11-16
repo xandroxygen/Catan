@@ -16,15 +16,7 @@ import shared.locations.EdgeDirection;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
-import shared.model.Bank;
-import shared.model.Game;
-import shared.model.GameStatus;
-import shared.model.Hex;
-import shared.model.Player;
-import shared.model.Port;
-import shared.model.Road;
-import shared.model.Robber;
-import shared.model.TurnTracker;
+import shared.model.*;
 
 import static java.lang.Boolean.TRUE;
 
@@ -365,7 +357,9 @@ public class ServerGame extends Game {
      * @param receiverPlayerID Player being offered the trade
      * @param offer hand of cards to trade
      */
-    public void makeTradeOffer(int senderPlayerID, int receiverPlayerID, Map<ResourceType, Integer> offer){}
+    public void makeTradeOffer(int senderPlayerID, int receiverPlayerID, Map<ResourceType, Integer> offer){
+		setTradeOffer(new TradeOffer(senderPlayerID, receiverPlayerID, offer));
+	}
 
     /**
      * Accept the TradeOffer currently on the table.
@@ -560,6 +554,10 @@ public class ServerGame extends Game {
 	 * 		</pre>
 	 */
 	public void largestArmy() {
+		if(getTurnTracker().getLargestArmy() != -1){
+			getPlayerList().get(getTurnTracker().getLargestArmy()).setVictoryPoints(
+					getPlayerList().get(getTurnTracker().getLargestArmy()).getVictoryPoints() - 2);
+		}
 		Player playerWithLargestArmy = null;
 		for (Player tempPlayer: getPlayerList()) {
 			if(tempPlayer.getSoldiers() > 2 && (playerWithLargestArmy == null || tempPlayer.getSoldiers() > playerWithLargestArmy.getSoldiers())){
@@ -568,6 +566,10 @@ public class ServerGame extends Game {
 		}
 		if(playerWithLargestArmy != null){
 			getTurnTracker().setLargestArmy(playerWithLargestArmy.getPlayerIndex());
+		}
+		if(getTurnTracker().getLargestArmy() != -1){
+			getPlayerList().get(getTurnTracker().getLargestArmy()).setVictoryPoints(
+					getPlayerList().get(getTurnTracker().getLargestArmy()).getVictoryPoints() + 2);
 		}
 	}
 	

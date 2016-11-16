@@ -2,7 +2,8 @@ package shared.model;
 import com.google.gson.JsonObject;
 import shared.definitions.ResourceType;
 
-import java.util.HashMap;
+import java.util.*;
+import java.util.Map;
 
 /**
  * Trade Offer Class
@@ -11,7 +12,13 @@ public class TradeOffer {
 
 	private int sender;
 	private int receiver;
-	private HashMap<ResourceType, Integer> offer;
+	private Map<ResourceType, Integer> offer;
+
+	public TradeOffer(int senderPlayerID, int receiverPlayerID, Map<ResourceType, Integer> offer){
+		sender = senderPlayerID;
+		receiver = receiverPlayerID;
+		this.offer = offer;
+	}
 
 	public TradeOffer(JsonObject tradeJSON) {
 
@@ -45,7 +52,7 @@ public class TradeOffer {
 		this.receiver = receiver;
 	}
 
-	public HashMap<ResourceType, Integer> getOffer() {
+	public Map<ResourceType, Integer> getOffer() {
 		return offer;
 	}
 
