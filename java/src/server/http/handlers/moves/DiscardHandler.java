@@ -1,13 +1,16 @@
 package server.http.handlers.moves;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import server.command.moves.DiscardCardsCommand;
 import server.facade.IServerFacade;
 import server.http.handlers.BaseHandler;
+import server.http.requests.moves.DiscardRequest;
 
 /**
  * Handles requests to /moves/discardCards
  */
-public class DiscardHandler extends BaseHandler {
+public class DiscardHandler extends MoveHandler {
 	public DiscardHandler(IServerFacade server) {
 		super(server);
 	}
@@ -23,6 +26,10 @@ public class DiscardHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
-		return null;
+		DiscardRequest request = (new Gson()).fromJson(body, DiscardRequest.class);
+
+		DiscardCardsCommand command = new DiscardCardsCommand(server, gameID, request.getPlayerIndex(), request.getDiscardedCards());
+
+		return executeCommand(command);
 	}
 }

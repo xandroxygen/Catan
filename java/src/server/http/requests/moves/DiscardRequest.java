@@ -2,6 +2,7 @@ package server.http.requests.moves;
 
 import shared.definitions.ResourceType;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -9,9 +10,9 @@ import java.util.Map;
  */
 public class DiscardRequest extends MoveRequest {
 
-	private Map<ResourceType, Integer> discardedCards;
+	private HashMap<ResourceType, Integer> discardedCards;
 
-	public Map<ResourceType, Integer> getDiscardedCards() {
+	public HashMap<ResourceType, Integer> getDiscardedCards() {
 		return discardedCards;
 	}
 }

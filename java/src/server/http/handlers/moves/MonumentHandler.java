@@ -1,13 +1,16 @@
 package server.http.handlers.moves;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import server.command.moves.MonumentCommand;
 import server.facade.IServerFacade;
 import server.http.handlers.BaseHandler;
+import server.http.requests.moves.MoveRequest;
 
 /**
- * Handles requests to /moves/MonumentHandler
+ * Handles requests to /moves/Monument
  */
-public class MonumentHandler extends BaseHandler {
+public class MonumentHandler extends MoveHandler {
 	public MonumentHandler(IServerFacade server) {
 		super(server);
 	}
@@ -23,6 +26,9 @@ public class MonumentHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
-		return null;
+		MoveRequest request = new Gson().fromJson(body, MoveRequest.class);
+
+		MonumentCommand command = new MonumentCommand(server, gameID,request.getPlayerIndex());
+		return executeCommand(command);
 	}
 }

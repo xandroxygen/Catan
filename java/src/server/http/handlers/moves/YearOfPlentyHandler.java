@@ -1,13 +1,16 @@
 package server.http.handlers.moves;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import server.command.moves.YearOfPlentyCommand;
 import server.facade.IServerFacade;
 import server.http.handlers.BaseHandler;
+import server.http.requests.moves.YearOfPlentyRequest;
 
 /**
  * Handles requests to /moves/Year_Of_Plenty
  */
-public class YearOfPlentyHandler extends BaseHandler {
+public class YearOfPlentyHandler extends MoveHandler {
 	public YearOfPlentyHandler(IServerFacade server) {
 		super(server);
 	}
@@ -23,6 +26,10 @@ public class YearOfPlentyHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
-		return null;
+		YearOfPlentyRequest request = new Gson().fromJson(body, YearOfPlentyRequest.class);
+
+		YearOfPlentyCommand command = new YearOfPlentyCommand(server, gameID, request.getPlayerIndex(),
+				request.getResource1(), request.getResource2());
+		return executeCommand(command);
 	}
 }

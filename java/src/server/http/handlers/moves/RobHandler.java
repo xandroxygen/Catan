@@ -1,13 +1,16 @@
 package server.http.handlers.moves;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import server.command.moves.RobPlayerCommand;
 import server.facade.IServerFacade;
 import server.http.handlers.BaseHandler;
+import server.http.requests.moves.RobRequest;
 
 /**
  * Handles requests to /moves/robPlayer
  */
-public class RobHandler extends BaseHandler {
+public class RobHandler extends MoveHandler {
 	public RobHandler(IServerFacade server) {
 		super(server);
 	}
@@ -23,6 +26,10 @@ public class RobHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
-		return null;
+		RobRequest request = new Gson().fromJson(body, RobRequest.class);
+
+		RobPlayerCommand command = new RobPlayerCommand(server, gameID, request.getPlayerIndex(),
+				request.getVictimIndex(), request.getLocation());
+		return executeCommand(command);
 	}
 }

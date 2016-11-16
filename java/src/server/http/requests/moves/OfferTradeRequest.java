@@ -2,6 +2,7 @@ package server.http.requests.moves;
 
 import shared.definitions.ResourceType;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -9,10 +10,10 @@ import java.util.Map;
  */
 public class OfferTradeRequest extends MoveRequest {
 
-	private Map<ResourceType, Integer> offer;
+	private HashMap<ResourceType, Integer> offer;
 	private int receiver;
 
-	public Map<ResourceType, Integer> getOffer() {
+	public HashMap<ResourceType, Integer> getOffer() {
 		return offer;
 	}
 

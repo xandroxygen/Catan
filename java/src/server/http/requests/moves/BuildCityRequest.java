@@ -8,8 +8,13 @@ import shared.locations.VertexLocation;
 public class BuildCityRequest extends MoveRequest {
 
 	private VertexLocation vertexLocation;
+	private boolean isFree;
 
 	public VertexLocation getVertexLocation() {
 		return vertexLocation;
+	}
+
+	public boolean isFree() {
+		return isFree;
 	}
 }

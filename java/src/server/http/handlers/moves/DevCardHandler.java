@@ -1,13 +1,16 @@
 package server.http.handlers.moves;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import server.command.moves.BuyDevCardCommand;
 import server.facade.IServerFacade;
 import server.http.handlers.BaseHandler;
+import server.http.requests.moves.MoveRequest;
 
 /**
  * Handles requests to /moves/buyDevCard
  */
-public class DevCardHandler extends BaseHandler {
+public class DevCardHandler extends MoveHandler {
 	public DevCardHandler(IServerFacade server) {
 		super(server);
 	}
@@ -23,6 +26,10 @@ public class DevCardHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
-		return null;
+		MoveRequest request = (new Gson()).fromJson(body, MoveRequest.class);
+
+		BuyDevCardCommand command = new BuyDevCardCommand(server, gameID, request.getPlayerIndex());
+
+		return executeCommand(command);
 	}
 }

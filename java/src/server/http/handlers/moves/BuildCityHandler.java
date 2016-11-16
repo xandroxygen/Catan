@@ -1,13 +1,17 @@
 package server.http.handlers.moves;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import server.command.moves.BuildCityCommand;
 import server.facade.IServerFacade;
+import server.http.ModelSerializer;
 import server.http.handlers.BaseHandler;
+import server.http.requests.moves.BuildCityRequest;
 
 /**
  * Handles requests to /moves/buildCity
  */
-public class BuildCityHandler extends BaseHandler {
+public class BuildCityHandler extends MoveHandler {
 	public BuildCityHandler(IServerFacade server) {
 		super(server);
 	}
@@ -23,6 +27,11 @@ public class BuildCityHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
-		return null;
+		BuildCityRequest request = (new Gson()).fromJson(body, BuildCityRequest.class);
+
+		BuildCityCommand command = new BuildCityCommand(server, gameID,
+				request.getPlayerIndex(), request.getVertexLocation(), request.isFree());
+
+		return executeCommand(command);
 	}
 }
