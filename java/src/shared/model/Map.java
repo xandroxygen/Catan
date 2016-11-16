@@ -5,9 +5,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import shared.definitions.HexType;
+import shared.definitions.ResourceType;
 import shared.locations.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -585,6 +589,37 @@ public class Map {
 
 	public void setRobber(Robber robber2) {
 		this.robber = robber2;
+	}
+
+	public void rewardPlayerAtHex(Player p, int hexNumber) {
+		for (HexLocation key : hexes.keySet()) {
+			if (hexes.get(key).getNumber() == hexNumber && hexes.get(key).getResource() != HexType.DESERT) {
+				Hex hex = hexes.get(key);
+				
+				// Create vertices for each point around the hex
+				ArrayList<VertexLocation> vertices = new ArrayList<VertexLocation>(
+		    		    Arrays.asList(new VertexLocation(hex.getLocation(), VertexDirection.East),
+		    					new VertexLocation(hex.getLocation(), VertexDirection.NorthEast),
+		    					new VertexLocation(hex.getLocation(), VertexDirection.NorthWest),
+		    					new VertexLocation(hex.getLocation(), VertexDirection.SouthEast),
+		    					new VertexLocation(hex.getLocation(), VertexDirection.SouthWest),
+		    					new VertexLocation(hex.getLocation(), VertexDirection.West)));
+				
+				for (VertexLocation vertex : vertices) {
+					// Add 1 resource for settlement
+					if (settlements.get(vertex.getNormalizedLocation()) != null && settlements.get(vertex.getNormalizedLocation()).getOwnerIndex() == p.getPlayerIndex()) {
+						p.addToResourceHand(ResourceType.valueOf(hex.getResource().toString()), 1);
+					}
+					// Add 2 resource for city
+					if (cities.get(vertex.getNormalizedLocation()) != null && cities.get(vertex.getNormalizedLocation()).getOwnerIndex() == p.getPlayerIndex()) {
+						p.addToResourceHand(ResourceType.valueOf(hex.getResource().toString()), 2);
+					}
+				}
+				
+				
+			}
+		}
+		
 	}
 	
 

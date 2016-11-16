@@ -335,9 +335,20 @@ public class ServerGame extends Game {
      * @param rollValue the value that was rolled
 	 */
     public void rollDice(int playerID,  int rollValue) {
-    	if (rollValue == 7) {
-    		getTurnTracker().setStatus(GameStatus.Robbing);
+    	// Award resources to players
+    	for (Player p : getPlayerList()) {
+    		getTheMap().rewardPlayerAtHex(p,rollValue);
     	}
+    	
+    	// If any player has more than 7 resource cards, change game status to discarding
+    	if (rollValue == 7 && (getPlayerList().get(0).getTotalOfResources() >= 7 || 
+    			getPlayerList().get(1).getTotalOfResources() >= 7 || 
+    			getPlayerList().get(2).getTotalOfResources() >= 7 || 
+    			getPlayerList().get(3).getTotalOfResources() >= 7)) {
+    		getTurnTracker().setStatus(GameStatus.Discarding);
+    	}
+    	
+    	// Else set to playing
     	else {
     		getTurnTracker().setStatus(GameStatus.Playing);
     	}
