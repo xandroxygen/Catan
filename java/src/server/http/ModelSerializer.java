@@ -53,15 +53,26 @@ public class ModelSerializer {
 
 			// players
 			JsonArray players = new JsonArray();
-			for (Player player : game.getPlayerList()) {
-				players.add(serializePlayer(player));
+			
+			//for (Player player : game.getPlayerList()) {
+				//players.add(serializePlayer(player));
+			//}
+			
+			for(int i = 0; i < 4; i++) {
+				if (i < game.getPlayerList().size()) {
+					Player p = game.getPlayerList().get(i);
+					players.add(serializePlayer(p));
+				}
+				else {
+					players.add(null);
+				}
 			}
 			object.add("players", players);
 
 			// logs
 			JsonObject logs = new JsonObject();
 			logs.add("lines", serializeLogEntryList(game.getLog()));
-			object.add("logs", logs);
+			object.add("log", logs);
 
 			// chat
 			JsonObject chat = new JsonObject();
@@ -75,6 +86,12 @@ public class ModelSerializer {
 			tracker.addProperty("longestRoad", game.getTurnTracker().getLongestRoad());
 			tracker.addProperty("largestArmy", game.getTurnTracker().getLargestArmy());
 			object.add("turnTracker", tracker);
+			
+			// winner
+			object.addProperty("winner", game.getWinner());
+			
+			//version
+			object.addProperty("version", game.getVersion());
 
 			return object.toString();
 
