@@ -352,6 +352,7 @@ public class ServerGame extends Game {
     	else {
     		getTurnTracker().setStatus(GameStatus.Playing);
     	}
+    	// TODO distribute resources to every player
     }
 
     /**
@@ -401,7 +402,7 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      */
     public void addPlayer(int playerID, String username, CatanColor color) {
-    	if (getPlayerIndex(playerID) != -1) {
+    	if (getPlayerIndex(playerID) == -1) {
     		this.addPlayer(new Player(playerID,username,color,getPlayerList().size()));
     	}
     }
