@@ -3,6 +3,7 @@ package server.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import client.communication.LogEntry;
@@ -19,7 +20,6 @@ import shared.model.Bank;
 import shared.model.Game;
 import shared.model.GameStatus;
 import shared.model.Hex;
-import shared.model.Map;
 import shared.model.Player;
 import shared.model.Port;
 import shared.model.Robber;
@@ -140,7 +140,7 @@ public class ServerGame extends Game {
      */
     public void buyDevelopmentCard(int playerID){
         int totalNumOfDevCards = 0;
-        for(java.util.Map.Entry<DevCardType, Integer> tempDevCard : getBank().getDevelopmentCards().entrySet()) {
+        for(Map.Entry<DevCardType, Integer> tempDevCard : getBank().getDevelopmentCards().entrySet()) {
             totalNumOfDevCards += tempDevCard.getValue();
         }
         // TODO: 11/7/2016 finish method
@@ -320,7 +320,7 @@ public class ServerGame extends Game {
      * @param receiverPlayerID Player being offered the trade
      * @param offer hand of cards to trade
      */
-    public void makeTradeOffer(int senderPlayerID, int receiverPlayerID, HashMap<ResourceType, Integer> offer){}
+    public void makeTradeOffer(int senderPlayerID, int receiverPlayerID, Map<ResourceType, Integer> offer){}
 
     /**
      * Accept the TradeOffer currently on the table.
@@ -404,7 +404,7 @@ public class ServerGame extends Game {
      * 		</pre>
      * @param playerID the ID of the player who is requesting the move
      */
-    public void discardCards(int playerID, HashMap<ResourceType, Integer> discardCards){
+    public void discardCards(int playerID, Map<ResourceType, Integer> discardCards){
 
     }
 
@@ -442,7 +442,7 @@ public class ServerGame extends Game {
 	 */
 	public void largestArmy() {}
 	
-	private Map createMap(boolean randomTiles, boolean randomNumbers, boolean randomPorts) {
+	private shared.model.Map createMap(boolean randomTiles, boolean randomNumbers, boolean randomPorts) {
 		ArrayList<Integer> numbers = new ArrayList<Integer>(
     		    Arrays.asList(0,4,11,8,3,9,12,5,10,11,5,6,2,9,4,10,6,3,8));
     	// BRICK, WOOL, ORE, GRAIN, WOOD
@@ -476,7 +476,7 @@ public class ServerGame extends Game {
     					new Port(2,ResourceType.ORE),new Port(2,ResourceType.WHEAT),new Port(3,null)));
     			
 
-		java.util.Map<HexLocation,Hex> hexes = new HashMap<>();
+		Map<HexLocation,Hex> hexes = new HashMap<>();
 		while (!locations.isEmpty()) {
 			Hex hex = null;
 			HexType type = resources.get(0);
@@ -507,7 +507,7 @@ public class ServerGame extends Game {
 			locations.remove(location);
     	}
     	
-		java.util.Map<EdgeLocation,Port> finalPorts = new HashMap<>();
+		Map<EdgeLocation,Port> finalPorts = new HashMap<>();
     	for (Port port: ports) {
     		EdgeLocation loc = portLocations.get(0);
     		if (randomPorts) {
@@ -522,7 +522,7 @@ public class ServerGame extends Game {
     		portLocations.remove(loc);
     	}
     	
-    	return new Map(hexes,finalPorts);
+    	return new shared.model.Map(hexes,finalPorts);
 	}
 	
 }
