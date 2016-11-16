@@ -151,6 +151,15 @@ public class ServerModel {
     public boolean canPlayMonumentCard(int gameID, int playerId) {
         return false;
     }
+    
+    public boolean canCreateGame(String gameName) {
+    	for (ServerGame g : games) {
+    		if (g.getGameName().equals(gameName)) {
+    			return false;
+    		}
+    	}
+    	return true;
+    }
 
     /**
      * Places a City in the Game from the given gameID for the player specified in the given playerID, at the given location.

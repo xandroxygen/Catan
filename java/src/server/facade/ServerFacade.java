@@ -43,6 +43,9 @@ public class ServerFacade implements IServerFacade {
 	@Override
 	public ServerGame gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts)
 			throws InvalidActionException {
+		if (!model.canCreateGame(name)) {
+			throw new InvalidActionException("Game name already exists");
+		}
 		return model.createGame(randomTiles, randomNumbers, randomPorts, name);
 	}
 
