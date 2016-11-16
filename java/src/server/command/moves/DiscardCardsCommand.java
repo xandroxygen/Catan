@@ -1,6 +1,5 @@
 package server.command.moves;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import server.command.Command;
@@ -17,9 +16,9 @@ public class DiscardCardsCommand extends Command {
 	/**
 	 * the cards being discarded
 	 */
-	private HashMap<ResourceType, Integer> hand;
+	private Map<ResourceType, Integer> hand;
 	
-	public DiscardCardsCommand(IServerFacade facade, int gameID, int playerID, HashMap<ResourceType, Integer> hand) {
+	public DiscardCardsCommand(IServerFacade facade, int gameID, int playerID, Map<ResourceType, Integer> hand) {
 		super(gameID, facade);
 		this.playerID = playerID;
 		this.hand = hand;

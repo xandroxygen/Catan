@@ -6,16 +6,30 @@ import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
-import shared.model.Game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ServerModel class
  */
 public class ServerModel {
-    private HashMap<String, User> users;
-    private HashMap<Integer, ServerGame> games;
+	private static ServerModel model;
+    private ArrayList<User> users;
+    private ArrayList<ServerGame> games;
+    
+    public ServerModel() {
+        users = new ArrayList<>();
+        games = new ArrayList<>();
+    }
+    
+    public static ServerModel getInstance() {
+		if (model == null) {
+			model = new ServerModel();
+		}
+		return model;
+	}
     
     /**
      * Checks whether the player can place a city.
@@ -76,7 +90,7 @@ public class ServerModel {
      * @param recieverPlayerId the playerIndex of the offer recipient.
      * @return result
      */
-    public boolean canTradeWithPlayer(int gameID, int senderPlayerId, int recieverPlayerId, HashMap<ResourceType, Integer> offer){
+    public boolean canTradeWithPlayer(int gameID, int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){
         return games.get(gameID).canTradeWithPlayer(senderPlayerId, recieverPlayerId, offer);
     }
 
@@ -333,7 +347,7 @@ public class ServerModel {
      * @param receiverPlayerID Player being offered the trade
      * @param offer hand of cards to trade
      */
-    public void makeTradeOffer(int gameID, int senderPlayerID, int receiverPlayerID, HashMap<ResourceType, Integer> offer){
+    public void makeTradeOffer(int gameID, int senderPlayerID, int receiverPlayerID, Map<ResourceType, Integer> offer){
         games.get(gameID).makeTradeOffer(senderPlayerID, receiverPlayerID, offer);
     }
 
@@ -421,7 +435,7 @@ public class ServerModel {
      * @param gameID the ID of the game from which the request was made.
      * @param playerID the ID of the player who is requesting the move
      */
-    public void discardCards(int gameID, int playerID, HashMap<ResourceType, Integer> discardCards){
+    public void discardCards(int gameID, int playerID, Map<ResourceType, Integer> discardCards){
         games.get(gameID).discardCards(playerID, discardCards);
     }
 
@@ -430,10 +444,9 @@ public class ServerModel {
      * * @post <pre>
      *      If there are AI players it will return an array of their corresponding types
      * 		</pre>
-     * @param gameID the ID of the game from which the request was made.
      */
-    public String[] listAIPlayers(int gameID){
-        return games.get(gameID).listAIPlayers();
+    public String[] listAIPlayers(){
+        return new String[]{"LARGEST_ARMY"};
     }
 
     /**
@@ -445,10 +458,11 @@ public class ServerModel {
      *      adds a new game to the list of games
      * 		</pre>
      */
-    public void createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName) {
-    	int id = games.size()+1;
+    public ServerGame createGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName) {
+    	int id = games.size();
     	ServerGame game = new ServerGame(randomTiles,randomNumbers,randomPorts,gameName,id);
-    	games.put(id,game);
+    	games.add(id,game);
+        return game;
     }
     
     /**
@@ -475,8 +489,8 @@ public class ServerModel {
      *      Returns an array of all of the games
      * 		</pre>
      */
-    public Game[] listGames(){
-        return null;
+    public ArrayList<ServerGame> listGames(){
+        return games;
     }
 
 
@@ -493,7 +507,16 @@ public class ServerModel {
      * @param password The password of the new User
      * @return int playerId of new user
      */
-    public int registerUser(String username, String password){ return -1; }
+    public int registerUser(String username, String password) {
+        for (User tempUser : users) {
+            if(tempUser.getUsername().equals(username)){
+                return -1;
+            }
+        }
+        //todo possibly needs to add ID (I am not sure)
+        users.add(new User(username, password));
+        return users.size() - 1;
+    }
 
     /**
      * Adds a new user to the game.
@@ -505,6 +528,12 @@ public class ServerModel {
      * @return true if login succeeded false if incorrect username/password were given
      */
     public boolean login(String username, String password){
+        for (User tempUser : users) {
+            if(tempUser.getUsername().equals(username) && tempUser.getPassword().equals(password)){
+                tempUser.setLoggedIn(true);
+                return true;
+            }
+        }
         return false;
     }
 }

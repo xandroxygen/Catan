@@ -39,6 +39,14 @@ public class User {
         localPlayer = new PlayerInfo();
     }
 
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
+    }
+
     public boolean canJoinGame() {
         return false;
     }

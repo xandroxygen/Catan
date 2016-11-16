@@ -1,6 +1,6 @@
 package server.facade;
 
-import shared.model.Game;
+import server.model.ServerGame;
 import shared.model.InvalidActionException;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
@@ -8,7 +8,7 @@ import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Map;
 
 public interface IServerFacade{
@@ -78,7 +78,7 @@ public interface IServerFacade{
 	 * 		1. Server returns 400 error response and body contains an error message.
 	 * 	</pre>
 	 */
-	Game[] gamesList() throws InvalidActionException;
+	ArrayList<ServerGame> gamesList() throws InvalidActionException;
 	/**
 	 * Creates a new game on the server. 
 	 * 
@@ -100,10 +100,10 @@ public interface IServerFacade{
      * @param randomTiles true if the tiles should be randomized, false if they should be preset
      * @param randomNumbers true if the numbers should be randomized, false if they should be preset
      * @param randomPorts true if the ports should be randomized, false if they should be preset
-	 * @return 
+	 * @return
 	 * @throws InvalidActionException 
 	 */
-	String gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws InvalidActionException;
+	ServerGame gamesCreate(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws InvalidActionException;
 	
 	/**
 	 * Adds the player to the specified game and sets their catan.game cookie.
@@ -151,7 +151,7 @@ public interface IServerFacade{
 	 * 		1. The server returns an HTTP 400 error message and the response body contains an error message
 	 * </pre>
 	 */
-	String gameGetModel() throws InvalidActionException;
+	ServerGame gameGetModel(int gameID) throws InvalidActionException;
 
 	/**
 	 * Returns the current state of the game in JSON format.
@@ -175,13 +175,12 @@ public interface IServerFacade{
 	 *  </pre>
 	 *
 	 * @param version The version number of the model. Used to compare and check if model has been updated.
-	 * @throws InvalidActionException 
+	 * @throws InvalidActionException
 	 */
-	String gameGetModel(int version) throws InvalidActionException;	
-	
+	ServerGame gameGetModel(int gameID, int version) throws InvalidActionException;
+
 	/**
 	 * Returns a list of supported AI player types.
-	 * @param gameID The ID of the game from which the request was made
 	 * @return All AI player types for a particular game
 	 * @throws InvalidActionException 
 	 *
@@ -195,7 +194,7 @@ public interface IServerFacade{
 	 * 		 1. The server returns an HTTP 400 error message and the response body contains an error message
 	 * </pre>
 	 */
-	String[] gameListAI(int gameID) throws InvalidActionException;
+	String[] gameListAI() throws InvalidActionException;
 	/**
 	 * Adds an AI player to the current game.
 	 * 
@@ -278,7 +277,7 @@ public interface IServerFacade{
      * 		You have the resources you are discarding
 	 * </pre>
 	 */
-	Object discardCards(int gameID, int playerID, HashMap<ResourceType, Integer> hand) throws InvalidActionException;
+	Object discardCards(int gameID, int playerID, Map<ResourceType, Integer> hand) throws InvalidActionException;
 
     /**
      * Tell the server that the dice were rolled.
@@ -367,7 +366,7 @@ public interface IServerFacade{
      * @pre You have the resources you are offering
      * @post The trade is offered to the other player
 	 */
-	Object offerTrade(int gameID, int senderID, int receiverID, HashMap<ResourceType, Integer> offer) throws InvalidActionException;
+	Object offerTrade(int gameID, int senderID, int receiverID, Map<ResourceType, Integer> offer) throws InvalidActionException;
 	/**
 	 * Used when built on a port, or when trading to the bank.
 	 * @param ratio 4 (to 1, when not on a port), 3 (to 1, when on a general port), 2 (to 1, when on a resource port)

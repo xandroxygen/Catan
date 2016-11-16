@@ -59,4 +59,13 @@ public class TurnTracker {
 		}
 		
 	}
+
+	public void nextTurn() {
+		currentTurn++;
+		if (currentTurn == 4) {
+			currentTurn = 0;
+		}
+		status = GameStatus.Rolling;
+		
+	}
 }

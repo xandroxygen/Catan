@@ -582,6 +582,10 @@ public class Map {
 		Settlement settlement = new Settlement(location,playerIndex);
 		settlements.put(settlement.getLocation().getNormalizedLocation(), settlement);
 	}
+
+	public void setRobber(Robber robber2) {
+		this.robber = robber2;
+	}
 	
 
 }
