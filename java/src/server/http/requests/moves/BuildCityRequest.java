@@ -17,4 +17,8 @@ public class BuildCityRequest extends MoveRequest {
 	public boolean isFree() {
 		return isFree;
 	}
+	
+	public void setCityLocation(VertexLocation loc) {
+		this.vertexLocation = loc;
+	}
 }

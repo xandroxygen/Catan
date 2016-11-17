@@ -1,6 +1,8 @@
 package server.http.handlers.moves;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 //import com.sun.javafx.scene.layout.region.BackgroundSizeConverter;
 import com.sun.net.httpserver.HttpExchange;
 import server.command.moves.BuildSettlementCommand;
@@ -8,6 +10,11 @@ import server.facade.IServerFacade;
 import server.http.ModelSerializer;
 import server.http.handlers.BaseHandler;
 import server.http.requests.moves.BuildSettlementRequest;
+import shared.locations.EdgeDirection;
+import shared.locations.VertexDirection;
+import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
+import shared.locations.VertexLocation;
 
 /**
  * Handles requests to /moves/buildSettlement
@@ -29,6 +36,13 @@ public class BuildSettlementHandler extends MoveHandler {
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
 		BuildSettlementRequest request = (new Gson()).fromJson(body, BuildSettlementRequest.class);
+		
+		JsonObject json = new JsonParser().parse(body).getAsJsonObject();
+		request.setFree(json.get("free").getAsBoolean());
+		JsonObject locationJSON = json.getAsJsonObject("settlementLocation");
+		VertexDirection dir = VertexDirection.getEnumFromAbbrev(locationJSON.get("direction").getAsString().toUpperCase());
+		HexLocation hex = new HexLocation(locationJSON.get("x").getAsInt(),locationJSON.get("y").getAsInt());
+		request.setSettlementLocation(new VertexLocation(hex,dir));
 
 		BuildSettlementCommand command = new BuildSettlementCommand(server, gameID,
 				request.getPlayerIndex(), request.getVertexLocation(), request.isFree());

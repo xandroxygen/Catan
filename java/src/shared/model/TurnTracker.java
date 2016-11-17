@@ -68,4 +68,14 @@ public class TurnTracker {
 		status = GameStatus.Rolling;
 		
 	}
+
+	public void setupProgression() {
+		if (status == GameStatus.FirstRound && currentTurn < 3) {
+			currentTurn++;
+		}
+		else if (status == GameStatus.SecondRound && currentTurn > 0) {
+			currentTurn--;
+		}
+		
+	}
 }

@@ -17,4 +17,12 @@ public class BuildSettlementRequest extends MoveRequest {
 	public boolean isFree() {
 		return free;
 	}
+	
+	public void setFree(boolean free) {
+		this.free = free;
+	}
+	
+	public void setSettlementLocation(VertexLocation v) {
+		this.vertexLocation = v;
+	}
 }

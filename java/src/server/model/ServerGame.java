@@ -102,6 +102,9 @@ public class ServerGame extends Game {
 	    	// Adjust player piece inventory
 	    	getPlayerList().get(index).addToPlayerPieces(PieceType.SETTLEMENT, -1);
     	}
+    	else {
+        	getTurnTracker().setupProgression();
+    	}
     	if (getTheMap().getSettlements().size() == 4 || getTheMap().getSettlements().size() == 8) {
     		getTurnTracker().nextStatus();
     	}
@@ -124,8 +127,8 @@ public class ServerGame extends Game {
 	    	getBank().purchaseRoad(getPlayerList().get(index));
 	    	// Adjust player piece inventory
 	    	getPlayerList().get(index).addToPlayerPieces(PieceType.ROAD, -1);
+	    	this.longestRoad();
     	}
-    	this.longestRoad();
     }
 
     /**
