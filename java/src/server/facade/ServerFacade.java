@@ -179,7 +179,7 @@ public class ServerFacade implements IServerFacade {
 	@Override
 	public Object robPlayer(int gameID, int playerIndex, HexLocation location, int victimIndex)
 			throws InvalidActionException {
-		model.robPlayer(gameID, playerIndex, victimIndex);
+		model.robPlayer(gameID, playerIndex, victimIndex, location);
 		
 		return model.listGames().get(gameID);
 	}

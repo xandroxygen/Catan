@@ -223,10 +223,8 @@ public class ServerGame extends Game {
         getPlayerList().get(playerIndex).setPlayedDevCard(true);
         //add a soldier to player
         getPlayerList().get(playerIndex).addSoldier();
-        //move the robber
-        getTheMap().getRobber().setLocation(location);
         //rob the victim and add it to the player who played the card
-        robPlayer(playerIndex, victimIndex);
+        robPlayer(playerIndex, victimIndex, location);
         largestArmy();
 		setVersion(getVersion() + 1);
 	}
@@ -488,7 +486,7 @@ public class ServerGame extends Game {
      * @param playerIndex the ID of the player who is requesting the move
      * @param victimIndex .
      */
-    public void robPlayer(int playerIndex, int victimIndex){
+    public void robPlayer(int playerIndex, int victimIndex, HexLocation location){
 		Player current_player = getPlayerList().get(playerIndex);
 		Player victim_player = getPlayerList().get(victimIndex);
 		if(victim_player.getResources().size() > 0){
@@ -521,6 +519,9 @@ public class ServerGame extends Game {
 					hasRobbedPlayer = TRUE;
 				}
 			}
+		}
+		if (location != null) {
+			getTheMap().getRobber().setLocation(location);
 		}
 		getTurnTracker().setStatus(GameStatus.Playing);
         setVersion(getVersion() + 1);

@@ -429,9 +429,10 @@ public class ServerModel {
      * @param gameID the ID of the game from which the request was made.
      * @param playerIndex the ID of the player who is requesting the move
      * @param victimIndex .
+     * @param location 
      */
-    public void robPlayer(int gameID, int playerIndex, int victimIndex){
-        games.get(gameID).robPlayer(playerIndex, victimIndex);
+    public void robPlayer(int gameID, int playerIndex, int victimIndex, HexLocation location){
+        games.get(gameID).robPlayer(playerIndex, victimIndex, location);
     }
 
     /**
