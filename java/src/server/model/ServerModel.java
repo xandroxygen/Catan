@@ -548,13 +548,15 @@ public class ServerModel {
      * @param password The password of the User
      * @return true if login succeeded false if incorrect username/password were given
      */
-    public boolean login(String username, String password){
+    public int login(String username, String password){
+    	int id = 0;
         for (User tempUser : users) {
             if(tempUser.getUsername().equals(username) && tempUser.getPassword().equals(password)){
                 tempUser.setLoggedIn(true);
-                return true;
+                return id;
             }
+            id++;
         }
-        return false;
+        return -1;
     }
 }
