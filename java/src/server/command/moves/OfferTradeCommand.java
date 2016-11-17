@@ -12,7 +12,7 @@ public class OfferTradeCommand extends Command{
 	/**
 	 * the ID of the person offering the trade
 	 */
-	private int senderID;
+	private int senderIndex;
 	/**
 	 * <pre>
 	 * the cards to send and the cards to receive:
@@ -24,12 +24,12 @@ public class OfferTradeCommand extends Command{
 	/**
 	 * the ID of the player receiving the offer
 	 */
-	private int receiverID;
+	private int receiverIndex;
 	
-	public OfferTradeCommand(IServerFacade facade, int gameID, int senderID, int receiverID, Map<ResourceType, Integer> offer) {
+	public OfferTradeCommand(IServerFacade facade, int gameID, int senderIndex, int receiverIndex, Map<ResourceType, Integer> offer) {
 		super(gameID, facade);
-		this.senderID = senderID;
-		this.receiverID = receiverID;
+		this.senderIndex = senderIndex;
+		this.receiverIndex = receiverIndex;
 		this.offer = offer;
 	}
 
@@ -42,7 +42,7 @@ public class OfferTradeCommand extends Command{
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().offerTrade(this.getGameID(), senderID, receiverID, offer);
+		return this.getFacade().offerTrade(this.getGameID(), senderIndex, receiverIndex, offer);
 	}
 
 }

@@ -258,11 +258,11 @@ public class Game {
      * @pre It's your turn, You have the resources you are offering.
      * @post The trade is offered to the other player (stored in the server model)
      * @param offer list of Resources, Negative numbers mean you get those cards
-     * @param recieverPlayerId the playerIndex of the offer recipient.
+     * @param recieverPlayerIndex the playerIndex of the offer recipient.
      * @return result
      */
-	public boolean canTradeWithPlayer(int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){
-    	Player player = this.getPlayerById(senderPlayerId);
+	public boolean canTradeWithPlayer(int senderPlayerIndex, int recieverPlayerIndex, Map<ResourceType, Integer> offer){
+    	Player player = this.getPlayerList().get(senderPlayerIndex);
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) && 
 				player.hasOfferResources(offer));
     }

@@ -73,17 +73,19 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move.
      * @param location The location of the city.
      */
-    public void placeCity(int playerID, VertexLocation location) {
-    	int index = getPlayerIndex(playerID);
-    	// Add to the Map
-    	getTheMap().addCity(index,location);
-    	// Adjust the player and bank resources
-    	getBank().purchaseCity(getPlayerList().get(index));
-    	// Adjust player piece inventory
-    	getPlayerList().get(index).addToPlayerPieces(PieceType.CITY, -1);
-    	getPlayerList().get(index).addToPlayerPieces(PieceType.SETTLEMENT, 1);
+    public void placeCity(int playerIndex, VertexLocation location) {
     	
-    	getPlayerList().get(index).setVictoryPoints(getPlayerList().get(index).getVictoryPoints() + 1);
+    	// Add to the Map
+    	getTheMap().addCity(playerIndex,location);
+    	
+    	// Adjust the player and bank resources
+    	getBank().purchaseCity(getPlayerList().get(playerIndex));
+    	
+    	// Adjust player piece inventory
+    	getPlayerList().get(playerIndex).addToPlayerPieces(PieceType.CITY, -1);
+    	getPlayerList().get(playerIndex).addToPlayerPieces(PieceType.SETTLEMENT, 1);
+    	
+    	getPlayerList().get(playerIndex).setVictoryPoints(getPlayerList().get(playerIndex).getVictoryPoints() + 1);
 		setVersion(getVersion() + 1);
     }
 
@@ -95,18 +97,17 @@ public class ServerGame extends Game {
      * @param free Whether or not piece can be built for free.
      * @param location The location of the settlement.
      */
-    public void placeSettlement(int playerID, boolean free, VertexLocation location) {
-    	int index = getPlayerIndex(playerID);
+    public void placeSettlement(int playerIndex, boolean free, VertexLocation location) {
     	// Add to the Map
-    	getTheMap().addSettlement(index,location);
+    	getTheMap().addSettlement(playerIndex,location);
     	if (!free) {
 	    	// Adjust the player and bank resources
-	    	getBank().purchaseRoad(getPlayerList().get(index));
+	    	getBank().purchaseRoad(getPlayerList().get(playerIndex));
 	    	// Adjust player piece inventory
-	    	getPlayerList().get(index).addToPlayerPieces(PieceType.SETTLEMENT, -1);
+	    	getPlayerList().get(playerIndex).addToPlayerPieces(PieceType.SETTLEMENT, -1);
     	}
     	if (getTurnTracker().getStatus() == GameStatus.SecondRound) {
-    		getTheMap().rewardPlayerAtSecondRound(getPlayerList().get(index), location);
+    		getTheMap().rewardPlayerAtSecondRound(getPlayerList().get(playerIndex), location);
     	}
     	//else {
         	//getTurnTracker().setupProgression();
@@ -114,7 +115,7 @@ public class ServerGame extends Game {
     	//if (getTheMap().getSettlements().size() == 4 || getTheMap().getSettlements().size() == 8) {
     		//getTurnTracker().nextStatus();
     	//}
-    	getPlayerList().get(index).setVictoryPoints(getPlayerList().get(index).getVictoryPoints() + 1);
+    	getPlayerList().get(playerIndex).setVictoryPoints(getPlayerList().get(playerIndex).getVictoryPoints() + 1);
 		setVersion(getVersion() + 1);
 	}
 
@@ -126,15 +127,14 @@ public class ServerGame extends Game {
      * @param free Whether or not piece can be built for free.
      * @param location The location of the road.
      */
-    public void placeRoad(int playerID, boolean free, EdgeLocation location) {
-    	int index = getPlayerIndex(playerID);
+    public void placeRoad(int playerIndex, boolean free, EdgeLocation location) {
     	// Add to the Map
-    	getTheMap().addRoad(index,location);
+    	getTheMap().addRoad(playerIndex,location);
     	if (!free) {
 	    	// Adjust the player and bank resources
-	    	getBank().purchaseRoad(getPlayerList().get(index));
+	    	getBank().purchaseRoad(getPlayerList().get(playerIndex));
 	    	// Adjust player piece inventory
-	    	getPlayerList().get(index).addToPlayerPieces(PieceType.ROAD, -1);
+	    	getPlayerList().get(playerIndex).addToPlayerPieces(PieceType.ROAD, -1);
             this.longestRoad();
         }
 		setVersion(getVersion() + 1);
@@ -146,8 +146,8 @@ public class ServerGame extends Game {
      * @post You have a new card; If it is a monument card, it has been added to your old devCard hand, If it is a non­monument card, it has been added to your new devCard hand (unplayable this turn)
      * @param playerID the ID of the player who is requesting the move
      */
-    public void buyDevelopmentCard(int playerID){
-        Player current_player = getPlayerList().get(getPlayerIndex(playerID));
+    public void buyDevelopmentCard(int playerIndex){
+        Player current_player = getPlayerList().get(playerIndex);
 
         //THIS PART CALCULATES THE PROBABILITY THAT YOU WILL PICK UP EACH CARD
         //THE REASON THAT THE NUMBER OF THE PREVIOUS CARD IS ADDED IS SO WHEN GENERATING A RANDOM NUMBER IT ALL WORKS OUT
@@ -219,14 +219,14 @@ public class ServerGame extends Game {
      * @param location the new robber location.
      * @param victimIndex The playerIndex of the player you wish to rob, or -1 to rob no one.
      */
-    public void playSoldierCard(int playerID, HexLocation location, int victimIndex){
-        getPlayerList().get(playerID).setPlayedDevCard(true);
+    public void playSoldierCard(int playerIndex, HexLocation location, int victimIndex){
+        getPlayerList().get(playerIndex).setPlayedDevCard(true);
         //add a soldier to player
-        getPlayerList().get(playerID).addSoldier();
+        getPlayerList().get(playerIndex).addSoldier();
         //move the robber
         getTheMap().getRobber().setLocation(location);
         //rob the victim and add it to the player who played the card
-        robPlayer(playerID, victimIndex);
+        robPlayer(playerIndex, victimIndex);
         largestArmy();
 		setVersion(getVersion() + 1);
 	}
@@ -248,17 +248,17 @@ public class ServerGame extends Game {
      * @param resource1 The type of the first resource you'd like to receive
      * @param resource2 The type of the second resource you'd like to receive
      */
-    public void playYearOfPlenty(int playerID, ResourceType resource1, ResourceType resource2){
-        getPlayerList().get(playerID).setPlayedDevCard(true);
+    public void playYearOfPlenty(int playerIndex, ResourceType resource1, ResourceType resource2){
+        getPlayerList().get(playerIndex).setPlayedDevCard(true);
         if(getBank().getResourceDeck().get(resource1) > 0){
             getBank().getResourceDeck().put(resource1, getBank().getResourceDeck().get(resource1) - 1);
-            getPlayerList().get(playerID).getResources().put(resource1,
-                    getPlayerList().get(playerID).getResources().get(resource1) + 1);
+            getPlayerList().get(playerIndex).getResources().put(resource1,
+                    getPlayerList().get(playerIndex).getResources().get(resource1) + 1);
         }
         if(getBank().getResourceDeck().get(resource2) > 0){
             getBank().getResourceDeck().put(resource2, getBank().getResourceDeck().get(resource2) - 1);
-            getPlayerList().get(playerID).getResources().put(resource2,
-                    getPlayerList().get(playerID).getResources().get(resource2) + 1);
+            getPlayerList().get(playerIndex).getResources().put(resource2,
+                    getPlayerList().get(playerIndex).getResources().get(resource2) + 1);
         }
 		setVersion(getVersion() + 1);
     }
@@ -285,10 +285,10 @@ public class ServerGame extends Game {
      * @param spot1 first edge location of road.
      * @param spot2 second edge location of road.
      */
-    public void playRoadCard(int playerID, EdgeLocation spot1, EdgeLocation spot2){
-        getPlayerList().get(playerID).setPlayedDevCard(true);
-        placeRoad(playerID, true, spot1);
-        placeRoad(playerID, true, spot2);
+    public void playRoadCard(int playerIndex, EdgeLocation spot1, EdgeLocation spot2){
+        getPlayerList().get(playerIndex).setPlayedDevCard(true);
+        placeRoad(playerIndex, true, spot1);
+        placeRoad(playerIndex, true, spot2);
 		setVersion(getVersion() + 1);
 	}
 
@@ -307,14 +307,14 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      * @param resource The type of resource desired from other players.
      */
-    public void playMonopolyCard(int playerID, ResourceType resource){
-        getPlayerList().get(playerID).setPlayedDevCard(true);
+    public void playMonopolyCard(int playerIndex, ResourceType resource){
+        getPlayerList().get(playerIndex).setPlayedDevCard(true);
         int totalCountOfResource = 0;
         for (Player tempPlayer : getPlayerList()) {
             totalCountOfResource += tempPlayer.getResources().get(resource);
             tempPlayer.getResources().put(resource, 0);
         }
-        getPlayerList().get(playerID).getResources().put(resource, totalCountOfResource);
+        getPlayerList().get(playerIndex).getResources().put(resource, totalCountOfResource);
 		setVersion(getVersion() + 1);
 	}
 
@@ -332,8 +332,8 @@ public class ServerGame extends Game {
      * 		</pre>
      * @param playerID the ID of the player who is requesting the move
      */
-    public void playMonumentCard(int playerID){
-        getPlayerList().get(playerID).setVictoryPoints(getPlayerList().get(playerID).getVictoryPoints() + 1);
+    public void playMonumentCard(int playerIndex){
+        getPlayerList().get(playerIndex).setVictoryPoints(getPlayerList().get(playerIndex).getVictoryPoints() + 1);
 		setVersion(getVersion() + 1);
 	}
 
@@ -344,10 +344,10 @@ public class ServerGame extends Game {
      * @param playerID the ID of the player who is requesting the move
      * @param rollValue the value that was rolled
 	 */
-    public void rollDice(int playerID,  int rollValue) {
+    public void rollDice(int playerIndex,  int rollValue) {
     	// Award resources to players
     	for (Player p : getPlayerList()) {
-    		getTheMap().rewardPlayerAtHex(p,rollValue);
+    		getTheMap().rewardPlayerAtHex(p,rollValue, getBank());
     	}
     	
     	// If any player has more than 7 resource cards, change game status to discarding
@@ -368,28 +368,23 @@ public class ServerGame extends Game {
     /**
      * Sends a chat message.
      * @post  The chat contains your message at the end.
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerIndex the ID of the player who is requesting the move
      * @param message the message the player wishes to send.
      */
-    public void sendMessage(int playerID, String message) {
-    	String name = "";
-    	for (Player p: getPlayerList()) {
-    		if (p.getPlayerID() == playerID) {
-    			name = p.getName();
-    		}
-    	}
+    public void sendMessage(int playerIndex, String message) {
+    	String name = getPlayerList().get(playerIndex).getName();
     	getChat().add(new LogEntry(message,name));
         setVersion(getVersion() + 1);
     }
 
     /**
      * Make a trade offer to another player.
-     * @param senderPlayerID Player offering the trade
-     * @param receiverPlayerID Player being offered the trade
+     * @param senderPlayerIndex Player offering the trade
+     * @param receiverPlayerIndex Player being offered the trade
      * @param offer hand of cards to trade
      */
-    public void makeTradeOffer(int senderPlayerID, int receiverPlayerID, Map<ResourceType, Integer> offer){
-		setTradeOffer(new TradeOffer(senderPlayerID, receiverPlayerID, offer));
+    public void makeTradeOffer(int senderPlayerIndex, int receiverPlayerIndex, Map<ResourceType, Integer> offer){
+		setTradeOffer(new TradeOffer(senderPlayerIndex, receiverPlayerIndex, offer));
         setVersion(getVersion() + 1);
 	}
 
@@ -416,13 +411,12 @@ public class ServerGame extends Game {
      * Accept the TradeOffer currently on the table.
      * @param playerID the ID of the player who is requesting the move
      */
-    public void makeMaritimeTrade(int playerID, int ratio, ResourceType inputResource, ResourceType outputResource) {
-    	int index = getPlayerIndex(playerID);
+    public void makeMaritimeTrade(int playerIndex, int ratio, ResourceType inputResource, ResourceType outputResource) {
     	// Adjust the player and bank resources
     	getBank().addToResourceDeck(inputResource, ratio);
     	// Adjust player piece inventory
-    	getPlayerList().get(index).addToResourceHand(outputResource, 1);
-    	getPlayerList().get(index).addToResourceHand(inputResource, -ratio);
+    	getPlayerList().get(playerIndex).addToResourceHand(outputResource, 1);
+    	getPlayerList().get(playerIndex).addToResourceHand(inputResource, -ratio);
         setVersion(getVersion() + 1);
     }
 
@@ -549,13 +543,13 @@ public class ServerGame extends Game {
      * 		</pre>
      * @param playerID the ID of the player who is requesting the move
      */
-    public void discardCards(int playerID, Map<ResourceType, Integer> discardCards){
-        getPlayerList().get(playerID).setDiscarded(true);
-		discardResource(playerID, discardCards, ResourceType.BRICK);
-		discardResource(playerID, discardCards, ResourceType.WOOD);
-		discardResource(playerID, discardCards, ResourceType.SHEEP);
-		discardResource(playerID, discardCards, ResourceType.ORE);
-		discardResource(playerID, discardCards, ResourceType.WHEAT);
+    public void discardCards(int playerIndex, Map<ResourceType, Integer> discardCards){
+        getPlayerList().get(playerIndex).setDiscarded(true);
+		discardResource(playerIndex, discardCards, ResourceType.BRICK);
+		discardResource(playerIndex, discardCards, ResourceType.WOOD);
+		discardResource(playerIndex, discardCards, ResourceType.SHEEP);
+		discardResource(playerIndex, discardCards, ResourceType.ORE);
+		discardResource(playerIndex, discardCards, ResourceType.WHEAT);
         for (Player tempPlayer : getPlayerList()) {
             if(!(tempPlayer.isDiscarded() || tempPlayer.getTotalOfResources() <= 7)){
                 return;
@@ -569,8 +563,8 @@ public class ServerGame extends Game {
         setVersion(getVersion() + 1);
     }
 
-	private void discardResource(int playerID, Map<ResourceType, Integer> discardCards, ResourceType resourceType){
-		Player current_player = getPlayerList().get(getPlayerIndex(playerID));
+	private void discardResource(int playerIndex, Map<ResourceType, Integer> discardCards, ResourceType resourceType){
+		Player current_player = getPlayerList().get(playerIndex);
 		current_player.getResources().put(resourceType,
 				current_player.getResources().get(resourceType) - discardCards.get(resourceType));
 	}

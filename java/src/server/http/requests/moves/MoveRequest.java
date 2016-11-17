@@ -21,7 +21,7 @@ public class MoveRequest {
 
 	public ResourceType findResource(String resource) throws InvalidActionException {
 		for (ResourceType r : ResourceType.values()) {
-			if (r.toString().equals(resource)) {
+			if (r.toString().toLowerCase().equals(resource)) {
 				return r;
 			}
 		}

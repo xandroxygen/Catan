@@ -10,7 +10,7 @@ public class YearOfPlentyCommand extends Command {
 	/**
 	 * the ID of the player playing the Year of Plenty card
 	 */
-	private int playerID;
+	private int playerIndex;
 	/**
 	 * the first resource the player wants to receive 
 	 */
@@ -20,9 +20,9 @@ public class YearOfPlentyCommand extends Command {
 	 */
 	private ResourceType resource2;
 	
-	public YearOfPlentyCommand(IServerFacade facade, int gameID, int playerID, ResourceType resource1, ResourceType resource2) {
+	public YearOfPlentyCommand(IServerFacade facade, int gameID, int playerIndex, ResourceType resource1, ResourceType resource2) {
 		super(gameID, facade);
-		this.playerID = playerID;
+		this.playerIndex = playerIndex;
 		this.resource1 = resource1;
 		this.resource2 = resource2;
 	}
@@ -36,7 +36,7 @@ public class YearOfPlentyCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().playYearOfPlenty(this.getGameID(), playerID, resource1, resource2);	
+		return this.getFacade().playYearOfPlenty(this.getGameID(), playerIndex, resource1, resource2);	
 	}
 
 }

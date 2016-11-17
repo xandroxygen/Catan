@@ -10,7 +10,7 @@ public class RoadBuildingCommand extends Command{
 	/**
 	 * the ID of the player playing the BuildRoad card
 	 */
-	private int playerID;
+	private int playerIndex;
 	/**
 	 * the first location to build a road
 	 */
@@ -20,9 +20,9 @@ public class RoadBuildingCommand extends Command{
 	 */
 	private EdgeLocation location2;
 
-	public RoadBuildingCommand(IServerFacade facade, int gameID, int playerID, EdgeLocation location1, EdgeLocation location2) {
+	public RoadBuildingCommand(IServerFacade facade, int gameID, int playerIndex, EdgeLocation location1, EdgeLocation location2) {
 		super(gameID, facade);
-		this.playerID = playerID;
+		this.playerIndex = playerIndex;
 		this.location1 = location1;
 		this.location2 = location2;
 	}
@@ -36,7 +36,7 @@ public class RoadBuildingCommand extends Command{
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().playRoadBuilding(this.getGameID(), playerID, location1, location2);
+		return this.getFacade().playRoadBuilding(this.getGameID(), playerIndex, location1, location2);
 	}
 
 }

@@ -17,4 +17,8 @@ public class RobRequest extends MoveRequest {
 	public HexLocation getLocation() {
 		return location;
 	}
+
+	public void setLocation(HexLocation location) {
+		this.location = location;
+	}
 }
