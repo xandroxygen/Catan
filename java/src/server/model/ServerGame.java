@@ -428,6 +428,9 @@ public class ServerGame extends Game {
     	if (getPlayerIndex(playerID) == -1) {
     		this.addPlayer(new Player(playerID,username,color,getPlayerList().size()));
     	}
+    	else{
+            getPlayerList().get(getPlayerIndex(playerID)).setColor(color);
+        }
         setVersion(getVersion() + 1);
     }
 
