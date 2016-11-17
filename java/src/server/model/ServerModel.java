@@ -103,7 +103,7 @@ public class ServerModel {
      * @return result
      */
     public boolean canTradeWithBank(int gameID, int playerId, int ratio, ResourceType inputResource, ResourceType outputResource){
-        return false;
+        return true;
     }
 
     /**
@@ -113,7 +113,7 @@ public class ServerModel {
      * @return result
      */
     public boolean canPlaySoldier(int gameID, int playerId, HexLocation location, int victimIndex) {
-        return false;
+        return true;
     }
 
     /**
@@ -123,7 +123,7 @@ public class ServerModel {
      * @return result
      */
     public boolean canPlayYearOfPlenty(int gameID, int playerId, ResourceType resource1, ResourceType resource2) {
-        return false;
+        return true;
     }
 
     /**
@@ -133,7 +133,7 @@ public class ServerModel {
      * @return result
      */
     public boolean canPlayRoadCard(int gameID, int playerId, EdgeLocation spot1, EdgeLocation spot2) {
-        return false;
+        return true;
     }
 
     /**
@@ -142,7 +142,7 @@ public class ServerModel {
      * @return result
      */
     public boolean canPlayMonopolyCard(int gameID, int playerId, ResourceType resource) {
-        return false;
+        return true;
     }
 
     /**
@@ -150,7 +150,7 @@ public class ServerModel {
      * @return result
      */
     public boolean canPlayMonumentCard(int gameID, int playerId) {
-        return false;
+        return true;
     }
     
     public boolean canCreateGame(String gameName) {
