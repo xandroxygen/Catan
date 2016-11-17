@@ -109,7 +109,7 @@ public class ServerFacade implements IServerFacade {
 	public Object rollNumber(int gameID, int playerID, int rollValue) throws InvalidActionException {
 		model.rollDice(gameID, playerID, rollValue);
 		
-d			return model.listGames().get(gameID);
+			return model.listGames().get(gameID);
 	}
 
 	@Override
