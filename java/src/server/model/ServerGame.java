@@ -148,7 +148,10 @@ public class ServerGame extends Game {
      */
     public void buyDevelopmentCard(int playerIndex){
         Player current_player = getPlayerList().get(playerIndex);
-
+        current_player.getResources().put(ResourceType.ORE, current_player.getResources().get(ResourceType.ORE) - 1);
+        current_player.getResources().put(ResourceType.WHEAT, current_player.getResources().get(ResourceType.WHEAT) - 1);
+        current_player.getResources().put(ResourceType.SHEEP, current_player.getResources().get(ResourceType.SHEEP) - 1);
+        
         //THIS PART CALCULATES THE PROBABILITY THAT YOU WILL PICK UP EACH CARD
         //THE REASON THAT THE NUMBER OF THE PREVIOUS CARD IS ADDED IS SO WHEN GENERATING A RANDOM NUMBER IT ALL WORKS OUT
         int numOfSoldierCards, numOfYearOfPlentyCards, numOfMonopolyCards, numOfRoadBuildCards, numOfMonumentCards;
