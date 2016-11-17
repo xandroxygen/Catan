@@ -9,11 +9,11 @@ public class BuyDevCardCommand extends Command {
 	/**
 	 * the ID of the player buying a Dev card
 	 */
-	private int playerID;
+	private int playerIndex;
 	
-	public BuyDevCardCommand(IServerFacade facade, int gameID, int playerID) {
+	public BuyDevCardCommand(IServerFacade facade, int gameID, int playerIndex) {
 		super(gameID, facade);
-		this.playerID = playerID;
+		this.playerIndex = playerIndex;
 	}
 
 	@Override
@@ -25,6 +25,6 @@ public class BuyDevCardCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().buyDevCard(this.getGameID(), playerID);		
+		return this.getFacade().buyDevCard(this.getGameID(), playerIndex);		
 	}
 }

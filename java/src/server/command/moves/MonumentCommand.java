@@ -9,11 +9,11 @@ public class MonumentCommand extends Command {
 	/**
 	 * the ID of the player playing the Monument card
 	 */
-	private int playerID; 
+	private int playerIndex; 
 	
-	public MonumentCommand(IServerFacade facade, int gameID, int playerID) {
+	public MonumentCommand(IServerFacade facade, int gameID, int playerIndex) {
 		super(gameID, facade);
-		this.playerID = playerID;
+		this.playerIndex = playerIndex;
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class MonumentCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().playMonument(this.getGameID(), playerID);
+		return this.getFacade().playMonument(this.getGameID(), playerIndex);
 	}
 
 }

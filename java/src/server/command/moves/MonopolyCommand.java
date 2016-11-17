@@ -10,15 +10,15 @@ public class MonopolyCommand extends Command{
 	/**
 	 * the ID of the player playing the Monopoly card
 	 */
-	private int playerID;
+	private int playerIndex;
 	/**
 	 * the resource to be taken from the other players
 	 */
 	private ResourceType resource;
 	
-	public MonopolyCommand(IServerFacade facade, int gameID, int playerID, ResourceType resource) {
+	public MonopolyCommand(IServerFacade facade, int gameID, int playerIndex, ResourceType resource) {
 		super(gameID, facade);
-		this.playerID = playerID;
+		this.playerIndex = playerIndex;
 		this.resource = resource;
 	}
 
@@ -31,7 +31,7 @@ public class MonopolyCommand extends Command{
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().playMonopoly(this.getGameID(), playerID, resource);
+		return this.getFacade().playMonopoly(this.getGameID(), playerIndex, resource);
 	}
 
 }

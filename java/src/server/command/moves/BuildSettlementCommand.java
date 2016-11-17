@@ -10,7 +10,7 @@ public class BuildSettlementCommand extends Command {
 	/**
 	 * the ID of the player building a settlement
 	 */
-	private int playerID;
+	private int playerIndex;
 	/**
 	 * whether the location that the player wants to build a settlement is free or not
 	 */
@@ -20,9 +20,9 @@ public class BuildSettlementCommand extends Command {
 	 */
 	private VertexLocation settlementLocation;
 	
-	public BuildSettlementCommand(IServerFacade facade, int gameID, int playerID, VertexLocation settlementLoc, boolean isFree) {
+	public BuildSettlementCommand(IServerFacade facade, int gameID, int playerIndex, VertexLocation settlementLoc, boolean isFree) {
 		super(gameID, facade);
-		this.playerID = playerID;
+		this.playerIndex = playerIndex;
 		this.settlementLocation = settlementLoc;
 		this.isFree = isFree;
 	}
@@ -36,7 +36,7 @@ public class BuildSettlementCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException{
-		return this.getFacade().buildSettlement(this.getGameID(), playerID, isFree, settlementLocation);
+		return this.getFacade().buildSettlement(this.getGameID(), playerIndex, isFree, settlementLocation);
 	}
 
 }

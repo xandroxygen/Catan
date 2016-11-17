@@ -9,15 +9,15 @@ public class RollNumberCommand extends Command {
 	/**
 	 * the ID of the player that rolled
 	 */
-	private int playerID;
+	private int playerIndex;
 	/**
 	 * the value that was rolled
 	 */
 	private int rollValue;
 
-	public RollNumberCommand(IServerFacade facade, int gameID, int playerID, int rollValue) {
+	public RollNumberCommand(IServerFacade facade, int gameID, int playerIndex, int rollValue) {
 		super(gameID, facade);
-		this.playerID = playerID;
+		this.playerIndex = playerIndex;
 		this.rollValue = rollValue;
 	}
 
@@ -30,7 +30,7 @@ public class RollNumberCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().rollNumber(this.getGameID(), playerID, rollValue);
+		return this.getFacade().rollNumber(this.getGameID(), playerIndex, rollValue);
 	}
 
 }

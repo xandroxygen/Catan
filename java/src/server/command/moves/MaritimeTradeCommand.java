@@ -10,7 +10,7 @@ public class MaritimeTradeCommand extends Command {
 	/**
 	 * the ID of the player performing Maritime trade
 	 */
-	private int playerID;
+	private int playerIndex;
 	/**
 	 * the ratio at which the resources will be traded (could be 2:1, 3:1, or 4:1)
 	 */
@@ -24,9 +24,9 @@ public class MaritimeTradeCommand extends Command {
 	 */
 	private ResourceType outputResource;
 
-	public MaritimeTradeCommand(IServerFacade facade, int gameID, int playerID, int ratio, ResourceType inputResource, ResourceType outputResource) {
+	public MaritimeTradeCommand(IServerFacade facade, int gameID, int playerIndex, int ratio, ResourceType inputResource, ResourceType outputResource) {
 		super(gameID, facade);
-		this.playerID = playerID;
+		this.playerIndex = playerIndex;
 		this.ratio = ratio;
 		this.inputResource = inputResource;
 		this.outputResource = outputResource;
@@ -41,7 +41,7 @@ public class MaritimeTradeCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException{
-		return this.getFacade().maritimeTrade(this.getGameID(), playerID, ratio, inputResource, outputResource);
+		return this.getFacade().maritimeTrade(this.getGameID(), playerIndex, ratio, inputResource, outputResource);
 	}
 
 }
