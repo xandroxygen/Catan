@@ -600,13 +600,15 @@ public class ServerGame extends Game {
 		}
 		// Get the current largest amount of roads
 		int max;
+		int index = -1;
 		if (getTurnTracker().getLongestRoad() != -1) {
 			max = playerRoads[getTurnTracker().getLongestRoad()];
+			index = getTurnTracker().getLongestRoad();
 		}
 		else {
 			max = 4;
 		}
-		int index = -1;
+
 		// If greater than current max, replace
 		for (int i = 0; i < playerRoads.length; i++) {
 			if (playerRoads[i] > max) {
