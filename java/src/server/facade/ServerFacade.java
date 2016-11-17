@@ -22,8 +22,9 @@ public class ServerFacade implements IServerFacade {
 
 	@Override
 	public int userLogin(String username, String password) throws InvalidActionException {
-		if(model.login(username, password)) {
-			return 0; // TODO return playerID
+		int id = model.login(username, password);
+		if(id >= 0) {
+			return id; // TODO return playerID
 		}
 		else {
 			throw new InvalidActionException("Cannot log in");
@@ -108,7 +109,7 @@ public class ServerFacade implements IServerFacade {
 	public Object rollNumber(int gameID, int playerID, int rollValue) throws InvalidActionException {
 		model.rollDice(gameID, playerID, rollValue);
 		
-		return model.listGames().get(gameID);
+			return model.listGames().get(gameID);
 	}
 
 	@Override
