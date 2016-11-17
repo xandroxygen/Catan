@@ -522,6 +522,7 @@ public class ServerGame extends Game {
 				}
 			}
 		}
+		getTurnTracker().setStatus(GameStatus.Playing);
         setVersion(getVersion() + 1);
 	}
 
@@ -551,7 +552,7 @@ public class ServerGame extends Game {
 		discardResource(playerIndex, discardCards, ResourceType.ORE);
 		discardResource(playerIndex, discardCards, ResourceType.WHEAT);
         for (Player tempPlayer : getPlayerList()) {
-            if(!(tempPlayer.isDiscarded() || tempPlayer.getTotalOfResources() < 7)){
+            if(!(tempPlayer.isDiscarded() || tempPlayer.getTotalOfResources() <= 7)){
                 return;
             }
         }
