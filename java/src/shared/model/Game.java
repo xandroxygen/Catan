@@ -226,10 +226,19 @@ public class Game {
     				theMap.futureCanPlaceSettlement(location.getNormalizedVertices().get(1))) &&
     				!theMap.edgeIsOnWater(location));
     	}
+    	ArrayList<Player> otherPlayers = new ArrayList<>();
+    	for (Player p : playerList) {
+    		if (p.getPlayerID() != player.getPlayerID()) {
+    			otherPlayers.add(p);
+    		}
+    	}
     	return ((turnTracker.getCurrentTurn() == player.getPlayerIndex()) &&
     			!theMap.edgeIsOnWater(location) &&
 				!theMap.hasRoadAtLocation(location) &&
 				(theMap.edgeHasPlayerMunicipality(location, player) || theMap.edgeHasAdjacentPlayerRoad(location, player)) &&
+				!theMap.edgeHasPlayerMunicipality(location, otherPlayers.get(0)) &&
+				!theMap.edgeHasPlayerMunicipality(location, otherPlayers.get(1)) && 
+				!theMap.edgeHasPlayerMunicipality(location, otherPlayers.get(2)) &&
 				(player.getResources().get(ResourceType.WOOD) >= 1) && 
 				(player.getResources().get(ResourceType.BRICK) >= 1) && (player.getRoads() >= 1));
     }
