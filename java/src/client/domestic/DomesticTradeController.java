@@ -468,12 +468,12 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			int receiver = Model.getInstance().getTradeReceiver();
 			int sender = Model.getInstance().getTradeSender();
 			
-			if(receiver == Model.getInstance().getPlayerIndex(receiver)) {
+			if(receiver == GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getPlayerIndex()) {
 				setUpAcceptTrade();
 				getAcceptOverlay().showModal();
 			}
 			
-			if(sender == Model.getInstance().getPlayerIndex(sender)) {
+			if(sender == GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getPlayerIndex()) {
 				getWaitOverlay().showModal();
 			}
 		}
