@@ -32,7 +32,11 @@ public class ServerFacade implements IServerFacade {
 
 	@Override
 	public int userRegister(String username, String password) throws InvalidActionException {
-		return model.registerUser(username, password);
+		int ID = model.registerUser(username, password);
+		if(ID == -1){
+			throw new InvalidActionException("User Already Exists");
+		}
+		return ID;
 	}
 
 	@Override

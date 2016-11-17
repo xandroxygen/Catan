@@ -82,6 +82,7 @@ public class ServerGame extends Game {
     	// Adjust player piece inventory
     	getPlayerList().get(index).addToPlayerPieces(PieceType.CITY, -1);
     	getPlayerList().get(index).addToPlayerPieces(PieceType.SETTLEMENT, 1);
+		setVersion(getVersion() + 1);
     }
 
     /**
@@ -108,7 +109,8 @@ public class ServerGame extends Game {
     	if (getTheMap().getSettlements().size() == 4 || getTheMap().getSettlements().size() == 8) {
     		getTurnTracker().nextStatus();
     	}
-    }
+		setVersion(getVersion() + 1);
+	}
 
     /**
      * Places a Road in the Game for the player specified in the given playerID, at the given location.
@@ -127,9 +129,10 @@ public class ServerGame extends Game {
 	    	getBank().purchaseRoad(getPlayerList().get(index));
 	    	// Adjust player piece inventory
 	    	getPlayerList().get(index).addToPlayerPieces(PieceType.ROAD, -1);
-	    	this.longestRoad();
-    	}
-    }
+            this.longestRoad();
+        }
+		setVersion(getVersion() + 1);
+	}
 
     /**
      * Buys a development card if the given player.
@@ -185,7 +188,8 @@ public class ServerGame extends Game {
             current_player.getOldDevCards().put(DevCardType.MONUMENT,
                     current_player.getOldDevCards().get(DevCardType.MONUMENT) + 1);
         }
-    }
+		setVersion(getVersion() + 1);
+	}
 
     /**
      * Places a soldier development card and moves the robber into the given location and robs the victim player if there is one
@@ -218,7 +222,8 @@ public class ServerGame extends Game {
         //rob the victim and add it to the player who played the card
         robPlayer(playerID, victimIndex);
         largestArmy();
-    }
+		setVersion(getVersion() + 1);
+	}
 
     /**
      * Plays a year of plenty devCard.
@@ -249,6 +254,7 @@ public class ServerGame extends Game {
             getPlayerList().get(playerID).getResources().put(resource2,
                     getPlayerList().get(playerID).getResources().get(resource2) + 1);
         }
+		setVersion(getVersion() + 1);
     }
 
     /**
@@ -277,7 +283,8 @@ public class ServerGame extends Game {
         getPlayerList().get(playerID).setPlayedDevCard(true);
         placeRoad(playerID, true, spot1);
         placeRoad(playerID, true, spot2);
-    }
+		setVersion(getVersion() + 1);
+	}
 
     /**
      * Plays a monopoly devCard.
@@ -302,7 +309,8 @@ public class ServerGame extends Game {
             tempPlayer.getResources().put(resource, 0);
         }
         getPlayerList().get(playerID).getResources().put(resource, totalCountOfResource);
-    }
+		setVersion(getVersion() + 1);
+	}
 
     /**
      * Plays a monument devCard.
@@ -320,7 +328,8 @@ public class ServerGame extends Game {
      */
     public void playMonumentCard(int playerID){
         getPlayerList().get(playerID).setVictoryPoints(getPlayerList().get(playerID).getVictoryPoints() + 1);
-    }
+		setVersion(getVersion() + 1);
+	}
 
     /**
      * Checks whether the player can roll the dice
@@ -347,7 +356,7 @@ public class ServerGame extends Game {
     	else {
     		getTurnTracker().setStatus(GameStatus.Playing);
     	}
-    	// TODO distribute resources to every player
+		setVersion(getVersion() + 1);
     }
 
     /**
