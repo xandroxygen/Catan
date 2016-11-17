@@ -347,7 +347,7 @@ public class ServerGame extends Game {
     public void rollDice(int playerIndex,  int rollValue) {
     	// Award resources to players
     	for (Player p : getPlayerList()) {
-    		getTheMap().rewardPlayerAtHex(p,rollValue);
+    		getTheMap().rewardPlayerAtHex(p,rollValue, getBank());
     	}
     	
     	// If any player has more than 7 resource cards, change game status to discarding
@@ -379,12 +379,12 @@ public class ServerGame extends Game {
 
     /**
      * Make a trade offer to another player.
-     * @param senderPlayerID Player offering the trade
-     * @param receiverPlayerID Player being offered the trade
+     * @param senderPlayerIndex Player offering the trade
+     * @param receiverPlayerIndex Player being offered the trade
      * @param offer hand of cards to trade
      */
-    public void makeTradeOffer(int senderPlayerID, int receiverPlayerID, Map<ResourceType, Integer> offer){
-		setTradeOffer(new TradeOffer(senderPlayerID, receiverPlayerID, offer));
+    public void makeTradeOffer(int senderPlayerIndex, int receiverPlayerIndex, Map<ResourceType, Integer> offer){
+		setTradeOffer(new TradeOffer(senderPlayerIndex, receiverPlayerIndex, offer));
         setVersion(getVersion() + 1);
 	}
 
@@ -485,7 +485,7 @@ public class ServerGame extends Game {
      * * @post <pre>
      *      Robs 1 resource from the victim player
      * 		</pre>
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerIndex the ID of the player who is requesting the move
      * @param victimIndex .
      */
     public void robPlayer(int playerIndex, int victimIndex){

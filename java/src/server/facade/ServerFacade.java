@@ -55,8 +55,8 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public String gamesJoin(int gameID, int playerID, CatanColor color) throws InvalidActionException {
-		model.join(playerID, gameID, color);
+	public String gamesJoin(int gameID, int playerIndex, CatanColor color) throws InvalidActionException {
+		model.join(playerIndex, gameID, color);
 		return "Success";
 	}
 
@@ -151,10 +151,10 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public Object offerTrade(int gameID, int senderID, int receiverID, Map<ResourceType, Integer> offer)
+	public Object offerTrade(int gameID, int senderIndex, int receiverIndex, Map<ResourceType, Integer> offer)
 			throws InvalidActionException {
-		if(model.canTrade(gameID) && model.canTradeWithPlayer(gameID, senderID, receiverID, offer)) {
-			model.makeTradeOffer(gameID, senderID, receiverID, offer);
+		if(model.canTrade(gameID) && model.canTradeWithPlayer(gameID, senderIndex, receiverIndex, offer)) {
+			model.makeTradeOffer(gameID, senderIndex, receiverIndex, offer);
 			
 			return model.listGames().get(gameID);
 		}

@@ -72,8 +72,9 @@ public class ServerModel {
      * Checks whether the player can buy a development card.
      * @return result
      */
-    public boolean canBuyDevelopmentCard(int gameID, int playerIndex){
-        return false;
+
+    public boolean canBuyDevelopmentCard(int gameID, int playerId){
+        return true;
     }
     
     /**
@@ -81,17 +82,17 @@ public class ServerModel {
      * @return
      */
     public boolean canTrade(int gameID) {
-    	return false;
+    	return true;
     }
 
     /**
      * Checks whether the player can trade with another player
      * @param offer list of Resources, Negative numbers mean you get those cards
-     * @param recieverPlayerId the playerIndex of the offer recipient.
+     * @param recieverPlayerIndex the playerIndex of the offer recipient.
      * @return result
      */
-    public boolean canTradeWithPlayer(int gameID, int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){
-        return games.get(gameID).canTradeWithPlayer(senderPlayerId, recieverPlayerId, offer);
+    public boolean canTradeWithPlayer(int gameID, int senderPlayerIndex, int recieverPlayerIndex, Map<ResourceType, Integer> offer){
+        return games.get(gameID).canTradeWithPlayer(senderPlayerIndex, recieverPlayerIndex, offer);
     }
 
     /**
@@ -352,12 +353,12 @@ public class ServerModel {
     /**
      * Make a trade offer to another player.
      * @param gameID the ID of the game from which the request was made.
-     * @param senderPlayerID Player offering the trade
-     * @param receiverPlayerID Player being offered the trade
+     * @param senderPlayerIndex Player offering the trade
+     * @param receiverPlayerIndex Player being offered the trade
      * @param offer hand of cards to trade
      */
-    public void makeTradeOffer(int gameID, int senderPlayerID, int receiverPlayerID, Map<ResourceType, Integer> offer){
-        games.get(gameID).makeTradeOffer(senderPlayerID, receiverPlayerID, offer);
+    public void makeTradeOffer(int gameID, int senderPlayerIndex, int receiverPlayerIndex, Map<ResourceType, Integer> offer){
+        games.get(gameID).makeTradeOffer(senderPlayerIndex, receiverPlayerIndex, offer);
     }
 
     /**
@@ -426,7 +427,7 @@ public class ServerModel {
      *      Robs 1 resource from the victim player
      * 		</pre>
      * @param gameID the ID of the game from which the request was made.
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerIndex the ID of the player who is requesting the move
      * @param victimIndex .
      */
     public void robPlayer(int gameID, int playerIndex, int victimIndex){
