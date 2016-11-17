@@ -103,6 +103,9 @@ public class ServerGame extends Game {
 	    	// Adjust player piece inventory
 	    	getPlayerList().get(index).addToPlayerPieces(PieceType.SETTLEMENT, -1);
     	}
+    	if (getTurnTracker().getStatus() == GameStatus.SecondRound) {
+    		getTheMap().rewardPlayerAtSecondRound(getPlayerList().get(index), location);
+    	}
     	//else {
         	//getTurnTracker().setupProgression();
     	//}

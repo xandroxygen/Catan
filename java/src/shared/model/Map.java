@@ -593,7 +593,7 @@ public class Map {
 
 	public void rewardPlayerAtHex(Player p, int hexNumber) {
 		for (HexLocation key : hexes.keySet()) {
-			if (hexes.get(key).getNumber() == hexNumber && hexes.get(key).getResource() != HexType.DESERT) {
+			if (hexes.get(key).getNumber() == hexNumber && hexes.get(key).getResource() != null) {
 				Hex hex = hexes.get(key);
 				
 				// Create vertices for each point around the hex
@@ -621,6 +621,37 @@ public class Map {
 		}
 		
 	}
-	
 
+	public void rewardPlayerAtSecondRound(Player player, VertexLocation location) {
+		VertexLocation loc = location.getNormalizedLocation();
+		if (loc.getDir() == VertexDirection.NorthEast) {
+
+			HexLocation aboveHex = new HexLocation(location.getHexLoc().getX(),location.getHexLoc().getY() - 1);
+			HexLocation rightHex = new HexLocation(location.getHexLoc().getX() + 1,location.getHexLoc().getY() - 1);
+			if (hexes.get(aboveHex) != null && hexes.get(aboveHex).getResource() != null) {
+				player.addToResourceHand(ResourceType.valueOf(hexes.get(aboveHex).getResource().toString()), 1);
+
+			}
+			if (hexes.get(rightHex) != null && hexes.get(rightHex).getResource() != null) {
+				player.addToResourceHand(ResourceType.valueOf(hexes.get(rightHex).getResource().toString()), 1);
+			}
+		}
+		
+		else if (loc.getDir() == VertexDirection.NorthWest) {
+			
+			HexLocation aboveHex = new HexLocation(location.getHexLoc().getX(),location.getHexLoc().getY() - 1);
+			HexLocation leftHex = new HexLocation(location.getHexLoc().getX() - 1,location.getHexLoc().getY());
+			if (hexes.get(aboveHex) != null && hexes.get(aboveHex).getResource() != null) {
+				player.addToResourceHand(ResourceType.valueOf(hexes.get(aboveHex).getResource().toString()), 1);
+
+			}
+			if (hexes.get(leftHex) != null && hexes.get(leftHex).getResource() != null) {
+				player.addToResourceHand(ResourceType.valueOf(hexes.get(leftHex).getResource().toString()), 1);
+			}
+		}
+		
+		if (hexes.get(loc.getHexLoc()) != null) {
+			player.addToResourceHand(ResourceType.valueOf(hexes.get(loc.getHexLoc()).getResource().toString()), 1);
+		}
+	}
 }
