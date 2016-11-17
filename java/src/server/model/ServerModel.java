@@ -81,17 +81,17 @@ public class ServerModel {
      * @return
      */
     public boolean canTrade(int gameID) {
-    	return false;
+    	return true;
     }
 
     /**
      * Checks whether the player can trade with another player
      * @param offer list of Resources, Negative numbers mean you get those cards
-     * @param recieverPlayerId the playerIndex of the offer recipient.
+     * @param recieverPlayerIndex the playerIndex of the offer recipient.
      * @return result
      */
-    public boolean canTradeWithPlayer(int gameID, int senderPlayerId, int recieverPlayerId, Map<ResourceType, Integer> offer){
-        return games.get(gameID).canTradeWithPlayer(senderPlayerId, recieverPlayerId, offer);
+    public boolean canTradeWithPlayer(int gameID, int senderPlayerIndex, int recieverPlayerIndex, Map<ResourceType, Integer> offer){
+        return games.get(gameID).canTradeWithPlayer(senderPlayerIndex, recieverPlayerIndex, offer);
     }
 
     /**
@@ -352,12 +352,12 @@ public class ServerModel {
     /**
      * Make a trade offer to another player.
      * @param gameID the ID of the game from which the request was made.
-     * @param senderPlayerID Player offering the trade
-     * @param receiverPlayerID Player being offered the trade
+     * @param senderPlayerIndex Player offering the trade
+     * @param receiverPlayerIndex Player being offered the trade
      * @param offer hand of cards to trade
      */
-    public void makeTradeOffer(int gameID, int senderPlayerID, int receiverPlayerID, Map<ResourceType, Integer> offer){
-        games.get(gameID).makeTradeOffer(senderPlayerID, receiverPlayerID, offer);
+    public void makeTradeOffer(int gameID, int senderPlayerIndex, int receiverPlayerIndex, Map<ResourceType, Integer> offer){
+        games.get(gameID).makeTradeOffer(senderPlayerIndex, receiverPlayerIndex, offer);
     }
 
     /**
