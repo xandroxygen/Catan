@@ -510,7 +510,7 @@ public class ServerModel {
      * @return
      */
     public ServerGame getUpdatedGame(int gameId, int version) {
-    	if(games.get(gameId).getVersion() == version)
+    	if(games.get(gameId).getVersion() > version)
     		return games.get(gameId);
     	else
     		return null;
