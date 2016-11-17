@@ -28,12 +28,16 @@ public class ModelHandler extends BaseHandler {
 	 */
 	@Override
 	public String respondToRequest(HttpExchange exchange) {
+		
+		String query = exchange.getRequestURI().getQuery();
+		String[] pair = query.split("=");
+		int version = Integer.parseInt(pair[1]);
 
 		// catan.game must be set
 		if (gameID > -1) {
 
 			try {
-				ServerGame model = server.gameGetModel(gameID);
+				ServerGame model = server.gameGetModel(gameID, version);
 				if(model != null) {
 					return ModelSerializer.serializeGame(model);
 				}
