@@ -79,6 +79,21 @@ public class ModelSerializer {
 			chat.add("lines", serializeLogEntryList(game.getChat()));
 			object.add("chat", chat);
 
+			// trade offer
+			if (game.getTradeOffer() != null) {
+				JsonObject tradeOffer = new JsonObject();
+				tradeOffer.addProperty("sender", game.getTradeOffer().getSender());
+				tradeOffer.addProperty("receiver", game.getTradeOffer().getReceiver());
+				JsonObject offer = new JsonObject();
+				for (ResourceType resource : game.getTradeOffer().getOffer().keySet()) {
+
+					offer.addProperty(resource.toString().toLowerCase(), game.getTradeOffer().getOffer().get(resource));
+				}
+				tradeOffer.add("offer", offer);
+				object.add("tradeOffer", tradeOffer);
+			}
+
+
 			// turn tracker
 			JsonObject tracker = new JsonObject();
 			tracker.addProperty("status", game.getTurnTracker().getStatus().toString());
