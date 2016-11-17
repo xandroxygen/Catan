@@ -70,7 +70,7 @@ public class ServerGame extends Game {
      * Places a City in the Game for the player specified in the given playerID, at the given location.
      * @pre It's your turn, The city location is where you currently have a settlement, You have the required resources (2 wheat, 3 ore; 1 city)
      * @post You lost the resources required to build a city (2 wheat, 3 ore, 1 city), The city is on the map at the specified location, You got a settlement back on the desired location
-     * @param playerID the ID of the player who is requesting the move.
+     * @param playerIndex the ID of the player who is requesting the move.
      * @param location The location of the city.
      */
     public void placeCity(int playerIndex, VertexLocation location) {
@@ -93,7 +93,7 @@ public class ServerGame extends Game {
      * Places a Settlement in the Game for the player specified in the given playerID, at the given location.
      * @pre It's your turn, The settlement location is open, The settlement location is not on water, The settlement location is connected to one of your roads except during setup, You have the required resources (1 wood, 1 brick, 1 wheat, 1 sheep; 1 settlement), The settlement cannot be placed adjacent to another settlement
      * @post You lost the resources required to build a settlement (1 wood, 1 brick, 1 wheat, 1 sheep; 1 settlement), The settlement is on the map at the specified location
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerIndex the ID of the player who is requesting the move
      * @param free Whether or not piece can be built for free.
      * @param location The location of the settlement.
      */
@@ -123,7 +123,7 @@ public class ServerGame extends Game {
      * Places a Road in the Game for the player specified in the given playerID, at the given location.
      * @pre It's your turn, The road location is open, The road location is connected to another road owned by the player, The road location is not on water, You have the required resources (1 wood, 1 brick; 1 road), Setup round: Must be placed by settlement owned by the player with no adjacent road.
      * @post You lost the resources required to build a road (1 wood, 1 brick - 1 road), The road is on the map at the specified location, If applicable, longest road has been awarded to the player with the longest road
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerIndex the ID of the player who is requesting the move
      * @param free Whether or not piece can be built for free.
      * @param location The location of the road.
      */
@@ -144,7 +144,7 @@ public class ServerGame extends Game {
      * Buys a development card if the given player.
      * @pre It's your turn, You have the required resources (1 ore, 1 wheat, 1 sheep), There are dev cards left in the deck.
      * @post You have a new card; If it is a monument card, it has been added to your old devCard hand, If it is a non­monument card, it has been added to your new devCard hand (unplayable this turn)
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerIndex the ID of the player who is requesting the move
      */
     public void buyDevelopmentCard(int playerIndex){
         Player current_player = getPlayerList().get(playerIndex);
@@ -215,7 +215,7 @@ public class ServerGame extends Game {
      * 		You are not allowed to play other development cards during this turn (except for monument cards, which may still be played)
      * 	    Can not play another DevCard with the exception of the Monument Card
      * 		</pre>
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerIndex the ID of the player who is requesting the move
      * @param location the new robber location.
      * @param victimIndex The playerIndex of the player you wish to rob, or -1 to rob no one.
      */
@@ -244,7 +244,7 @@ public class ServerGame extends Game {
      * 		You gained the two specified resources
      * 	    Can not play another DevCard with the exception of the Monument Card
      * 		</pre>
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerIndex the ID of the player who is requesting the move
      * @param resource1 The type of the first resource you'd like to receive
      * @param resource2 The type of the second resource you'd like to receive
      */
@@ -281,7 +281,7 @@ public class ServerGame extends Game {
      * 		If applicable, longest road has been awarded to the player with the longest road
      * 	    Can not play another DevCard with the exception of the Monument Card
      * 		</pre>
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerIndex the ID of the player who is requesting the move
      * @param spot1 first edge location of road.
      * @param spot2 second edge location of road.
      */
@@ -304,7 +304,7 @@ public class ServerGame extends Game {
      * 		All of the other players have given you all of their resource cards of the specified type
      * 	    Can not play another DevCard with the exception of the Monument Card
      * 		</pre>
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerIndex the ID of the player who is requesting the move
      * @param resource The type of resource desired from other players.
      */
     public void playMonopolyCard(int playerIndex, ResourceType resource){
@@ -330,7 +330,7 @@ public class ServerGame extends Game {
      * @post <pre>
      * 		You gained a victory point
      * 		</pre>
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerIndex the ID of the player who is requesting the move
      */
     public void playMonumentCard(int playerIndex){
         getPlayerList().get(playerIndex).setVictoryPoints(getPlayerList().get(playerIndex).getVictoryPoints() + 1);
@@ -341,7 +341,7 @@ public class ServerGame extends Game {
      * Checks whether the player can roll the dice
      * @pre It's their turn, and the model status is ROLLING
      * @post distributes the correct amount of resources corresponding to the roll for every player
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerIndex the ID of the player who is requesting the move
      * @param rollValue the value that was rolled
 	 */
     public void rollDice(int playerIndex,  int rollValue) {
@@ -409,7 +409,7 @@ public class ServerGame extends Game {
 
     /**
      * Accept the TradeOffer currently on the table.
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerIndex the ID of the player who is requesting the move
      */
     public void makeMaritimeTrade(int playerIndex, int ratio, ResourceType inputResource, ResourceType outputResource) {
     	// Adjust the player and bank resources
@@ -542,7 +542,7 @@ public class ServerGame extends Game {
      * * @post <pre>
      *      the given resources are discarded
      * 		</pre>
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerIndex the ID of the player who is requesting the move
      */
     public void discardCards(int playerIndex, Map<ResourceType, Integer> discardCards){
         getPlayerList().get(playerIndex).setDiscarded(true);
@@ -556,6 +556,7 @@ public class ServerGame extends Game {
                 return;
             }
         }
+
         for (Player tempPlayer : getPlayerList()) {
             tempPlayer.setDiscarded(false);
         }
