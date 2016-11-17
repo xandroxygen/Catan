@@ -223,7 +223,8 @@ public class ServerGame extends Game {
      * @param victimIndex The playerIndex of the player you wish to rob, or -1 to rob no one.
      */
     public void playSoldierCard(int playerIndex, HexLocation location, int victimIndex){
-        getPlayerList().get(playerIndex).setPlayedDevCard(true);
+    	getPlayerList().get(playerIndex).getOldDevCards().put(DevCardType.SOLDIER, getPlayerList().get(playerIndex).getOldDevCards().get(DevCardType.SOLDIER) - 1);
+    	getPlayerList().get(playerIndex).setPlayedDevCard(true);
         //add a soldier to player
         getPlayerList().get(playerIndex).addSoldier();
         //rob the victim and add it to the player who played the card
@@ -250,7 +251,8 @@ public class ServerGame extends Game {
      * @param resource2 The type of the second resource you'd like to receive
      */
     public void playYearOfPlenty(int playerIndex, ResourceType resource1, ResourceType resource2){
-        getPlayerList().get(playerIndex).setPlayedDevCard(true);
+    	getPlayerList().get(playerIndex).getOldDevCards().put(DevCardType.YEAR_OF_PLENTY, getPlayerList().get(playerIndex).getOldDevCards().get(DevCardType.YEAR_OF_PLENTY) - 1);
+    	getPlayerList().get(playerIndex).setPlayedDevCard(true);
         if(getBank().getResourceDeck().get(resource1) > 0){
             getBank().getResourceDeck().put(resource1, getBank().getResourceDeck().get(resource1) - 1);
             getPlayerList().get(playerIndex).getResources().put(resource1,
@@ -287,6 +289,7 @@ public class ServerGame extends Game {
      * @param spot2 second edge location of road.
      */
     public void playRoadCard(int playerIndex, EdgeLocation spot1, EdgeLocation spot2){
+    	getPlayerList().get(playerIndex).getOldDevCards().put(DevCardType.ROAD_BUILD, getPlayerList().get(playerIndex).getOldDevCards().get(DevCardType.ROAD_BUILD) - 1);
         getPlayerList().get(playerIndex).setPlayedDevCard(true);
         placeRoad(playerIndex, true, spot1);
         placeRoad(playerIndex, true, spot2);
@@ -309,6 +312,7 @@ public class ServerGame extends Game {
      * @param resource The type of resource desired from other players.
      */
     public void playMonopolyCard(int playerIndex, ResourceType resource){
+    	getPlayerList().get(playerIndex).getOldDevCards().put(DevCardType.MONOPOLY, getPlayerList().get(playerIndex).getOldDevCards().get(DevCardType.MONOPOLY) - 1);
         getPlayerList().get(playerIndex).setPlayedDevCard(true);
         int totalCountOfResource = 0;
         for (Player tempPlayer : getPlayerList()) {
@@ -334,6 +338,7 @@ public class ServerGame extends Game {
      * @param playerIndex the ID of the player who is requesting the move
      */
     public void playMonumentCard(int playerIndex){
+    	getPlayerList().get(playerIndex).getOldDevCards().put(DevCardType.MONUMENT, getPlayerList().get(playerIndex).getOldDevCards().get(DevCardType.MONUMENT) - 1);
         getPlayerList().get(playerIndex).setVictoryPoints(getPlayerList().get(playerIndex).getVictoryPoints() + 1);
 		setVersion(getVersion() + 1);
 	}
@@ -468,11 +473,11 @@ public class ServerGame extends Game {
         for (Player tempPlayer : getPlayerList()) {
             tempPlayer.getOldDevCards().put(DevCardType.SOLDIER, tempPlayer.getOldDevCards().get(DevCardType.SOLDIER) +
                     tempPlayer.getNewDevCards().get(DevCardType.SOLDIER));
-            tempPlayer.getOldDevCards().put(DevCardType.YEAR_OF_PLENTY, tempPlayer.getOldDevCards().get(DevCardType.SOLDIER) +
+            tempPlayer.getOldDevCards().put(DevCardType.YEAR_OF_PLENTY, tempPlayer.getOldDevCards().get(DevCardType.YEAR_OF_PLENTY) +
                     tempPlayer.getNewDevCards().get(DevCardType.YEAR_OF_PLENTY));
-            tempPlayer.getOldDevCards().put(DevCardType.MONOPOLY, tempPlayer.getOldDevCards().get(DevCardType.SOLDIER) +
+            tempPlayer.getOldDevCards().put(DevCardType.MONOPOLY, tempPlayer.getOldDevCards().get(DevCardType.MONOPOLY) +
                     tempPlayer.getNewDevCards().get(DevCardType.MONOPOLY));
-            tempPlayer.getOldDevCards().put(DevCardType.ROAD_BUILD, tempPlayer.getOldDevCards().get(DevCardType.SOLDIER) +
+            tempPlayer.getOldDevCards().put(DevCardType.ROAD_BUILD, tempPlayer.getOldDevCards().get(DevCardType.ROAD_BUILD) +
                     tempPlayer.getNewDevCards().get(DevCardType.ROAD_BUILD));
             
             tempPlayer.getNewDevCards().put(DevCardType.SOLDIER, 0);
