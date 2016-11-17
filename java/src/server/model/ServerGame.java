@@ -356,7 +356,7 @@ public class ServerGame extends Game {
     	else {
     		getTurnTracker().setStatus(GameStatus.Playing);
     	}
-		setVersion(getVersion() + 1);
+        setVersion(getVersion() + 1);
     }
 
     /**
@@ -373,6 +373,7 @@ public class ServerGame extends Game {
     		}
     	}
     	getChat().add(new LogEntry(message,name));
+        setVersion(getVersion() + 1);
     }
 
     /**
@@ -383,6 +384,7 @@ public class ServerGame extends Game {
      */
     public void makeTradeOffer(int senderPlayerID, int receiverPlayerID, Map<ResourceType, Integer> offer){
 		setTradeOffer(new TradeOffer(senderPlayerID, receiverPlayerID, offer));
+        setVersion(getVersion() + 1);
 	}
 
     /**
@@ -401,6 +403,7 @@ public class ServerGame extends Game {
             }
         }
         setTradeOffer(null);
+        setVersion(getVersion() + 1);
     }
 
     /**
@@ -414,6 +417,7 @@ public class ServerGame extends Game {
     	// Adjust player piece inventory
     	getPlayerList().get(index).addToResourceHand(outputResource, 1);
     	getPlayerList().get(index).addToResourceHand(inputResource, -ratio);
+        setVersion(getVersion() + 1);
     }
 
     /**
@@ -424,6 +428,7 @@ public class ServerGame extends Game {
     	if (getPlayerIndex(playerID) == -1) {
     		this.addPlayer(new Player(playerID,username,color,getPlayerList().size()));
     	}
+        setVersion(getVersion() + 1);
     }
 
     /**
@@ -437,6 +442,7 @@ public class ServerGame extends Game {
      */
     public void addComputerPlayer(){
         //This method needs to check to see if there are four players before execution
+        setVersion(getVersion() + 1);
     }
 
     /**
@@ -465,6 +471,7 @@ public class ServerGame extends Game {
             tempPlayer.getOldDevCards().put(DevCardType.ROAD_BUILD, tempPlayer.getOldDevCards().get(DevCardType.SOLDIER) +
                     tempPlayer.getNewDevCards().get(DevCardType.ROAD_BUILD));
         }
+        setVersion(getVersion() + 1);
     }
 
     /**
@@ -512,6 +519,7 @@ public class ServerGame extends Game {
 				}
 			}
 		}
+        setVersion(getVersion() + 1);
 	}
 
 	private void giveUpAResource(Player current_player, Player victim_player, ResourceType resourceType){
@@ -519,6 +527,7 @@ public class ServerGame extends Game {
 				victim_player.getResources().get(resourceType) - 1);
 		current_player.getResources().put(resourceType,
 				victim_player.getResources().get(resourceType) + 1);
+        setVersion(getVersion() + 1);
 	}
 
     /**
@@ -547,6 +556,7 @@ public class ServerGame extends Game {
             tempPlayer.setDiscarded(false);
         }
         getTurnTracker().setStatus(GameStatus.Robbing);
+        setVersion(getVersion() + 1);
     }
 
 	private void discardResource(int playerID, Map<ResourceType, Integer> discardCards, ResourceType resourceType){
@@ -576,7 +586,7 @@ public class ServerGame extends Game {
 	 *      The player with the longest road is determined, and set within the model.
 	 * 		</pre>
 	 */
-	public void longestRoad() {
+	private void longestRoad() {
 		int[] playerRoads = new int[4];
 		// Populate array with number of roads built by each player
 		for (EdgeLocation key : getTheMap().getRoads().keySet()) {
@@ -616,7 +626,7 @@ public class ServerGame extends Game {
 	 *      The player with the largest army is determined, and set within the model.
 	 * 		</pre>
 	 */
-	public void largestArmy() {
+	private void largestArmy() {
 		if(getTurnTracker().getLargestArmy() != -1){
 			getPlayerList().get(getTurnTracker().getLargestArmy()).setVictoryPoints(
 					getPlayerList().get(getTurnTracker().getLargestArmy()).getVictoryPoints() - 2);
