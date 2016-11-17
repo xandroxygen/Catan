@@ -55,8 +55,8 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public String gamesJoin(int gameID, int playerID, CatanColor color) throws InvalidActionException {
-		model.join(playerID, gameID, color);
+	public String gamesJoin(int gameID, int playerIndex, CatanColor color) throws InvalidActionException {
+		model.join(playerIndex, gameID, color);
 		return "Success";
 	}
 

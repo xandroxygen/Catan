@@ -491,11 +491,11 @@ public class ServerGame extends Game {
      * * @post <pre>
      *      Robs 1 resource from the victim player
      * 		</pre>
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerIndex the ID of the player who is requesting the move
      * @param victimIndex .
      */
-    public void robPlayer(int playerID, int victimIndex){
-		Player current_player = getPlayerList().get(getPlayerIndex(playerID));
+    public void robPlayer(int playerIndex, int victimIndex){
+		Player current_player = getPlayerList().get(playerIndex);
 		Player victim_player = getPlayerList().get(victimIndex);
 		if(victim_player.getResources().size() > 0){
 			Boolean hasRobbedPlayer = false;

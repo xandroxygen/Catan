@@ -426,11 +426,11 @@ public class ServerModel {
      *      Robs 1 resource from the victim player
      * 		</pre>
      * @param gameID the ID of the game from which the request was made.
-     * @param playerID the ID of the player who is requesting the move
+     * @param playerIndex the ID of the player who is requesting the move
      * @param victimIndex .
      */
-    public void robPlayer(int gameID, int playerID, int victimIndex){
-        games.get(gameID).robPlayer(playerID, victimIndex);
+    public void robPlayer(int gameID, int playerIndex, int victimIndex){
+        games.get(gameID).robPlayer(playerIndex, victimIndex);
     }
 
     /**
