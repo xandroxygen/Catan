@@ -474,6 +474,11 @@ public class ServerGame extends Game {
                     tempPlayer.getNewDevCards().get(DevCardType.MONOPOLY));
             tempPlayer.getOldDevCards().put(DevCardType.ROAD_BUILD, tempPlayer.getOldDevCards().get(DevCardType.SOLDIER) +
                     tempPlayer.getNewDevCards().get(DevCardType.ROAD_BUILD));
+            
+            tempPlayer.getNewDevCards().put(DevCardType.SOLDIER, 0);
+            tempPlayer.getNewDevCards().put(DevCardType.YEAR_OF_PLENTY, 0);
+            tempPlayer.getNewDevCards().put(DevCardType.MONOPOLY, 0);
+            tempPlayer.getNewDevCards().put(DevCardType.ROAD_BUILD, 0);
         }
         setVersion(getVersion() + 1);
     }
