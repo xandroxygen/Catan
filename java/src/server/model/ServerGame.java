@@ -348,10 +348,10 @@ public class ServerGame extends Game {
     	}
     	
     	// If any player has more than 7 resource cards, change game status to discarding
-    	if (rollValue == 7 && (getPlayerList().get(0).getTotalOfResources() >= 7 || 
-    			getPlayerList().get(1).getTotalOfResources() >= 7 || 
-    			getPlayerList().get(2).getTotalOfResources() >= 7 || 
-    			getPlayerList().get(3).getTotalOfResources() >= 7)) {
+    	if (rollValue == 7 && (getPlayerList().get(0).getTotalOfResources() > 7 ||
+    			getPlayerList().get(1).getTotalOfResources() > 7 ||
+    			getPlayerList().get(2).getTotalOfResources() > 7 ||
+    			getPlayerList().get(3).getTotalOfResources() > 7)) {
     		getTurnTracker().setStatus(GameStatus.Discarding);
     	}
     	
@@ -554,7 +554,7 @@ public class ServerGame extends Game {
 		discardResource(playerID, discardCards, ResourceType.ORE);
 		discardResource(playerID, discardCards, ResourceType.WHEAT);
         for (Player tempPlayer : getPlayerList()) {
-            if(!tempPlayer.isDiscarded() && tempPlayer.getTotalOfResources() >= 7){
+            if(!(tempPlayer.isDiscarded() || tempPlayer.getTotalOfResources() < 7)){
                 return;
             }
         }
