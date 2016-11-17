@@ -551,10 +551,11 @@ public class ServerGame extends Game {
 		discardResource(playerIndex, discardCards, ResourceType.ORE);
 		discardResource(playerIndex, discardCards, ResourceType.WHEAT);
         for (Player tempPlayer : getPlayerList()) {
-            if(!(tempPlayer.isDiscarded() || tempPlayer.getTotalOfResources() < 7)){
+            if(!(tempPlayer.isDiscarded() || tempPlayer.getTotalOfResources() <= 7)){
                 return;
             }
         }
+
         for (Player tempPlayer : getPlayerList()) {
             tempPlayer.setDiscarded(false);
         }
