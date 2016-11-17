@@ -580,6 +580,7 @@ public class Map {
 	public void addCity(int playerIndex, VertexLocation location) {
 		City city = new City(location,playerIndex);
 		cities.put(city.getLocation().getNormalizedLocation(), city);
+		settlements.remove(location);
 	}
 	
 	public void addSettlement(int playerIndex, VertexLocation location) {

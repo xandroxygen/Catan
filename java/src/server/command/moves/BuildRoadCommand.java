@@ -10,7 +10,7 @@ public class BuildRoadCommand extends Command {
 	/**
 	 * the ID of the player building a road
 	 */
-	private int playerID;
+	private int playerIndex;
 	/**
 	 * whether the location that the player wants to build a road is free or not
 	 */
@@ -20,9 +20,9 @@ public class BuildRoadCommand extends Command {
 	 */
 	private EdgeLocation roadLocation;
 
-	public BuildRoadCommand(IServerFacade facade, int gameID, int playerID, EdgeLocation roadLoc, boolean isFree) {
+	public BuildRoadCommand(IServerFacade facade, int gameID, int playerIndex, EdgeLocation roadLoc, boolean isFree) {
 		super(gameID, facade);
-		this.playerID = playerID;
+		this.playerIndex = playerIndex;
 		this.roadLocation = roadLoc;
 		this.isFree = isFree;
 	}
@@ -36,7 +36,7 @@ public class BuildRoadCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().buildRoad(this.getGameID(), playerID, isFree, roadLocation);
+		return this.getFacade().buildRoad(this.getGameID(), playerIndex, isFree, roadLocation);
 	}
 
 	

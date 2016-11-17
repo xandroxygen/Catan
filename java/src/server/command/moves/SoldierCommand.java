@@ -10,7 +10,7 @@ public class SoldierCommand extends Command {
 	/**
 	 * the ID of the player playing the Soldier card
 	 */
-	private int playerID;
+	private int playerIndex;
 	/**
 	 * the location where the Soldier card will be played
 	 */
@@ -20,9 +20,9 @@ public class SoldierCommand extends Command {
 	 */
 	private int victimIndex;
 	
-	public SoldierCommand(IServerFacade facade, int gameID, int playerID, HexLocation location, int victimIndex) {
+	public SoldierCommand(IServerFacade facade, int gameID, int playerIndex, HexLocation location, int victimIndex) {
 		super(gameID, facade);
-		this.playerID = playerID;
+		this.playerIndex = playerIndex;
 		this.location = location;
 		this.victimIndex = victimIndex;
 	}
@@ -36,7 +36,7 @@ public class SoldierCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().playSoldier(this.getGameID(), playerID, location, victimIndex);
+		return this.getFacade().playSoldier(this.getGameID(), playerIndex, location, victimIndex);
 	}
 
 }

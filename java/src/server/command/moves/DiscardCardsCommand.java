@@ -12,15 +12,15 @@ public class DiscardCardsCommand extends Command {
 	/**
 	 * the ID of the player discarding his cards
 	 */
-	private int playerID;
+	private int playerIndex;
 	/**
 	 * the cards being discarded
 	 */
 	private Map<ResourceType, Integer> hand;
 	
-	public DiscardCardsCommand(IServerFacade facade, int gameID, int playerID, Map<ResourceType, Integer> hand) {
+	public DiscardCardsCommand(IServerFacade facade, int gameID, int playerIndex, Map<ResourceType, Integer> hand) {
 		super(gameID, facade);
-		this.playerID = playerID;
+		this.playerIndex = playerIndex;
 		this.hand = hand;
 	}
 
@@ -33,7 +33,7 @@ public class DiscardCardsCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().discardCards(this.getGameID(), playerID, hand);
+		return this.getFacade().discardCards(this.getGameID(), playerIndex, hand);
 	}
 
 }

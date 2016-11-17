@@ -11,7 +11,7 @@ public class BuildCityCommand extends Command {
 	/**
 	 * the ID of the player building a city
 	 */
-	private int playerID;
+	private int playerIndex;
 	/**
 	 * whether the location that the player wants to build a city is free or not
 	 */
@@ -21,9 +21,9 @@ public class BuildCityCommand extends Command {
 	 */
 	VertexLocation cityLocation;
 
-	public BuildCityCommand(IServerFacade facade, int gameID, int playerID, VertexLocation cityLoc, boolean isFree) {
+	public BuildCityCommand(IServerFacade facade, int gameID, int playerIndex, VertexLocation cityLoc, boolean isFree) {
 		super(gameID, facade);
-		this.playerID = playerID;
+		this.playerIndex = playerIndex;
 		this.cityLocation = cityLoc;
 		this.isFree = isFree;
 	}
@@ -37,7 +37,7 @@ public class BuildCityCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().buildCity(this.getGameID(), playerID, cityLocation);	
+		return this.getFacade().buildCity(this.getGameID(), playerIndex, cityLocation);	
 	}
 
 }

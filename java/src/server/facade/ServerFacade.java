@@ -83,8 +83,8 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public Object sendChat(int gameID, int playerID, String message) throws InvalidActionException {
-		model.sendMessage(gameID, playerID, message);
+	public Object sendChat(int gameID, int playerIndex, String message) throws InvalidActionException {
+		model.sendMessage(gameID, playerIndex, message);
 		
 		return model.listGames().get(gameID);
 	}
@@ -97,26 +97,26 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public Object discardCards(int gameID, int playerID, Map<ResourceType, Integer> hand)
+	public Object discardCards(int gameID, int playerIndex, Map<ResourceType, Integer> hand)
 			throws InvalidActionException {
 		
-		model.discardCards(gameID, playerID, hand);
+		model.discardCards(gameID, playerIndex, hand);
 	
 		return model.listGames().get(gameID);
 	}
 
 	@Override
-	public Object rollNumber(int gameID, int playerID, int rollValue) throws InvalidActionException {
-		model.rollDice(gameID, playerID, rollValue);
+	public Object rollNumber(int gameID, int playerIndex, int rollValue) throws InvalidActionException {
+		model.rollDice(gameID, playerIndex, rollValue);
 		
 			return model.listGames().get(gameID);
 	}
 
 	@Override
-	public Object buildRoad(int gameID, int playerID, boolean isFree, EdgeLocation roadLocation)
+	public Object buildRoad(int gameID, int playerIndex, boolean isFree, EdgeLocation roadLocation)
 			throws InvalidActionException {
-		if(model.canPlaceRoad(gameID, playerID, isFree, roadLocation)) {
-			model.placeRoad(gameID, playerID, isFree, roadLocation);
+		if(model.canPlaceRoad(gameID, playerIndex, isFree, roadLocation)) {
+			model.placeRoad(gameID, playerIndex, isFree, roadLocation);
 			
 			return model.listGames().get(gameID);
 		}
@@ -126,10 +126,10 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public Object buildSettlement(int gameID, int playerID, boolean isFree, VertexLocation vertexLocation)
+	public Object buildSettlement(int gameID, int playerIndex, boolean isFree, VertexLocation vertexLocation)
 			throws InvalidActionException {
-		if(model.canPlaceSettlement(gameID, playerID, isFree, vertexLocation)) {
-			model.placeSettlement(gameID, playerID, isFree, vertexLocation);
+		if(model.canPlaceSettlement(gameID, playerIndex, isFree, vertexLocation)) {
+			model.placeSettlement(gameID, playerIndex, isFree, vertexLocation);
 			
 			return model.listGames().get(gameID);
 		}
@@ -139,9 +139,9 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public Object buildCity(int gameID, int playerID, VertexLocation location) throws InvalidActionException {
-		if(model.canPlaceCity(gameID, playerID, location)) {
-			model.placeCity(gameID, playerID, location);
+	public Object buildCity(int gameID, int playerIndex, VertexLocation location) throws InvalidActionException {
+		if(model.canPlaceCity(gameID, playerIndex, location)) {
+			model.placeCity(gameID, playerIndex, location);
 			
 			return model.listGames().get(gameID);
 		}
@@ -164,10 +164,10 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public Object maritimeTrade(int gameID, int playerID, int ratio, ResourceType inputResource, ResourceType outputResource)
+	public Object maritimeTrade(int gameID, int playerIndex, int ratio, ResourceType inputResource, ResourceType outputResource)
 			throws InvalidActionException {
-		if(model.canTradeWithBank(gameID, playerID, ratio, inputResource, outputResource)) {
-			model.makeMaritimeTrade(gameID, playerID, ratio, inputResource, outputResource);
+		if(model.canTradeWithBank(gameID, playerIndex, ratio, inputResource, outputResource)) {
+			model.makeMaritimeTrade(gameID, playerIndex, ratio, inputResource, outputResource);
 			
 			return model.listGames().get(gameID);
 		}
@@ -177,9 +177,9 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public Object robPlayer(int gameID, int playerID, HexLocation location, int victimIndex)
+	public Object robPlayer(int gameID, int playerIndex, HexLocation location, int victimIndex)
 			throws InvalidActionException {
-		model.robPlayer(gameID, playerID, victimIndex);
+		model.robPlayer(gameID, playerIndex, victimIndex);
 		
 		return model.listGames().get(gameID);
 	}
@@ -192,9 +192,9 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public Object buyDevCard(int gameID, int playerID) throws InvalidActionException {
-		if(model.canBuyDevelopmentCard(gameID, playerID)) {
-			model.buyDevelopmentCard(gameID, playerID);
+	public Object buyDevCard(int gameID, int playerIndex) throws InvalidActionException {
+		if(model.canBuyDevelopmentCard(gameID, playerIndex)) {
+			model.buyDevelopmentCard(gameID, playerIndex);
 			
 			return model.listGames().get(gameID);
 		}
@@ -204,10 +204,10 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public Object playSoldier(int gameID, int playerID, HexLocation location, int victimIndex)
+	public Object playSoldier(int gameID, int playerIndex, HexLocation location, int victimIndex)
 			throws InvalidActionException {
-		if(model.canPlaySoldier(gameID, playerID, location, victimIndex)) {
-			model.playSoldierCard(gameID, playerID, location, victimIndex);
+		if(model.canPlaySoldier(gameID, playerIndex, location, victimIndex)) {
+			model.playSoldierCard(gameID, playerIndex, location, victimIndex);
 			
 			return model.listGames().get(gameID);
 		}
@@ -217,10 +217,10 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public Object playYearOfPlenty(int gameID, int playerID, ResourceType resource1, ResourceType resource2)
+	public Object playYearOfPlenty(int gameID, int playerIndex, ResourceType resource1, ResourceType resource2)
 			throws InvalidActionException {
-		if(model.canPlayYearOfPlenty(gameID, playerID, resource1, resource2)) {
-			model.playYearOfPleanty(gameID, playerID, resource1, resource2);
+		if(model.canPlayYearOfPlenty(gameID, playerIndex, resource1, resource2)) {
+			model.playYearOfPleanty(gameID, playerIndex, resource1, resource2);
 			
 			return model.listGames().get(gameID);
 		}
@@ -230,10 +230,10 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public Object playRoadBuilding(int gameID, int playerID, EdgeLocation location1, EdgeLocation location2)
+	public Object playRoadBuilding(int gameID, int playerIndex, EdgeLocation location1, EdgeLocation location2)
 			throws InvalidActionException {
-		if(model.canPlayRoadCard(gameID, playerID, location1, location2)) {
-			model.playRoadCard(gameID, playerID, location1, location2);
+		if(model.canPlayRoadCard(gameID, playerIndex, location1, location2)) {
+			model.playRoadCard(gameID, playerIndex, location1, location2);
 			
 			return model.listGames().get(gameID);
 		}
@@ -243,9 +243,9 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public Object playMonopoly(int gameID, int playerID, ResourceType resource) throws InvalidActionException {
-		if(model.canPlayMonopolyCard(gameID, playerID, resource)) {
-			model.playMonopolyCard(gameID, playerID, resource);
+	public Object playMonopoly(int gameID, int playerIndex, ResourceType resource) throws InvalidActionException {
+		if(model.canPlayMonopolyCard(gameID, playerIndex, resource)) {
+			model.playMonopolyCard(gameID, playerIndex, resource);
 			
 			return model.listGames().get(gameID);
 		}
@@ -255,9 +255,9 @@ public class ServerFacade implements IServerFacade {
 	}
 
 	@Override
-	public Object playMonument(int gameID, int playerID) throws InvalidActionException {
-		if(model.canPlayMonumentCard(gameID, playerID)) {
-			model.playMonumentCard(gameID, playerID);
+	public Object playMonument(int gameID, int playerIndex) throws InvalidActionException {
+		if(model.canPlayMonumentCard(gameID, playerIndex)) {
+			model.playMonumentCard(gameID, playerIndex);
 			
 			return model.listGames().get(gameID);
 		}

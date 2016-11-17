@@ -8,15 +8,15 @@ public class SendChatCommand extends Command{
 	/**
 	 * the ID of the player sending the chat
 	 */
-	private int playerID;
+	private int playerIndex;
 	/**
 	 * the message being sent
 	 */
 	private String message;
 
-	public SendChatCommand(IServerFacade facade, int gameID, int playerID, String message) {
+	public SendChatCommand(IServerFacade facade, int gameID, int playerIndex, String message) {
 		super(gameID, facade);
-		this.playerID = playerID;
+		this.playerIndex = playerIndex;
 		this.message = message;
 	}
 
@@ -29,7 +29,7 @@ public class SendChatCommand extends Command{
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().sendChat(this.getGameID(), playerID, message);
+		return this.getFacade().sendChat(this.getGameID(), playerIndex, message);
 	}
 
 }
