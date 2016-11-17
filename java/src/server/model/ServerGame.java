@@ -106,9 +106,9 @@ public class ServerGame extends Game {
     	//else {
         	//getTurnTracker().setupProgression();
     	//}
-    	if (getTheMap().getSettlements().size() == 4 || getTheMap().getSettlements().size() == 8) {
-    		getTurnTracker().nextStatus();
-    	}
+    	//if (getTheMap().getSettlements().size() == 4 || getTheMap().getSettlements().size() == 8) {
+    		//getTurnTracker().nextStatus();
+    	//}
 		setVersion(getVersion() + 1);
 	}
 
