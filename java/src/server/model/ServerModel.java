@@ -73,7 +73,7 @@ public class ServerModel {
      * @return result
      */
     public boolean canBuyDevelopmentCard(int gameID, int playerId){
-        return false;
+        return true;
     }
     
     /**
