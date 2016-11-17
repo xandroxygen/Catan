@@ -221,7 +221,7 @@ public class ModelSerializer {
 			JsonObject oldDevCards = new JsonObject();
 			for (DevCardType devCardType : player.getOldDevCards().keySet()) {
 
-				oldDevCards.addProperty(DevCardType.getCamelCase(devCardType), player.getOldDevCards().get(devCardType)); // TODO proper names
+				oldDevCards.addProperty(DevCardType.getCamelCase(devCardType), player.getOldDevCards().get(devCardType));
 			}
 			object.add("oldDevCards", oldDevCards);
 
@@ -229,7 +229,7 @@ public class ModelSerializer {
 			JsonObject newDevCards = new JsonObject();
 			for (DevCardType devCardType : player.getNewDevCards().keySet()) {
 
-				newDevCards.addProperty(DevCardType.getCamelCase(devCardType), player.getNewDevCards().get(devCardType)); // TODO proper names
+				newDevCards.addProperty(DevCardType.getCamelCase(devCardType), player.getNewDevCards().get(devCardType));
 			}
 			object.add("newDevCards", newDevCards);
 
@@ -262,26 +262,4 @@ public class ModelSerializer {
 			}
 			return array;
 		}
-	/*
-
-
-		Player:
-		- resources as object of lowercase names
-		- oldDevCards as object, camelCase names
-		- newDevCards as object
-		- roads as num remaining
-		- settlements as num "
-		- cities as "
-		- soldiers as "
-		- victoryPoints as "
-		- monuments as "
-		- playedDevCard as  bool
-		- discarded as bool
-		- playerID as num
-		- playerIndex as num
-		- name
-		- color
-
-
-	 */
 }

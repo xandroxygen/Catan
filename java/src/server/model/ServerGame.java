@@ -148,7 +148,10 @@ public class ServerGame extends Game {
      */
     public void buyDevelopmentCard(int playerIndex){
         Player current_player = getPlayerList().get(playerIndex);
-
+        current_player.getResources().put(ResourceType.ORE, current_player.getResources().get(ResourceType.ORE) - 1);
+        current_player.getResources().put(ResourceType.WHEAT, current_player.getResources().get(ResourceType.WHEAT) - 1);
+        current_player.getResources().put(ResourceType.SHEEP, current_player.getResources().get(ResourceType.SHEEP) - 1);
+        
         //THIS PART CALCULATES THE PROBABILITY THAT YOU WILL PICK UP EACH CARD
         //THE REASON THAT THE NUMBER OF THE PREVIOUS CARD IS ADDED IS SO WHEN GENERATING A RANDOM NUMBER IT ALL WORKS OUT
         int numOfSoldierCards, numOfYearOfPlentyCards, numOfMonopolyCards, numOfRoadBuildCards, numOfMonumentCards;
@@ -471,6 +474,11 @@ public class ServerGame extends Game {
                     tempPlayer.getNewDevCards().get(DevCardType.MONOPOLY));
             tempPlayer.getOldDevCards().put(DevCardType.ROAD_BUILD, tempPlayer.getOldDevCards().get(DevCardType.SOLDIER) +
                     tempPlayer.getNewDevCards().get(DevCardType.ROAD_BUILD));
+            
+            tempPlayer.getNewDevCards().put(DevCardType.SOLDIER, 0);
+            tempPlayer.getNewDevCards().put(DevCardType.YEAR_OF_PLENTY, 0);
+            tempPlayer.getNewDevCards().put(DevCardType.MONOPOLY, 0);
+            tempPlayer.getNewDevCards().put(DevCardType.ROAD_BUILD, 0);
         }
         setVersion(getVersion() + 1);
     }
