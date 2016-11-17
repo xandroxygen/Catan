@@ -39,7 +39,7 @@ public class BuildSettlementHandler extends MoveHandler {
 		
 		JsonObject json = new JsonParser().parse(body).getAsJsonObject();
 		request.setFree(json.get("free").getAsBoolean());
-		JsonObject locationJSON = json.getAsJsonObject("settlementLocation");
+		JsonObject locationJSON = json.getAsJsonObject("vertexLocation");
 		VertexDirection dir = VertexDirection.getEnumFromAbbrev(locationJSON.get("direction").getAsString().toUpperCase());
 		HexLocation hex = new HexLocation(locationJSON.get("x").getAsInt(),locationJSON.get("y").getAsInt());
 		request.setSettlementLocation(new VertexLocation(hex,dir));

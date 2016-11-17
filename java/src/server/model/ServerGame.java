@@ -96,7 +96,7 @@ public class ServerGame extends Game {
     public void placeSettlement(int playerID, boolean free, VertexLocation location) {
     	int index = getPlayerIndex(playerID);
     	// Add to the Map
-    	getTheMap().addSettlement(playerID,location);
+    	getTheMap().addSettlement(index,location);
     	if (!free) {
 	    	// Adjust the player and bank resources
 	    	getBank().purchaseRoad(getPlayerList().get(index));
@@ -123,7 +123,7 @@ public class ServerGame extends Game {
     public void placeRoad(int playerID, boolean free, EdgeLocation location) {
     	int index = getPlayerIndex(playerID);
     	// Add to the Map
-    	getTheMap().addRoad(playerID,location);
+    	getTheMap().addRoad(index,location);
     	if (!free) {
 	    	// Adjust the player and bank resources
 	    	getBank().purchaseRoad(getPlayerList().get(index));

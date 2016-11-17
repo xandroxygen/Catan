@@ -35,7 +35,7 @@ public class BuildCityHandler extends MoveHandler {
 		BuildCityRequest request = (new Gson()).fromJson(body, BuildCityRequest.class);
 		
 		JsonObject json = new JsonParser().parse(body).getAsJsonObject();
-		JsonObject locationJSON = json.getAsJsonObject("cityLocation");
+		JsonObject locationJSON = json.getAsJsonObject("vertexLocation");
 		VertexDirection dir = VertexDirection.getEnumFromAbbrev(locationJSON.get("direction").getAsString().toUpperCase());
 		HexLocation hex = new HexLocation(locationJSON.get("x").getAsInt(),locationJSON.get("y").getAsInt());
 		request.setCityLocation(new VertexLocation(hex,dir));
