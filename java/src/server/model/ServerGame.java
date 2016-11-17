@@ -82,6 +82,8 @@ public class ServerGame extends Game {
     	// Adjust player piece inventory
     	getPlayerList().get(index).addToPlayerPieces(PieceType.CITY, -1);
     	getPlayerList().get(index).addToPlayerPieces(PieceType.SETTLEMENT, 1);
+    	
+    	getPlayerList().get(index).setVictoryPoints(getPlayerList().get(index).getVictoryPoints() + 1);
 		setVersion(getVersion() + 1);
     }
 
@@ -112,6 +114,7 @@ public class ServerGame extends Game {
     	//if (getTheMap().getSettlements().size() == 4 || getTheMap().getSettlements().size() == 8) {
     		//getTurnTracker().nextStatus();
     	//}
+    	getPlayerList().get(index).setVictoryPoints(getPlayerList().get(index).getVictoryPoints() + 1);
 		setVersion(getVersion() + 1);
 	}
 
