@@ -235,7 +235,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		HashMap<ResourceType, Integer> offer = setTradeAmounts();		
 
 		try {
-			int senderIndex = GameAdministrator.getInstance().getCurrentUser().getLocalPlayer().getPlayerIndex();
+			int senderIndex = Model.getInstance().getCurrentTurnIndex();
 			int receiverIndex = Model.getInstance().getPlayer(tradingPartner).getPlayerIndex();
 			
 			if(Model.getInstance().canTradeWithPlayer(senderIndex, receiverIndex, offer)) {
