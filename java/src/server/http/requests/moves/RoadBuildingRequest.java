@@ -17,4 +17,12 @@ public class RoadBuildingRequest extends MoveRequest {
 	public EdgeLocation getSpot2() {
 		return spot2;
 	}
+
+	public void setSpot1(EdgeLocation spot1) {
+		this.spot1 = spot1;
+	}
+
+	public void setSpot2(EdgeLocation spot2) {
+		this.spot2 = spot2;
+	}
 }
