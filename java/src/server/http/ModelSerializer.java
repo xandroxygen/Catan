@@ -126,8 +126,9 @@ public class ModelSerializer {
 					jHex.addProperty("resource", hex.getResource().toString().toLowerCase());
 				}
 				jHex.add("location",location);
-				jHex.addProperty("number", hex.getNumber());
-
+				if (hex.getNumber() != 0) {
+					jHex.addProperty("number", hex.getNumber());
+				}
 				hexes.add(jHex);
 			}
 			map.add("hexes", hexes);

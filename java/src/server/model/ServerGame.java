@@ -3,6 +3,7 @@ package server.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -27,6 +28,8 @@ public class ServerGame extends Game {
 	
 	private String gameName;
 	private int gameId;
+	private List<String> availableAIs;
+	private List<CatanColor> availableColors;
 
     public ServerGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName, int id) {
     	
@@ -55,6 +58,13 @@ public class ServerGame extends Game {
     	// Set winner and version
     	this.setWinner(-1);
     	this.setVersion(0);
+    	
+    	// Set List of available AIs
+    	availableAIs = new ArrayList<String>(
+    		    Arrays.asList("Will","Mike","Eleven"));
+    	availableColors = new ArrayList<CatanColor>(
+    			Arrays.asList(CatanColor.BLUE,CatanColor.BROWN,CatanColor.GREEN,CatanColor.ORANGE,CatanColor.PUCE,
+    					CatanColor.PURPLE,CatanColor.RED,CatanColor.WHITE,CatanColor.YELLOW));
     	
 	}
 
@@ -358,6 +368,9 @@ public class ServerGame extends Game {
     			getPlayerList().get(3).getTotalOfResources() > 7)) {
     		getTurnTracker().setStatus(GameStatus.Discarding);
     	}
+    	else if (rollValue == 7) {
+    		getTurnTracker().setStatus(GameStatus.Robbing);
+    	}
     	
     	// Else set to playing
     	else {
@@ -375,6 +388,13 @@ public class ServerGame extends Game {
     public void sendMessage(int playerIndex, String message) {
     	String name = getPlayerList().get(playerIndex).getName();
     	getChat().add(new LogEntry(message,name));
+    	if (message.equals("t")) {
+			getPlayerList().get(playerIndex).addToResourceHand(ResourceType.BRICK, 2);
+			getPlayerList().get(playerIndex).addToResourceHand(ResourceType.ORE, 2);
+			getPlayerList().get(playerIndex).addToResourceHand(ResourceType.SHEEP, 2);
+			getPlayerList().get(playerIndex).addToResourceHand(ResourceType.WHEAT, 2);
+			getPlayerList().get(playerIndex).addToResourceHand(ResourceType.WOOD, 2);
+		}
         setVersion(getVersion() + 1);
     }
 
@@ -428,9 +448,12 @@ public class ServerGame extends Game {
     public void addPlayer(int playerID, String username, CatanColor color) {
     	if (getPlayerIndex(playerID) == -1) {
     		this.addPlayer(new Player(playerID,username,color,getPlayerList().size()));
+    		availableColors.remove(color);
     	}
     	else{
-            getPlayerList().get(getPlayerIndex(playerID)).setColor(color);
+            availableColors.add(getPlayerList().get(getPlayerIndex(playerID)).getColor());
+    		getPlayerList().get(getPlayerIndex(playerID)).setColor(color);
+            availableColors.remove(color);
         }
         setVersion(getVersion() + 1);
     }
@@ -461,6 +484,16 @@ public class ServerGame extends Game {
      */
     public void finishTurn(){
     	getTurnTracker().nextTurn();
+    	
+    	// If AI player exists, get them to buy dev cards
+    	if (getPlayerList().get(getTurnTracker().getCurrentTurn()).getPlayerID() < 0) {
+        	if (canBuyDevelopmentCard(getTurnTracker().getCurrentTurn())) {
+        		buyDevelopmentCard(getTurnTracker().getCurrentTurn());
+        	}
+        	getTurnTracker().nextTurn();
+        	setVersion(getVersion() + 1);
+        }
+    	
     	for (Player p : getPlayerList()) {
     		p.setPlayedDevCard(false);
     	}
@@ -481,6 +514,15 @@ public class ServerGame extends Game {
             tempPlayer.getNewDevCards().put(DevCardType.ROAD_BUILD, 0);
         }
         setVersion(getVersion() + 1);
+        
+        if (getPlayerList().get(getTurnTracker().getCurrentTurn()).getPlayerID() < 0) {
+        	if (canBuyDevelopmentCard(getTurnTracker().getCurrentTurn())) {
+        		buyDevelopmentCard(getTurnTracker().getCurrentTurn());
+        	}
+        	getTurnTracker().nextTurn();
+        	setVersion(getVersion() + 1);
+        }
+        	
     }
 
     /**
@@ -495,6 +537,7 @@ public class ServerGame extends Game {
      * @param victimIndex .
      */
     public void robPlayer(int playerIndex, int victimIndex, HexLocation location){
+
 		Player current_player = getPlayerList().get(playerIndex);
 
 		if (victimIndex > -1) { // this is true when user clicks NONE
@@ -521,12 +564,13 @@ public class ServerGame extends Game {
 						hasRobbedPlayer = TRUE;
 					} else if (randomNumber == 4
 							&& victim_player.getResources().get(ResourceType.ORE) > 0) {
+
 						giveUpAResource(current_player, victim_player, ResourceType.ORE);
 						hasRobbedPlayer = TRUE;
 					}
 				}
 			}
-		}
+    	}
 		if (location != null) {
 			getTheMap().getRobber().setLocation(location);
 		}
@@ -587,6 +631,22 @@ public class ServerGame extends Game {
     public String[] listAIPlayers(){
 		String[] types = { "LONGEST_ARMY" };
 		return types;
+    }
+    
+    /**
+     * Adds an AI player to the game
+     */
+    public void addAIPlayer() {
+    	if (getPlayerList().size() < 4) {
+    		String player = availableAIs.get(0);
+    		CatanColor color = availableColors.get(0);
+    		this.addPlayer((-1)*(getPlayerList().size()+1), player, color);
+    		
+    		// Remove from lists
+    		availableAIs.remove(0);
+    		availableColors.remove(0);
+    	}
+    	setVersion(getVersion() + 1);
     }
 
     /**
@@ -661,6 +721,16 @@ public class ServerGame extends Game {
 		}
 	}
 	
+	public boolean canBuyDevelopmentCard(int playerIndex){
+        // Verifies that the Bank has Dev Cards
+        boolean bool = getBank().canBuyDevelopmentCard();
+        // Verifies that the Player has enough resources
+        if (bool){
+            bool = getPlayerList().get(playerIndex).canBuyDevelopmentCard();
+        }
+        return bool;
+    }
+	
 	private shared.model.Map createMap(boolean randomTiles, boolean randomNumbers, boolean randomPorts) {
 		ArrayList<Integer> numbers = new ArrayList<Integer>(
     		    Arrays.asList(0,4,11,8,3,9,12,5,10,11,5,6,2,9,4,10,6,3,8));
@@ -711,9 +781,19 @@ public class ServerGame extends Game {
 			// If random numbers, get number from a list then remove it
 			if (randomNumbers) {
 				int numIndex = ThreadLocalRandom.current().nextInt(0, numbers.size());
-				number = numbers.get(numIndex);
+				if (type == null) {
+					number = 0;
+				}
+				else {
+					number = numbers.get(numIndex);
+				}
 				hex = new Hex(type,location,number);
-				numbers.remove(Integer.valueOf(number));
+				if (number == 0) {
+					numbers.remove(Integer.valueOf(0));
+				}
+				else {
+					numbers.remove(Integer.valueOf(number));
+				}
 			}
 			
 			// Else create hexes with default values
