@@ -103,18 +103,13 @@ public class ServerGame extends Game {
     	if (!free) {
 	    	// Adjust the player and bank resources
 	    	getBank().purchaseRoad(getPlayerList().get(playerIndex));
-	    	// Adjust player piece inventory
-	    	getPlayerList().get(playerIndex).addToPlayerPieces(PieceType.SETTLEMENT, -1);
     	}
     	if (getTurnTracker().getStatus() == GameStatus.SecondRound) {
     		getTheMap().rewardPlayerAtSecondRound(getPlayerList().get(playerIndex), location);
     	}
-    	//else {
-        	//getTurnTracker().setupProgression();
-    	//}
-    	//if (getTheMap().getSettlements().size() == 4 || getTheMap().getSettlements().size() == 8) {
-    		//getTurnTracker().nextStatus();
-    	//}
+		// Adjust player piece inventory
+		getPlayerList().get(playerIndex).addToPlayerPieces(PieceType.SETTLEMENT, -1);
+		// Adjust victory points
     	getPlayerList().get(playerIndex).setVictoryPoints(getPlayerList().get(playerIndex).getVictoryPoints() + 1);
 		setVersion(getVersion() + 1);
 	}

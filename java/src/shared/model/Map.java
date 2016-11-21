@@ -655,7 +655,7 @@ public class Map {
 			}
 		}
 		
-		if (hexes.get(loc.getHexLoc()) != null) {
+		if (hexes.get(loc.getHexLoc()) != null && hexes.get(loc.getHexLoc()).getResource() != null) {
 			player.addToResourceHand(ResourceType.valueOf(hexes.get(loc.getHexLoc()).getResource().toString()), 1);
 		}
 	}
