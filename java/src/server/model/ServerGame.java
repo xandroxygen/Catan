@@ -113,18 +113,13 @@ public class ServerGame extends Game {
     	if (!free) {
 	    	// Adjust the player and bank resources
 	    	getBank().purchaseRoad(getPlayerList().get(playerIndex));
-	    	// Adjust player piece inventory
-	    	getPlayerList().get(playerIndex).addToPlayerPieces(PieceType.SETTLEMENT, -1);
     	}
     	if (getTurnTracker().getStatus() == GameStatus.SecondRound) {
     		getTheMap().rewardPlayerAtSecondRound(getPlayerList().get(playerIndex), location);
     	}
-    	//else {
-        	//getTurnTracker().setupProgression();
-    	//}
-    	//if (getTheMap().getSettlements().size() == 4 || getTheMap().getSettlements().size() == 8) {
-    		//getTurnTracker().nextStatus();
-    	//}
+		// Adjust player piece inventory
+		getPlayerList().get(playerIndex).addToPlayerPieces(PieceType.SETTLEMENT, -1);
+		// Adjust victory points
     	getPlayerList().get(playerIndex).setVictoryPoints(getPlayerList().get(playerIndex).getVictoryPoints() + 1);
 		setVersion(getVersion() + 1);
 	}
@@ -233,7 +228,8 @@ public class ServerGame extends Game {
      * @param victimIndex The playerIndex of the player you wish to rob, or -1 to rob no one.
      */
     public void playSoldierCard(int playerIndex, HexLocation location, int victimIndex){
-        getPlayerList().get(playerIndex).setPlayedDevCard(true);
+    	getPlayerList().get(playerIndex).getOldDevCards().put(DevCardType.SOLDIER, getPlayerList().get(playerIndex).getOldDevCards().get(DevCardType.SOLDIER) - 1);
+    	getPlayerList().get(playerIndex).setPlayedDevCard(true);
         //add a soldier to player
         getPlayerList().get(playerIndex).addSoldier();
         //rob the victim and add it to the player who played the card
@@ -260,7 +256,8 @@ public class ServerGame extends Game {
      * @param resource2 The type of the second resource you'd like to receive
      */
     public void playYearOfPlenty(int playerIndex, ResourceType resource1, ResourceType resource2){
-        getPlayerList().get(playerIndex).setPlayedDevCard(true);
+    	getPlayerList().get(playerIndex).getOldDevCards().put(DevCardType.YEAR_OF_PLENTY, getPlayerList().get(playerIndex).getOldDevCards().get(DevCardType.YEAR_OF_PLENTY) - 1);
+    	getPlayerList().get(playerIndex).setPlayedDevCard(true);
         if(getBank().getResourceDeck().get(resource1) > 0){
             getBank().getResourceDeck().put(resource1, getBank().getResourceDeck().get(resource1) - 1);
             getPlayerList().get(playerIndex).getResources().put(resource1,
@@ -297,6 +294,7 @@ public class ServerGame extends Game {
      * @param spot2 second edge location of road.
      */
     public void playRoadCard(int playerIndex, EdgeLocation spot1, EdgeLocation spot2){
+    	getPlayerList().get(playerIndex).getOldDevCards().put(DevCardType.ROAD_BUILD, getPlayerList().get(playerIndex).getOldDevCards().get(DevCardType.ROAD_BUILD) - 1);
         getPlayerList().get(playerIndex).setPlayedDevCard(true);
         placeRoad(playerIndex, true, spot1);
         placeRoad(playerIndex, true, spot2);
@@ -319,6 +317,7 @@ public class ServerGame extends Game {
      * @param resource The type of resource desired from other players.
      */
     public void playMonopolyCard(int playerIndex, ResourceType resource){
+    	getPlayerList().get(playerIndex).getOldDevCards().put(DevCardType.MONOPOLY, getPlayerList().get(playerIndex).getOldDevCards().get(DevCardType.MONOPOLY) - 1);
         getPlayerList().get(playerIndex).setPlayedDevCard(true);
         int totalCountOfResource = 0;
         for (Player tempPlayer : getPlayerList()) {
@@ -344,6 +343,7 @@ public class ServerGame extends Game {
      * @param playerIndex the ID of the player who is requesting the move
      */
     public void playMonumentCard(int playerIndex){
+    	getPlayerList().get(playerIndex).getOldDevCards().put(DevCardType.MONUMENT, getPlayerList().get(playerIndex).getOldDevCards().get(DevCardType.MONUMENT) - 1);
         getPlayerList().get(playerIndex).setVictoryPoints(getPlayerList().get(playerIndex).getVictoryPoints() + 1);
 		setVersion(getVersion() + 1);
 	}
@@ -501,11 +501,11 @@ public class ServerGame extends Game {
         for (Player tempPlayer : getPlayerList()) {
             tempPlayer.getOldDevCards().put(DevCardType.SOLDIER, tempPlayer.getOldDevCards().get(DevCardType.SOLDIER) +
                     tempPlayer.getNewDevCards().get(DevCardType.SOLDIER));
-            tempPlayer.getOldDevCards().put(DevCardType.YEAR_OF_PLENTY, tempPlayer.getOldDevCards().get(DevCardType.SOLDIER) +
+            tempPlayer.getOldDevCards().put(DevCardType.YEAR_OF_PLENTY, tempPlayer.getOldDevCards().get(DevCardType.YEAR_OF_PLENTY) +
                     tempPlayer.getNewDevCards().get(DevCardType.YEAR_OF_PLENTY));
-            tempPlayer.getOldDevCards().put(DevCardType.MONOPOLY, tempPlayer.getOldDevCards().get(DevCardType.SOLDIER) +
+            tempPlayer.getOldDevCards().put(DevCardType.MONOPOLY, tempPlayer.getOldDevCards().get(DevCardType.MONOPOLY) +
                     tempPlayer.getNewDevCards().get(DevCardType.MONOPOLY));
-            tempPlayer.getOldDevCards().put(DevCardType.ROAD_BUILD, tempPlayer.getOldDevCards().get(DevCardType.SOLDIER) +
+            tempPlayer.getOldDevCards().put(DevCardType.ROAD_BUILD, tempPlayer.getOldDevCards().get(DevCardType.ROAD_BUILD) +
                     tempPlayer.getNewDevCards().get(DevCardType.ROAD_BUILD));
             
             tempPlayer.getNewDevCards().put(DevCardType.SOLDIER, 0);
@@ -537,36 +537,34 @@ public class ServerGame extends Game {
      * @param victimIndex .
      */
     public void robPlayer(int playerIndex, int victimIndex, HexLocation location){
-    	
-    	if (victimIndex >= 0) {
-			Player current_player = getPlayerList().get(playerIndex);
+
+		Player current_player = getPlayerList().get(playerIndex);
+
+		if (victimIndex > -1) { // this is true when user clicks NONE
 			Player victim_player = getPlayerList().get(victimIndex);
-			if(victim_player.getResources().size() > 0){
+			if (victim_player.getResources().size() > 0) {
 				Boolean hasRobbedPlayer = false;
-				while (!hasRobbedPlayer){
-					int randomNumber = (int )(Math. random() * 4 + 0);
-					if(randomNumber == 0
-							&& victim_player.getResources().get(ResourceType.BRICK) > 0){
+				while (!hasRobbedPlayer) {
+					int randomNumber = (int) (Math.random() * 4 + 0);
+					if (randomNumber == 0
+							&& victim_player.getResources().get(ResourceType.BRICK) > 0) {
 						giveUpAResource(current_player, victim_player, ResourceType.BRICK);
 						hasRobbedPlayer = TRUE;
-					}
-					else if(randomNumber == 1
-							&& victim_player.getResources().get(ResourceType.WOOD) > 0){
+					} else if (randomNumber == 1
+							&& victim_player.getResources().get(ResourceType.WOOD) > 0) {
 						giveUpAResource(current_player, victim_player, ResourceType.WOOD);
 						hasRobbedPlayer = TRUE;
-					}
-					else if(randomNumber == 2
-							&& victim_player.getResources().get(ResourceType.WHEAT) > 0){
+					} else if (randomNumber == 2
+							&& victim_player.getResources().get(ResourceType.WHEAT) > 0) {
 						giveUpAResource(current_player, victim_player, ResourceType.WHEAT);
 						hasRobbedPlayer = TRUE;
-					}
-					else if(randomNumber == 3
-							&& victim_player.getResources().get(ResourceType.SHEEP) > 0){
+					} else if (randomNumber == 3
+							&& victim_player.getResources().get(ResourceType.SHEEP) > 0) {
 						giveUpAResource(current_player, victim_player, ResourceType.SHEEP);
 						hasRobbedPlayer = TRUE;
-					}
-					else if(randomNumber == 4
-							&& victim_player.getResources().get(ResourceType.ORE) > 0){
+					} else if (randomNumber == 4
+							&& victim_player.getResources().get(ResourceType.ORE) > 0) {
+
 						giveUpAResource(current_player, victim_player, ResourceType.ORE);
 						hasRobbedPlayer = TRUE;
 					}
@@ -584,7 +582,7 @@ public class ServerGame extends Game {
 		victim_player.getResources().put(resourceType,
 				victim_player.getResources().get(resourceType) - 1);
 		current_player.getResources().put(resourceType,
-				victim_player.getResources().get(resourceType) + 1);
+				current_player.getResources().get(resourceType) + 1);
         setVersion(getVersion() + 1);
 	}
 
