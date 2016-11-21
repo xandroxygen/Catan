@@ -514,15 +514,6 @@ public class ServerGame extends Game {
             tempPlayer.getNewDevCards().put(DevCardType.ROAD_BUILD, 0);
         }
         setVersion(getVersion() + 1);
-        
-        if (getPlayerList().get(getTurnTracker().getCurrentTurn()).getPlayerID() < 0) {
-        	if (canBuyDevelopmentCard(getTurnTracker().getCurrentTurn())) {
-        		buyDevelopmentCard(getTurnTracker().getCurrentTurn());
-        	}
-        	getTurnTracker().nextTurn();
-        	setVersion(getVersion() + 1);
-        }
-        	
     }
 
     /**
