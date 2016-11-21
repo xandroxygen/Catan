@@ -501,35 +501,34 @@ public class ServerGame extends Game {
      */
     public void robPlayer(int playerIndex, int victimIndex, HexLocation location){
 		Player current_player = getPlayerList().get(playerIndex);
-		Player victim_player = getPlayerList().get(victimIndex);
-		if(victim_player.getResources().size() > 0){
-			Boolean hasRobbedPlayer = false;
-			while (!hasRobbedPlayer){
-				int randomNumber = (int )(Math. random() * 4 + 0);
-				if(randomNumber == 0
-						&& victim_player.getResources().get(ResourceType.BRICK) > 0){
-					giveUpAResource(current_player, victim_player, ResourceType.BRICK);
-					hasRobbedPlayer = TRUE;
-				}
-				else if(randomNumber == 1
-						&& victim_player.getResources().get(ResourceType.WOOD) > 0){
-					giveUpAResource(current_player, victim_player, ResourceType.WOOD);
-					hasRobbedPlayer = TRUE;
-				}
-				else if(randomNumber == 2
-						&& victim_player.getResources().get(ResourceType.WHEAT) > 0){
-					giveUpAResource(current_player, victim_player, ResourceType.WHEAT);
-					hasRobbedPlayer = TRUE;
-				}
-				else if(randomNumber == 3
-						&& victim_player.getResources().get(ResourceType.SHEEP) > 0){
-					giveUpAResource(current_player, victim_player, ResourceType.SHEEP);
-					hasRobbedPlayer = TRUE;
-				}
-				else if(randomNumber == 4
-						&& victim_player.getResources().get(ResourceType.ORE) > 0){
-					giveUpAResource(current_player, victim_player, ResourceType.ORE);
-					hasRobbedPlayer = TRUE;
+
+		if (victimIndex > -1) { // this is true when user clicks NONE
+			Player victim_player = getPlayerList().get(victimIndex);
+			if (victim_player.getResources().size() > 0) {
+				Boolean hasRobbedPlayer = false;
+				while (!hasRobbedPlayer) {
+					int randomNumber = (int) (Math.random() * 4 + 0);
+					if (randomNumber == 0
+							&& victim_player.getResources().get(ResourceType.BRICK) > 0) {
+						giveUpAResource(current_player, victim_player, ResourceType.BRICK);
+						hasRobbedPlayer = TRUE;
+					} else if (randomNumber == 1
+							&& victim_player.getResources().get(ResourceType.WOOD) > 0) {
+						giveUpAResource(current_player, victim_player, ResourceType.WOOD);
+						hasRobbedPlayer = TRUE;
+					} else if (randomNumber == 2
+							&& victim_player.getResources().get(ResourceType.WHEAT) > 0) {
+						giveUpAResource(current_player, victim_player, ResourceType.WHEAT);
+						hasRobbedPlayer = TRUE;
+					} else if (randomNumber == 3
+							&& victim_player.getResources().get(ResourceType.SHEEP) > 0) {
+						giveUpAResource(current_player, victim_player, ResourceType.SHEEP);
+						hasRobbedPlayer = TRUE;
+					} else if (randomNumber == 4
+							&& victim_player.getResources().get(ResourceType.ORE) > 0) {
+						giveUpAResource(current_player, victim_player, ResourceType.ORE);
+						hasRobbedPlayer = TRUE;
+					}
 				}
 			}
 		}
@@ -544,7 +543,7 @@ public class ServerGame extends Game {
 		victim_player.getResources().put(resourceType,
 				victim_player.getResources().get(resourceType) - 1);
 		current_player.getResources().put(resourceType,
-				victim_player.getResources().get(resourceType) + 1);
+				current_player.getResources().get(resourceType) + 1);
         setVersion(getVersion() + 1);
 	}
 
