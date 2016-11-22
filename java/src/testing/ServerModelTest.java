@@ -2,6 +2,8 @@ package testing;
 
 import org.junit.Before;
 import org.junit.Test;
+import server.command.moves.AcceptTradeCommand;
+import server.command.moves.OfferTradeCommand;
 
 import client.model.Model;
 import server.command.moves.RollNumberCommand;
@@ -87,18 +89,18 @@ public class ServerModelTest {
     @Test
     public void testBuilding() throws Exception {
         Game game = serverFacade.getModel().getGames(0);
-    	
+
     	ServerModel.getInstance().getGames(0).getPlayerList().get(0).addToResourceHand(ResourceType.BRICK, 3);
     	ServerModel.getInstance().getGames(0).getPlayerList().get(0).addToResourceHand(ResourceType.ORE, 3);
     	ServerModel.getInstance().getGames(0).getPlayerList().get(0).addToResourceHand(ResourceType.SHEEP, 3);
     	ServerModel.getInstance().getGames(0).getPlayerList().get(0).addToResourceHand(ResourceType.WHEAT, 3);
     	ServerModel.getInstance().getGames(0).getPlayerList().get(0).addToResourceHand(ResourceType.WOOD, 3);
-    	
+
     	// Make up a Vertex Location
 		VertexLocation vertex = new VertexLocation(new HexLocation(0,-2), VertexDirection.East);
 		assertTrue(ServerModel.getInstance().getGames(0).getTheMap().getCities().get(vertex.getNormalizedLocation()) == null);
 
-		
+
 		// Make up Road
 		EdgeLocation edge1 = new EdgeLocation(new HexLocation(0,-2),EdgeDirection.NorthEast);
 		//EdgeLocation edge2 = new EdgeLocation(new HexLocation(1,-2),EdgeDirection.North);
@@ -107,7 +109,7 @@ public class ServerModelTest {
 
 		serverFacade.buildRoad(0, 0, false, edge1);
 		assertTrue(ServerModel.getInstance().getGames(0).getTheMap().getRoads().get(edge1) != null);
-		
+
 		serverFacade.buildSettlement(0, 0, false, vertex);
 		assertTrue(ServerModel.getInstance().getGames(0).getTheMap().getCities().get(vertex.getNormalizedLocation()) == null);
 
@@ -347,10 +349,47 @@ public class ServerModelTest {
     @Test
     public void makeTradeOffer() throws Exception {
 
+        Game game = serverFacade.getModel().getGames(0);
+
+        game.getTurnTracker().setCurrentTurn(0);
+
+        // player 0 trades 1 brick for 1 wood to player 1
+        game.getPlayerList().get(0).addToResourceHand(ResourceType.BRICK, 1);
+        game.getPlayerList().get(1).addToResourceHand(ResourceType.WOOD, 1);
+
+        // construct trade offer
+        Map<ResourceType, Integer> offer = new HashMap<>();
+        offer.put(ResourceType.BRICK, 1);
+        offer.put(ResourceType.WOOD, -1);
+        offer.put(ResourceType.WHEAT, 0);
+        offer.put(ResourceType.SHEEP, 0);
+        offer.put(ResourceType.ORE, 0);
+
+        // command
+        OfferTradeCommand command = new OfferTradeCommand(serverFacade, 0, 0, 1, offer);
+        command.execute();
+
+        // there should be a turn tracker on the model
+        assertNotNull(game.getTradeOffer());
+        assertEquals(0, game.getTradeOffer().getSender());
+        assertEquals(1, game.getTradeOffer().getReceiver());
     }
 
     @Test
     public void acceptTradeOffer() throws Exception {
+
+        makeTradeOffer();
+
+        Game game = serverFacade.getModel().getGames(0);
+
+        assertNotNull(game.getTradeOffer());
+
+        // accept trade
+        AcceptTradeCommand command = new AcceptTradeCommand(serverFacade, 0, true);
+        command.execute();
+
+        // trade offer should be null
+        assertNull(game.getTradeOffer());
 
     }
 
