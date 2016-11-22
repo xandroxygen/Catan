@@ -6,9 +6,11 @@ import server.command.moves.RollNumberCommand;
 import server.facade.ServerFacade;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
+import shared.definitions.ResourceType;
 import shared.locations.*;
 import shared.model.DevCard;
 import shared.model.Game;
+import shared.model.Road;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -96,7 +98,7 @@ public class ServerModelTest {
     @Test
     public void buyDevelopmentCard() throws Exception {
         Game game = serverFacade.getModel().getGames(0);
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             HashMap<DevCardType, Integer> oldDevCards, newDevCards;
             oldDevCards = game.getPlayerList().get(i).getOldDevCards();
             newDevCards = game.getPlayerList().get(i).getNewDevCards();
@@ -136,7 +138,7 @@ public class ServerModelTest {
     @Test
     public void playSoldierCard() throws Exception {
         Game game = serverFacade.getModel().getGames(0);
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             int number_of_soldier_cards = game.getPlayerList().get(i).getOldDevCards().get(DevCardType.SOLDIER);
             game.getPlayerList().get(i).getOldDevCards().put(DevCardType.SOLDIER, 1);
             int player_resources  = game.getPlayerList().get(i).getTotalOfResources();
@@ -184,24 +186,110 @@ public class ServerModelTest {
                 }
             }
             assertEquals(number_of_soldier_cards, 0);
-            game.getPlayerList().get(i).getOldDevCards().put(DevCardType.SOLDIER, 1);
             serverFacade.finishTurn(0);
         }
     }
 
     @Test
     public void playYearOfPlenty() throws Exception {
+        Game game = serverFacade.getModel().getGames(0);
+        for (int i = 0; i < 4; i++) {
+            int number_of_YearOfPlenty_cards = game.getPlayerList().get(i).getOldDevCards().get(DevCardType.YEAR_OF_PLENTY);
+            game.getPlayerList().get(i).getOldDevCards().put(DevCardType.YEAR_OF_PLENTY, 1);
+            ResourceType ResourceTypeOne, ResourceTypeTwo;
+            if(i == 0){
+                ResourceTypeOne = ResourceType.BRICK;
+                ResourceTypeTwo = ResourceType.ORE;
+            }
+            else if(i == 1){
+                ResourceTypeOne = ResourceType.SHEEP;
+                ResourceTypeTwo = ResourceType.BRICK;
+            }
+            else if(i == 2){
+                ResourceTypeOne = ResourceType.WHEAT;
+                ResourceTypeTwo = ResourceType.WOOD;
+            }
+            else{
+                ResourceTypeOne = ResourceType.BRICK;
+                ResourceTypeTwo = ResourceType.BRICK;
+            }
+            int NumberOfResourceTypeOne = game.getPlayerList().get(i).getResources().get(ResourceTypeOne);
+            int NumberOfResourceTypeTwo = game.getPlayerList().get(i).getResources().get(ResourceTypeTwo);
+            serverFacade.playYearOfPlenty(0, i, ResourceTypeOne, ResourceTypeTwo);
 
+            if (ResourceTypeOne == ResourceTypeTwo){
+                assertEquals(NumberOfResourceTypeOne + 2, (int)game.getPlayerList().get(i).getResources().get(ResourceTypeOne));
+            } else{
+                assertEquals(NumberOfResourceTypeOne + 1, (int)game.getPlayerList().get(i).getResources().get(ResourceTypeOne));
+                assertEquals(NumberOfResourceTypeTwo + 1, (int)game.getPlayerList().get(i).getResources().get(ResourceTypeTwo));
+            }
+            assertEquals(number_of_YearOfPlenty_cards, 0);
+            serverFacade.finishTurn(0);
+        }
     }
 
     @Test
     public void playRoadCard() throws Exception {
-
+        Game game = serverFacade.getModel().getGames(0);
+        int number_of_RoadCard_cards = game.getPlayerList().get(0).getOldDevCards().get(DevCardType.ROAD_BUILD);
+        game.getPlayerList().get(0).getOldDevCards().put(DevCardType.ROAD_BUILD, 1);
+        Road roadOne = game.getTheMap().getRoads().remove(new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthEast));
+        Road roadTwo = game.getTheMap().getRoads().remove(new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthWest));
+        assertNull(roadOne);
+        assertNull(roadTwo);
+        serverFacade.playRoadBuilding(0,0, new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthEast),
+                new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthWest));
+        roadOne = game.getTheMap().getRoads().get(new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthEast));
+        roadTwo = game.getTheMap().getRoads().get(new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthWest));
+        assertNotNull(roadOne);
+        assertNotNull(roadTwo);
+        assertEquals(number_of_RoadCard_cards, 0);
+        serverFacade.finishTurn(0);
     }
 
     @Test
     public void playMonopolyCard() throws Exception {
+        Game game = serverFacade.getModel().getGames(0);
+        for (int i = 0; i < 4; i++) {
+            int number_of_YearOfPlenty_cards = game.getPlayerList().get(i).getOldDevCards().get(DevCardType.YEAR_OF_PLENTY);
+            game.getPlayerList().get(i).getOldDevCards().put(DevCardType.YEAR_OF_PLENTY, 1);
+            ResourceType ResourceTypeOne;
+            if(i == 0){
+                ResourceTypeOne = ResourceType.BRICK;
+            }
+            else if(i == 1){
+                ResourceTypeOne = ResourceType.SHEEP;
+            }
+            else if(i == 2){
+                ResourceTypeOne = ResourceType.WHEAT;
+            }
+            else{
+                ResourceTypeOne = ResourceType.ORE;
+            }
+            int NumberOfResourceTypeOne = game.getPlayerList().get(0).getResources().get(ResourceTypeOne) +
+                    game.getPlayerList().get(1).getResources().get(ResourceTypeOne) +
+                    game.getPlayerList().get(2).getResources().get(ResourceTypeOne) +
+                    game.getPlayerList().get(3).getResources().get(ResourceTypeOne);
+            serverFacade.playMonopoly(0, i, ResourceTypeOne);
 
+
+            assertEquals(NumberOfResourceTypeOne, (int)game.getPlayerList().get(i).getResources().get(ResourceTypeOne));
+            if(i != 0){
+                assertEquals(0, (int)game.getPlayerList().get(0).getResources().get(ResourceTypeOne));
+            }
+            if(i != 1){
+                assertEquals(0, (int)game.getPlayerList().get(1).getResources().get(ResourceTypeOne));
+            }
+            if(i != 2){
+                assertEquals(0, (int)game.getPlayerList().get(2).getResources().get(ResourceTypeOne));
+            }
+            if(i != 3){
+                assertEquals(0, (int)game.getPlayerList().get(3).getResources().get(ResourceTypeOne));
+            }
+
+            assertEquals(number_of_YearOfPlenty_cards, 0);
+            serverFacade.finishTurn(0);
+        }
     }
 
     @Test
@@ -234,15 +322,6 @@ public class ServerModelTest {
 
     }
 
-    @Test
-    public void addPlayer() throws Exception {
-
-    }
-
-    @Test
-    public void finishTurn() throws Exception {
-
-    }
 
     @Test
     public void robPlayer() throws Exception {
@@ -258,16 +337,5 @@ public class ServerModelTest {
     public void createGame() throws Exception {
 
     }
-
-    @Test
-    public void listGames() throws Exception {
-
-    }
-
-    @Test
-    public void getUpdatedGame() throws Exception {
-
-    }
-
 
 }
