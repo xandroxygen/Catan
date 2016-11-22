@@ -117,6 +117,10 @@ public class ServerModelTest {
 
             assertFalse(game.getPlayerList().get(i).isPlayedDevCard());
 
+            game.getPlayerList().get(i).getResources().put(ResourceType.WHEAT, 1);
+            game.getPlayerList().get(i).getResources().put(ResourceType.SHEEP, 1);
+            game.getPlayerList().get(i).getResources().put(ResourceType.ORE, 1);
+
             serverFacade.buyDevCard(0, i);
 
             assertEquals((int)oldDevCards.get(DevCardType.SOLDIER), 0);
@@ -185,7 +189,9 @@ public class ServerModelTest {
                     assertEquals(victim_resources, game.getPlayerList().get(2).getTotalOfResources());
                 }
             }
-            assertEquals(number_of_soldier_cards, 0);
+
+            assertTrue(game.getPlayerList().get(i).isPlayedDevCard());
+            assertEquals((int)game.getPlayerList().get(i).getOldDevCards().get(DevCardType.SOLDIER), 0);
             serverFacade.finishTurn(0);
         }
     }
@@ -223,7 +229,9 @@ public class ServerModelTest {
                 assertEquals(NumberOfResourceTypeOne + 1, (int)game.getPlayerList().get(i).getResources().get(ResourceTypeOne));
                 assertEquals(NumberOfResourceTypeTwo + 1, (int)game.getPlayerList().get(i).getResources().get(ResourceTypeTwo));
             }
-            assertEquals(number_of_YearOfPlenty_cards, 0);
+
+            assertTrue(game.getPlayerList().get(i).isPlayedDevCard());
+            assertEquals((int)game.getPlayerList().get(i).getOldDevCards().get(DevCardType.YEAR_OF_PLENTY), 0);
             serverFacade.finishTurn(0);
         }
     }
@@ -243,16 +251,22 @@ public class ServerModelTest {
         roadTwo = game.getTheMap().getRoads().get(new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthWest));
         assertNotNull(roadOne);
         assertNotNull(roadTwo);
-        assertEquals(number_of_RoadCard_cards, 0);
+
+        assertTrue(game.getPlayerList().get(0).isPlayedDevCard());
+        assertEquals((int)game.getPlayerList().get(0).getOldDevCards().get(DevCardType.ROAD_BUILD), 0);
         serverFacade.finishTurn(0);
+        serverFacade.finishTurn(0);
+        serverFacade.finishTurn(0);
+        serverFacade.finishTurn(0);
+        assertFalse(game.getPlayerList().get(0).isPlayedDevCard());
     }
 
     @Test
     public void playMonopolyCard() throws Exception {
         Game game = serverFacade.getModel().getGames(0);
         for (int i = 0; i < 4; i++) {
-            int number_of_YearOfPlenty_cards = game.getPlayerList().get(i).getOldDevCards().get(DevCardType.YEAR_OF_PLENTY);
-            game.getPlayerList().get(i).getOldDevCards().put(DevCardType.YEAR_OF_PLENTY, 1);
+            int number_of_Monopoly_cards = game.getPlayerList().get(i).getOldDevCards().get(DevCardType.MONOPOLY);
+            game.getPlayerList().get(i).getOldDevCards().put(DevCardType.MONOPOLY, 1);
             ResourceType ResourceTypeOne;
             if(i == 0){
                 ResourceTypeOne = ResourceType.BRICK;
@@ -270,8 +284,8 @@ public class ServerModelTest {
                     game.getPlayerList().get(1).getResources().get(ResourceTypeOne) +
                     game.getPlayerList().get(2).getResources().get(ResourceTypeOne) +
                     game.getPlayerList().get(3).getResources().get(ResourceTypeOne);
-            serverFacade.playMonopoly(0, i, ResourceTypeOne);
 
+            serverFacade.playMonopoly(0, i, ResourceTypeOne);
 
             assertEquals(NumberOfResourceTypeOne, (int)game.getPlayerList().get(i).getResources().get(ResourceTypeOne));
             if(i != 0){
@@ -286,15 +300,25 @@ public class ServerModelTest {
             if(i != 3){
                 assertEquals(0, (int)game.getPlayerList().get(3).getResources().get(ResourceTypeOne));
             }
-
-            assertEquals(number_of_YearOfPlenty_cards, 0);
+            assertTrue(game.getPlayerList().get(i).isPlayedDevCard());
+            assertEquals((int)game.getPlayerList().get(i).getOldDevCards().get(DevCardType.MONOPOLY), 0);
             serverFacade.finishTurn(0);
         }
     }
 
     @Test
     public void playMonumentCard() throws Exception {
-
+        Game game = serverFacade.getModel().getGames(0);
+        for (int i = 0; i < 4; i++) {
+            int number_of_Monument_cards = game.getPlayerList().get(i).getOldDevCards().get(DevCardType.MONUMENT);
+            game.getPlayerList().get(i).getOldDevCards().put(DevCardType.MONUMENT, 1);
+            int victoryPoints = game.getPlayerList().get(i).getVictoryPoints();
+            serverFacade.playMonument(0, i);
+            assertEquals(victoryPoints + 1, game.getPlayerList().get(i).getVictoryPoints());
+            assertFalse(game.getPlayerList().get(i).isPlayedDevCard());
+            assertEquals((int)game.getPlayerList().get(i).getOldDevCards().get(DevCardType.MONUMENT), 0);
+            serverFacade.finishTurn(0);
+        }
     }
 
     @Test

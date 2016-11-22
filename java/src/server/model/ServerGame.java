@@ -539,7 +539,14 @@ public class ServerGame extends Game {
 				Boolean hasRobbedPlayer = false;
 				while (!hasRobbedPlayer) {
 					int randomNumber = (int) (Math.random() * 4 + 0);
-					if (randomNumber == 0
+					if(victim_player.getResources().get(ResourceType.BRICK) == 0 &&
+							victim_player.getResources().get(ResourceType.WOOD) == 0 &&
+							victim_player.getResources().get(ResourceType.WHEAT) == 0 &&
+							victim_player.getResources().get(ResourceType.SHEEP) == 0 &&
+							victim_player.getResources().get(ResourceType.ORE) == 0){
+						return;
+					}
+					else if (randomNumber == 0
 							&& victim_player.getResources().get(ResourceType.BRICK) > 0) {
 						giveUpAResource(current_player, victim_player, ResourceType.BRICK);
 						hasRobbedPlayer = TRUE;
