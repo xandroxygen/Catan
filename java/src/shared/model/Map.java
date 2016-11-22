@@ -273,7 +273,7 @@ public class Map {
 	 * @return
 	 */
 	public boolean playerHasSettlementAtLocation(VertexLocation location, Player player) {
-		return (settlements.get(location) != null && settlements.get(location).getOwnerIndex() == player.getPlayerIndex());
+		return (settlements.get(location.getNormalizedLocation()) != null && settlements.get(location.getNormalizedLocation()).getOwnerIndex() == player.getPlayerIndex());
 	}
 
 	/**
@@ -554,8 +554,6 @@ public class Map {
 			indicies[settlements.get(vertexSW.getNormalizedLocation()).getOwnerIndex()] = 1;
 		}
 		
-		// ensure that current player can't rob himself
-		indicies[Model.getInstance().getCurrentPlayer().getPlayerIndex()] = 0;
 		return indicies;
 		
 	}

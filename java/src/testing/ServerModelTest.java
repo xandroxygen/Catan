@@ -2,8 +2,11 @@ package testing;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import client.model.Model;
 import server.command.moves.RollNumberCommand;
 import server.facade.ServerFacade;
+import server.model.ServerModel;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
@@ -11,6 +14,7 @@ import shared.locations.*;
 import shared.model.DevCard;
 import shared.model.Game;
 import shared.model.Road;
+import shared.model.Settlement;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,15 +51,15 @@ public class ServerModelTest {
             serverFacade.buildRoad(0, 0, true, new EdgeLocation(new HexLocation(0,0), EdgeDirection.North));
             serverFacade.buildSettlement(0, 0, true, new VertexLocation(new HexLocation(0,0), VertexDirection.NorthWest));
             serverFacade.finishTurn(0);
-
+//brooke
             serverFacade.buildRoad(0, 1, true, new EdgeLocation(new HexLocation(-1,0), EdgeDirection.North));
             serverFacade.buildSettlement(0, 1, true, new VertexLocation(new HexLocation(-1,0), VertexDirection.NorthWest));
             serverFacade.finishTurn(0);
-
+//pete
             serverFacade.buildRoad(0, 2, true, new EdgeLocation(new HexLocation(-2,0), EdgeDirection.North));
             serverFacade.buildSettlement(0, 2, true, new VertexLocation(new HexLocation(-2,0), VertexDirection.NorthWest));
             serverFacade.finishTurn(0);
-
+//mark
             serverFacade.buildRoad(0, 3, true, new EdgeLocation(new HexLocation(1,0), EdgeDirection.North));
             serverFacade.buildSettlement(0, 3, true, new VertexLocation(new HexLocation(1,0), VertexDirection.NorthWest));
             serverFacade.finishTurn(0);
@@ -81,17 +85,30 @@ public class ServerModelTest {
     }
 
     @Test
-    public void placeCity() throws Exception {
+    public void testBuilding() throws Exception {
+    	
+    	ServerModel.getInstance().getGames(0).getPlayerList().get(0).addToResourceHand(ResourceType.BRICK, 3);
+    	ServerModel.getInstance().getGames(0).getPlayerList().get(0).addToResourceHand(ResourceType.ORE, 3);
+    	ServerModel.getInstance().getGames(0).getPlayerList().get(0).addToResourceHand(ResourceType.SHEEP, 3);
+    	ServerModel.getInstance().getGames(0).getPlayerList().get(0).addToResourceHand(ResourceType.WHEAT, 3);
+    	ServerModel.getInstance().getGames(0).getPlayerList().get(0).addToResourceHand(ResourceType.WOOD, 3);
+    	
+    	// Make up a Vertex Location
+		VertexLocation vertex = new VertexLocation(new HexLocation(0,-2), VertexDirection.East);
+		assertTrue(ServerModel.getInstance().getGames(0).getTheMap().getCities().get(vertex.getNormalizedLocation()) == null);
 
-    }
+		
+		// Make up Road
+		EdgeLocation edge1 = new EdgeLocation(new HexLocation(0,-2),EdgeDirection.NorthEast);
+		//EdgeLocation edge2 = new EdgeLocation(new HexLocation(1,-2),EdgeDirection.North);
+		serverFacade.buildRoad(0, 0, false, edge1);
+		assertTrue(ServerModel.getInstance().getGames(0).getTheMap().getRoads().get(edge1) != null);
+		
+		serverFacade.buildSettlement(0, 0, false, vertex);
+		assertTrue(ServerModel.getInstance().getGames(0).getTheMap().getCities().get(vertex.getNormalizedLocation()) == null);
 
-    @Test
-    public void placeSettlement() throws Exception {
-
-    }
-
-    @Test
-    public void placeRoad() throws Exception {
+		serverFacade.buildCity(0, 0, vertex);
+		assertTrue(ServerModel.getInstance().getGames(0).getTheMap().getCities().get(vertex.getNormalizedLocation()) != null);
 
     }
 

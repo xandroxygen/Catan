@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import client.admin.GameAdministrator;
 import client.communication.LogEntry;
 import client.data.RobPlayerInfo;
+import client.model.Model;
 import client.server.IServerProxy;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
@@ -447,6 +448,8 @@ public class Game {
 	public RobPlayerInfo[] getCandidateVictims(HexLocation hexLoc) {
 		List<RobPlayerInfo> infoList = new ArrayList<>();
 		int[] victimIndicies = theMap.getPlayersWithMunicipalityOn(hexLoc);
+		// ensure that current player can't rob himself
+		victimIndicies[getCurrentPlayer().getPlayerIndex()] = 0;
 		
 		// Create array of Robbing Info
 		for (int i = 0; i < victimIndicies.length; i++) {
