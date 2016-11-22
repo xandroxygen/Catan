@@ -86,6 +86,7 @@ public class ServerModelTest {
 
     @Test
     public void testBuilding() throws Exception {
+        Game game = serverFacade.getModel().getGames(0);
     	
     	ServerModel.getInstance().getGames(0).getPlayerList().get(0).addToResourceHand(ResourceType.BRICK, 3);
     	ServerModel.getInstance().getGames(0).getPlayerList().get(0).addToResourceHand(ResourceType.ORE, 3);
@@ -101,6 +102,9 @@ public class ServerModelTest {
 		// Make up Road
 		EdgeLocation edge1 = new EdgeLocation(new HexLocation(0,-2),EdgeDirection.NorthEast);
 		//EdgeLocation edge2 = new EdgeLocation(new HexLocation(1,-2),EdgeDirection.North);
+        game.getTheMap().getRoads().remove(edge1);
+
+
 		serverFacade.buildRoad(0, 0, false, edge1);
 		assertTrue(ServerModel.getInstance().getGames(0).getTheMap().getRoads().get(edge1) != null);
 		
@@ -201,9 +205,6 @@ public class ServerModelTest {
                 if(game.getPlayerList().get(2).getTotalOfResources() != 0) {
                     assertEquals(player_resources + 1, game.getPlayerList().get(i).getTotalOfResources());
                     assertEquals(victim_resources - 1, game.getPlayerList().get(2).getTotalOfResources());
-                } else{
-                    assertEquals(player_resources, game.getPlayerList().get(i).getTotalOfResources());
-                    assertEquals(victim_resources, game.getPlayerList().get(2).getTotalOfResources());
                 }
             }
 
@@ -256,26 +257,26 @@ public class ServerModelTest {
     @Test
     public void playRoadCard() throws Exception {
         Game game = serverFacade.getModel().getGames(0);
-        int number_of_RoadCard_cards = game.getPlayerList().get(0).getOldDevCards().get(DevCardType.ROAD_BUILD);
-        game.getPlayerList().get(0).getOldDevCards().put(DevCardType.ROAD_BUILD, 1);
-        Road roadOne = game.getTheMap().getRoads().remove(new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthEast));
-        Road roadTwo = game.getTheMap().getRoads().remove(new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthWest));
+        int number_of_RoadCard_cards = game.getPlayerList().get(1).getOldDevCards().get(DevCardType.ROAD_BUILD);
+        game.getPlayerList().get(1).getOldDevCards().put(DevCardType.ROAD_BUILD, 1);
+        Road roadOne = game.getTheMap().getRoads().remove(new EdgeLocation(new HexLocation(0,1), EdgeDirection.NorthEast));
+        Road roadTwo = game.getTheMap().getRoads().remove(new EdgeLocation(new HexLocation(0,1), EdgeDirection.NorthWest));
         assertNull(roadOne);
         assertNull(roadTwo);
-        serverFacade.playRoadBuilding(0,0, new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthEast),
-                new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthWest));
-        roadOne = game.getTheMap().getRoads().get(new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthEast));
-        roadTwo = game.getTheMap().getRoads().get(new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthWest));
+        serverFacade.playRoadBuilding(0,1, new EdgeLocation(new HexLocation(0,1), EdgeDirection.NorthEast),
+                new EdgeLocation(new HexLocation(0,1), EdgeDirection.NorthWest));
+        roadOne = game.getTheMap().getRoads().get(new EdgeLocation(new HexLocation(0,1), EdgeDirection.NorthEast));
+        roadTwo = game.getTheMap().getRoads().get(new EdgeLocation(new HexLocation(0,1), EdgeDirection.NorthWest));
         assertNotNull(roadOne);
         assertNotNull(roadTwo);
 
-        assertTrue(game.getPlayerList().get(0).isPlayedDevCard());
-        assertEquals((int)game.getPlayerList().get(0).getOldDevCards().get(DevCardType.ROAD_BUILD), 0);
+        assertTrue(game.getPlayerList().get(1).isPlayedDevCard());
+        assertEquals((int)game.getPlayerList().get(1).getOldDevCards().get(DevCardType.ROAD_BUILD), 0);
         serverFacade.finishTurn(0);
         serverFacade.finishTurn(0);
         serverFacade.finishTurn(0);
         serverFacade.finishTurn(0);
-        assertFalse(game.getPlayerList().get(0).isPlayedDevCard());
+        assertFalse(game.getPlayerList().get(1).isPlayedDevCard());
     }
 
     @Test
@@ -339,11 +340,6 @@ public class ServerModelTest {
     }
 
     @Test
-    public void rollDice() throws Exception {
-
-    }
-
-    @Test
     public void sendMessage() throws Exception {
 
     }
@@ -366,16 +362,68 @@ public class ServerModelTest {
 
     @Test
     public void robPlayer() throws Exception {
+        serverFacade.finishTurn(0);
+        serverFacade.finishTurn(0);
+        Game game = serverFacade.getModel().getGames(0);
+        HexLocation robberHex = new HexLocation(0,0);
+        if(game.getTheMap().getRobber().getLocation() == robberHex){
+            robberHex = new HexLocation(1,1);
+        }
+        int totalPlayerResources = game.getPlayerList().get(2).getTotalOfResources();
+        int totalVictimResources = game.getPlayerList().get(3).getTotalOfResources();
+        serverFacade.robPlayer(0,2,robberHex, 3);
+
+        if(totalVictimResources != 0) {
+            assertEquals(totalPlayerResources + 1, game.getPlayerList().get(2).getTotalOfResources());
+            assertEquals(totalVictimResources - 1, game.getPlayerList().get(3).getTotalOfResources());
+        }
+        else{
+            assertEquals(totalPlayerResources, game.getPlayerList().get(2).getTotalOfResources());
+            assertEquals(totalVictimResources, game.getPlayerList().get(3).getTotalOfResources());
+        }
 
     }
 
     @Test
     public void discardCards() throws Exception {
+        Game game = serverFacade.getModel().getGames(0);
+        HashMap<ResourceType, Integer> discardHand = new HashMap<>();
+        game.getPlayerList().get(0).getResources().put(ResourceType.BRICK, 1);
+        discardHand.put(ResourceType.BRICK, 1);
+        discardHand.put(ResourceType.WOOD, 0);
+        discardHand.put(ResourceType.WHEAT, 0);
+        discardHand.put(ResourceType.SHEEP, 0);
+        discardHand.put(ResourceType.ORE, 0);
+        serverFacade.discardCards(0,0,discardHand);
+        assertEquals(0, (int)game.getPlayerList().get(0).getResources().get(ResourceType.BRICK));
+        serverFacade.finishTurn(0);
 
-    }
+        game.getPlayerList().get(1).getResources().put(ResourceType.WOOD, 3);
+        game.getPlayerList().get(1).getResources().put(ResourceType.WHEAT, 3);
+        discardHand.put(ResourceType.BRICK, 0);
+        discardHand.put(ResourceType.WOOD, 2);
+        discardHand.put(ResourceType.WHEAT, 3);
+        discardHand.put(ResourceType.SHEEP, 0);
+        discardHand.put(ResourceType.ORE, 0);
+        serverFacade.discardCards(0,1,discardHand);
+        assertEquals(1, (int)game.getPlayerList().get(1).getResources().get(ResourceType.WOOD));
+        assertEquals(0, (int)game.getPlayerList().get(1).getResources().get(ResourceType.WHEAT));
 
-    @Test
-    public void createGame() throws Exception {
+        game.getPlayerList().get(2).getResources().put(ResourceType.BRICK, 2);
+        game.getPlayerList().get(2).getResources().put(ResourceType.WOOD, 2);
+        game.getPlayerList().get(2).getResources().put(ResourceType.WHEAT, 2);
+        game.getPlayerList().get(2).getResources().put(ResourceType.SHEEP, 2);
+        game.getPlayerList().get(2).getResources().put(ResourceType.ORE, 2);
+        discardHand.put(ResourceType.BRICK, 1);
+        discardHand.put(ResourceType.WOOD, 1);
+        discardHand.put(ResourceType.WHEAT, 1);
+        discardHand.put(ResourceType.SHEEP, 1);
+        discardHand.put(ResourceType.ORE, 1);
+        serverFacade.discardCards(0,2,discardHand);
+        assertEquals(1, (int)game.getPlayerList().get(2).getResources().get(ResourceType.BRICK));
+        serverFacade.finishTurn(0);
+        serverFacade.finishTurn(0);
+        serverFacade.finishTurn(0);
 
     }
 
