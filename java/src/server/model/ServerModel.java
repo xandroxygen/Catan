@@ -400,8 +400,8 @@ public class ServerModel {
      * 		</pre>
      * @param gameID the ID of the game from which the request was made.
      */
-    public void addComputerPlayer(int gameID){
-        games.get(gameID).addComputerPlayer();
+    public void addAIPlayer(int gameID){
+        games.get(gameID).addAIPlayer();
     }
 
     /**

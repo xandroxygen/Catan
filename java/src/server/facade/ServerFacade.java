@@ -81,7 +81,7 @@ public class ServerFacade implements IServerFacade {
 
 	@Override
 	public Object gameAddAI(int gameID, String aiType) throws InvalidActionException {
-		model.addComputerPlayer(gameID);
+		model.addAIPlayer(gameID);
 		
 		return model.listGames().get(gameID);
 	}
