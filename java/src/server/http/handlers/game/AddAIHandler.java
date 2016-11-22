@@ -35,6 +35,7 @@ public class AddAIHandler extends BaseHandler {
 
 				try {
 					server.gameAddAI(gameID, request.getAIType());
+					return "Success";
 				} catch (InvalidActionException e) {
 					responseCode = RESPONSE_FAIL;
 					return "Invalid Request";
@@ -48,6 +49,5 @@ public class AddAIHandler extends BaseHandler {
 			responseCode = RESPONSE_FAIL;
 			return "The catan.game cookie must be set before calling this.";
 		}
-		return null;
 	}
 }

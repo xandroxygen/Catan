@@ -30,6 +30,7 @@ public class ServerGame extends Game {
 	private int gameId;
 	private List<String> availableAIs;
 	private List<CatanColor> availableColors;
+	private List<EdgeLocation> availableRoadLocations;
 
     public ServerGame(boolean randomTiles, boolean randomNumbers, boolean randomPorts, String gameName, int id) {
     	
@@ -59,12 +60,22 @@ public class ServerGame extends Game {
     	this.setWinner(-1);
     	this.setVersion(0);
     	
-    	// Set List of available AIs
+    	// Set List of available AIs with colors and locations
     	availableAIs = new ArrayList<String>(
     		    Arrays.asList("Will","Mike","Eleven"));
     	availableColors = new ArrayList<CatanColor>(
     			Arrays.asList(CatanColor.BLUE,CatanColor.BROWN,CatanColor.GREEN,CatanColor.ORANGE,CatanColor.PUCE,
     					CatanColor.PURPLE,CatanColor.RED,CatanColor.WHITE,CatanColor.YELLOW));
+    	availableRoadLocations = new ArrayList<EdgeLocation>(
+    			Arrays.asList(new EdgeLocation(new HexLocation(0,0),EdgeDirection.North),
+    					new EdgeLocation(new HexLocation(2,2),EdgeDirection.South),
+    					new EdgeLocation(new HexLocation(0,-2),EdgeDirection.North),
+    					new EdgeLocation(new HexLocation(2,0),EdgeDirection.South),
+    					new EdgeLocation(new HexLocation(0,2),EdgeDirection.South),
+    					new EdgeLocation(new HexLocation(2,-2),EdgeDirection.North),
+    					new EdgeLocation(new HexLocation(-2,2),EdgeDirection.South),
+    					new EdgeLocation(new HexLocation(1,0),EdgeDirection.North),
+    					new EdgeLocation(new HexLocation(-1,0),EdgeDirection.South)));
     	
 	}
 
@@ -96,6 +107,8 @@ public class ServerGame extends Game {
     	getPlayerList().get(playerIndex).addToPlayerPieces(PieceType.SETTLEMENT, 1);
     	
     	getPlayerList().get(playerIndex).setVictoryPoints(getPlayerList().get(playerIndex).getVictoryPoints() + 1);
+    	String name = getPlayerList().get(playerIndex).getName();
+    	getLog().add(new LogEntry(name+ " built a city",name));
 		setVersion(getVersion() + 1);
     }
 
@@ -121,6 +134,9 @@ public class ServerGame extends Game {
 		getPlayerList().get(playerIndex).addToPlayerPieces(PieceType.SETTLEMENT, -1);
 		// Adjust victory points
     	getPlayerList().get(playerIndex).setVictoryPoints(getPlayerList().get(playerIndex).getVictoryPoints() + 1);
+    	
+    	String name = getPlayerList().get(playerIndex).getName();
+    	getLog().add(new LogEntry(name+ " built a settlement",name));
 		setVersion(getVersion() + 1);
 	}
 
@@ -142,6 +158,9 @@ public class ServerGame extends Game {
 	    	getPlayerList().get(playerIndex).addToPlayerPieces(PieceType.ROAD, -1);
             this.longestRoad();
         }
+    	
+    	String name = getPlayerList().get(playerIndex).getName();
+    	getLog().add(new LogEntry(name+ " built a road",name));
 		setVersion(getVersion() + 1);
 	}
 
@@ -235,6 +254,9 @@ public class ServerGame extends Game {
         //rob the victim and add it to the player who played the card
         robPlayer(playerIndex, victimIndex, location);
         largestArmy();
+        
+        String name = getPlayerList().get(playerIndex).getName();
+    	getLog().add(new LogEntry(name+ " played a soldier card",name));
 		setVersion(getVersion() + 1);
 	}
 
@@ -268,6 +290,9 @@ public class ServerGame extends Game {
             getPlayerList().get(playerIndex).getResources().put(resource2,
                     getPlayerList().get(playerIndex).getResources().get(resource2) + 1);
         }
+        
+        String name = getPlayerList().get(playerIndex).getName();
+    	getLog().add(new LogEntry(name+ " played a year of plenty card",name));
 		setVersion(getVersion() + 1);
     }
 
@@ -298,6 +323,9 @@ public class ServerGame extends Game {
         getPlayerList().get(playerIndex).setPlayedDevCard(true);
         placeRoad(playerIndex, true, spot1);
         placeRoad(playerIndex, true, spot2);
+        
+        String name = getPlayerList().get(playerIndex).getName();
+    	getLog().add(new LogEntry(name+ " played a road card",name));
 		setVersion(getVersion() + 1);
 	}
 
@@ -325,6 +353,8 @@ public class ServerGame extends Game {
             tempPlayer.getResources().put(resource, 0);
         }
         getPlayerList().get(playerIndex).getResources().put(resource, totalCountOfResource);
+        String name = getPlayerList().get(playerIndex).getName();
+    	getLog().add(new LogEntry(name+ " played a monoply card",name));
 		setVersion(getVersion() + 1);
 	}
 
@@ -345,6 +375,9 @@ public class ServerGame extends Game {
     public void playMonumentCard(int playerIndex){
     	getPlayerList().get(playerIndex).getOldDevCards().put(DevCardType.MONUMENT, getPlayerList().get(playerIndex).getOldDevCards().get(DevCardType.MONUMENT) - 1);
         getPlayerList().get(playerIndex).setVictoryPoints(getPlayerList().get(playerIndex).getVictoryPoints() + 1);
+        
+        String name = getPlayerList().get(playerIndex).getName();
+    	getLog().add(new LogEntry(name+ " played a monument card",name));
 		setVersion(getVersion() + 1);
 	}
 
@@ -367,6 +400,11 @@ public class ServerGame extends Game {
     			getPlayerList().get(2).getTotalOfResources() > 7 ||
     			getPlayerList().get(3).getTotalOfResources() > 7)) {
     		getTurnTracker().setStatus(GameStatus.Discarding);
+    		for (Player p: getPlayerList()) {
+    			if (p.getTotalOfResources() > 7 && p.getPlayerID() < 0) {
+    	    		this.discardCards(p.getPlayerIndex(), p.getDiscardingResources());
+    			}
+    		}
     	}
     	else if (rollValue == 7) {
     		getTurnTracker().setStatus(GameStatus.Robbing);
@@ -376,6 +414,9 @@ public class ServerGame extends Game {
     	else {
     		getTurnTracker().setStatus(GameStatus.Playing);
     	}
+    	
+    	String name = getPlayerList().get(playerIndex).getName();
+    	getLog().add(new LogEntry(name+ " rolled a " + rollValue ,name));
         setVersion(getVersion() + 1);
     }
 
@@ -406,6 +447,12 @@ public class ServerGame extends Game {
      */
     public void makeTradeOffer(int senderPlayerIndex, int receiverPlayerIndex, Map<ResourceType, Integer> offer){
 		setTradeOffer(new TradeOffer(senderPlayerIndex, receiverPlayerIndex, offer));
+		
+		// If trading with an AI, reject >=]
+		if (getPlayerList().get(receiverPlayerIndex).getPlayerID() < 0) {
+			this.acceptTradeOffer(false);
+		}
+		
         setVersion(getVersion() + 1);
 	}
 
@@ -425,6 +472,13 @@ public class ServerGame extends Game {
             for (Map.Entry<ResourceType, Integer> playerResource : getPlayerList().get(getPlayerIndex(receiverID)).getResources().entrySet()) {
                 playerResource.setValue(playerResource.getValue() + offer.get(playerResource.getKey()));
             }
+            String name = getPlayerList().get(senderID).getName();
+        	getLog().add(new LogEntry("The trade was accepted!",name));
+        }
+        else {
+        	int senderID = getTradeOffer().getSender();
+        	String name = getPlayerList().get(senderID).getName();
+        	getLog().add(new LogEntry("The trade was rejected",name));
         }
         setTradeOffer(null);
         setVersion(getVersion() + 1);
@@ -485,15 +539,14 @@ public class ServerGame extends Game {
      * 		</pre>
      */
     public void finishTurn(){
+    	String name = getPlayerList().get(getTurnTracker().getCurrentTurn()).getName();
+    	getLog().add(new LogEntry(name+ "'s turn ended",name));
+    	
     	getTurnTracker().nextTurn();
     	
-    	// If AI player exists, get them to buy dev cards
-    	if (getPlayerList().get(getTurnTracker().getCurrentTurn()).getPlayerID() < 0) {
-        	if (canBuyDevelopmentCard(getTurnTracker().getCurrentTurn())) {
-        		buyDevelopmentCard(getTurnTracker().getCurrentTurn());
-        	}
-        	getTurnTracker().nextTurn();
-        	setVersion(getVersion() + 1);
+    	// If AI player exists, perform turn
+    	while (getPlayerList().get(getTurnTracker().getCurrentTurn()).getPlayerID() < 0) {
+        	performAITurn(getTurnTracker().getCurrentTurn());
         }
     	
     	for (Player p : getPlayerList()) {
@@ -515,7 +568,65 @@ public class ServerGame extends Game {
             tempPlayer.getNewDevCards().put(DevCardType.MONOPOLY, 0);
             tempPlayer.getNewDevCards().put(DevCardType.ROAD_BUILD, 0);
         }
+        
         setVersion(getVersion() + 1);
+    }
+    
+    private void performAITurn(int playerIndex) {
+    	int id = getPlayerList().get(playerIndex).getPlayerID();
+    	if (getTurnTracker().getStatus() == GameStatus.FirstRound || getTurnTracker().getStatus() == GameStatus.SecondRound) {
+    		// Place Road and settlement in random location
+    		EdgeLocation e = null;
+    		VertexLocation v = null;
+    		for (EdgeLocation edge : availableRoadLocations) {
+    			if (canPlaceRoad(id, true, edge)) {
+    				e = edge;
+    				this.placeRoad(playerIndex, true, edge);
+    				break;
+    			}
+    		}
+    		for (VertexLocation vertex : e.getNormalizedVertices()) {
+    			if (canPlaceSettlement(id, true, vertex)) {
+    				v = vertex;
+    				this.placeSettlement(playerIndex, true, vertex);
+    				break;
+    			}
+    		}
+    		availableRoadLocations.remove(e);
+    		getTurnTracker().nextTurn();
+    	}
+    	if (getTurnTracker().getStatus() == GameStatus.Rolling && (getTurnTracker().getCurrentTurn() == playerIndex)) {
+    		int dice = ThreadLocalRandom.current().nextInt(1, 7) + ThreadLocalRandom.current().nextInt(1, 7);
+    		//int dice = 7;
+    		this.rollDice(getTurnTracker().getCurrentTurn(), dice);
+    	}
+    	if (getTurnTracker().getStatus() == GameStatus.Discarding) {
+    		Player p = getPlayerList().get(playerIndex);
+    		this.discardCards(playerIndex, p.getDiscardingResources());
+    	}
+    	if (getTurnTracker().getStatus() == GameStatus.Robbing && (getTurnTracker().getCurrentTurn() == playerIndex)) {
+    		HexLocation hex = new HexLocation(0,0);
+    		if (getTheMap().getRobber().getLocation().equals(hex)) {
+    			hex = new HexLocation(0,-2);
+    		}
+    		int[] indices = getTheMap().getPlayersWithMunicipalityOn(hex);
+    		indices[playerIndex] = 0;
+    		int victim = -1;
+			for (int i = 0; i < indices.length; i++) {
+				if (indices[i] != 0 && getPlayerList().get(indices[i]).getTotalOfResources() > 0) {
+					victim = indices[i];
+				}
+			}
+			this.robPlayer(playerIndex, victim, hex);
+    	}
+    	if (getTurnTracker().getStatus() == GameStatus.Playing && (getTurnTracker().getCurrentTurn() == playerIndex)) {
+    		// Purchase Dev card if sufficient resources exist
+    		if (canBuyDevelopmentCard(getTurnTracker().getCurrentTurn())) {
+        		buyDevelopmentCard(getTurnTracker().getCurrentTurn());
+        	}
+        	getTurnTracker().nextTurn();
+    	}
+    	setVersion(getVersion() + 1);
     }
 
     /**
@@ -570,7 +681,14 @@ public class ServerGame extends Game {
 					}
 				}
 			}
+			String name = getPlayerList().get(playerIndex).getName();
+			String victim = getPlayerList().get(victimIndex).getName();
+	    	getLog().add(new LogEntry(name+ " moved the robber and robbed " + victim,name));
     	}
+		else {
+			String name = getPlayerList().get(playerIndex).getName();
+	    	getLog().add(new LogEntry(name+ " moved the robber but couldn't rob anyone!",name));
+		}
 		if (location != null) {
 			getTheMap().getRobber().setLocation(location);
 		}

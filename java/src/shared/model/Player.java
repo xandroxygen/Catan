@@ -584,5 +584,26 @@ public class Player {
 		}
 		
 	}
+	
+	public Map<ResourceType,Integer> getDiscardingResources() {
+		if (getTotalOfResources() < 7) {
+			return null;
+		}
+		Map<ResourceType,Integer> result = new HashMap<ResourceType,Integer>();
+		
+		int total = getTotalOfResources()/2;
+		int resultResources = 0;
+		for (ResourceType key : resources.keySet()) {
+			int resource = resources.get(key);
+			while (resource > 0 && (resultResources < total)) {
+				int count = resources.containsKey(key) ? resources.get(key) : 0;
+				result.put(key, count + 1);
+				resource--;
+				resultResources++;
+			}
+			resources.put(key, resource);
+		}
+		return result;
+	}
 
 }
