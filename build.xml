@@ -180,6 +180,8 @@
 			<test name="testing.ModelTest"/>
 			<test name="testing.GameAdministratorTest"/>
 			<test name="testing.ServerProxyTest"/>
+			<test name="testing.ServerModelTest"/>
+			<test name="testing.CommandTest"/>
 			<!-- TODO put the name of your test classes here, then run ant test -->
 		</junit>
 	</target>
