@@ -5,7 +5,13 @@ import org.junit.Test;
 import server.command.moves.RollNumberCommand;
 import server.facade.ServerFacade;
 import shared.definitions.CatanColor;
+import shared.definitions.DevCardType;
 import shared.locations.*;
+import shared.model.DevCard;
+import shared.model.Game;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -17,56 +23,58 @@ public class ServerModelTest {
 
     @Before
     public void setUp() throws Exception {
-        serverFacade.userRegister("Jonathan", "jonathan");
-        serverFacade.userRegister("Xander", "xander");
-        serverFacade.userRegister("Spencer", "spencer");
-        serverFacade.userRegister("Jeremy", "jeremy");
+        try {
+            serverFacade.userRegister("Jonathan", "jonathan");
+            serverFacade.userRegister("Xander", "xander");
+            serverFacade.userRegister("Spencer", "spencer");
+            serverFacade.userRegister("Jeremy", "jeremy");
 
-        serverFacade.userLogin("Jonathan", "jonathan");
-        serverFacade.userLogin("Xander", "xander");
-        serverFacade.userLogin("Spencer", "spencer");
-        serverFacade.userLogin("Jeremy", "jeremy");
+            serverFacade.userLogin("Jonathan", "jonathan");
+            serverFacade.userLogin("Xander", "xander");
+            serverFacade.userLogin("Spencer", "spencer");
+            serverFacade.userLogin("Jeremy", "jeremy");
 
-        serverFacade.gamesCreate("Game", false, false, false);
+            serverFacade.gamesCreate("Game", false, false, false);
 
-        serverFacade.gamesJoin(0, 0, CatanColor.RED);
-        serverFacade.gamesJoin(0, 1, CatanColor.ORANGE);
-        serverFacade.gamesJoin(0, 2, CatanColor.BLUE);
-        serverFacade.gamesJoin(0, 3, CatanColor.GREEN);
+            serverFacade.gamesJoin(0, 0, CatanColor.RED);
+            serverFacade.gamesJoin(0, 1, CatanColor.ORANGE);
+            serverFacade.gamesJoin(0, 2, CatanColor.BLUE);
+            serverFacade.gamesJoin(0, 3, CatanColor.GREEN);
 
-        //firstRound
-        serverFacade.buildRoad(0, 0, true, new EdgeLocation(new HexLocation(0,0), EdgeDirection.North));
-        serverFacade.buildSettlement(0, 0, true, new VertexLocation(new HexLocation(0,0), VertexDirection.NorthWest));
-        serverFacade.finishTurn(0);
+            //firstRound
+            serverFacade.buildRoad(0, 0, true, new EdgeLocation(new HexLocation(0,0), EdgeDirection.North));
+            serverFacade.buildSettlement(0, 0, true, new VertexLocation(new HexLocation(0,0), VertexDirection.NorthWest));
+            serverFacade.finishTurn(0);
 
-        serverFacade.buildRoad(0, 1, true, new EdgeLocation(new HexLocation(-1,0), EdgeDirection.North));
-        serverFacade.buildSettlement(0, 1, true, new VertexLocation(new HexLocation(-1,0), VertexDirection.NorthWest));
-        serverFacade.finishTurn(0);
+            serverFacade.buildRoad(0, 1, true, new EdgeLocation(new HexLocation(-1,0), EdgeDirection.North));
+            serverFacade.buildSettlement(0, 1, true, new VertexLocation(new HexLocation(-1,0), VertexDirection.NorthWest));
+            serverFacade.finishTurn(0);
 
-        serverFacade.buildRoad(0, 2, true, new EdgeLocation(new HexLocation(-2,0), EdgeDirection.North));
-        serverFacade.buildSettlement(0, 2, true, new VertexLocation(new HexLocation(-2,0), VertexDirection.NorthWest));
-        serverFacade.finishTurn(0);
+            serverFacade.buildRoad(0, 2, true, new EdgeLocation(new HexLocation(-2,0), EdgeDirection.North));
+            serverFacade.buildSettlement(0, 2, true, new VertexLocation(new HexLocation(-2,0), VertexDirection.NorthWest));
+            serverFacade.finishTurn(0);
 
-        serverFacade.buildRoad(0, 3, true, new EdgeLocation(new HexLocation(1,0), EdgeDirection.North));
-        serverFacade.buildSettlement(0, 3, true, new VertexLocation(new HexLocation(1,0), VertexDirection.NorthWest));
-        serverFacade.finishTurn(0);
+            serverFacade.buildRoad(0, 3, true, new EdgeLocation(new HexLocation(1,0), EdgeDirection.North));
+            serverFacade.buildSettlement(0, 3, true, new VertexLocation(new HexLocation(1,0), VertexDirection.NorthWest));
+            serverFacade.finishTurn(0);
 
-        //secondRound
-        serverFacade.buildRoad(0, 3, true, new EdgeLocation(new HexLocation(2,0), EdgeDirection.North));
-        serverFacade.buildSettlement(0, 3, true, new VertexLocation(new HexLocation(2,0), VertexDirection.NorthWest));
-        serverFacade.finishTurn(0);
+            //secondRound
+            serverFacade.buildRoad(0, 3, true, new EdgeLocation(new HexLocation(2,0), EdgeDirection.North));
+            serverFacade.buildSettlement(0, 3, true, new VertexLocation(new HexLocation(2,0), VertexDirection.NorthWest));
+            serverFacade.finishTurn(0);
 
-        serverFacade.buildRoad(0, 2, true, new EdgeLocation(new HexLocation(0,-1), EdgeDirection.North));
-        serverFacade.buildSettlement(0, 2, true, new VertexLocation(new HexLocation(0,-1), VertexDirection.NorthWest));
-        serverFacade.finishTurn(0);
+            serverFacade.buildRoad(0, 2, true, new EdgeLocation(new HexLocation(0,-1), EdgeDirection.North));
+            serverFacade.buildSettlement(0, 2, true, new VertexLocation(new HexLocation(0,-1), VertexDirection.NorthWest));
+            serverFacade.finishTurn(0);
 
-        serverFacade.buildRoad(0, 1, true, new EdgeLocation(new HexLocation(0,1), EdgeDirection.North));
-        serverFacade.buildSettlement(0, 1, true, new VertexLocation(new HexLocation(0,1), VertexDirection.NorthWest));
-        serverFacade.finishTurn(0);
+            serverFacade.buildRoad(0, 1, true, new EdgeLocation(new HexLocation(0,1), EdgeDirection.North));
+            serverFacade.buildSettlement(0, 1, true, new VertexLocation(new HexLocation(0,1), VertexDirection.NorthWest));
+            serverFacade.finishTurn(0);
 
-        serverFacade.buildRoad(0, 0, true, new EdgeLocation(new HexLocation(0,-2), EdgeDirection.North));
-        serverFacade.buildSettlement(0, 0, true, new VertexLocation(new HexLocation(0,-2), VertexDirection.NorthWest));
-        serverFacade.finishTurn(0);
+            serverFacade.buildRoad(0, 0, true, new EdgeLocation(new HexLocation(0,-2), EdgeDirection.North));
+            serverFacade.buildSettlement(0, 0, true, new VertexLocation(new HexLocation(0,-2), VertexDirection.NorthWest));
+            serverFacade.finishTurn(0);
+        } catch (Exception e){}
 
     }
 
@@ -87,12 +95,98 @@ public class ServerModelTest {
 
     @Test
     public void buyDevelopmentCard() throws Exception {
+        Game game = serverFacade.getModel().getGames(0);
+        for (int i = 0; i < 3; i++) {
+            HashMap<DevCardType, Integer> oldDevCards, newDevCards;
+            oldDevCards = game.getPlayerList().get(i).getOldDevCards();
+            newDevCards = game.getPlayerList().get(i).getNewDevCards();
 
+            assertEquals((int)oldDevCards.get(DevCardType.SOLDIER), 0);
+            assertEquals((int)oldDevCards.get(DevCardType.YEAR_OF_PLENTY), 0);
+            assertEquals((int)oldDevCards.get(DevCardType.MONOPOLY), 0);
+            assertEquals((int)oldDevCards.get(DevCardType.ROAD_BUILD), 0);
+            assertEquals((int)oldDevCards.get(DevCardType.MONUMENT), 0);
+
+            assertEquals((int)newDevCards.get(DevCardType.SOLDIER), 0);
+            assertEquals((int)newDevCards.get(DevCardType.YEAR_OF_PLENTY), 0);
+            assertEquals((int)newDevCards.get(DevCardType.MONOPOLY), 0);
+            assertEquals((int)newDevCards.get(DevCardType.ROAD_BUILD), 0);
+            assertEquals((int)newDevCards.get(DevCardType.MONUMENT), 0);
+
+            assertFalse(game.getPlayerList().get(i).isPlayedDevCard());
+
+            serverFacade.buyDevCard(0, i);
+
+            assertEquals((int)oldDevCards.get(DevCardType.SOLDIER), 0);
+            assertEquals((int)oldDevCards.get(DevCardType.YEAR_OF_PLENTY), 0);
+            assertEquals((int)oldDevCards.get(DevCardType.MONOPOLY), 0);
+            assertEquals((int)oldDevCards.get(DevCardType.ROAD_BUILD), 0);
+
+            assertEquals((int)newDevCards.get(DevCardType.MONUMENT), 0);
+
+            assertEquals(oldDevCards.get(DevCardType.MONUMENT) + newDevCards.get(DevCardType.SOLDIER) +
+                    newDevCards.get(DevCardType.YEAR_OF_PLENTY) + newDevCards.get(DevCardType.MONOPOLY) +
+                    newDevCards.get(DevCardType.ROAD_BUILD), 1);
+
+            assertFalse(game.getPlayerList().get(i).isPlayedDevCard());
+            serverFacade.finishTurn(0);
+        }
     }
 
     @Test
     public void playSoldierCard() throws Exception {
-
+        Game game = serverFacade.getModel().getGames(0);
+        for (int i = 0; i < 3; i++) {
+            int number_of_soldier_cards = game.getPlayerList().get(i).getOldDevCards().get(DevCardType.SOLDIER);
+            game.getPlayerList().get(i).getOldDevCards().put(DevCardType.SOLDIER, 1);
+            int player_resources  = game.getPlayerList().get(i).getTotalOfResources();
+            if(i == 0){
+                int victim_resources  = game.getPlayerList().get(3).getTotalOfResources();
+                serverFacade.playSoldier(0, i, new HexLocation(0,0), 3);
+                if(game.getPlayerList().get(3).getTotalOfResources() != 0) {
+                    assertEquals(player_resources + 1, game.getPlayerList().get(i).getTotalOfResources());
+                    assertEquals(victim_resources - 1, game.getPlayerList().get(3).getTotalOfResources());
+                } else{
+                    assertEquals(player_resources, game.getPlayerList().get(i).getTotalOfResources());
+                    assertEquals(victim_resources, game.getPlayerList().get(3).getTotalOfResources());
+                }
+            }
+            else if(i == 1){
+                int victim_resources  = game.getPlayerList().get(0).getTotalOfResources();
+                serverFacade.playSoldier(0, i, new HexLocation(0,-2), 0);
+                if(game.getPlayerList().get(1).getTotalOfResources() != 0) {
+                    assertEquals(player_resources + 1, game.getPlayerList().get(1).getTotalOfResources());
+                    assertEquals(victim_resources - 1, game.getPlayerList().get(0).getTotalOfResources());
+                } else{
+                    assertEquals(player_resources, game.getPlayerList().get(i).getTotalOfResources());
+                    assertEquals(victim_resources, game.getPlayerList().get(0).getTotalOfResources());
+                }
+            }
+            else if(i == 2){
+                int player_zero_resources  = game.getPlayerList().get(0).getTotalOfResources();
+                int player_one_resources  = game.getPlayerList().get(1).getTotalOfResources();
+                int player_three_resources  = game.getPlayerList().get(3).getTotalOfResources();
+                serverFacade.playSoldier(0, i, new HexLocation(2,0), -1);
+                assertEquals(player_resources, game.getPlayerList().get(i).getTotalOfResources());
+                assertEquals(player_zero_resources, game.getPlayerList().get(0).getTotalOfResources());
+                assertEquals(player_one_resources, game.getPlayerList().get(1).getTotalOfResources());
+                assertEquals(player_three_resources, game.getPlayerList().get(3).getTotalOfResources());
+            }
+            else{
+                int victim_resources  = game.getPlayerList().get(2).getTotalOfResources();
+                serverFacade.playSoldier(0, i, new HexLocation(1,1), 2);
+                if(game.getPlayerList().get(2).getTotalOfResources() != 0) {
+                    assertEquals(player_resources + 1, game.getPlayerList().get(i).getTotalOfResources());
+                    assertEquals(victim_resources - 1, game.getPlayerList().get(2).getTotalOfResources());
+                } else{
+                    assertEquals(player_resources, game.getPlayerList().get(i).getTotalOfResources());
+                    assertEquals(victim_resources, game.getPlayerList().get(2).getTotalOfResources());
+                }
+            }
+            assertEquals(number_of_soldier_cards, 0);
+            game.getPlayerList().get(i).getOldDevCards().put(DevCardType.SOLDIER, 1);
+            serverFacade.finishTurn(0);
+        }
     }
 
     @Test

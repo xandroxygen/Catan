@@ -14,10 +14,14 @@ import shared.locations.VertexLocation;
 
 public class ServerFacade implements IServerFacade {
 	
-	ServerModel model;
+	private ServerModel model;
 	
 	public ServerFacade() {
 		model = ServerModel.getInstance();
+	}
+
+	public ServerModel getModel() {
+		return model;
 	}
 
 	@Override
