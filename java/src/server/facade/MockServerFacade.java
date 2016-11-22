@@ -108,14 +108,12 @@ public class MockServerFacade implements IServerFacade{
 
 	@Override
 	public Object sendChat(int gameID, int playerID, String message) throws InvalidActionException {
-		// TODO Auto-generated method stub
-		return null;
+		return message;
 	}
 
 	@Override
 	public Object acceptTrade(int gameID, boolean willAccept) throws InvalidActionException {
-		// TODO Auto-generated method stub
-		return null;
+		return willAccept;
 	}
 
 	/**
@@ -132,33 +130,29 @@ public class MockServerFacade implements IServerFacade{
 	 */
 	@Override
 	public Object discardCards(int gameID, int playerID, Map<ResourceType, Integer> hand) throws InvalidActionException {
-		return null;
+		return hand.get(ResourceType.BRICK);
 	}
 
 	@Override
 	public Object rollNumber(int gameID, int playerID, int rollValue) throws InvalidActionException {
-		// TODO Auto-generated method stub
-		return null;
+		return rollValue;
 	}
 
 	@Override
 	public Object buildRoad(int gameID, int playerID, boolean isFree, EdgeLocation roadLocation)
 			throws InvalidActionException {
-		// TODO Auto-generated method stub
-		return null;
+		return isFree;
 	}
 
 	@Override
 	public Object buildSettlement(int gameID, int playerID, boolean isFree, VertexLocation vertexLocation)
 			throws InvalidActionException {
-		// TODO Auto-generated method stub
-		return null;
+		return isFree;
 	}
 
 	@Override
 	public Object buildCity(int gameID, int playerID, VertexLocation vertexLocation) throws InvalidActionException {
-		// TODO Auto-generated method stub
-		return null;
+		return vertexLocation.getDir();
 	}
 
 	/**
@@ -172,7 +166,7 @@ public class MockServerFacade implements IServerFacade{
 	 */
 	@Override
 	public Object offerTrade(int gameID, int senderID, int receiverID, Map<ResourceType, Integer> offer) throws InvalidActionException {
-		return null;
+		return offer.get(ResourceType.BRICK);
 	}
 
 	/**
@@ -196,59 +190,51 @@ public class MockServerFacade implements IServerFacade{
 	 */
 	@Override
 	public Object maritimeTrade(int gameID, int playerID, int ratio, ResourceType inputResource, ResourceType outputResource) throws InvalidActionException {
-		return null;
+		return inputResource;
 	}
 
 	@Override
 	public Object robPlayer(int gameID, int playerID, HexLocation location, int victimIndex)
 			throws InvalidActionException {
-		// TODO Auto-generated method stub
-		return null;
+		return victimIndex;
 	}
 
 	@Override
 	public Object finishTurn(int gameID) throws InvalidActionException {
-		// TODO Auto-generated method stub
-		return null;
+		return gameID;
 	}
 
 	@Override
 	public Object buyDevCard(int gameID, int playerID) throws InvalidActionException {
-		// TODO Auto-generated method stub
-		return null;
+		return playerID;
 	}
 
 	@Override
 	public Object playSoldier(int gameID, int playerID, HexLocation location, int victimIndex)
 			throws InvalidActionException {
-		// TODO Auto-generated method stub
-		return null;
+		return victimIndex;
 	}
 
 	@Override
 	public Object playYearOfPlenty(int gameID, int playerID, ResourceType resource1, ResourceType resource2)
 			throws InvalidActionException {
-		// TODO Auto-generated method stub
-		return null;
+		return resource1;
 	}
 
 	@Override
 	public Object playRoadBuilding(int gameID, int playerID, EdgeLocation location1, EdgeLocation location2)
 			throws InvalidActionException {
-		// TODO Auto-generated method stub
-		return null;
+		return playerID;
 	}
 
 	@Override
 	public Object playMonopoly(int gameID, int playerID, ResourceType resource) throws InvalidActionException {
-		// TODO Auto-generated method stub
-		return null;
+		return resource;
 	}
 
 	@Override
 	public Object playMonument(int gameID, int playerID) throws InvalidActionException {
-		// TODO Auto-generated method stub
-		return null;
+		return playerID;
 	}
 
 }
