@@ -81,10 +81,10 @@ public class Bank {
      * @return
      */
     public boolean canBuyDevelopmentCard(){
-		return developmentCards.get(DevCardType.SOLDIER) > 0 &&
-				developmentCards.get(DevCardType.YEAR_OF_PLENTY) > 0 &&
-				developmentCards.get(DevCardType.MONOPOLY) > 0 &&
-				developmentCards.get(DevCardType.ROAD_BUILD) > 0 &&
+		return developmentCards.get(DevCardType.SOLDIER) > 0 ||
+				developmentCards.get(DevCardType.YEAR_OF_PLENTY) > 0 ||
+				developmentCards.get(DevCardType.MONOPOLY) > 0 ||
+				developmentCards.get(DevCardType.ROAD_BUILD) > 0 ||
 				developmentCards.get(DevCardType.MONUMENT) > 0;
     }
 

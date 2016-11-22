@@ -174,8 +174,7 @@
 	<target name="test" depends="package" description="only runs junit tests">
 		<junit printsummary="withOutAndErr">
 			<classpath refid="junit.classpath"/>
-			<formatter type="plain" usefile="false"/>
-			<test name="testing.TestTest"/>
+			<formatter type="plain" usefile="false"/>>
 			<test name="testing.ServerPollerTest"/>
 			<test name="testing.ModelTest"/>
 			<test name="testing.GameAdministratorTest"/>
