@@ -1,4 +1,4 @@
-package server.persistence.text;
+package server.plugins.serialized;
 
 import java.util.List;
 

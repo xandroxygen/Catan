@@ -14,7 +14,7 @@ public class LogEntry
 	private CatanColor color;
 	
 	/**
-	 * Message text
+	 * Message serialized
 	 */
 	private String message;
 	private String username = "";

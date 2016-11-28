@@ -1,4 +1,4 @@
-package server.persistence.relational;
+package server.plugins.relational;
 
 
 public class CommandRelationalDAO {

@@ -6,7 +6,7 @@ import java.awt.RenderingHints;
 import javax.swing.JTextField;
 
 /**
- * JTextField that supports adding a placeholder text
+ * JTextField that supports adding a placeholder serialized
  */
 public class PlaceholderTextField extends JTextField {
     
@@ -29,12 +29,12 @@ public class PlaceholderTextField extends JTextField {
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
 
-        // If we don't have a placeholder or there is text continue
+        // If we don't have a placeholder or there is serialized continue
         if (placeholder.isEmpty() || !getText().isEmpty()) {
             return;
         }
 
-        // Render the placeholder text
+        // Render the placeholder serialized
         Graphics2D g2d = (Graphics2D) graphics;
         g2d.setRenderingHint(
             RenderingHints.KEY_ANTIALIASING,
