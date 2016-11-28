@@ -1,4 +1,4 @@
-package server.plugins.serialized;
+package plugins.serialized;
 
 
 public class SerializedPersistenceProvider {

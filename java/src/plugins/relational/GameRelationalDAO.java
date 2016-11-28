@@ -1,4 +1,4 @@
-package server.plugins.relational;
+package plugins.relational;
 
 
 public class GameRelationalDAO {
