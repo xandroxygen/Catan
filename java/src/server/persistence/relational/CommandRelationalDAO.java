@@ -1,5 +1,5 @@
 package server.persistence.relational;
 
 
-public class RelationalCommand {
+public class CommandRelationalDAO {
 }

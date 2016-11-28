@@ -1,5 +1,5 @@
 package server.persistence.relational;
 
 
-public class RelationalGame {
+public class GameRelationalDAO {
 }
