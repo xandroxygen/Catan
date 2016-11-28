@@ -5,8 +5,7 @@ import java.util.List;
 import server.command.Command;
 
 public interface ICommandDAO {
-	
-	
+
 	/**
 	 * Stores command into the persistent provider
 	 */
@@ -24,4 +23,14 @@ public interface ICommandDAO {
 	 * @param gameID id of the game
 	 */
 	public void clearCommands(int gameID);
+
+	/**
+	 * @return int count command
+	 */
+	public int getCommandCount();
+
+	/**
+	 * Resets command count to 0. Used when game is saved and checkpoint is reached.
+	 */
+	public void resetCommandCount();
 }
