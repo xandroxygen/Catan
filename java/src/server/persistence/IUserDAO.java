@@ -1,5 +1,6 @@
 package server.persistence;
 
 
-public interface CommandDAO {
+public interface IUserDAO {
+
 }

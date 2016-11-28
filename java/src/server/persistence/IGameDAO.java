@@ -1,5 +1,5 @@
 package server.persistence;
 
 
-public interface UserDAO {
+public interface IGameDAO {
 }
