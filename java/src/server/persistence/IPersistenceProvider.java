@@ -3,16 +3,34 @@ package server.persistence;
 
 public interface IPersistenceProvider {
 
+    /**
+     * Clears all information in the the database
+     */
     public void clearData();
 
-    public void getGameDAO();
+    /**
+     * @return the GameDAO
+     */
+    public IGameDAO getGameDAO();
 
-    public void getUserDAO();
+    /**
+     * @return the UserDAO
+     */
+    public IUserDAO getUserDAO();
 
-    public void getCommandDAO();
+    /**
+     * @return the CommandDAO
+     */
+    public ICommandDAO getCommandDAO();
 
+    /**
+     * Starts the transaction
+     */
     public void startTransaction();
 
+    /**
+     * ends the transaction
+     */
     public void endTransaction();
 
 }
