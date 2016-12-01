@@ -7,21 +7,49 @@ import server.persistence.ICommandDAO;
 
 public class CommandTextDAO implements ICommandDAO {
 
+
+	/**
+	 * Stores command into the persistent provider
+	 */
 	@Override
 	public void addCommand() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
+	/**
+	 * Returns a list of commands from the persistent provider
+	 *
+	 * @param gameID id of the game
+	 * @return list of commands
+	 */
 	@Override
 	public List<Command> getCommands(int gameID) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Removes all commands from the persistent provider for the specified game
+	 *
+	 * @param gameID id of the game
+	 */
 	@Override
 	public void clearCommands(int gameID) {
-		// TODO Auto-generated method stub
-		
+
+	}
+
+	/**
+	 * @return int count command
+	 */
+	@Override
+	public int getCommandCount() {
+		return 0;
+	}
+
+	/**
+	 * Resets command count to 0. Used when game is saved and checkpoint is reached.
+	 */
+	@Override
+	public void resetCommandCount() {
+
 	}
 }

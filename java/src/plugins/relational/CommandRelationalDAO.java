@@ -1,4 +1,4 @@
-package server.plugins.relational;
+package plugins.relational;
 
 
 import server.command.Command;
@@ -7,6 +7,7 @@ import server.persistence.ICommandDAO;
 import java.util.List;
 
 public class CommandRelationalDAO implements ICommandDAO{
+
 	/**
 	 * Stores command into the persistent provider
 	 */
@@ -33,6 +34,22 @@ public class CommandRelationalDAO implements ICommandDAO{
 	 */
 	@Override
 	public void clearCommands(int gameID) {
+
+	}
+
+	/**
+	 * @return int count command
+	 */
+	@Override
+	public int getCommandCount() {
+		return 0;
+	}
+
+	/**
+	 * Resets command count to 0. Used when game is saved and checkpoint is reached.
+	 */
+	@Override
+	public void resetCommandCount() {
 
 	}
 }

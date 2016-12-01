@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 
 import shared.definitions.*;
 
+import java.io.Serializable;
+
 /**
  * Used to pass player information into views<br>
  * <br>
@@ -16,7 +18,7 @@ import shared.definitions.*;
  * </ul>
  * 
  */
-public class PlayerInfo
+public class PlayerInfo implements Serializable
 {
 	
 	private int id;

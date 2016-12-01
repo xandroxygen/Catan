@@ -1,0 +1,31 @@
+DROP TABLE IF EXISTS games;
+DROP TABLE IF EXISTS commands;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS users_games;
+
+CREATE TABLE games(
+	id	    INTEGER PRIMARY KEY ASC,
+	game	BLOB NOT NULL
+);
+
+
+CREATE TABLE commands(
+	id		INTEGER PRIMARY KEY ASC,
+	game_id	INTEGER NOT NULL,
+	command	BLOB NOT NULL,
+	FOREIGN KEY(game_id) REFERENCES games(id)
+);
+
+
+CREATE TABLE users(
+	id	    INTEGER PRIMARY KEY ASC,
+	user	BLOB NOT NULL
+);
+
+
+CREATE TABLE users_games(
+	user_id	INTEGER NOT NULL,
+	game_id	INTEGER NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users(id),
+	FOREIGN KEY (game_id) REFERENCES games(id)
+);
