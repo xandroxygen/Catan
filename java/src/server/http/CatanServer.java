@@ -16,6 +16,7 @@ import server.http.handlers.user.RegisterHandler;
 import server.persistence.IPersistenceProvider;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -84,20 +85,29 @@ public class CatanServer {
 	}
 
 	public static void getPluginPersistence(String[] args){
-		String persistenceType = args[0];
-		int numberOfCommands = Integer.parseInt(args[1]);
+		//String persistenceType = args[0];
+		//int numberOfCommands = Integer.parseInt(args[1]);
 
         //get path for plugin
 
 
         //make the instance of PP
-        try {
-			IPersistenceProvider persistenceProvider;
-			File file = new File("C:\\Users\\Jonathan Skaggs\\IdeaProjects\\Catan\\java\\src\\plugins\\relational.jar");
-			URL jarUrl = new URL("jar", "","file:" + file.getAbsolutePath());
-			URLClassLoader urlClassLoader = new URLClassLoader(new URL[] {jarUrl});
-			urlClassLoader.loadClass("RelationalPersistenceProvider");
-			Class temp = Class.forName("RelationalPersistenceProvider", true, urlClassLoader);
+		try {
+			//IPersistenceProvider persistenceProvider;
+			File file = new File("java\\src\\plugins\\relational");
+			URL[] jarUrl = new URL[]{new URL("file:"+file.getAbsolutePath())};
+			URLClassLoader urlClassLoader = new URLClassLoader(jarUrl);
+//			Class<?> plugin = urlClassLoader.loadClass("plugins.relational.PersistenceProvider");
+//			Constructor<?> constructor = plugin.getConstructor();
+//			Object tempObj = constructor.newInstance();
+//			IPersistenceProvider p = (IPersistenceProvider) tempObj;
+//			int five = p.returnFive();
+
+			Class temp2 = Class.forName("plugins.relational.PersistenceProvider", true, urlClassLoader);
+			
+			IPersistenceProvider p1 = (IPersistenceProvider) temp2.newInstance();
+			int fives = p1.returnFive();
+			System.out.println();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

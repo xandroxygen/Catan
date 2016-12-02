@@ -32,5 +32,6 @@ public interface IPersistenceProvider {
      * ends the transaction
      */
     public void endTransaction();
-
+    
+    public int returnFive();
 }

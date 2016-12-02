@@ -6,7 +6,7 @@ import server.persistence.ICommandDAO;
 
 import java.util.List;
 
-public class CommandRelationalDAO implements ICommandDAO{
+public class CommandDAO implements ICommandDAO{
 	/**
 	 * Stores command into the persistent provider
 	 */
