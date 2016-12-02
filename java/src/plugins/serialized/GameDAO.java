@@ -5,7 +5,7 @@ import java.util.List;
 import server.model.ServerGame;
 import server.persistence.IGameDAO;
 
-public class GameTextDAO implements IGameDAO {
+public class GameDAO implements IGameDAO {
 
 	@Override
 	public void createGame(ServerGame game) {

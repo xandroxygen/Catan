@@ -6,7 +6,7 @@ import server.persistence.IUserDAO;
 
 import java.util.List;
 
-public class UserRelationalDAO implements IUserDAO {
+public class UserDAO implements IUserDAO {
 	/**
 	 * Stores a user for the persistent provider
 	 *

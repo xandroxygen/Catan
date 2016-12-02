@@ -5,7 +5,7 @@ import java.util.List;
 import server.command.Command;
 import server.persistence.ICommandDAO;
 
-public class CommandTextDAO implements ICommandDAO {
+public class CommandDAO implements ICommandDAO {
 
 	@Override
 	public void addCommand() {

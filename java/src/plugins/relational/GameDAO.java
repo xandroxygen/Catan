@@ -6,7 +6,7 @@ import server.persistence.IGameDAO;
 
 import java.util.List;
 
-public class GameRelationalDAO implements IGameDAO{
+public class GameDAO implements IGameDAO{
 	/**
 	 * Stores a game into the persistent provider
 	 *

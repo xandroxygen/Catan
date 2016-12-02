@@ -5,7 +5,7 @@ import java.util.List;
 import client.admin.User;
 import server.persistence.IUserDAO;
 
-public class UserTextDAO implements IUserDAO {
+public class UserDAO implements IUserDAO {
 
 	@Override
 	public void createUser(User user) {
