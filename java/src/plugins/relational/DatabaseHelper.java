@@ -12,40 +12,6 @@ import java.util.Scanner;
  */
 public class DatabaseHelper {
 
-
-	/*
-		methods needed
-		- get connection
-		- get blob from object
-		- get object from blob
-		- reset - clears then creates
-			- should be called only by user
-			- perhaps better as an ant target that deletes file and restarts server?
-			- takes same command line param for sqlite vs serialized
-
-		sqlConfig.txt
-		- drop all tables if exists
-		- create all tables
-		- accessed as resource
-
-		catan.sqlite
-		- accessed as resource?
-		- can this be included in the plugin jar file? definitely for production.
-
-		there should be initial file with 4 demo players, and a demo game or two
-
-		actual statements and executing should be done in the DAOs
-
-		should actual database data be stored under version control?
-			no. neither should the file.
-			or, initial file should be. but ignore the rest of the changes
-			yes because initial database will contain blobs, and those are harder to bootstrap with SQL statements.
-
-		when server starts up
-			there will always be an existing database, with initial data in it
-
-	 */
-
 	/**
 	 * Opens and returns a new SQL connection
 	 * @return

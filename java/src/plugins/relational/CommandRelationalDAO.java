@@ -4,16 +4,42 @@ package plugins.relational;
 import server.command.Command;
 import server.persistence.ICommandDAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
-public class CommandRelationalDAO implements ICommandDAO{
+public class CommandRelationalDAO implements ICommandDAO {
+
+	private int commandCount;
+
+	// --- SQL STATEMENTS ---
+	private static final String INSERT = "INSERT INTO commands(game_id, command) VALUES(?,?)";
+	private static final String SELECT = "SELECT command FROM commands WHERE game_id = ?";
+	private static final String DELETE = "DELETE FROM commands WHERE game_id = ?";
+
+	public CommandRelationalDAO() {
+		commandCount = 0;
+	}
 
 	/**
 	 * Stores command into the persistent provider
 	 */
 	@Override
-	public void addCommand() {
+	public void addCommand(int gameID, Command command) {
 
+		try(Connection connection = DatabaseHelper.getConnection();
+			PreparedStatement statement = connection.prepareStatement(INSERT)) {
+
+			statement.setInt(1,gameID);
+			statement.setBytes(2, DatabaseHelper.getBlob(command));
+			statement.executeUpdate();
+			commandCount++;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -24,7 +50,25 @@ public class CommandRelationalDAO implements ICommandDAO{
 	 */
 	@Override
 	public List<Command> getCommands(int gameID) {
-		return null;
+
+		List<Command> commands = new ArrayList<>();
+
+		try(Connection connection = DatabaseHelper.getConnection();
+			PreparedStatement statement = connection.prepareStatement(SELECT)) {
+
+			statement.setInt(1,gameID);
+			ResultSet result = statement.executeQuery();
+
+			while (result.next()) {
+				byte[] blob = result.getBytes("command");
+				Command command = (Command) DatabaseHelper.getObject(blob); // TODO will this handle subtypes?
+				commands.add(command);
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return commands;
 	}
 
 	/**
@@ -35,6 +79,15 @@ public class CommandRelationalDAO implements ICommandDAO{
 	@Override
 	public void clearCommands(int gameID) {
 
+		try(Connection connection = DatabaseHelper.getConnection();
+			PreparedStatement statement = connection.prepareStatement(DELETE)) {
+
+			statement.setInt(1,gameID);
+			statement.executeUpdate();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -42,7 +95,7 @@ public class CommandRelationalDAO implements ICommandDAO{
 	 */
 	@Override
 	public int getCommandCount() {
-		return 0;
+		return commandCount;
 	}
 
 	/**
@@ -50,6 +103,6 @@ public class CommandRelationalDAO implements ICommandDAO{
 	 */
 	@Override
 	public void resetCommandCount() {
-
+		commandCount = 0;
 	}
 }

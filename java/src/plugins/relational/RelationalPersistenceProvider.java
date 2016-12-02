@@ -19,10 +19,6 @@ public class RelationalPersistenceProvider implements IPersistenceProvider {
 		commandDAO = new CommandRelationalDAO();
 		gameDAO = new GameRelationalDAO();
 		userDAO = new UserRelationalDAO();
-
-		// create database file if needed?
-
-
 	}
 
 	/**
