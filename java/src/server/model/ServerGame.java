@@ -21,10 +21,12 @@ import shared.model.*;
 
 import static java.lang.Boolean.TRUE;
 
+import java.io.Serializable;
+
 /**
  * ServerModelFacade
  */
-public class ServerGame extends Game {
+public class ServerGame extends Game implements Serializable {
 	
 	private String gameName;
 	private int gameId;

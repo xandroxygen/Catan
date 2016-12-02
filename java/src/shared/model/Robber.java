@@ -1,11 +1,13 @@
 package shared.model;
 
+import java.io.Serializable;
+
 import shared.locations.HexLocation;
 
 /**
  * Robbing Class
  */
-public class Robber {
+public class Robber implements Serializable {
 	private HexLocation location;
 	
 	public Robber(int x, int y) {

@@ -2,13 +2,14 @@ package shared.model;
 import com.google.gson.JsonObject;
 import shared.definitions.ResourceType;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.Map;
 
 /**
  * Trade Offer Class
  */
-public class TradeOffer {
+public class TradeOffer implements Serializable {
 
 	private int sender;
 	private int receiver;

@@ -8,13 +8,14 @@ import shared.definitions.ResourceType;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Player class
  */
-public class Player {
+public class Player implements Serializable{
 	
 	private String name;
 	private CatanColor color;

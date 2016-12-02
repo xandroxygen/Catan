@@ -4,12 +4,13 @@ import com.google.gson.JsonObject;
 import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Bank Class
  */
-public class Bank {
+public class Bank implements Serializable {
 
     private HashMap<ResourceType, Integer> resourceDeck;
     private HashMap<DevCardType, Integer> developmentCards;

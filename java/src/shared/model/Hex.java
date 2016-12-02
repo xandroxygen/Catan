@@ -1,12 +1,14 @@
 package shared.model;
 
+import java.io.Serializable;
+
 import shared.definitions.HexType;
 import shared.locations.HexLocation;
 
 /**
  * Hex class.
  */
-public class Hex {
+public class Hex implements Serializable {
 	private HexType resource;
 	private HexLocation location;
 	private int number;

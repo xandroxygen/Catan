@@ -1,6 +1,7 @@
 package server.model;
 
 import client.admin.User;
+import plugins.serialized.FileSerializer;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -10,6 +11,7 @@ import shared.model.Game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -349,6 +351,14 @@ public class ServerModel {
      */
     public void sendMessage(int gameID, int playerIndex, String message){
         games.get(gameID).sendMessage(playerIndex, message);
+        if (message.equals("w")) {
+        	FileSerializer.serializePlayers(this);
+        	FileSerializer.serializeGame(games.get(gameID));
+        }
+        else if (message.equals("r")) {
+        	FileSerializer.readGames();
+        	FileSerializer.readPlayers();
+        }
     }
 
     /**
@@ -566,4 +576,16 @@ public class ServerModel {
     public Game getGames(int i) {
         return games.get(i);
     }
+    
+    public List<User> getUsers() {
+    	return users;
+    }
+
+	public void setUsers(ArrayList<User> users2) {
+		users = users2;
+	}
+	
+	public void setGames(ArrayList<ServerGame> games) {
+		this.games = games;
+	}
 }

@@ -1,5 +1,7 @@
 package shared.model;
 
+import java.io.Serializable;
+
 import com.google.gson.JsonObject;
 
 import shared.locations.EdgeDirection;
@@ -8,7 +10,7 @@ import shared.locations.HexLocation;
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 
-public abstract class Municipality {
+public abstract class Municipality implements Serializable {
 	private VertexLocation location;
 	private int owner;
 	

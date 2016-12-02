@@ -1,9 +1,11 @@
 package server.command;
 
+import java.io.Serializable;
+
 import server.facade.IServerFacade;
 import shared.model.InvalidActionException;
 
-public abstract class Command {
+public abstract class Command implements Serializable {
 	
 	/**
 	 * the ID of the game on which to perform the command

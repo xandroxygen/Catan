@@ -5,12 +5,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * ModelUpdater class.
  */
-public class ModelUpdater {
+public class ModelUpdater implements Serializable {
 	
 	/**
 	 * Updates model class.
