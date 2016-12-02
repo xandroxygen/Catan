@@ -1,4 +1,4 @@
-package server.plugins.relational;
+package plugins.relational;
 
 
 import server.command.Command;
@@ -34,5 +34,17 @@ public class CommandRelationalDAO implements ICommandDAO{
 	@Override
 	public void clearCommands(int gameID) {
 
+	}
+
+	@Override
+	public int getCommandCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void resetCommandCount() {
+		// TODO Auto-generated method stub
+		
 	}
 }
