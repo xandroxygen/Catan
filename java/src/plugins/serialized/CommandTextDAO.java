@@ -24,4 +24,16 @@ public class CommandTextDAO implements ICommandDAO {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public int getCommandCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void resetCommandCount() {
+		// TODO Auto-generated method stub
+		
+	}
 }

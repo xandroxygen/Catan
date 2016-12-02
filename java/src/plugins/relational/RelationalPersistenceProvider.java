@@ -1,7 +1,10 @@
 package plugins.relational;
 
 
+import server.persistence.ICommandDAO;
+import server.persistence.IGameDAO;
 import server.persistence.IPersistenceProvider;
+import server.persistence.IUserDAO;
 
 public class RelationalPersistenceProvider implements IPersistenceProvider {
 	@Override
@@ -10,18 +13,18 @@ public class RelationalPersistenceProvider implements IPersistenceProvider {
 	}
 
 	@Override
-	public void getGameDAO() {
-
+	public IGameDAO getGameDAO() {
+		return null;
 	}
 
 	@Override
-	public void getUserDAO() {
-
+	public IUserDAO getUserDAO() {
+		return null;
 	}
 
 	@Override
-	public void getCommandDAO() {
-
+	public ICommandDAO getCommandDAO() {
+		return null;
 	}
 
 	@Override
