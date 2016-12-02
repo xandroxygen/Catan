@@ -10,9 +10,12 @@ public class CommandTextDAO implements ICommandDAO {
 
 	/**
 	 * Stores command into the persistent provider
+	 *
+	 * @param gameId
+	 * @param command
 	 */
 	@Override
-	public void addCommand() {
+	public void addCommand(int gameId, Command command) {
 
 	}
 
