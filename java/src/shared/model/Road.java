@@ -1,5 +1,7 @@
 package shared.model;
 
+import java.io.Serializable;
+
 import com.google.gson.JsonObject;
 
 import shared.definitions.ResourceType;
@@ -9,7 +11,7 @@ import shared.locations.HexLocation;
 /**
  * Road class
  */
-public class Road {
+public class Road implements Serializable {
 	
 	private EdgeLocation location;
 	private int owner;

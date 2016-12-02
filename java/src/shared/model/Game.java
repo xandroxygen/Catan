@@ -16,6 +16,7 @@ import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.List;
 /**
  * Game class.
  */
-public class Game {
+public class Game implements Serializable{
 
     private ArrayList<Player> playerList;
     private shared.model.Map theMap;

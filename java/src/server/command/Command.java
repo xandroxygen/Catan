@@ -1,9 +1,9 @@
 package server.command;
 
+import java.io.Serializable;
+
 import server.facade.IServerFacade;
 import shared.model.InvalidActionException;
-
-import java.io.Serializable;
 
 public abstract class Command implements Serializable {
 	

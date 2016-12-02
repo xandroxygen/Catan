@@ -1,11 +1,12 @@
 package shared.locations;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Represents the location of an edge on a hex map
  */
-public class EdgeLocation
+public class EdgeLocation implements Serializable
 {
 	
 	private HexLocation hexLoc;

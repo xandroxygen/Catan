@@ -1,8 +1,9 @@
 package shared.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Line {
+public class Line implements Serializable {
 	private String message;
 	private String source;
 

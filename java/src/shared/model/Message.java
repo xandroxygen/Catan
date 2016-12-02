@@ -1,10 +1,12 @@
 package shared.model;
 
+import java.io.Serializable;
+
 /**
  * Message that will show in the chat box.
  * Contains content and a playerID.
  */
-public class Message {
+public class Message implements Serializable {
     private String content;
     private int playerId;
 
