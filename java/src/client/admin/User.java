@@ -1,5 +1,6 @@
 package client.admin;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -13,13 +14,13 @@ import com.google.gson.JsonParser;
  * Superclass for a player. A user is someone who has logged in to the application.
  * Once a user joins a game, a player is created with the same ID.
  */
-public class User {
+public class User implements Serializable {
     private String username;
     private String password;
     private String cookie;
-    public boolean isLoggedIn;
-    private List<Integer> gamesJoined;
-    private PlayerInfo localPlayer;
+    transient public boolean isLoggedIn;
+    transient private List<Integer> gamesJoined;
+    transient private PlayerInfo localPlayer;
 
     public User() {
         username = "";

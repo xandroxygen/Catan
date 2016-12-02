@@ -9,25 +9,25 @@ public interface ICommandDAO {
 	/**
 	 * Stores command into the persistent provider
 	 */
-	public void addCommand();
-	
+	void addCommand(int gameId, Command command);
+
 	/**
 	 * Returns a list of commands from the persistent provider
 	 * @param gameID id of the game
 	 * @return list of commands
 	 */
-	public List<Command> getCommands(int gameID);
+	List<Command> getCommands(int gameID);
 	
 	/**
 	 * Removes all commands from the persistent provider for the specified game
 	 * @param gameID id of the game
 	 */
-	public void clearCommands(int gameID);
+	void clearCommands(int gameID);
 
 	/**
 	 * @return int count command
 	 */
-	public int getCommandCount();
+	int getCommandCount();
 
 	/**
 	 * Resets command count to 0. Used when game is saved and checkpoint is reached.
