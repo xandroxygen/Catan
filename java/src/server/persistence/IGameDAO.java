@@ -1,8 +1,8 @@
 package server.persistence;
 
-import server.model.ServerGame;
-
 import java.util.List;
+
+import server.model.ServerGame;
 
 
 public interface IGameDAO {
@@ -12,7 +12,14 @@ public interface IGameDAO {
 	 */
 	public void createGame(ServerGame game);
 
-	
+	/**
+	 * Saves an updated game into the persistence provider.
+	 *
+	 * Called when N commands have been executed. Deletes current
+	 * game state and commands for the game. Saves new game state.
+	 */
+	public void saveGame(ServerGame game);
+
 	/**
 	 * Returns list of games from the persistent provider
 	 */
