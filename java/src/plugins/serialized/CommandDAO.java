@@ -28,7 +28,7 @@ public class CommandDAO implements ICommandDAO {
 	@Override
 	public int getCommandCount() {
 		// TODO Auto-generated method stub
-		return 0;
+		return 6;
 	}
 
 	@Override

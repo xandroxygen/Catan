@@ -1,6 +1,5 @@
 package server.http;
 
-import com.sun.net.httpserver.HttpServer;
 import server.facade.IServerFacade;
 import server.facade.ServerFacade;
 import server.http.handlers.SwaggerHandler;
@@ -13,15 +12,11 @@ import server.http.handlers.games.ListHandler;
 import server.http.handlers.moves.*;
 import server.http.handlers.user.LoginHandler;
 import server.http.handlers.user.RegisterHandler;
-import server.persistence.ICommandDAO;
-import server.persistence.IGameDAO;
 import server.persistence.IPersistenceProvider;
-import server.persistence.IUserDAO;
+import server.persistence.ClassLoader;
 
-import java.io.File;
+import com.sun.net.httpserver.HttpServer;
 import java.net.InetSocketAddress;
-import java.net.URL;
-import java.net.URLClassLoader;
 
 /**
  * This is the entry point for our server implementation.
@@ -91,39 +86,36 @@ public class CatanServer {
 		//int numberOfCommands = Integer.parseInt(args[1]);
 
         //get path for plugin
-
-
+		String pluginPath = "java\\src\\plugins\\serialized";
+		String classPath = "plugins.serialized.PersistenceProvider";
+		
         //make the instance of PP
 		try {
-			File file = new File("java\\src\\plugins\\relational");
-			URL[] jarUrl = new URL[]{new URL("file:" + file.getAbsolutePath())};
-			URLClassLoader urlClassLoader = new URLClassLoader(jarUrl);
-//			Class<?> plugin = urlClassLoader.loadClass("plugins.relational.PersistenceProvider");
-//			Constructor<?> constructor = plugin.getConstructor();
-//			Object tempObj = constructor.newInstance();
-//			IPersistenceProvider p = (IPersistenceProvider) tempObj;
-//			int five = p.returnFive()
-			Class temp1 = Class.forName("plugins.relational.PersistenceProvider", true, urlClassLoader);
-			IPersistenceProvider persistenceProvider = (IPersistenceProvider) temp1.newInstance();
-
-			Class temp2 = Class.forName("plugins.relational.GameDAO", true, urlClassLoader);
-			IGameDAO gameDAO = (IGameDAO) temp2.newInstance();
-
-			Class temp3 = Class.forName("plugins.relational.CommandDAO", true, urlClassLoader);
-			ICommandDAO commandDAO = (ICommandDAO) temp3.newInstance();
-
-			Class temp4 = Class.forName("plugins.relational.UserDAO", true, urlClassLoader);
-			IUserDAO userDAO = (IUserDAO) temp4.newInstance();
-
-			persistenceProvider.setGameDAO(gameDAO);
-			persistenceProvider.setCommandDAO(commandDAO);
-			persistenceProvider.setUserDAO(userDAO);
-
-			System.out.println();
-		} catch (Exception e) {
+			Class<?> plugin = ClassLoader.loadClass(pluginPath, classPath);
+			IPersistenceProvider p1 = (IPersistenceProvider) plugin.newInstance();
+			p1.returnFive();
+		} catch (InstantiationException e) {
 			e.printStackTrace();
-		}
-//        IPersistenceProvider persistenceProvider =
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}	
+//			//IPersistenceProvider persistenceProvider;
+//			File file = new File("java\\src\\plugins\\relational");
+//			URL[] jarUrl = new URL[]{new URL("file:"+file.getAbsolutePath())};
+//			URLClassLoader urlClassLoader = new URLClassLoader(jarUrl);
+////			Class<?> plugin = urlClassLoader.loadClass("plugins.relational.PersistenceProvider");
+////			Constructor<?> constructor = plugin.getConstructor();
+////			Object tempObj = constructor.newInstance();
+////			IPersistenceProvider p = (IPersistenceProvider) tempObj;
+////			int five = p.returnFive();
+//
+//			Class<?> plugin = Class.forName("plugins.relational.PersistenceProvider", true, urlClassLoader);
+//			
+//			IPersistenceProvider p1 = (IPersistenceProvider) plugin.newInstance();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		
         //make the instance of DOW
 
         //load data from database
