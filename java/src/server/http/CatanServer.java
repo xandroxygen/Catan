@@ -1,5 +1,6 @@
 package server.http;
 
+import com.sun.net.httpserver.HttpServer;
 import server.facade.IServerFacade;
 import server.facade.ServerFacade;
 import server.http.handlers.SwaggerHandler;
@@ -12,10 +13,11 @@ import server.http.handlers.games.ListHandler;
 import server.http.handlers.moves.*;
 import server.http.handlers.user.LoginHandler;
 import server.http.handlers.user.RegisterHandler;
-import server.persistence.IPersistenceProvider;
 import server.persistence.ClassLoader;
+import server.persistence.IPersistenceProvider;
 
-import com.sun.net.httpserver.HttpServer;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.net.InetSocketAddress;
 
 /**
@@ -82,23 +84,41 @@ public class CatanServer {
 	}
 
 	public static void getPluginPersistence(String[] args){
-		//String persistenceType = args[0];
-		//int numberOfCommands = Integer.parseInt(args[1]);
+		String persistenceType = args[0];
+		int numberOfCommands = Integer.parseInt(args[1]);
 
-        //get path for plugin
-		String pluginPath = "java\\src\\plugins\\serialized";
-		String classPath = "plugins.serialized.PersistenceProvider";
-		
+		//get plugin path and class path
+		String pluginPath = "";
+		String classPath = "";
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader("java\\config.txt"));
+			String text;
+
+			while ((text = reader.readLine()) != null) {
+				String[] array = text.split(" ");
+				if (array.length == 3 && persistenceType.toLowerCase().equals(array[0].toLowerCase())){
+					pluginPath = array[1];
+					classPath = array[2];
+					break;
+				}
+			}
+			if (text == null){
+				System.out.print("That type of persistence is not permitted");
+				System.exit(0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
         //make the instance of PP
 		try {
 			Class<?> plugin = ClassLoader.loadClass(pluginPath, classPath);
 			IPersistenceProvider p1 = (IPersistenceProvider) plugin.newInstance();
 			p1.returnFive();
-		} catch (InstantiationException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}	
+		}
 //			//IPersistenceProvider persistenceProvider;
 //			File file = new File("java\\src\\plugins\\relational");
 //			URL[] jarUrl = new URL[]{new URL("file:"+file.getAbsolutePath())};
@@ -116,8 +136,6 @@ public class CatanServer {
 //			e.printStackTrace();
 //		}
 		
-        //make the instance of DOW
-
         //load data from database
 
         //set command number

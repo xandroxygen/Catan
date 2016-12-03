@@ -1,0 +1,6 @@
+sqlite java\src\plugins\relational plugins.relational.PersistenceProvider
+sql java\src\plugins\relational plugins.relational.PersistenceProvider
+relational java\src\plugins\relational plugins.relational.PersistenceProvider
+
+serializable java\src\plugins\serialized plugins.serialized.PersistenceProvider
+text java\src\plugins\serialized plugins.serialized.PersistenceProvider
