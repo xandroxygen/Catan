@@ -14,6 +14,7 @@ import server.http.handlers.moves.*;
 import server.http.handlers.user.LoginHandler;
 import server.http.handlers.user.RegisterHandler;
 import server.persistence.IPersistenceProvider;
+import server.persistence.ClassLoader;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -92,26 +93,33 @@ public class CatanServer {
 
 
         //make the instance of PP
+		Class<?> plugin = ClassLoader.loadClass("java\\src\\plugins\\relational", "plugins.relational.PersistenceProvider");
 		try {
-			//IPersistenceProvider persistenceProvider;
-			File file = new File("java\\src\\plugins\\relational");
-			URL[] jarUrl = new URL[]{new URL("file:"+file.getAbsolutePath())};
-			URLClassLoader urlClassLoader = new URLClassLoader(jarUrl);
-//			Class<?> plugin = urlClassLoader.loadClass("plugins.relational.PersistenceProvider");
-//			Constructor<?> constructor = plugin.getConstructor();
-//			Object tempObj = constructor.newInstance();
-//			IPersistenceProvider p = (IPersistenceProvider) tempObj;
-//			int five = p.returnFive();
-
-			Class temp2 = Class.forName("plugins.relational.PersistenceProvider", true, urlClassLoader);
-			
-			IPersistenceProvider p1 = (IPersistenceProvider) temp2.newInstance();
-			int fives = p1.returnFive();
-			System.out.println();
-		} catch (Exception e) {
+			IPersistenceProvider p1 = (IPersistenceProvider) plugin.newInstance();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-//        IPersistenceProvider persistenceProvider =
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+//			//IPersistenceProvider persistenceProvider;
+//			File file = new File("java\\src\\plugins\\relational");
+//			URL[] jarUrl = new URL[]{new URL("file:"+file.getAbsolutePath())};
+//			URLClassLoader urlClassLoader = new URLClassLoader(jarUrl);
+////			Class<?> plugin = urlClassLoader.loadClass("plugins.relational.PersistenceProvider");
+////			Constructor<?> constructor = plugin.getConstructor();
+////			Object tempObj = constructor.newInstance();
+////			IPersistenceProvider p = (IPersistenceProvider) tempObj;
+////			int five = p.returnFive();
+//
+//			Class<?> plugin = Class.forName("plugins.relational.PersistenceProvider", true, urlClassLoader);
+//			
+//			IPersistenceProvider p1 = (IPersistenceProvider) plugin.newInstance();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		
         //make the instance of DOW
 
         //load data from database

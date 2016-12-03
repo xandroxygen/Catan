@@ -3,7 +3,7 @@ package server.facade;
 import java.util.List;
 import java.util.Map;
 
-import plugins.serialized.FileSerializer;
+//import plugins.serialized.FileSerializer;
 import server.model.ServerGame;
 import server.model.ServerModel;
 import shared.model.InvalidActionException;
@@ -19,8 +19,8 @@ public class ServerFacade implements IServerFacade {
 	
 	public ServerFacade() {
 		model = ServerModel.getInstance();
-		FileSerializer.readPlayers();
-		FileSerializer.readGames();
+//		FileSerializer.readPlayers();
+//		FileSerializer.readGames();
 	}
 
 	public ServerModel getModel() {
