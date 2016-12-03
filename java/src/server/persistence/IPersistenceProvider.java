@@ -23,6 +23,12 @@ public interface IPersistenceProvider {
      */
     public ICommandDAO getCommandDAO();
 
+    public void setGameDAO(IGameDAO gameDAO);
+
+    public void setCommandDAO(ICommandDAO commandDAO);
+
+    public void setUserDAO(IUserDAO userDAO);
+
     /**
      * Starts the transaction
      */

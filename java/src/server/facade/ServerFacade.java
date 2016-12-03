@@ -1,17 +1,16 @@
 package server.facade;
 
-import java.util.List;
-import java.util.Map;
-
-import plugins.serialized.FileSerializer;
 import server.model.ServerGame;
 import server.model.ServerModel;
-import shared.model.InvalidActionException;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.model.InvalidActionException;
+
+import java.util.List;
+import java.util.Map;
 
 public class ServerFacade implements IServerFacade {
 	
@@ -19,8 +18,8 @@ public class ServerFacade implements IServerFacade {
 	
 	public ServerFacade() {
 		model = ServerModel.getInstance();
-		FileSerializer.readPlayers();
-		FileSerializer.readGames();
+//		FileSerializer.readPlayers();
+//		FileSerializer.readGames();
 	}
 
 	public ServerModel getModel() {
