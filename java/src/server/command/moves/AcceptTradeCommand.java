@@ -25,7 +25,7 @@ public class AcceptTradeCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().acceptTrade(this.getGameID(), willAccept);		
+		return this.getFacade().acceptTrade(this.getGameID(), willAccept);	
 	}
 
 }

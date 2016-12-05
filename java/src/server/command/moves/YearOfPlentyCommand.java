@@ -2,6 +2,7 @@ package server.command.moves;
 
 import server.command.Command;
 import server.facade.IServerFacade;
+import server.persistence.Persistence;
 import shared.definitions.ResourceType;
 import shared.model.InvalidActionException;
 
@@ -36,7 +37,14 @@ public class YearOfPlentyCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().playYearOfPlenty(this.getGameID(), playerIndex, resource1, resource2);	
+		try {
+			Object o = this.getFacade().playYearOfPlenty(this.getGameID(), playerIndex, resource1, resource2);	
+			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+			return o;
+		}
+		catch(InvalidActionException e) {
+			throw e;
+		}
 	}
 
 }

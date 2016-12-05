@@ -2,6 +2,7 @@ package server.command.moves;
 
 import server.command.Command;
 import server.facade.IServerFacade;
+import server.persistence.Persistence;
 import shared.locations.HexLocation;
 import shared.model.InvalidActionException;
 
@@ -36,7 +37,14 @@ public class RobPlayerCommand extends Command{
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException{
-		return this.getFacade().robPlayer(this.getGameID(), playerIndex, location, victimIndex);
+		try {
+			Object o = this.getFacade().robPlayer(this.getGameID(), playerIndex, location, victimIndex);
+			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+			return o;
+		}
+		catch(InvalidActionException e) {
+			throw e;
+		}
 	}
 
 }
