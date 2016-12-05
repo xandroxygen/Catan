@@ -36,7 +36,7 @@ public class MaritimeTradeCommand extends Command {
 	@Override
 	/**
 	 * Executes the command for maritime trade.
-	 * 
+	 *
 	 * @post <pre>
 	 * 	The command was executed and the result of the command is returned.
 	 * </pre>
@@ -45,11 +45,11 @@ public class MaritimeTradeCommand extends Command {
 		Object o;
 		try {
 			o = this.getFacade().maritimeTrade(this.getGameID(), playerIndex, ratio, inputResource, outputResource);
+			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+			return o;
 		} catch(InvalidActionException e){
 			throw e;
 		}
-		Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
-		return o;
 	}
 
 }

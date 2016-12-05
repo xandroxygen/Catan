@@ -40,11 +40,11 @@ public class BuildRoadCommand extends Command {
 		Object o;
 		try {
 			o = this.getFacade().buildRoad(this.getGameID(), playerIndex, isFree, roadLocation);
+			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+			return o;
 		}catch(InvalidActionException e){
 			throw e;
 		}
-		Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
-		return o;
 	}
 
 	
