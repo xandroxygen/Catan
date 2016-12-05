@@ -15,6 +15,8 @@ import server.persistence.IGameDAO;
 
 public class GameDAO implements IGameDAO {
 
+	private int maxCommandCount;
+
 	@Override
 	public void createGame(ServerGame game) {
 		try {
@@ -82,5 +84,23 @@ public class GameDAO implements IGameDAO {
 	         c.printStackTrace();
 	      }
 	      return games;
+	}
+
+	/**
+	 * @return the max command count N that was set on the command line.
+	 */
+	@Override
+	public int getMaxCommandCount() {
+		return maxCommandCount;
+	}
+
+	/**
+	 * Sets the max command count that was set on the command line.
+	 *
+	 * @param count
+	 */
+	@Override
+	public void setMaxCommandCount(int count) {
+		maxCommandCount = count;
 	}
 }

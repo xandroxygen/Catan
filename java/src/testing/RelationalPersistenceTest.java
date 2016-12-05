@@ -5,8 +5,9 @@ import client.data.PlayerInfo;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import plugins.relational.CommandRelationalDAO;
+import plugins.relational.CommandDAO;
 import plugins.relational.DatabaseHelper;
+import plugins.relational.UserDAO;
 import server.command.Command;
 import server.command.moves.RollNumberCommand;
 import server.command.moves.SendChatCommand;
@@ -72,7 +73,7 @@ public class RelationalPersistenceTest {
 
 		RollNumberCommand command = new RollNumberCommand(null, 1, 0, 6);
 
-		CommandRelationalDAO commandDAO = new CommandRelationalDAO();
+		CommandDAO commandDAO = new CommandDAO();
 
 		commandDAO.addCommand(command.getGameID(), command);
 
@@ -96,7 +97,7 @@ public class RelationalPersistenceTest {
 	@Test
 	public void testGetCommands() {
 
-		CommandRelationalDAO commandDAO = new CommandRelationalDAO();
+		CommandDAO commandDAO = new CommandDAO();
 
 		RollNumberCommand rollNumberCommand = new RollNumberCommand(null, 0, 0, 6);
 		commandDAO.addCommand(rollNumberCommand.getGameID(), rollNumberCommand);
@@ -114,6 +115,25 @@ public class RelationalPersistenceTest {
 	public void testAddUser() {
 
 		User user = new User("Test", "test");
+		UserDAO userDAO = new UserDAO();
+
+		userDAO.createUser(user);
+
+		try (Connection connection = DatabaseHelper.getConnection();
+			 Statement statement = connection.createStatement()) {
+
+			ResultSet resultSet = statement.executeQuery("SELECT user FROM users");
+			while (resultSet.next()) {
+				User retrieved = (User) DatabaseHelper.getObject(resultSet.getBytes(1));
+
+				assertNotNull(retrieved);
+				assertEquals(user.getUsername(), retrieved.getUsername());
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(false);
+		}
 
 
 	}

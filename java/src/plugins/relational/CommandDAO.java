@@ -8,20 +8,21 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CommandDAO implements ICommandDAO{
-public class CommandRelationalDAO implements ICommandDAO {
 
-	private int commandCount;
+	private Map<Integer, Integer> commandCounts;
 
 	// --- SQL STATEMENTS ---
 	private static final String INSERT = "INSERT INTO commands(game_id, command) VALUES(?,?)";
 	private static final String SELECT = "SELECT command FROM commands WHERE game_id = ?";
 	private static final String DELETE = "DELETE FROM commands WHERE game_id = ?";
 
-	public CommandRelationalDAO() {
-		commandCount = 0;
+	public CommandDAO() {
+		commandCounts = new HashMap<>();
 	}
 
 	/**
@@ -36,7 +37,9 @@ public class CommandRelationalDAO implements ICommandDAO {
 			statement.setInt(1,gameID);
 			statement.setBytes(2, DatabaseHelper.getBlob(command));
 			statement.executeUpdate();
-			commandCount++;
+
+			// increment command count for this game
+			commandCounts.put(gameID, commandCounts.get(gameID) + 1);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -92,18 +95,25 @@ public class CommandRelationalDAO implements ICommandDAO {
 	}
 
 	/**
+	 * @param gameID
 	 * @return int count command
 	 */
 	@Override
-	public int getCommandCount() {
-		return commandCount;
+	public int getCommandCount(int gameID) {
+		return commandCounts.get(gameID);
 	}
 
 	/**
 	 * Resets command count to 0. Used when game is saved and checkpoint is reached.
+	 *
+	 * @param gameID
 	 */
 	@Override
-	public void resetCommandCount() {
-		commandCount = 0;
+	public void resetCommandCount(int gameID) {
+		commandCounts.put(gameID, 0);
+	}
+
+	private void incrementCommandCount(int gameID) {
+
 	}
 }

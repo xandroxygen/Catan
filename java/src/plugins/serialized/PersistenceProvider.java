@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import plugins.relational.DBHelper;
 import server.persistence.ClassLoader;
 import server.persistence.ICommandDAO;
 import server.persistence.IGameDAO;
@@ -16,16 +15,12 @@ public class PersistenceProvider implements IPersistenceProvider {
 	private IUserDAO userDAO;
 	private ICommandDAO commandDAO;
 	
-	private DBHelper dbHelper;
-	
 	private final String  FILE_PATH = "java\\src\\plugins\\serialized";
 	private final String GAME_DAO_PATH = "plugins.serialized.GameDAO";
 	private final String USER_DAO_PATH = "plugins.serialized.UserDAO";
 	private final String COMMAND_DAO_PATH = "plugins.serialized.CommandDAO";
 	
 	public PersistenceProvider() {
-		this.dbHelper = new DBHelper();
-		
 		buildDAOs();
 	}
 	
@@ -39,7 +34,7 @@ public class PersistenceProvider implements IPersistenceProvider {
 			
 			c = ClassLoader.loadClass(FILE_PATH, COMMAND_DAO_PATH);
 			this.commandDAO = (ICommandDAO) c.newInstance();
-			commandDAO.getCommandCount();
+			commandDAO.getCommandCount(0);
 			
 			
 //			File file = new File("java\\src\\plugins\\relational");

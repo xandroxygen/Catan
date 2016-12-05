@@ -16,8 +16,10 @@ import server.persistence.ICommandDAO;
 
 public class CommandDAO implements ICommandDAO {
 
+	private int maxCommandCount;
+
 	@Override
-	public void addCommand(Command command, int gameID) {
+	public void addCommand(int gameID, Command command) {
 		List<Command> commands = new ArrayList<>();
 		try {
 			

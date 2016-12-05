@@ -24,4 +24,15 @@ public interface IGameDAO {
 	 * Returns list of games from the persistent provider
 	 */
 	public List<ServerGame> getGames();
+
+
+	/**
+	 * @return the max command count N that was set on the command line.
+	 */
+	int getMaxCommandCount();
+
+	/**
+	 * Sets the max command count that was set on the command line.
+	 */
+	void setMaxCommandCount(int count);
 }
