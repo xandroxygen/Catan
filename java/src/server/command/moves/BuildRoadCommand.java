@@ -1,5 +1,6 @@
 package server.command.moves;
 
+import server.persistence.Persistence;
 import shared.model.InvalidActionException;
 import server.command.Command;
 import server.facade.IServerFacade;
@@ -36,7 +37,14 @@ public class BuildRoadCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().buildRoad(this.getGameID(), playerIndex, isFree, roadLocation);
+		Object o;
+		try {
+			o = this.getFacade().buildRoad(this.getGameID(), playerIndex, isFree, roadLocation);
+		}catch(InvalidActionException e){
+			throw e;
+		}
+		Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+		return o;
 	}
 
 	

@@ -2,7 +2,7 @@ package server.command.moves;
 
 import server.command.Command;
 import server.facade.IServerFacade;
-import shared.locations.EdgeLocation;
+import server.persistence.Persistence;
 import shared.locations.VertexLocation;
 import shared.model.InvalidActionException;
 
@@ -37,7 +37,14 @@ public class BuildCityCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().buildCity(this.getGameID(), playerIndex, cityLocation);	
+		Object o;
+		try {
+			o = this.getFacade().buildCity(this.getGameID(), playerIndex, cityLocation);
+		}catch(InvalidActionException e){
+			throw e;
+		}
+		Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+		return o;
 	}
 
 }
