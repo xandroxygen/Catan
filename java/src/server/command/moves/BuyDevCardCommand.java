@@ -29,10 +29,10 @@ public class BuyDevCardCommand extends Command {
 		Object o;
 		try {
 			o = this.getFacade().buyDevCard(this.getGameID(), playerIndex);
+			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+			return o;
 		} catch(InvalidActionException e){
 			throw e;
 		}
-		Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
-		return o;
 	}
 }

@@ -40,11 +40,11 @@ public class BuildSettlementCommand extends Command {
 		Object o;
 		try {
 			o = this.getFacade().buildSettlement(this.getGameID(), playerIndex, isFree, settlementLocation);
+			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+			return o;
 		} catch(InvalidActionException e){
 			throw e;
 		}
-		Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
-		return o;
 	}
 
 }

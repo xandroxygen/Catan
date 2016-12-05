@@ -23,11 +23,11 @@ public class FinishTurnCommand extends Command{
 		Object o;
 		try {
 			o = this.getFacade().finishTurn(this.getGameID());
+			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+			return o;
 		} catch(InvalidActionException e){
 			throw e;
 		}
-		Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
-		return o;
 	}
 
 }

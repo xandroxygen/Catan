@@ -40,11 +40,11 @@ public class BuildCityCommand extends Command {
 		Object o;
 		try {
 			o = this.getFacade().buildCity(this.getGameID(), playerIndex, cityLocation);
+			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+			return o;
 		}catch(InvalidActionException e){
 			throw e;
 		}
-		Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
-		return o;
 	}
 
 }
