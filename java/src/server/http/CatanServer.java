@@ -135,7 +135,7 @@ public class CatanServer {
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
-		
+
         //load data from database
 
         //set command number
