@@ -13,7 +13,6 @@ import server.persistence.IUserDAO;
 public class PersistenceProvider implements IPersistenceProvider {
 	private IGameDAO gameDAO;
 	private IUserDAO userDAO;
-	private ICommandDAO commandDAO;
 	
 	private final String  FILE_PATH = "java\\src\\plugins\\serialized";
 	private final String GAME_DAO_PATH = "plugins.serialized.GameDAO";
@@ -33,9 +32,7 @@ public class PersistenceProvider implements IPersistenceProvider {
 			this.userDAO = (IUserDAO) c.newInstance();
 			
 			c = ClassLoader.loadClass(FILE_PATH, COMMAND_DAO_PATH);
-			this.commandDAO = (ICommandDAO) c.newInstance();
-			commandDAO.getCommandCount(0);
-			
+			this.gameDAO.setCommandDAO((ICommandDAO) c.newInstance());
 			
 //			File file = new File("java\\src\\plugins\\relational");
 //			URL[] jarUrl = new URL[]{new URL("file:"+file.getAbsolutePath())};
@@ -85,35 +82,32 @@ public class PersistenceProvider implements IPersistenceProvider {
 
 	@Override
 	public IGameDAO getGameDAO() {
-		// TODO Auto-generated method stub
-		return null;
+		return gameDAO;
 	}
 
 	@Override
 	public IUserDAO getUserDAO() {
-		// TODO Auto-generated method stub
-		return null;
+		return userDAO;
 	}
 
 	@Override
 	public ICommandDAO getCommandDAO() {
-		// TODO Auto-generated method stub
-		return null;
+		return gameDAO.getCommandDAO();
 	}
 
 	@Override
 	public void setGameDAO(IGameDAO gameDAO) {
-		this.gameDAO = (GameDAO) gameDAO;
+		this.gameDAO = gameDAO;
 	}
 
 	@Override
 	public void setCommandDAO(ICommandDAO commandDAO) {
-		this.commandDAO = (CommandDAO) commandDAO;
+		this.gameDAO.setCommandDAO(commandDAO);
 	}
 
 	@Override
 	public void setUserDAO(IUserDAO userDAO) {
-		this.userDAO = (UserDAO) userDAO;
+		this.userDAO = userDAO;
 	}
 
 	@Override

@@ -9,13 +9,16 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import server.command.Command;
 import server.model.ServerGame;
 import server.model.ServerModel;
+import server.persistence.ICommandDAO;
 import server.persistence.IGameDAO;
 
 public class GameDAO implements IGameDAO {
 
 	private int maxCommandCount;
+	private ICommandDAO commandDAO;
 
 	@Override
 	public void createGame(ServerGame game) {
@@ -87,6 +90,20 @@ public class GameDAO implements IGameDAO {
 	}
 
 	/**
+	 * Adds a command to the currently saved game.
+	 * <p>
+	 * If game has N current commands, saves new game state
+	 * and clears list of commands.
+	 *
+	 * @param gameID
+	 * @param command
+	 */
+	@Override
+	public void addCommand(int gameID, Command command) {
+
+	}
+
+	/**
 	 * @return the max command count N that was set on the command line.
 	 */
 	@Override
@@ -102,5 +119,23 @@ public class GameDAO implements IGameDAO {
 	@Override
 	public void setMaxCommandCount(int count) {
 		maxCommandCount = count;
+	}
+
+	/**
+	 * @return the game's command DAO
+	 */
+	@Override
+	public ICommandDAO getCommandDAO() {
+		return commandDAO;
+	}
+
+	/**
+	 * Sets the commandDAO.
+	 *
+	 * @param commandDAO
+	 */
+	@Override
+	public void setCommandDAO(ICommandDAO commandDAO) {
+		this.commandDAO = commandDAO;
 	}
 }
