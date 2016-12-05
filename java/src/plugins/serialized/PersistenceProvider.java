@@ -1,14 +1,7 @@
 package plugins.serialized;
 
-import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
-
 import server.persistence.ClassLoader;
-import server.persistence.ICommandDAO;
-import server.persistence.IGameDAO;
-import server.persistence.IPersistenceProvider;
-import server.persistence.IUserDAO;
+import server.persistence.*;
 
 public class PersistenceProvider implements IPersistenceProvider {
 	private IGameDAO gameDAO;
@@ -18,7 +11,9 @@ public class PersistenceProvider implements IPersistenceProvider {
 	private final String GAME_DAO_PATH = "plugins.serialized.GameDAO";
 	private final String USER_DAO_PATH = "plugins.serialized.UserDAO";
 	private final String COMMAND_DAO_PATH = "plugins.serialized.CommandDAO";
-	
+
+	IPersistenceProvider persistenceProvider;
+
 	public PersistenceProvider() {
 		buildDAOs();
 	}

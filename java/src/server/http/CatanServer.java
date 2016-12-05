@@ -15,6 +15,7 @@ import server.http.handlers.user.LoginHandler;
 import server.http.handlers.user.RegisterHandler;
 import server.persistence.ClassLoader;
 import server.persistence.IPersistenceProvider;
+import server.persistence.Persistence;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -114,8 +115,7 @@ public class CatanServer {
         //make the instance of PP
 		try {
 			Class<?> plugin = ClassLoader.loadClass(pluginPath, classPath);
-			IPersistenceProvider p1 = (IPersistenceProvider) plugin.newInstance();
-			p1.returnFive();
+			Persistence.setPersistence((IPersistenceProvider) plugin.newInstance());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -135,7 +135,7 @@ public class CatanServer {
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
-		
+
         //load data from database
 
         //set command number
