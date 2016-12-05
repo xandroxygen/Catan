@@ -11,7 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserRelationalDAO implements IUserDAO {
+public class UserDAO implements IUserDAO {
 
 	// --- SQL STATEMENTS ---
 	private static final String INSERT = "INSERT INTO users(user) VALUES(?)";

@@ -27,10 +27,10 @@ public interface ICommandDAO {
 	/**
 	 * @return int count command
 	 */
-	int getCommandCount();
+	int getCommandCount(int gameID);
 
 	/**
 	 * Resets command count to 0. Used when game is saved and checkpoint is reached.
 	 */
-	public void resetCommandCount();
+	void resetCommandCount(int gameID);
 }

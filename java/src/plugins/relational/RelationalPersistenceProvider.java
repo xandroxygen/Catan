@@ -6,7 +6,7 @@ import server.persistence.IGameDAO;
 import server.persistence.IPersistenceProvider;
 import server.persistence.IUserDAO;
 
-public class RelationalPersistenceProvider implements IPersistenceProvider {
+public class PersistenceProvider implements IPersistenceProvider {
 
 	private DatabaseHelper database;
 	private CommandRelationalDAO commandDAO;

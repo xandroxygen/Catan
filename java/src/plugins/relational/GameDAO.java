@@ -11,7 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameRelationalDAO implements IGameDAO{
+public class GameDAO implements IGameDAO {
 
 	// --- SQL STATEMENTS ---
 	private static final String INSERT = "INSERT INTO games(game) VALUES(?)";

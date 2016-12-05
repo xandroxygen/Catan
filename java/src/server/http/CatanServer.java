@@ -1,10 +1,8 @@
 package server.http;
 
 import com.sun.net.httpserver.HttpServer;
-import server.command.moves.BuyDevCardCommand;
 import server.facade.IServerFacade;
 import server.facade.ServerFacade;
-import server.http.handlers.ExampleHandler;
 import server.http.handlers.SwaggerHandler;
 import server.http.handlers.game.AddAIHandler;
 import server.http.handlers.game.ListAIHandler;
@@ -15,7 +13,11 @@ import server.http.handlers.games.ListHandler;
 import server.http.handlers.moves.*;
 import server.http.handlers.user.LoginHandler;
 import server.http.handlers.user.RegisterHandler;
+import server.persistence.ClassLoader;
+import server.persistence.IPersistenceProvider;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.net.InetSocketAddress;
 
 /**
@@ -77,6 +79,65 @@ public class CatanServer {
 
 		// -----------------
 		server.setExecutor(null); // uses default
+		getPluginPersistence(args);
 		server.start();
+	}
+
+	public static void getPluginPersistence(String[] args){
+		String persistenceType = args[0];
+		int numberOfCommands = Integer.parseInt(args[1]);
+
+		//get plugin path and class path
+		String pluginPath = "";
+		String classPath = "";
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader("java\\config.txt"));
+			String text;
+
+			while ((text = reader.readLine()) != null) {
+				String[] array = text.split(" ");
+				if (array.length == 3 && persistenceType.toLowerCase().equals(array[0].toLowerCase())){
+					pluginPath = array[1];
+					classPath = array[2];
+					break;
+				}
+			}
+			if (text == null){
+				System.out.print("That type of persistence is not permitted");
+				System.exit(0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+        //make the instance of PP
+		try {
+			Class<?> plugin = ClassLoader.loadClass(pluginPath, classPath);
+			IPersistenceProvider p1 = (IPersistenceProvider) plugin.newInstance();
+			p1.returnFive();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+//			//IPersistenceProvider persistenceProvider;
+//			File file = new File("java\\src\\plugins\\relational");
+//			URL[] jarUrl = new URL[]{new URL("file:"+file.getAbsolutePath())};
+//			URLClassLoader urlClassLoader = new URLClassLoader(jarUrl);
+////			Class<?> plugin = urlClassLoader.loadClass("plugins.relational.PersistenceProvider");
+////			Constructor<?> constructor = plugin.getConstructor();
+////			Object tempObj = constructor.newInstance();
+////			IPersistenceProvider p = (IPersistenceProvider) tempObj;
+////			int five = p.returnFive();
+//
+//			Class<?> plugin = Class.forName("plugins.relational.PersistenceProvider", true, urlClassLoader);
+//			
+//			IPersistenceProvider p1 = (IPersistenceProvider) plugin.newInstance();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		
+        //load data from database
+
+        //set command number
 	}
 }

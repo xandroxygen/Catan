@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+public class CommandDAO implements ICommandDAO{
 public class CommandRelationalDAO implements ICommandDAO {
 
 	private int commandCount;
