@@ -17,11 +17,6 @@ public class PersistenceProvider implements IPersistenceProvider {
 	public PersistenceProvider() {
 		buildDAOs();
 	}
-
-	@Override
-	public IPersistenceProvider getInstance() {
-		return persistenceProvider;
-	}
 	
 	private void buildDAOs() {
 		try {

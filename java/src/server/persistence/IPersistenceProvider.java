@@ -4,11 +4,6 @@ package server.persistence;
 public interface IPersistenceProvider {
 
     /**
-     * @return the singleton IPersistenceProvider
-     */
-    public IPersistenceProvider getInstance();
-
-    /**
      * Clears all information in the the database
      */
     public void clearData();

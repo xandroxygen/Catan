@@ -28,11 +28,6 @@ public class PersistenceProvider implements IPersistenceProvider {
 		buildDAOs();
 	}
 
-	@Override
-	public IPersistenceProvider getInstance() {
-		return persistenceProvider;
-	}
-
 	private void buildDAOs() {
 		try {
 			Class<?> c = ClassLoader.loadClass(FILE_PATH, GAME_DAO_PATH);
