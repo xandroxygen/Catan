@@ -1,5 +1,6 @@
 package server.command.moves;
 
+import server.persistence.Persistence;
 import shared.model.InvalidActionException;
 import server.command.Command;
 import server.facade.IServerFacade;
@@ -25,7 +26,14 @@ public class AcceptTradeCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().acceptTrade(this.getGameID(), willAccept);		
+		Object o;
+		try {
+			o = this.getFacade().acceptTrade(this.getGameID(), willAccept);
+			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+			return o;
+		}catch(InvalidActionException e){
+			throw e;
+		}
 	}
 
 }

@@ -2,6 +2,7 @@ package server.command.moves;
 
 import server.command.Command;
 import server.facade.IServerFacade;
+import server.persistence.Persistence;
 import shared.model.InvalidActionException;
 
 public class MonumentCommand extends Command {
@@ -25,7 +26,14 @@ public class MonumentCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().playMonument(this.getGameID(), playerIndex);
+		try {
+			Object o = this.getFacade().playMonument(this.getGameID(), playerIndex);
+			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+			return o;
+		}
+		catch(InvalidActionException e) {
+			throw e;
+		}
 	}
 
 }

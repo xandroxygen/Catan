@@ -15,6 +15,7 @@ import java.util.Map;
 public class CommandDAO implements ICommandDAO{
 
 	private Map<Integer, Integer> commandCounts;
+	private String databaseName;
 
 	// --- SQL STATEMENTS ---
 	private static final String INSERT = "INSERT INTO commands(game_id, command) VALUES(?,?)";
@@ -23,6 +24,7 @@ public class CommandDAO implements ICommandDAO{
 
 	public CommandDAO() {
 		commandCounts = new HashMap<>();
+		databaseName = DatabaseHelper.DEFAULT_DATABASE;
 	}
 
 	/**
@@ -31,7 +33,9 @@ public class CommandDAO implements ICommandDAO{
 	@Override
 	public void addCommand(int gameID, Command command) {
 
-		try(Connection connection = DatabaseHelper.getConnection();
+		DatabaseHelper.reset();
+
+		try(Connection connection = DatabaseHelper.getConnection(databaseName);
 			PreparedStatement statement = connection.prepareStatement(INSERT)) {
 
 			statement.setInt(1,gameID);
@@ -39,7 +43,7 @@ public class CommandDAO implements ICommandDAO{
 			statement.executeUpdate();
 
 			// increment command count for this game
-			commandCounts.put(gameID, commandCounts.get(gameID) + 1);
+			commandCounts.put(gameID, (commandCounts.containsKey(gameID) ? commandCounts.get(gameID) : 0) + 1);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -57,7 +61,7 @@ public class CommandDAO implements ICommandDAO{
 
 		List<Command> commands = new ArrayList<>();
 
-		try(Connection connection = DatabaseHelper.getConnection();
+		try(Connection connection = DatabaseHelper.getConnection(databaseName);
 			PreparedStatement statement = connection.prepareStatement(SELECT)) {
 
 			statement.setInt(1,gameID);
@@ -65,7 +69,7 @@ public class CommandDAO implements ICommandDAO{
 
 			while (result.next()) {
 				byte[] blob = result.getBytes("command");
-				Command command = (Command) DatabaseHelper.getObject(blob); // TODO will this handle subtypes?
+				Command command = (Command) DatabaseHelper.getObject(blob);
 				commands.add(command);
 			}
 		}
@@ -83,7 +87,7 @@ public class CommandDAO implements ICommandDAO{
 	@Override
 	public void clearCommands(int gameID) {
 
-		try(Connection connection = DatabaseHelper.getConnection();
+		try(Connection connection = DatabaseHelper.getConnection(databaseName);
 			PreparedStatement statement = connection.prepareStatement(DELETE)) {
 
 			statement.setInt(1,gameID);
@@ -113,7 +117,18 @@ public class CommandDAO implements ICommandDAO{
 		commandCounts.put(gameID, 0);
 	}
 
-	private void incrementCommandCount(int gameID) {
+	/**
+	 * @return the database being used
+	 */
+	public String getDatabaseName() {
+		return databaseName;
+	}
 
+	/**
+	 * Used for mocking purposes to define a different database.
+	 * @param databaseName
+	 */
+	public void setDatabaseName(String databaseName) {
+		this.databaseName = databaseName;
 	}
 }

@@ -17,6 +17,12 @@ public class UserDAO implements IUserDAO {
 	private static final String INSERT = "INSERT INTO users(user) VALUES(?)";
 	private static final String SELECT = "SELECT user FROM users";
 
+	private String databaseName;
+
+	public UserDAO() {
+		databaseName = DatabaseHelper.DEFAULT_DATABASE;
+	}
+
 	/**
 	 * Stores a user for the persistent provider
 	 *
@@ -25,7 +31,7 @@ public class UserDAO implements IUserDAO {
 	@Override
 	public void createUser(User user) {
 
-		try(Connection connection = DatabaseHelper.getConnection();
+		try(Connection connection = DatabaseHelper.getConnection(databaseName);
 			PreparedStatement statement = connection.prepareStatement(INSERT)) {
 
 			statement.setBytes(1, DatabaseHelper.getBlob(user));
@@ -45,7 +51,7 @@ public class UserDAO implements IUserDAO {
 	public List<User> getUsers() {
 		List<User> users = new ArrayList<>();
 
-		try(Connection connection = DatabaseHelper.getConnection();
+		try(Connection connection = DatabaseHelper.getConnection(databaseName);
 			Statement statement = connection.createStatement()) {
 
 			ResultSet result = statement.executeQuery(SELECT);
@@ -65,6 +71,20 @@ public class UserDAO implements IUserDAO {
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
-		
+	}
+	
+	/**
+	 * @return the database being used
+	 */
+	public String getDatabaseName() {
+		return databaseName;
+	}
+
+	/**
+	 * Used for mocking purposes to define a different database.
+	 * @param databaseName
+	 */
+	public void setDatabaseName(String databaseName) {
+		this.databaseName = databaseName;
 	}
 }

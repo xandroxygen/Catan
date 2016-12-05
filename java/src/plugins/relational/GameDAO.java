@@ -17,11 +17,16 @@ public class GameDAO implements IGameDAO {
 
 	private int maxCommandCount;
 	private ICommandDAO commandDAO;
+	private String databaseName;
 
 	// --- SQL STATEMENTS ---
-	private static final String INSERT = "INSERT INTO games(game) VALUES(?)";
+	private static final String INSERT = "INSERT INTO games(id, game) VALUES(?,?)";
 	private static final String SELECT = "SELECT game FROM games";
-	private static final String UPDATE = "UPDATES games SET game = ? WHERE id = ?";
+	private static final String UPDATE = "UPDATE games SET game = ? WHERE id = ?";
+
+	public GameDAO() {
+		databaseName = DatabaseHelper.DEFAULT_DATABASE;
+	}
 
 	/**
 	 * Stores a game into the persistent provider
@@ -31,10 +36,11 @@ public class GameDAO implements IGameDAO {
 	@Override
 	public void createGame(ServerGame game) {
 
-		try(Connection connection = DatabaseHelper.getConnection();
+		try(Connection connection = DatabaseHelper.getConnection(databaseName);
 			PreparedStatement statement = connection.prepareStatement(INSERT)) {
 
-			statement.setBytes(1, DatabaseHelper.getBlob(game));
+			statement.setInt(1, game.getGameId());
+			statement.setBytes(2, DatabaseHelper.getBlob(game));
 			statement.executeUpdate();
 		}
 		catch (Exception e) {
@@ -52,7 +58,7 @@ public class GameDAO implements IGameDAO {
 	@Override
 	public void saveGame(ServerGame game) {
 
-		try(Connection connection = DatabaseHelper.getConnection();
+		try(Connection connection = DatabaseHelper.getConnection(databaseName);
 			PreparedStatement statement = connection.prepareStatement(UPDATE)) {
 
 			statement.setBytes(1, DatabaseHelper.getBlob(game));
@@ -71,7 +77,7 @@ public class GameDAO implements IGameDAO {
 	public List<ServerGame> getGames() {
 		List<ServerGame> games = new ArrayList<>();
 
-		try(Connection connection = DatabaseHelper.getConnection();
+		try(Connection connection = DatabaseHelper.getConnection(databaseName);
 			Statement statement = connection.createStatement()) {
 
 			ResultSet result = statement.executeQuery(SELECT);
@@ -141,6 +147,20 @@ public class GameDAO implements IGameDAO {
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
+	}
 		
+	/**
+	 * @return the database being used
+	 */
+	public String getDatabaseName() {
+		return databaseName;
+	}
+
+	/**
+	 * Used for mocking purposes to define a different database.
+	 * @param databaseName
+	 */
+	public void setDatabaseName(String databaseName) {
+		this.databaseName = databaseName;
 	}
 }

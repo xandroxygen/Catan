@@ -2,6 +2,7 @@ package server.command.moves;
 
 import server.command.Command;
 import server.facade.IServerFacade;
+import server.persistence.Persistence;
 import shared.locations.HexLocation;
 import shared.model.InvalidActionException;
 
@@ -35,8 +36,15 @@ public class SoldierCommand extends Command {
 	 * 	The command was executed and the result of the command is returned.
 	 * </pre>
 	 */
-	public Object execute() throws InvalidActionException {
-		return this.getFacade().playSoldier(this.getGameID(), playerIndex, location, victimIndex);
+	public Object execute() throws InvalidActionException {	
+		try {
+			Object o = this.getFacade().playSoldier(this.getGameID(), playerIndex, location, victimIndex);	
+			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+			return o;
+		}
+		catch(InvalidActionException e) {
+			throw e;
+		}
 	}
 
 }
