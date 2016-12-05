@@ -3,6 +3,7 @@ package server.model;
 import client.admin.User;
 import server.persistence.Persistence;
 //import plugins.serialized.FileSerializer;
+import server.persistence.Persistence;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -548,7 +549,9 @@ public class ServerModel {
                 return -1;
             }
         }
-        users.add(new User(username, password));
+        User newUser = new User(username, password);
+        users.add(newUser);
+        Persistence.getInstance().getUserDAO().createUser(newUser);
         return users.size() - 1;
     }
 
