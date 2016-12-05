@@ -1,6 +1,7 @@
 package server.model;
 
 import client.admin.User;
+import server.persistence.Persistence;
 //import plugins.serialized.FileSerializer;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
