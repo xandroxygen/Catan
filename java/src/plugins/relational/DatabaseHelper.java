@@ -12,12 +12,21 @@ import java.util.Scanner;
  */
 public class DatabaseHelper {
 
+	public static final String DEFAULT_DATABASE = "catan.db";
 	/**
-	 * Opens and returns a new SQL connection
+	 * Opens and returns a new SQL connection with the default database
 	 * @return
 	 */
 	public static Connection getConnection() throws SQLException {
-		return DriverManager.getConnection("jdbc:sqlite:java/src/plugins/relational/catan.db"); // TODO this may change with plugins
+		return getConnection(DEFAULT_DATABASE);
+	}
+
+	/**
+	 * Opens and returns a new SQL connection with the database specified
+	 * @return
+	 */
+	public static Connection getConnection(String database) throws SQLException {
+		return DriverManager.getConnection("jdbc:sqlite:java/src/plugins/relational/" + database);
 	}
 
 	/**
@@ -58,12 +67,13 @@ public class DatabaseHelper {
 	}
 
 	/**
-	 * Clears database and reloads initial data.
+	 * Clears database provided and reloads initial data.
 	 *
 	 * Somehow, this will wipe the database, and
 	 * reload it with the initial data.
+	 * @param database the name of the database to reset
 	 */
-	public static void reset() {
+	public static void reset(String database) {
 
 
 		// TODO: for now, this will just run the config script. later it will load initial data.
@@ -77,7 +87,7 @@ public class DatabaseHelper {
 		}
 
 		try (Scanner scanner = new Scanner(config);
-				Connection connection = DatabaseHelper.getConnection();
+				Connection connection = DatabaseHelper.getConnection(database);
 			 	Statement statement = connection.createStatement()) {
 
 			// split SQL statements
@@ -93,5 +103,15 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * Clears default database and reloads initial data.
+	 *
+	 * Somehow, this will wipe the database, and
+	 * reload it with the initial data.
+	 */
+	public static void reset() {
+		reset(DEFAULT_DATABASE);
 	}
 }

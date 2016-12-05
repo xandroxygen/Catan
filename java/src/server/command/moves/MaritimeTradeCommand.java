@@ -2,6 +2,7 @@ package server.command.moves;
 
 import server.command.Command;
 import server.facade.IServerFacade;
+import server.persistence.Persistence;
 import shared.definitions.ResourceType;
 import shared.model.InvalidActionException;
 
@@ -41,7 +42,14 @@ public class MaritimeTradeCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException{
-		return this.getFacade().maritimeTrade(this.getGameID(), playerIndex, ratio, inputResource, outputResource);
+		Object o;
+		try {
+			o = this.getFacade().maritimeTrade(this.getGameID(), playerIndex, ratio, inputResource, outputResource);
+		} catch(InvalidActionException e){
+			throw e;
+		}
+		Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+		return o;
 	}
 
 }

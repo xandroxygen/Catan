@@ -8,36 +8,13 @@ public interface IPersistenceProvider {
      */
     public void clearData();
 
-    /**
-     * @return the GameDAO
-     */
     public IGameDAO getGameDAO();
 
-    /**
-     * @return the UserDAO
-     */
     public IUserDAO getUserDAO();
-
-    /**
-     * @return the CommandDAO
-     */
-    public ICommandDAO getCommandDAO();
 
     public void setGameDAO(IGameDAO gameDAO);
 
-    public void setCommandDAO(ICommandDAO commandDAO);
-
     public void setUserDAO(IUserDAO userDAO);
-
-    /**
-     * Starts the transaction
-     */
-    public void startTransaction();
-
-    /**
-     * ends the transaction
-     */
-    public void endTransaction();
     
     public int returnFive();
 }

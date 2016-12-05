@@ -11,9 +11,6 @@ public class PersistenceProvider implements IPersistenceProvider {
 
 	private IGameDAO gameDAO;
 	private IUserDAO userDAO;
-	private ICommandDAO commandDAO;
-
-	private DatabaseHelper dbHelper;
 
 	private static final String  FILE_PATH = "java\\src\\plugins\\relational";
 	private static final String GAME_DAO_PATH = "plugins.relational.GameDAO";
@@ -23,7 +20,6 @@ public class PersistenceProvider implements IPersistenceProvider {
 	IPersistenceProvider persistenceProvider;
 
 	public PersistenceProvider() {
-		dbHelper = new DatabaseHelper();
 
 		buildDAOs();
 	}
@@ -45,29 +41,8 @@ public class PersistenceProvider implements IPersistenceProvider {
 	}
 
 	@Override
-	public void startTransaction() {
-//		try {
-//			dbHelper.startTransaction();
-//		}
-//		catch {
-//			dbHelper.endTransaction(false);
-//		}
-	}
-
-
-	@Override
-	public void endTransaction() {
-//		try {
-//			dbHelper.endTransaction(true);
-//		}
-//		catch {
-//			dbHelper.endTransaction(false);
-//		}
-	}
-
-	@Override
 	public void clearData() {
-		//dbHelper.clear();
+		DatabaseHelper.reset();
 	}
 
 	@Override
@@ -78,19 +53,9 @@ public class PersistenceProvider implements IPersistenceProvider {
 	public IUserDAO getUserDAO() {
 		return this.userDAO;
 	}
-
-	@Override
-	public ICommandDAO getCommandDAO() {
-		return this.gameDAO.getCommandDAO();
-	}
 	
 	public void setGameDAO(IGameDAO gameDAO) {
 		this.gameDAO = gameDAO;
-	}
-
-	@Override
-	public void setCommandDAO(ICommandDAO commandDAO) {
-		this.gameDAO.setCommandDAO(commandDAO);
 	}
 
 	@Override
