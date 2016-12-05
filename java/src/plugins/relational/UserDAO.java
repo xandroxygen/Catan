@@ -61,4 +61,10 @@ public class UserDAO implements IUserDAO {
 		}
 		return users;
 	}
+
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
 }

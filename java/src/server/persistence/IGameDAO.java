@@ -45,6 +45,11 @@ public interface IGameDAO {
 	 * Sets the max command count that was set on the command line.
 	 */
 	void setMaxCommandCount(int count);
+	
+	/**
+	 * Clears all game data
+	 */
+	public void reset();
 
 	/**
 	 * @return the game's command DAO

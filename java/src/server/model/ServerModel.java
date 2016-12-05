@@ -572,7 +572,7 @@ public class ServerModel {
         return -1;
     }
 
-    public Game getGames(int i) {
+    public ServerGame getGames(int i) {
         return games.get(i);
     }
     

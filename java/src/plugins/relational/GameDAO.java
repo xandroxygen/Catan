@@ -137,4 +137,10 @@ public class GameDAO implements IGameDAO {
 	public void setCommandDAO(ICommandDAO commandDAO) {
 		this.commandDAO = commandDAO;
 	}
+
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
 }

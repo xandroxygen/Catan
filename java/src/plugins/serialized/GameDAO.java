@@ -3,11 +3,14 @@ package plugins.serialized;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import server.command.Command;
 import server.model.ServerGame;
@@ -19,6 +22,7 @@ public class GameDAO implements IGameDAO {
 
 	private int maxCommandCount;
 	private ICommandDAO commandDAO;
+	private Map<Integer, Integer> commandCounts = new HashMap<>();
 
 	@Override
 	public void createGame(ServerGame game) {
@@ -70,7 +74,12 @@ public class GameDAO implements IGameDAO {
 		ServerGame game = null;
 	      try {
 	    	  File folder = new File("plugins/serialized/save/games/");
-	    	  File[] listOfFiles = folder.listFiles(); 
+	    	  File[] listOfFiles = folder.listFiles(new FilenameFilter() {
+	    	        @Override
+	    	        public boolean accept(File dir, String name) {
+	    	            return !name.equals(".DS_Store");
+	    	        }
+	    	  }); 
 	    	  for (int i = 0; i < listOfFiles.length; i++) {
 	    		  File file = listOfFiles[i];
 	    		  FileInputStream fileIn = new FileInputStream(file + "/game.ser");
@@ -100,7 +109,21 @@ public class GameDAO implements IGameDAO {
 	 */
 	@Override
 	public void addCommand(int gameID, Command command) {
-
+		// If at max, clear them and save a new game
+		if (commandCounts.containsKey(gameID) && commandCounts.get(gameID) == (maxCommandCount-1)) {
+			this.commandDAO.clearCommands(gameID);
+			this.saveGame(ServerModel.getInstance().getGames(gameID));
+			commandCounts.remove(gameID);
+		}
+		// else add it to the list and increment the count
+		else if (commandCounts.containsKey(gameID)) {
+			commandCounts.put(gameID, commandCounts.get(gameID)+1);
+			this.commandDAO.addCommand(gameID, command);
+		}
+		else {
+			commandCounts.put(gameID, 1);
+			this.commandDAO.addCommand(gameID, command);
+		}
 	}
 
 	/**
@@ -137,5 +160,30 @@ public class GameDAO implements IGameDAO {
 	@Override
 	public void setCommandDAO(ICommandDAO commandDAO) {
 		this.commandDAO = commandDAO;
+	}
+
+	@Override
+	public void reset() {
+		File folder = new File("plugins/serialized/save/games/");
+  	  	File[] listOfFiles = folder.listFiles(new FilenameFilter() {
+  	        @Override
+  	        public boolean accept(File dir, String name) {
+  	            return !name.equals(".DS_Store");
+  	        }
+  	  	}); 
+  	  	for (File f: listOfFiles) {
+  	  		deleteDir(f);
+  	  	}
+	  	
+	}
+	
+	private void deleteDir(File file) {
+	    File[] contents = file.listFiles();
+	    if (contents != null) {
+	        for (File f : contents) {
+	            deleteDir(f);
+	        }
+	    }
+	    file.delete();
 	}
 }

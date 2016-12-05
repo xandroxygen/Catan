@@ -56,11 +56,13 @@ public class CommandDAO implements ICommandDAO {
 		List<Command> commands = new ArrayList<>();
 		try {
 	    	  File file = new File("plugins/serialized/save/games/" + gameID + "/command.ser");
-    		  FileInputStream fileIn = new FileInputStream(file);
-    		  ObjectInputStream in = new ObjectInputStream(fileIn);
-    		  commands = (ArrayList<Command>) in.readObject();
-    		  in.close();
-    		  fileIn.close();
+	    	  if (file.exists()) {
+	    		  FileInputStream fileIn = new FileInputStream(file);
+	    		  ObjectInputStream in = new ObjectInputStream(fileIn);
+	    		  commands = (ArrayList<Command>) in.readObject();
+	    		  in.close();
+	    		  fileIn.close();
+	    	  }
 	      }catch(IOException i) {
 	         i.printStackTrace();
 	      }catch(ClassNotFoundException c) {

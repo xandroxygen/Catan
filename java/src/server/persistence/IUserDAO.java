@@ -18,4 +18,8 @@ public interface IUserDAO {
 	 */
 	public List<User> getUsers();
 	
+	/**
+	 * Clear all user data
+	 */
+	public void reset();
 }

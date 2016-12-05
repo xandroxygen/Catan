@@ -15,6 +15,9 @@ import com.google.gson.JsonParser;
  * Once a user joins a game, a player is created with the same ID.
  */
 public class User implements Serializable {
+	
+	private static final long serialVersionUID = 8736282405037266205L;
+	
     private String username;
     private String password;
     private String cookie;

@@ -3,6 +3,7 @@ package plugins.serialized;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -50,7 +51,12 @@ public class UserDAO implements IUserDAO {
 		User user = null;
 	      try {
 	    	  File folder = new File("plugins/serialized/save/users/");
-	    	  File[] listOfFiles = folder.listFiles(); 
+	    	  File[] listOfFiles = folder.listFiles(new FilenameFilter() {
+	    	        @Override
+	    	        public boolean accept(File dir, String name) {
+	    	            return !name.equals(".DS_Store");
+	    	        }
+	    	  }); 
 	    	  for (int i = 0; i < listOfFiles.length; i++) {
 	    		  File file = listOfFiles[i];
 	    		  FileInputStream fileIn = new FileInputStream(file);
@@ -67,4 +73,21 @@ public class UserDAO implements IUserDAO {
 	      }
 	      return users;
 	}
+
+	@Override
+	public void reset() {
+		File folder = new File("plugins/serialized/save/users/");
+		File[] listOfFiles = folder.listFiles(new FilenameFilter() {
+	        @Override
+	        public boolean accept(File dir, String name) {
+	            return !name.equals(".DS_Store");
+	        }
+		}); 
+		for (File f: listOfFiles) {
+			f.delete();
+		}
+		
+	}
+	
+	
 }
