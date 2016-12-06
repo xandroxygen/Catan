@@ -126,6 +126,11 @@ public class CatanServer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		if(args.length > 2) {
+			Persistence.getInstance().clearData();
+		}
+		
 
 		//Populate the Model
 		ServerModel.getInstance().setUsers((ArrayList<User>) Persistence.getInstance().getUserDAO().getUsers());
