@@ -20,7 +20,6 @@ public class JoinCommand extends Command {
 	public Object execute() throws InvalidActionException {
 		try {
 			Object o = this.getFacade().gamesJoin(this.getGameID(), playerIndex, color);
-			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
 			return o;
 		} 
 		catch (InvalidActionException e) {
