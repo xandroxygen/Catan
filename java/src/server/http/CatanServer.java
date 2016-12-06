@@ -1,6 +1,8 @@
 package server.http;
 
+import client.admin.User;
 import com.sun.net.httpserver.HttpServer;
+import server.command.Command;
 import server.facade.IServerFacade;
 import server.facade.ServerFacade;
 import server.http.handlers.SwaggerHandler;
@@ -13,13 +15,18 @@ import server.http.handlers.games.ListHandler;
 import server.http.handlers.moves.*;
 import server.http.handlers.user.LoginHandler;
 import server.http.handlers.user.RegisterHandler;
+import server.model.ServerGame;
+import server.model.ServerModel;
 import server.persistence.ClassLoader;
 import server.persistence.IPersistenceProvider;
 import server.persistence.Persistence;
+import shared.model.InvalidActionException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is the entry point for our server implementation.
@@ -118,6 +125,26 @@ public class CatanServer {
 			Persistence.setPersistence((IPersistenceProvider) plugin.newInstance());
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+
+		//Populate the Model
+		ServerModel.getInstance().setUsers((ArrayList<User>) Persistence.getInstance().getUserDAO().getUsers());
+		ServerModel.getInstance().setGames((ArrayList<ServerGame>)Persistence.getInstance().getGameDAO().getGames());
+
+		//Set command count
+		Persistence.getInstance().getGameDAO().setMaxCommandCount(numberOfCommands);
+
+		//Run commands
+		for (ServerGame game : ServerModel.getInstance().listGames()) {
+			List<Command> commands = Persistence.getInstance().getGameDAO().getCommandDAO().getCommands(game.getGameId());
+			Persistence.getInstance().getGameDAO().getCommandDAO().clearCommands(game.getGameId());
+			for (Command command : commands){
+				try {
+					command.execute();
+				} catch (InvalidActionException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 //			//IPersistenceProvider persistenceProvider;
 //			File file = new File("java\\src\\plugins\\relational");
