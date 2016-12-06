@@ -20,8 +20,6 @@ public class ServerFacade implements IServerFacade {
 	
 	public ServerFacade() {
 		model = ServerModel.getInstance();
-//		FileSerializer.readPlayers();
-//		FileSerializer.readGames();
 	}
 
 	public ServerModel getModel() {

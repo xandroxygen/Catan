@@ -352,14 +352,6 @@ public class ServerModel {
      */
     public void sendMessage(int gameID, int playerIndex, String message){
         games.get(gameID).sendMessage(playerIndex, message);
-        if (message.equals("w")) {
-//        	FileSerializer.serializePlayers(this);
-//        	FileSerializer.serializeGame(games.get(gameID));
-        }
-        else if (message.equals("r")) {
-//        	FileSerializer.readGames();
-//        	FileSerializer.readPlayers();
-        }
     }
 
     /**
