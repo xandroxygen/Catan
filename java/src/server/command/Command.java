@@ -1,9 +1,9 @@
 package server.command;
 
-import java.io.Serializable;
-
 import server.facade.IServerFacade;
 import shared.model.InvalidActionException;
+
+import java.io.Serializable;
 
 public abstract class Command implements Serializable {
 	
@@ -15,7 +15,7 @@ public abstract class Command implements Serializable {
 	/**
 	 * the IServerFacade with which to interact
 	 */
-	private IServerFacade facade;
+	transient private IServerFacade facade;
 	
 	public Command(int gameID, IServerFacade facade) {
 		this.gameID = gameID;
