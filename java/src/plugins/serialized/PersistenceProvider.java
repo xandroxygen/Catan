@@ -36,7 +36,8 @@ public class PersistenceProvider implements IPersistenceProvider {
 
 	@Override
 	public void clearData() {
-		
+		this.gameDAO.reset();
+		this.userDAO.reset();
 	}
 
 	@Override
