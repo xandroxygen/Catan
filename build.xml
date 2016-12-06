@@ -175,9 +175,7 @@
 		<junit printsummary="withOutAndErr">
 			<classpath refid="junit.classpath"/>
 			<formatter type="plain" usefile="false"/>
-			<test name="testing.ModelTest"/>
-			<test name="testing.ServerModelTest"/>
-			<test name="testing.CommandTest"/>
+			<test name="testing.SerializedPersistenceTest"/>
 			<!-- TODO put the name of your test classes here, then run ant test -->
 		</junit>
 	</target>
