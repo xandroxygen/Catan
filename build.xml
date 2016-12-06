@@ -147,6 +147,9 @@
 	</target>
  	
 	<target name="our-server" depends="package" description="compiles, packages, and runs the student server">
+		<property name="database" value="sqlite"/>
+		<property name="command" value="10"/>
+		<property name="wipe" value=""/>
 		<java jar="${java.dist}/catan-server.jar" dir="${java.dist}" fork="yes">
 			<arg value="${database}"/>
 			<arg value="${command}"/>
