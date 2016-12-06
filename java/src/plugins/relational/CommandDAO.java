@@ -92,6 +92,8 @@ public class CommandDAO implements ICommandDAO{
 
 			statement.setInt(1,gameID);
 			statement.executeUpdate();
+
+			commandCounts.put(gameID, 0);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -104,7 +106,7 @@ public class CommandDAO implements ICommandDAO{
 	 */
 	@Override
 	public int getCommandCount(int gameID) {
-		return commandCounts.get(gameID);
+		return commandCounts.containsKey(gameID) ? commandCounts.get(gameID) : 0;
 	}
 
 	/**

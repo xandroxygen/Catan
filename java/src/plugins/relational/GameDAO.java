@@ -3,6 +3,7 @@ package plugins.relational;
 
 import server.command.Command;
 import server.model.ServerGame;
+import server.model.ServerModel;
 import server.persistence.ICommandDAO;
 import server.persistence.IGameDAO;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public class GameDAO implements IGameDAO {
 
 	private int maxCommandCount;
-	private ICommandDAO commandDAO;
+	private CommandDAO commandDAO;
 	private String databaseName;
 
 	// --- SQL STATEMENTS ---
@@ -106,6 +107,15 @@ public class GameDAO implements IGameDAO {
 	@Override
 	public void addCommand(int gameID, Command command) {
 
+		// add until the Nth command, then save and clear
+		if (commandDAO.getCommandCount(gameID) >= maxCommandCount - 1) {
+
+			saveGame(ServerModel.getInstance().getGames(gameID));
+			commandDAO.clearCommands(gameID);
+		}
+		else {
+			commandDAO.addCommand(gameID, command);
+		}
 	}
 
 	/**
@@ -141,7 +151,7 @@ public class GameDAO implements IGameDAO {
 	 */
 	@Override
 	public void setCommandDAO(ICommandDAO commandDAO) {
-		this.commandDAO = commandDAO;
+		this.commandDAO = (CommandDAO) commandDAO;
 	}
 
 	@Override
@@ -162,5 +172,6 @@ public class GameDAO implements IGameDAO {
 	 */
 	public void setDatabaseName(String databaseName) {
 		this.databaseName = databaseName;
+		commandDAO.setDatabaseName(databaseName);
 	}
 }

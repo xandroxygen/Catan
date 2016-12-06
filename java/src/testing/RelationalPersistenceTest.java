@@ -2,8 +2,10 @@ package testing;
 
 import client.admin.User;
 import client.data.PlayerInfo;
+import com.sun.corba.se.impl.orb.ParserTable;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static shared.definitions.CatanColor.BLUE;
 
 import plugins.relational.CommandDAO;
 import plugins.relational.DatabaseHelper;
@@ -13,6 +15,7 @@ import server.command.Command;
 import server.command.moves.RollNumberCommand;
 import server.command.moves.SendChatCommand;
 import server.model.ServerGame;
+import server.model.ServerModel;
 import shared.definitions.CatanColor;
 
 import java.sql.Connection;
@@ -123,6 +126,74 @@ public class RelationalPersistenceTest {
 	}
 
 	@Test
+	public void testCommandCounts() {
+
+		DatabaseHelper.reset(TEST_DATABASE);
+
+		CommandDAO commandDAO = new CommandDAO();
+		commandDAO.setDatabaseName(TEST_DATABASE);
+
+		// - Game 0
+		RollNumberCommand rollNumberCommand = new RollNumberCommand(null, 0, 0, 6);
+		commandDAO.addCommand(rollNumberCommand.getGameID(), rollNumberCommand);
+
+		SendChatCommand sendChatCommand = new SendChatCommand(null, 0, 0, "chat");
+		commandDAO.addCommand(sendChatCommand.getGameID(), sendChatCommand);
+
+		// - Game 1
+		RollNumberCommand rollNumberCommandNewGame = new RollNumberCommand(null, 1, 0, 6);
+		commandDAO.addCommand(rollNumberCommandNewGame.getGameID(), rollNumberCommandNewGame);
+
+		//compare counts
+		assertEquals(2, commandDAO.getCommandCount(0));
+		assertEquals(1, commandDAO.getCommandCount(1));
+	}
+	@Test
+	public void testAddAndSaveCommands() {
+
+		DatabaseHelper.reset(TEST_DATABASE);
+
+		GameDAO gameDAO = new GameDAO();
+		gameDAO.setCommandDAO(new CommandDAO());
+		gameDAO.setDatabaseName(TEST_DATABASE);
+		gameDAO.setMaxCommandCount(5);
+
+		ServerGame game = new ServerGame(false, false, false, "Test", 0);
+		ServerModel.getInstance().listGames().add(game);
+		gameDAO.createGame(game);
+
+		// after game is saved, update
+		game.addPlayer(0, "test", BLUE);
+
+		// add 4 commands
+		RollNumberCommand rollNumberCommand = new RollNumberCommand(null, 0, 0, 6);
+		gameDAO.addCommand(rollNumberCommand.getGameID(), rollNumberCommand);
+
+		SendChatCommand sendChatCommand = new SendChatCommand(null, 0, 0, "chat");
+		gameDAO.addCommand(sendChatCommand.getGameID(), sendChatCommand);
+
+		RollNumberCommand command3 = new RollNumberCommand(null, 0, 0, 6);
+		gameDAO.addCommand(command3.getGameID(), command3);
+
+		SendChatCommand command4 = new SendChatCommand(null, 0, 0, "chat");
+		gameDAO.addCommand(command4.getGameID(), command4);
+
+		// check that 4 commands are saved
+		assertEquals(4, gameDAO.getCommandDAO().getCommandCount(0));
+
+		// add fifth command
+		RollNumberCommand command5 = new RollNumberCommand(null, 0, 0, 6);
+		gameDAO.addCommand(command5.getGameID(), command5);
+
+		// check that command count reset
+		assertEquals(0, gameDAO.getCommandDAO().getCommandCount(0));
+
+		// check that game was indeed updated
+		List<ServerGame> games = gameDAO.getGames();
+		assertEquals(1, games.get(0).getPlayerList().size());
+	}
+
+	@Test
 	public void testAddUser() {
 
 		DatabaseHelper.reset(TEST_DATABASE);
@@ -181,7 +252,7 @@ public class RelationalPersistenceTest {
 		gameDAO.setDatabaseName(TEST_DATABASE);
 
 		ServerGame game = new ServerGame(false, false, false, "test", 0);
-		game.addPlayer(0, "Test", CatanColor.BLUE);
+		game.addPlayer(0, "Test", BLUE);
 
 
 		try (Connection connection = DatabaseHelper.getConnection(TEST_DATABASE);
@@ -216,7 +287,7 @@ public class RelationalPersistenceTest {
 		ServerGame first = new ServerGame(false, false, false, "First", 0);
 		gameDAO.createGame(first);
 
-		first.addPlayer(0, "Added", CatanColor.BLUE);
+		first.addPlayer(0, "Added", BLUE);
 
 		gameDAO.saveGame(first);
 
