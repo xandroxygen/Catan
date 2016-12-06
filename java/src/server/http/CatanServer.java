@@ -114,6 +114,7 @@ public class CatanServer {
 				System.out.print("That type of persistence is not permitted");
 				System.exit(0);
 			}
+			reader.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
