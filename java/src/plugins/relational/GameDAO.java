@@ -172,6 +172,8 @@ public class GameDAO implements IGameDAO {
 	 */
 	public void setDatabaseName(String databaseName) {
 		this.databaseName = databaseName;
-		commandDAO.setDatabaseName(databaseName);
+		if (commandDAO != null) {
+			commandDAO.setDatabaseName(databaseName);
+		}
 	}
 }

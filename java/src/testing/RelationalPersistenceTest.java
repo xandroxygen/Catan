@@ -2,7 +2,6 @@ package testing;
 
 import client.admin.User;
 import client.data.PlayerInfo;
-import com.sun.corba.se.impl.orb.ParserTable;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static shared.definitions.CatanColor.BLUE;
