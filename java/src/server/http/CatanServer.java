@@ -87,11 +87,11 @@ public class CatanServer {
 
 		// -----------------
 		server.setExecutor(null); // uses default
-		getPluginPersistence(args);
+		getPluginPersistence(args, facade);
 		server.start();
 	}
 
-	public static void getPluginPersistence(String[] args){
+	public static void getPluginPersistence(String[] args, IServerFacade facade){
 		String persistenceType = args[0];
 		int numberOfCommands = Integer.parseInt(args[1]);
 
@@ -146,6 +146,7 @@ public class CatanServer {
 			Persistence.getInstance().getGameDAO().getCommandDAO().clearCommands(game.getGameId());
 			for (Command command : commands){
 				try {
+					command.setFacade(facade);
 					command.execute();
 				} catch (InvalidActionException e) {
 					e.printStackTrace();
