@@ -1,6 +1,7 @@
 package server.http;
 
 import client.admin.User;
+import client.main.Catan;
 import com.sun.net.httpserver.HttpServer;
 import server.command.Command;
 import server.facade.IServerFacade;
@@ -23,8 +24,11 @@ import server.persistence.Persistence;
 import shared.model.InvalidActionException;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.net.InetSocketAddress;
+import java.net.URL;
+import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +103,7 @@ public class CatanServer {
 		String pluginPath = "";
 		String classPath = "";
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader("java\\config.txt"));
+			BufferedReader reader = new BufferedReader(new FileReader("resources/config.txt"));
 			String text;
 
 			while ((text = reader.readLine()) != null) {
@@ -122,8 +126,12 @@ public class CatanServer {
 
         //make the instance of PP
 		try {
+			// Load JDBC driver
+			Class.forName("java.sql.Driver");
+
 			Class<?> plugin = ClassLoader.loadClass(pluginPath, classPath);
 			Persistence.setPersistence((IPersistenceProvider) plugin.newInstance());
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -153,25 +161,5 @@ public class CatanServer {
 				}
 			}
 		}
-//			//IPersistenceProvider persistenceProvider;
-//			File file = new File("java\\src\\plugins\\relational");
-//			URL[] jarUrl = new URL[]{new URL("file:"+file.getAbsolutePath())};
-//			URLClassLoader urlClassLoader = new URLClassLoader(jarUrl);
-////			Class<?> plugin = urlClassLoader.loadClass("plugins.relational.PersistenceProvider");
-////			Constructor<?> constructor = plugin.getConstructor();
-////			Object tempObj = constructor.newInstance();
-////			IPersistenceProvider p = (IPersistenceProvider) tempObj;
-////			int five = p.returnFive();
-//
-//			Class<?> plugin = Class.forName("plugins.relational.PersistenceProvider", true, urlClassLoader);
-//			
-//			IPersistenceProvider p1 = (IPersistenceProvider) plugin.newInstance();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-
-        //load data from database
-
-        //set command number
 	}
 }

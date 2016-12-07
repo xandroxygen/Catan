@@ -26,7 +26,7 @@ public class DatabaseHelper {
 	 * @return
 	 */
 	public static Connection getConnection(String database) throws SQLException {
-		return DriverManager.getConnection("jdbc:sqlite:java/src/plugins/relational/" + database);
+		return DriverManager.getConnection("jdbc:sqlite:resources/database/" + database);
 	}
 
 	/**
@@ -77,14 +77,7 @@ public class DatabaseHelper {
 
 
 		// TODO: for now, this will just run the config script. later it will load initial data.
-		URL url = DatabaseHelper.class.getResource("dbConfig.txt");
-		File config = null;
-		try {
-			config = new File(url.toURI());
-		}
-		catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		File config = new File("resources/dbConfig.txt");
 
 		try (Scanner scanner = new Scanner(config);
 				Connection connection = DatabaseHelper.getConnection(database);
