@@ -33,6 +33,8 @@ public class CommandDAO implements ICommandDAO{
 	@Override
 	public void addCommand(int gameID, Command command) {
 
+		DatabaseHelper.reset();
+
 		try(Connection connection = DatabaseHelper.getConnection(databaseName);
 			PreparedStatement statement = connection.prepareStatement(INSERT)) {
 
