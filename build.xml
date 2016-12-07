@@ -12,6 +12,7 @@
     <property name="java.dir" value="java"/>
     <property name="java.src.dir" value="${java.dir}/src"/>
     <property name="java.lib.dir" value="${java.dir}/lib"/>
+	<property name="resources.dir" value="resources"/>
     <!-- JavaScript source folder -->
     <property name="javascript.dir" value="gameplay/js"/>
     
@@ -117,6 +118,15 @@
 				<include name="**"/>
 			</fileset>
 		</copy>
+		<copy todir="${java.dist}/resources">
+			<fileset dir="${resources.dir}">
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<manifestclasspath property="server.classpath"
+							jarfile="${java.dist}/catan-server.jar">
+			<classpath refid="java.lib.classpath"/>
+		</manifestclasspath>
  		<jar jarfile="${java.dist}/catan-client.jar" basedir="${java.build}">
 			<manifest>
 				<attribute name="Main-Class" value="client.main.Catan"/>
@@ -128,7 +138,7 @@
 			<manifest>
 				<attribute name="Main-Class" value="server.http.CatanServer"/>
 				<attribute name="Class-Path" 
-					value="lib/gson-2.2.4.jar" />
+					value="${server.classpath}" />
 			</manifest>
 		</jar>
 	</target>
@@ -157,7 +167,7 @@
 			<sysproperty key="com.sun.management.jmxremote" value=""/>
 						
 			<classpath>
-				<fileset dir="java/lib">
+				<fileset dir="${java.lib}">
 				<include name="**/*.jar"/>
 				</fileset>
 			</classpath>
@@ -174,7 +184,9 @@
 
 	<path id="junit.classpath">
 		<fileset dir="${java.lib.dir}"/>
-		<fileset dir="${java.dist}"/>
+		<fileset dir="${java.dist}">
+			<include name="**/*.jar"/>
+		</fileset>
 	</path>
 
 	<target name="test" depends="package" description="only runs junit tests">
