@@ -90,7 +90,7 @@ public class ChatView extends PanelView implements IChatView {
         if (!message.isEmpty()) {
             getController().sendMessage(message);
             
-            // Clear the text area so we are ready for the next message
+            // Clear the serialized area so we are ready for the next message
             chatTextInput.setText("");
         }
     }

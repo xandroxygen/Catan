@@ -1,5 +1,7 @@
 package shared.model;
 
+import java.io.Serializable;
+
 import com.google.gson.JsonObject;
 
 import shared.definitions.ResourceType;
@@ -10,7 +12,7 @@ import shared.locations.HexLocation;
 /**
  * Port Class
  */
-public class Port {
+public class Port implements Serializable {
 	private int ratio;
     private ResourceType resource;
     private EdgeLocation location;

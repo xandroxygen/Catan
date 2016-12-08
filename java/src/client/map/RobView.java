@@ -47,7 +47,7 @@ public class RobView extends OverlayView implements IRobView {
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(25,0,25,0));
 		
 		defaultButton = new JButton("<html>"
-				+ "<body style=\"text-align:center\">"
+				+ "<body style=\"serialized-align:center\">"
 				+ "<p style=\"font-size:" + TOP_SIZE + "%\">None</p>"
 				+ "<p></p>"
 				+ "<p style=\"font-size:" + BOTTOM_SIZE + "%\">OK</p>"
@@ -113,7 +113,7 @@ public class RobView extends OverlayView implements IRobView {
 			
 			for(int i=0; i < numberOfPlayers; i++){
 				JButton victimButton = new JButton("<html>"
-						+ "<body style=\"text-align:center\">"
+						+ "<body style=\"serialized-align:center\">"
 						+ "<p style=\"font-size:" + TOP_SIZE + "%\">" + victims[i].getName() + "</p>"
 						+ "<p></p>"
 						+ "<p style=\"font-size:" + BOTTOM_SIZE + "%\">" + victims[i].getNumCards() + "</p>"
@@ -155,7 +155,7 @@ public class RobView extends OverlayView implements IRobView {
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(25,0,25,0));
 		
 		defaultButton = new JButton("<html>"
-				+ "<body style=\"text-align:center\">"
+				+ "<body style=\"serialized-align:center\">"
 				+ "<p style=\"font-size:" + TOP_SIZE + "%\">None</p>"
 				+ "<p></p>"
 				+ "<p style=\"font-size:" + BOTTOM_SIZE + "%\">OK</p>"

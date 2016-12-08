@@ -2,6 +2,7 @@ package server.command.moves;
 
 import server.command.Command;
 import server.facade.IServerFacade;
+import server.persistence.Persistence;
 import shared.model.InvalidActionException;
 
 public class BuyDevCardCommand extends Command {
@@ -25,6 +26,13 @@ public class BuyDevCardCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().buyDevCard(this.getGameID(), playerIndex);		
+		Object o;
+		try {
+			o = this.getFacade().buyDevCard(this.getGameID(), playerIndex);
+			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+			return o;
+		} catch(InvalidActionException e){
+			throw e;
+		}
 	}
 }

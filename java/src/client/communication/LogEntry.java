@@ -1,11 +1,13 @@
 package client.communication;
 
+import java.io.Serializable;
+
 import shared.definitions.*;
 
 /**
  * Message (or entry) displayed in the LogComponent
  */
-public class LogEntry
+public class LogEntry implements Serializable
 {
 	
 	/**
@@ -14,7 +16,7 @@ public class LogEntry
 	private CatanColor color;
 	
 	/**
-	 * Message text
+	 * Message serialized
 	 */
 	private String message;
 	private String username = "";

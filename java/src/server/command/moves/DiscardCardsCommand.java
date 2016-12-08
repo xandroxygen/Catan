@@ -1,11 +1,12 @@
 package server.command.moves;
 
-import java.util.Map;
-
 import server.command.Command;
 import server.facade.IServerFacade;
+import server.persistence.Persistence;
 import shared.definitions.ResourceType;
 import shared.model.InvalidActionException;
+
+import java.util.Map;
 
 public class DiscardCardsCommand extends Command {
 	
@@ -33,7 +34,14 @@ public class DiscardCardsCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().discardCards(this.getGameID(), playerIndex, hand);
+		Object o;
+		try {
+			o = this.getFacade().discardCards(this.getGameID(), playerIndex, hand);
+			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+			return o;
+		} catch(InvalidActionException e){
+			throw e;
+		}
 	}
 
 }

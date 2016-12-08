@@ -2,9 +2,15 @@ package server.http.handlers.games;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+
+import server.command.games.JoinCommand;
+import server.command.moves.AcceptTradeCommand;
 import server.facade.IServerFacade;
 import server.http.handlers.BaseHandler;
 import server.http.requests.games.JoinGameRequest;
+import server.http.requests.moves.AcceptTradeRequest;
+import server.model.ServerModel;
+import server.persistence.Persistence;
 import shared.definitions.CatanColor;
 
 /**
@@ -31,10 +37,15 @@ public class JoinHandler extends BaseHandler {
 		// verify player cookie is set
 		if (this.user != null) {
 			try {
-				server.gamesJoin(request.getId(), user.getPlayerID(), CatanColor.valueOf(request.getColor().toUpperCase()));
+				// new code so that we can store the command
+				JoinCommand command = new JoinCommand(server, request.getId(), user.getPlayerID(), CatanColor.valueOf(request.getColor().toUpperCase()));
+				command.execute();
+				// old code
+				//server.gamesJoin(request.getId(), user.getPlayerID(), CatanColor.valueOf(request.getColor().toUpperCase()));
 
 				// set game cookie
 				this.gameID = request.getId();
+				Persistence.getInstance().getGameDAO().saveGame(ServerModel.getInstance().getGames(gameID));
 				return "Success";
 
 			} catch (Exception e) {

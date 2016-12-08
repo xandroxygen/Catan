@@ -4,6 +4,8 @@ package client.model;
 import client.data.RobPlayerInfo;
 import client.server.IServerProxy;
 import client.server.ServerProxy;
+import server.model.ServerGame;
+
 import com.google.gson.JsonObject;
 import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
@@ -12,6 +14,7 @@ import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -753,4 +756,5 @@ public class Model extends Observable {
 	public int getTradeSender() {
 		return game.getTradeOffer().getSender();
 	}
+
 }

@@ -1,6 +1,9 @@
 package server.model;
 
 import client.admin.User;
+import server.persistence.Persistence;
+//import plugins.serialized.FileSerializer;
+import server.persistence.Persistence;
 import shared.definitions.CatanColor;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -9,7 +12,7 @@ import shared.locations.VertexLocation;
 import shared.model.Game;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -538,7 +541,9 @@ public class ServerModel {
                 return -1;
             }
         }
-        users.add(new User(username, password));
+        User newUser = new User(username, password);
+        users.add(newUser);
+        Persistence.getInstance().getUserDAO().createUser(newUser);
         return users.size() - 1;
     }
 
@@ -563,7 +568,19 @@ public class ServerModel {
         return -1;
     }
 
-    public Game getGames(int i) {
+    public ServerGame getGames(int i) {
         return games.get(i);
     }
+    
+    public List<User> getUsers() {
+    	return users;
+    }
+
+	public void setUsers(ArrayList<User> users2) {
+		users = users2;
+	}
+	
+	public void setGames(ArrayList<ServerGame> games) {
+		this.games = games;
+	}
 }

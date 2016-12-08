@@ -2,6 +2,7 @@ package server.command.moves;
 
 import server.command.Command;
 import server.facade.IServerFacade;
+import server.persistence.Persistence;
 import shared.model.InvalidActionException;
 
 public class RollNumberCommand extends Command {
@@ -30,7 +31,14 @@ public class RollNumberCommand extends Command {
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().rollNumber(this.getGameID(), playerIndex, rollValue);
+		try {
+			Object o = this.getFacade().rollNumber(this.getGameID(), playerIndex, rollValue);
+			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+			return o;
+		}
+		catch(InvalidActionException e) {
+			throw e;
+		}
 	}
 
 }

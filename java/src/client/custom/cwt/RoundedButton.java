@@ -47,14 +47,14 @@ public class RoundedButton extends JButton
 		this.setBorder(new LineBorder(Color.GRAY, 3, true));
 		g2.drawRoundRect(0,0,getWidth(),getHeight(),15,15);  
 		   
-		// Finding size of text so can position in center.  
+		// Finding size of serialized so can position in center.
 		FontRenderContext frc = new FontRenderContext(null, false, false);  
 		Rectangle2D r = getFont().getStringBounds(getText(), frc);  
 		   
 		float xMargin = (float)(getWidth()-r.getWidth())/2;  
 		float yMargin = (float)(getHeight()-getFont().getSize())/2;  
 		   
-		// Draw the text in the center  
+		// Draw the serialized in the center
 		g2.setColor(Color.BLACK);  
 		g2.drawString(getText(), xMargin, (float)getFont().getSize() + yMargin);
 	}

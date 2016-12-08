@@ -2,6 +2,7 @@ package server.command.moves;
 
 import server.command.Command;
 import server.facade.IServerFacade;
+import server.persistence.Persistence;
 import shared.model.InvalidActionException;
 
 public class FinishTurnCommand extends Command{
@@ -19,7 +20,14 @@ public class FinishTurnCommand extends Command{
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().finishTurn(this.getGameID());
+		Object o;
+		try {
+			o = this.getFacade().finishTurn(this.getGameID());
+			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+			return o;
+		} catch(InvalidActionException e){
+			throw e;
+		}
 	}
 
 }

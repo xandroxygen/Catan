@@ -10,6 +10,7 @@ import shared.definitions.HexType;
 import shared.definitions.ResourceType;
 import shared.locations.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,7 +18,7 @@ import java.util.HashMap;
 /**
  * Map class.
  */
-public class Map {
+public class Map implements Serializable {
 	
 	private HashMap<HexLocation, Hex> hexes;
 	private HashMap<VertexLocation, City> cities;

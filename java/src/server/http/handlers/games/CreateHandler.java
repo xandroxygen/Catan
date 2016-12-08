@@ -9,6 +9,7 @@ import server.http.handlers.BaseHandler;
 import server.http.requests.games.CreateGameRequest;
 import server.http.requests.user.UserRequest;
 import server.model.ServerGame;
+import server.persistence.Persistence;
 import shared.model.InvalidActionException;
 
 /**
@@ -40,6 +41,7 @@ public class CreateHandler extends BaseHandler {
 			JsonArray players = new JsonArray();
 			players.add(new JsonObject());
 			jo.add("players", players);
+			Persistence.getInstance().getGameDAO().createGame(game);
 			return jo.toString();
 		}
 		catch (InvalidActionException e) {

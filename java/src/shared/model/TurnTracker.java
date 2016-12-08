@@ -1,6 +1,8 @@
 package shared.model;
 
-public class TurnTracker {
+import java.io.Serializable;
+
+public class TurnTracker implements Serializable {
 	private GameStatus status;
 	private int currentTurn;
 	private int longestRoad;

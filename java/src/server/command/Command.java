@@ -3,7 +3,9 @@ package server.command;
 import server.facade.IServerFacade;
 import shared.model.InvalidActionException;
 
-public abstract class Command {
+import java.io.Serializable;
+
+public abstract class Command implements Serializable {
 	
 	/**
 	 * the ID of the game on which to perform the command
@@ -13,7 +15,7 @@ public abstract class Command {
 	/**
 	 * the IServerFacade with which to interact
 	 */
-	private IServerFacade facade;
+	transient private IServerFacade facade;
 	
 	public Command(int gameID, IServerFacade facade) {
 		this.gameID = gameID;

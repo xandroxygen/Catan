@@ -2,6 +2,7 @@ package server.command.moves;
 
 import server.command.Command;
 import server.facade.IServerFacade;
+import server.persistence.Persistence;
 import shared.definitions.ResourceType;
 import shared.model.InvalidActionException;
 
@@ -31,7 +32,14 @@ public class MonopolyCommand extends Command{
 	 * </pre>
 	 */
 	public Object execute() throws InvalidActionException {
-		return this.getFacade().playMonopoly(this.getGameID(), playerIndex, resource);
+		try {
+			Object o = this.getFacade().playMonopoly(this.getGameID(), playerIndex, resource);
+			Persistence.getInstance().getGameDAO().addCommand(this.getGameID(), this);
+			return o;
+		}
+		catch(InvalidActionException e) {
+			throw e;
+		}
 	}
 
 }
